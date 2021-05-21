@@ -1,9 +1,9 @@
 
 # Miscellaneous Guild Bridge Bot
-
+<hr>
 <h3 align="center">
 The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord.
-<hr>
+  
   <a href="https://discord.gg/dEsfnJkQcq" alt="Discord">
       <img src="https://img.shields.io/discord/522586672148381726?label=discord&style=for-the-badge&color=blue"/>
   </a>
