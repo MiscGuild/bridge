@@ -270,7 +270,7 @@
         if(!Rank_guild_join){var Rank_guild_join = ''}
         messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
         // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
         
         setTimeout(() => {
           var randomID = crypto.randomBytes(5).toString('hex');
@@ -293,7 +293,7 @@
         if(!Rank_guild_leave){var Rank_guild_leave = ''}
         // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -307,7 +307,7 @@
         if(!guild_promote_rank){var guild_promote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -321,7 +321,7 @@
         if(!guild_demote_rank){var guild_demote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }
 
 
@@ -337,7 +337,7 @@
         if(!guild_requesting_rank){var guild_requesting_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -350,7 +350,7 @@
       const guild_left_game = (guild_left_game_name) => {
         // logger.info(`${guild_left_game_name} left the game.`)
         messages.push(`${guild_left_game_name} left the game.`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }      
       
       bot.chatAddPattern(
@@ -361,7 +361,7 @@
       
       const guild_joined_game = (guild_joined_game_name) => {
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
