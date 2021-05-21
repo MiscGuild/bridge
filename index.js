@@ -201,7 +201,7 @@
       )
       const guild_chat = (rank_guild_chat, username_guild_chat, tag_guild_chat, message_guild_chat) => {
         if(!rank_guild_chat){var rankChat_Emoji = ''
-        colour.push('000000')
+        colour.push('AAAAAA')
       }
 
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
