@@ -210,20 +210,20 @@
 
         if(rank_guild_chat == '[VIP]'){
           var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}`;
-          messagesEmbed.color=0x55FF55;
+          messagesEmbed.setColor=0x55FF55;
         } else if(rank_guild_chat == '[VIP+]'){
           var rankChat_Emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`;
-          messagesEmbed.color = 0x55FF55;
+          messagesEmbed.setColor = 0x55FF55;
         } else if(rank_guild_chat == '[MVP]'){
           var rankChat_Emoji = `**   **${MVP1}${MVP2}${MVP3}`;
-          messagesEmbed.color = 0x55FFFF;
+          messagesEmbed.setColor = 0x55FFFF;
         } else if(rank_guild_chat == '[MVP+]'){
           var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`;
-          messagesEmbed.color = 0x55FFFF;
+          messagesEmbed.setColor = 0x55FFFF;
         } else if(rank_guild_chat == '[MVP++]'){
           var rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`;
-          messagesEmbed.color = 0xFFAA00;
-        } else {messagesEmbed.color = DEFAULT}
+          messagesEmbed.setColor = 0xFFAA00;
+        } else {messagesEmbed.setColor = DEFAULT}
 
         // logger.info(`${rank_guild_chat} ${username_guild_chat} ${tag_guild_chat}: ${message_guild_chat}`)
         messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
