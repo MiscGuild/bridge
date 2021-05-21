@@ -201,24 +201,35 @@
         if(!rank_guild_chat){var rankChat_Emoji = ''}
         if(!rank_guild_chat){var rank_guild_chat = ''}
 
-        if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
+        if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`} //Credit to Fury_101 for all the emojis
         if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
         if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
         if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
         if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
         if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
 
-        if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}`}
-        if(rank_guild_chat == '[VIP+]'){var rankChat_Emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
-        if(rank_guild_chat == '[MVP]'){var rankChat_Emoji = `**   **${MVP1}${MVP2}${MVP3}`}
-        if(rank_guild_chat == '[MVP+]'){var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`}
-        if(rank_guild_chat == '[MVP++]'){var rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
+        if(rank_guild_chat == '[VIP]'){
+          var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}`;
+          messagesEmbed.color=0x55FF55;
+        } else if(rank_guild_chat == '[VIP+]'){
+          var rankChat_Emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`;
+          messagesEmbed.color = 0x55FF55;
+        } else if(rank_guild_chat == '[MVP]'){
+          var rankChat_Emoji = `**   **${MVP1}${MVP2}${MVP3}`;
+          messagesEmbed.color = 0x55FFFF;
+        } else if(rank_guild_chat == '[MVP+]'){
+          var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`;
+          messagesEmbed.color = 0x55FFFF;
+        } else if(rank_guild_chat == '[MVP++]'){
+          var rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`;
+          messagesEmbed.color = 0xFFAA00;
+        } else {messagesEmbed.color = DEFAULT}
 
         // logger.info(`${rank_guild_chat} ${username_guild_chat} ${tag_guild_chat}: ${message_guild_chat}`)
         messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
       }
 
-      bot.chatAddPattern(
+      bot.chatAddPattern( //Credit to Fury_101 for all the regex
         /^Officer > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
         'officer_chat',
         'Custom Officer guild Chat Setup'
