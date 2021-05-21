@@ -62,7 +62,9 @@ web_modules/
 
 # Optional REPL history
 .node_repl_history
-
+.history
+.history/
+history/
 # Output of 'npm pack'
 *.tgz
 
@@ -115,3 +117,5 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.DS_Store
