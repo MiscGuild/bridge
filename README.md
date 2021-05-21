@@ -34,4 +34,4 @@ Pull requests are welcome. If you would like to chat with other developers pleas
 
 Please test your code before committing it.
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://github.com/MiscGuild/BridgeBot/blob/master/LICENSE)
