@@ -201,7 +201,7 @@
       )
       const guild_chat = (rank_guild_chat, username_guild_chat, tag_guild_chat, message_guild_chat) => {
         if(!rank_guild_chat){var rankChat_Emoji = ''
-        colour.push('AAAAAA')
+        colour.push('0xAAAAAA')
       }
 
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
@@ -345,6 +345,7 @@
       const guild_left_game = (guild_left_game_name) => {
         // logger.info(`${guild_left_game_name} left the game.`)
         messages.push(`${guild_left_game_name} left the game.`)
+        colour.push('0x36393F')
       }      
       
       bot.chatAddPattern(
@@ -355,6 +356,7 @@
       
       const guild_joined_game = (guild_joined_game_name) => {
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
+        colour.push('0x36393F')
       }
 
       bot.chatAddPattern(
@@ -459,7 +461,7 @@
     if(!messages.length){return}    
     
     const messagesEmbed = new Discord.MessageEmbed()
-    .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`)
+    .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`) 
     .setColor(colour[Math.floor(Math.random() * colour.length)])
     channel.send(messagesEmbed);
 
