@@ -1,6 +1,6 @@
 
 # Miscellaneous Guild Bridge Bot
-<hr>
+
 <h3 align="center">
 The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord.
   
