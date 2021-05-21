@@ -55,8 +55,8 @@
 
 
   
-  client.on('ready', () => {
-    logger.info(`The discord bot logged in! Username: ${client.user.username}!`)
+  client.on('ready', () => { // The bot is ready
+    logger.info(`The discord bot logged in! Username: ${client.user.username}!`) 
     var channel = client.channels.cache.get(channelID)
     if (!channel) {
       logger.info(`I could not find the channel (${channelID})! -- 2`)
@@ -125,7 +125,7 @@
     // .setColor(colour)
       channel.send(loggedInEmbed)
 
-    var VIP1 = client.emojis.cache.get("843335876872110100");
+    var VIP1 = client.emojis.cache.get("843335876872110100"); //Get emojis
     var VIP2 = client.emojis.cache.get("843335910287736842");
     var VIP3 = client.emojis.cache.get("843335946699014145");
   
@@ -174,7 +174,7 @@
 
 
 
-      bot.chat('/wijfelkcewnrljglf')
+      bot.chat('/wijfelkcewnrljglf') // Go to limbo
       bot.chat('/wijfelkcewnrljglf')
       bot.chat('/wijfelkcewnrljglf')
       bot.chat('/wijfelkcewnrljglf')
@@ -211,15 +211,15 @@
         if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
         if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
 
-        if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}` 
+        if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
         colour.push('0x55FF55') }
-        if(rank_guild_chat == '[VIP+]'){var rankChat_Emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
+        if(rank_guild_chat == '[VIP+]'){var rankChat_Emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
         colour.push('0x55FF55')}
-        if(rank_guild_chat == '[MVP]'){var rankChat_Emoji = `**   **${MVP1}${MVP2}${MVP3}`
+        if(rank_guild_chat == '[MVP]'){var rankChat_Emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`
         colour.push('0x55FFFF')}
         if(rank_guild_chat == '[MVP+]'){var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
         colour.push('0x55FFFF')}
-        if(rank_guild_chat == '[MVP++]'){var rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
+        if(rank_guild_chat == '[MVP++]'){var rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
         colour.push('0xFFAA00')}
 
         // logger.info(`${rank_guild_chat} ${username_guild_chat} ${tag_guild_chat}: ${message_guild_chat}`)
@@ -268,9 +268,10 @@
 
       const guild_join = (Rank_guild_join, username_guild_join) => {
         if(!Rank_guild_join){var Rank_guild_join = ''}
-        messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** Joined the guild!\n-----------------------------------------------------`)
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** Joined the guild!\n-----------------------------------------------------`)
-
+        messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
+        // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
+        colour.push('0x2f3136')
+        
         setTimeout(() => {
           var randomID = crypto.randomBytes(5).toString('hex');
           bot.chat(`Welcome to the guild, ${username_guild_join}! Make sure you join the discord with /g discord | ${randomID}`)
@@ -290,8 +291,9 @@
 
       const guild_leave = (Rank_guild_leave, username_guild_leave) => {
         if(!Rank_guild_leave){var Rank_guild_leave = ''}
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** Left the guild!\n-----------------------------------------------------`)
-        messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** Left the guild!\n-----------------------------------------------------`)
+        // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
+        messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -305,6 +307,7 @@
         if(!guild_promote_rank){var guild_promote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -318,6 +321,7 @@
         if(!guild_demote_rank){var guild_demote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
+        colour.push('0x2f3136')
       }
 
 
@@ -333,6 +337,7 @@
         if(!guild_requesting_rank){var guild_requesting_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -345,7 +350,7 @@
       const guild_left_game = (guild_left_game_name) => {
         // logger.info(`${guild_left_game_name} left the game.`)
         messages.push(`${guild_left_game_name} left the game.`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }      
       
       bot.chatAddPattern(
@@ -356,7 +361,7 @@
       
       const guild_joined_game = (guild_joined_game_name) => {
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -365,7 +370,7 @@
         'bot msg in game Setup'
       )
       
-      const msg_bot = (msg_bot_username, msg_bot_message) => {
+      const msg_bot = (msg_bot_username, msg_bot_message) => { //Messaging the bot commands
 
         async function msg_bot_aysnc() {
           if(msg_bot_message.startsWith('weeklygexp')){
@@ -377,7 +382,7 @@
           .then(data => {
               for (var item in data.guild.members) {
                   if (data.guild.members[item].uuid == minecraftAPI.id) {
-                    function gexpFunction(gexpLIST) {
+                    function gexpFunction(gexpLIST) { //Add all the gexp from the last week
                       let sum = 0;
                       for (let gexp of Object.values(gexpLIST)) {
                         sum += gexp;
@@ -407,7 +412,7 @@
         if(!data.guild){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
           for (var item in data.guild.members) {
               if (data.guild.members[item].uuid == minecraftAPI.id) {
-                function gexpDFunction(gexpLIST) {
+                function gexpDFunction(gexpLIST) { //Add all the gexp from the last week
                   let sum = 0;
                   for (let gexp of Object.values(gexpLIST)) {
                     sum += gexp;
@@ -446,7 +451,7 @@
       const McChatLogger = log4js.getLogger("McChatLogs");
            bot.on('message', message => {
             var msg = message.toString()
-            if(msg == 'Unknown command. Type "help" for help.'){return}
+            if(msg == 'Unknown command. Type "help" for help.'){return} //Excludes these messages
             if(msg == 'A kick occurred in your connection, so you have been routed to limbo!'){return}
             if(msg == 'disconnect.spam'){return}
             if(msg == 'You were spawned in Limbo.'){return}
@@ -545,7 +550,7 @@
   else if (command === 'limbo') {
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
 
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
+    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`) //Getting into limbo
     bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
     bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
     bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
