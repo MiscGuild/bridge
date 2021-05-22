@@ -9,6 +9,7 @@
   var log4js = require('log4js');
   var crypto = require("crypto");
   const dotenv = require('dotenv');
+const { setTimeout } = require('timers');
   dotenv.config();
 
   var HypixelAPIKey = process.env.HypixelAPIKey
@@ -17,7 +18,8 @@
     host: process.env.IP,
     port: process.env.PORT,
     username: process.env.USERNAME,
-    password: process.env.PASSWORD
+    password: process.env.PASSWORD,
+    version: '1.8.9'
   }
 
   log4js.configure({
@@ -119,7 +121,7 @@
   bot.once('spawn', () => {
 
     logger.info('Bot logged in!')
-    mineflayerViewer(bot, { port: 30271 })
+    // mineflayerViewer(bot, { port: 30271 })
     const loggedInEmbed = new Discord.MessageEmbed()
     .setDescription(`**MiscellaneousBot** Has logged onto \`mc.hypixel.net\` and is now ready!`)
     // .setColor(colour)
@@ -173,6 +175,41 @@
     var OFFICER2 = client.emojis.cache.get("843900165748555796");
 
 
+// + COLOURS
+        var RED_MVP_PLUS = client.emojis.cache.get("844352407902617650");
+        var PINK_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352250469941258");
+        var PINK_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352250440056892");
+        var BLACK_MVP_PLUS = client.emojis.cache.get("844350093431013447");
+        var BLACK_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844350093507035136");
+        var BLACK_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844350093472956416");
+        var BLUE_MVP_PLUS = client.emojis.cache.get("844350320565682246");
+        var BLUE_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844350320645767168");
+        var BLUE_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844350320355049495");
+        var DARK_AQUA_MVP_PLUS = client.emojis.cache.get("844350604436045834");
+        var DARK_AQUA_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844350604549160980");
+        var DARK_AQUA_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844350604464750622");
+        var DARK_PURPLE_MVP_PLUS = client.emojis.cache.get("844351554970452048");
+        var DARK_PURPLE_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351554945548338");
+        var DARK_PURPLE_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351555037429760");
+        var DARK_RED_MVP_PLUS = client.emojis.cache.get("844351667339395092");
+        var DARK_RED_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351667343196211");
+        var DARK_RED_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351667418955796");
+        var GOLD_MVP_PLUS = client.emojis.cache.get("844351835224801290");
+        var GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("ID844351834994901043");
+        var GOLD_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351834872479815");
+        var GREEN_MVP_PLUS = client.emojis.cache.get("844352013751025664");
+        var GREEN_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352013479182377");
+        var GREEN_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352013759414304");
+        var RED_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352407885709322");
+        var RED_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352407924506654");
+
+        var PINK_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352250440056892");
+        var WHITE_MVP_PLUS = client.emojis.cache.get("844352509103702027");
+        var WHITE_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352509355098142");
+        var WHITE_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352509388390420");
+        var YELLOW_MVP_PLUS = client.emojis.cache.get("844352595828801566");
+        var YELLOW_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352595631013890");
+        var YELLOW_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352595791314944");
 
       bot.chat('/wijfelkcewnrljglf')
       bot.chat('/wijfelkcewnrljglf')
@@ -205,26 +242,78 @@
       }
 
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
+        else {
         if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
-        if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
-        if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
-        if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
-        if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
-
+        else if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
+        else if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
+        else if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
+        else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
+        }
         if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}` 
-        colour.push('0x55FF55') }
-        if(rank_guild_chat == '[VIP+]'){var rankChat_Emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
-        colour.push('0x55FF55')}
-        if(rank_guild_chat == '[MVP]'){var rankChat_Emoji = `**   **${MVP1}${MVP2}${MVP3}`
-        colour.push('0x55FFFF')}
-        if(rank_guild_chat == '[MVP+]'){var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
-        colour.push('0x55FFFF')}
-        if(rank_guild_chat == '[MVP++]'){var rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
-        colour.push('0xFFAA00')}
-
-        // logger.info(`${rank_guild_chat} ${username_guild_chat} ${tag_guild_chat}: ${message_guild_chat}`)
-        messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
+        colour.push('0x55FF55') 
+        return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
       }
+        else {
+        if(rank_guild_chat == '[VIP+]'){var rankChat_Emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
+        colour.push('0x55FF55')
+        return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
+      }
+        else if(rank_guild_chat == '[MVP]'){var rankChat_Emoji = `**   **${MVP1}${MVP2}${MVP3}`
+        colour.push('0x55FFFF')
+        return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
+
+        }
+        else if(rank_guild_chat == '[MVP+]'){var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
+        colour.push('0x55FFFF')
+        return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
+
+  }
+      }
+
+        if(rank_guild_chat == '[MVP++]'){
+        try {
+        async function GetPlusColourMVP_Plus_plus() {
+          var MinecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username_guild_chat}`)
+          .then(res => res.json())
+          if(!MinecraftAPI.id){return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from MojangAPI:  \n\`${MinecraftAPI}\` <@484411714637529088>`)}
+          if(MinecraftAPI.error){return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from MojangAPI: \n\`${MinecraftAPI.error} | ${MinecraftAPI.errorMessage} \` <@484411714637529088>`)}
+           
+          await fetch(`https://api.hypixel.net/player?key=${HypixelAPIKey}&uuid=${MinecraftAPI.id}`)
+          .then(res => res.json())
+          .then(data => {
+              if(!data.success) {return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from HypixelAPI: \n\`${data.cause}\` <@484411714637529088>`)}
+              if(!data.player) {return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from HypixelAPI: \n\`${data.player}\` -- No player?? <@484411714637529088>`)}
+              console.log(data.player.rankPlusColor)
+
+            if(data.player.rankPlusColor == 'RED'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${RED_MVP_PLUS_PLUS_1}${RED_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'GOLD'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${GOLD_MVP_PLUS_PLUS_1}${GOLD_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'GREEN'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${GREEN_MVP_PLUS_PLUS_1}${GREEN_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'YELLOW'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${YELLOW_MVP_PLUS_PLUS_1}${YELLOW_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'LIGHT_PURPLE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${PINK_MVP_PLUS_PLUS_1}${PINK_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'WHITE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${WHITE_MVP_PLUS_PLUS_1}${WHITE_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'BLUE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${BLUE_MVP_PLUS_PLUS_1}${BLUE_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'DARK_GREEN'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_GREEN_MVP_PLUS_PLUS_1}${DARK_GREEN_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'DARK_RED'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_RED_MVP_PLUS_PLUS_1}${DARK_RED_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'DARK_AQUA'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_PURPLE_MVP_PLUS_PLUS_1}${DARK_AQUA_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'DARK_PURPLE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_PURPLE_MVP_PLUS_PLUS_1}${DARK_AQUA_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'DARK_GRAY'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_GRAY_MVP_PLUS_PLUS_1}${DARK_GRAY_MVP_PLUS_PLUS_2}`}
+            if(data.player.rankPlusColor == 'BLACK'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${BLACK_MVP_PLUS_PLUS_1}${BLACK_MVP_PLUS_PLUS_2}`}
+
+
+
+
+          }) 
+          colour.push('0xFFAA00')
+          return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
+          }
+  
+          GetPlusColourMVP_Plus_plus()
+
+      } catch(e) {
+        console.log("Err: " + err);
+      }
+      }
+    }
   
 
       bot.chatAddPattern(
@@ -426,8 +515,6 @@
   }
   msg_bot_aysnc()
 }
-
-  
   
 
       bot.on('guild_chat', guild_chat)
@@ -566,8 +653,7 @@
     else { return message.channel.send('no perms')}
     }
   
-  })}});
-})
+  })}})
+  })
       client.login(process.env.TOKEN)
-
-
+  

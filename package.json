@@ -16,6 +16,7 @@
     "mineflayer": "3.6.0",
     "node-fetch": "^2.6.1",
     "prismarine-chat": "^1.0.3",
-    "prismarine-viewer": "^1.19.3"
+    "prismarine-viewer": "^1.19.3",
+    "sync-fetch": "^0.3.0"
   }
 }
