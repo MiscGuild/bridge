@@ -277,11 +277,15 @@ const { setTimeout } = require('timers');
       }
 
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
-        else {
         if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
         if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
+<<<<<<< Updated upstream
         if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
         if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
+=======
+       if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
+       if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
+>>>>>>> Stashed changes
         if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
 
         if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
@@ -297,11 +301,16 @@ const { setTimeout } = require('timers');
 
         // logger.info(`${rank_guild_chat} ${username_guild_chat} ${tag_guild_chat}: ${message_guild_chat}`)
         messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
+<<<<<<< Updated upstream
         else if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
         else if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
         else if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
         else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
         }
+=======
+
+        
+>>>>>>> Stashed changes
         if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}` 
         colour.push('0x55FF55') 
         return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
@@ -716,7 +725,6 @@ const { setTimeout } = require('timers');
     else { return message.channel.send('no perms')}
     }
   
-  })}})
-  })
+      })}
+    })})
       client.login(process.env.TOKEN)
-  
