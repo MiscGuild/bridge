@@ -57,8 +57,8 @@ const { setTimeout } = require('timers');
 
 
   
-  client.on('ready', () => { // The bot is ready
-    logger.info(`The discord bot logged in! Username: ${client.user.username}!`) 
+  client.on('ready', () => {
+    logger.info(`The discord bot logged in! Username: ${client.user.username}!`)
     var channel = client.channels.cache.get(channelID)
     if (!channel) {
       logger.info(`I could not find the channel (${channelID})! -- 2`)
@@ -126,7 +126,6 @@ const { setTimeout } = require('timers');
     .setDescription(`**MiscellaneousBot** Has logged onto \`mc.hypixel.net\` and is now ready!`)
     // .setColor(colour)
       channel.send(loggedInEmbed)
-
       const VIP1 = client.emojis.cache.get("843335876872110100");
       const VIP2 = client.emojis.cache.get("843335910287736842");
       const VIP3 = client.emojis.cache.get("843335946699014145");
@@ -163,35 +162,6 @@ const { setTimeout } = require('timers');
       const RES2 = client.emojis.cache.get("843900184714936351");
       const RES3 = client.emojis.cache.get("843900185079709696");
   
-    var MVPPLUSPLUS1 = client.emojis.cache.get("843338459841691649");
-    var MVPPLUSPLUS2 = client.emojis.cache.get("843338505379250187");
-    var MVPPLUSPLUS3 = client.emojis.cache.get("843338582889463808");
-    var MVPPLUSPLUS4 = client.emojis.cache.get("843338615333191700");
-
-    // g ranks
-    var MISC1 = client.emojis.cache.get("843900141064552488");
-    var MISC2 = client.emojis.cache.get("843900141017759774");
-    var MISC3 = client.emojis.cache.get("843900141207027712");
-
-    var ACTIVE1 = client.emojis.cache.get("843900080628039725");
-    var ACTIVE2 = client.emojis.cache.get("843900080901718056");
-    var ACTIVE3 = client.emojis.cache.get("843900080713236493");
-    var ACTIVE4 = client.emojis.cache.get("843900080922165348");
-
-    var RES1 = client.emojis.cache.get("843900184840110091");
-    var RES2 = client.emojis.cache.get("843900184714936351");
-    var RES3 = client.emojis.cache.get("843900185079709696");
-
-    var GM1 = client.emojis.cache.get("843900121003327508");
-    var GM2 = client.emojis.cache.get("843900120901746689");
-
-    var ADMIN1 = client.emojis.cache.get("843900103601291344");
-    var ADMIN2 = client.emojis.cache.get("843901734920388659");
-    var ADMIN3 = client.emojis.cache.get("843901735097204806");
-    var ADMIN4 = client.emojis.cache.get("843901735068237824");
-
-    var OFFICER1 = client.emojis.cache.get("843900165937037372");
-    var OFFICER2 = client.emojis.cache.get("843900165748555796");
       const GM1 = client.emojis.cache.get("843900121003327508");
       const GM2 = client.emojis.cache.get("843900120901746689");
   
@@ -243,9 +213,6 @@ const { setTimeout } = require('timers');
           const YELLOW_MVP_PLUS = client.emojis.cache.get("844352595828801566");
           const YELLOW_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352595631013890");
           const YELLOW_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352595791314944");
-
-
-      bot.chat('/wijfelkcewnrljglf') // Go to limbo
       bot.chat('/wijfelkcewnrljglf')
       bot.chat('/wijfelkcewnrljglf')
       bot.chat('/wijfelkcewnrljglf')
@@ -277,40 +244,13 @@ const { setTimeout } = require('timers');
       }
 
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
+        else {
         if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
-        if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
-<<<<<<< Updated upstream
-        if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
-        if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
-=======
-       if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
-       if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
->>>>>>> Stashed changes
-        if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
-
-        if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
-        colour.push('0x55FF55') }
-        if(rank_guild_chat == '[VIP+]'){var rankChat_Emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
-        colour.push('0x55FF55')}
-        if(rank_guild_chat == '[MVP]'){var rankChat_Emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`
-        colour.push('0x55FFFF')}
-        if(rank_guild_chat == '[MVP+]'){var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
-        colour.push('0x55FFFF')}
-        if(rank_guild_chat == '[MVP++]'){var rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
-        colour.push('0xFFAA00')}
-
-        // logger.info(`${rank_guild_chat} ${username_guild_chat} ${tag_guild_chat}: ${message_guild_chat}`)
-        messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-<<<<<<< Updated upstream
         else if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
         else if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
         else if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
         else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
         }
-=======
-
-        
->>>>>>> Stashed changes
         if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}` 
         colour.push('0x55FF55') 
         return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
@@ -424,10 +364,9 @@ const { setTimeout } = require('timers');
 
       const guild_join = (Rank_guild_join, username_guild_join) => {
         if(!Rank_guild_join){var Rank_guild_join = ''}
-        messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
-        colour.push('0x2f3136')
-        
+        messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** Joined the guild!\n-----------------------------------------------------`)
+        // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** Joined the guild!\n-----------------------------------------------------`)
+
         setTimeout(() => {
           var randomID = crypto.randomBytes(5).toString('hex');
           bot.chat(`Welcome to the guild, ${username_guild_join}! Make sure you join the discord with /g discord | ${randomID}`)
@@ -447,9 +386,8 @@ const { setTimeout } = require('timers');
 
       const guild_leave = (Rank_guild_leave, username_guild_leave) => {
         if(!Rank_guild_leave){var Rank_guild_leave = ''}
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
-        messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
-        colour.push('0x2f3136')
+        // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** Left the guild!\n-----------------------------------------------------`)
+        messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** Left the guild!\n-----------------------------------------------------`)
       }
 
       bot.chatAddPattern(
@@ -463,7 +401,6 @@ const { setTimeout } = require('timers');
         if(!guild_promote_rank){var guild_promote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
-        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -477,7 +414,6 @@ const { setTimeout } = require('timers');
         if(!guild_demote_rank){var guild_demote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
-        colour.push('0x2f3136')
       }
 
 
@@ -493,7 +429,6 @@ const { setTimeout } = require('timers');
         if(!guild_requesting_rank){var guild_requesting_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
-        colour.push('0x2f3136')
       }
 
       bot.chatAddPattern(
@@ -506,7 +441,7 @@ const { setTimeout } = require('timers');
       const guild_left_game = (guild_left_game_name) => {
         // logger.info(`${guild_left_game_name} left the game.`)
         messages.push(`${guild_left_game_name} left the game.`)
-        colour.push('0x2f3136')
+        colour.push('0x36393F')
       }      
       
       bot.chatAddPattern(
@@ -517,7 +452,7 @@ const { setTimeout } = require('timers');
       
       const guild_joined_game = (guild_joined_game_name) => {
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
-        colour.push('0x2f3136')
+        colour.push('0x36393F')
       }
 
       bot.chatAddPattern(
@@ -526,7 +461,7 @@ const { setTimeout } = require('timers');
         'bot msg in game Setup'
       )
       
-      const msg_bot = (msg_bot_username, msg_bot_message) => { //Messaging the bot commands
+      const msg_bot = (msg_bot_username, msg_bot_message) => {
 
         async function msg_bot_aysnc() {
           if(msg_bot_message.startsWith('weeklygexp')){
@@ -538,7 +473,7 @@ const { setTimeout } = require('timers');
           .then(data => {
               for (var item in data.guild.members) {
                   if (data.guild.members[item].uuid == minecraftAPI.id) {
-                    function gexpFunction(gexpLIST) { //Add all the gexp from the last week
+                    function gexpFunction(gexpLIST) {
                       let sum = 0;
                       for (let gexp of Object.values(gexpLIST)) {
                         sum += gexp;
@@ -568,7 +503,7 @@ const { setTimeout } = require('timers');
         if(!data.guild){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
           for (var item in data.guild.members) {
               if (data.guild.members[item].uuid == minecraftAPI.id) {
-                function gexpDFunction(gexpLIST) { //Add all the gexp from the last week
+                function gexpDFunction(gexpLIST) {
                   let sum = 0;
                   for (let gexp of Object.values(gexpLIST)) {
                     sum += gexp;
@@ -605,7 +540,7 @@ const { setTimeout } = require('timers');
       const McChatLogger = log4js.getLogger("McChatLogs");
            bot.on('message', message => {
             var msg = message.toString()
-            if(msg == 'Unknown command. Type "help" for help.'){return} //Excludes these messages
+            if(msg == 'Unknown command. Type "help" for help.'){return}
             if(msg == 'A kick occurred in your connection, so you have been routed to limbo!'){return}
             if(msg == 'disconnect.spam'){return}
             if(msg == 'You were spawned in Limbo.'){return}
@@ -704,7 +639,7 @@ const { setTimeout } = require('timers');
   else if (command === 'limbo') {
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
 
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`) //Getting into limbo
+    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
     bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
     bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
     bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
@@ -725,6 +660,7 @@ const { setTimeout } = require('timers');
     else { return message.channel.send('no perms')}
     }
   
-      })}
-    })})
+  })}})
+  })
       client.login(process.env.TOKEN)
+  
