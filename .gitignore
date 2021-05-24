@@ -118,4 +118,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+
+#MacOSX SHIT
 .DS_Store
