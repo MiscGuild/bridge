@@ -391,7 +391,7 @@ const { setTimeout } = require('timers');
       }
 
       bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was promoted from .+ to .+/,
+        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was promoted from (.+) to (.+)/,
         'guild_promote',
         'Guild promote Setup'
       )
@@ -404,7 +404,7 @@ const { setTimeout } = require('timers');
       }
 
       bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was demoted from .+ to .+/,
+        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was demoted from (.+) to (.+)/,
         'guild_demote',
         'Guild demote Setup'
       )
