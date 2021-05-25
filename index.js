@@ -469,6 +469,7 @@ const { setTimeout } = require('timers');
         let displayNickname = `${guild_mute_username}`;
         let serverMembers = client.guilds.cache.get(serverID).members
         let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
+        if (!matchedMember) {return}
         matchedMember.roles.add('529453283782164502')
       }
       
@@ -486,6 +487,7 @@ const { setTimeout } = require('timers');
         let displayNickname = `${guild_mute_username}`;
         let serverMembers = client.guilds.cache.get(serverID).members
         let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
+        if (!matchedMember) {return}
         matchedMember.roles.remove('529453283782164502')
       }
 
