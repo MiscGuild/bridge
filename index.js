@@ -465,6 +465,11 @@ const { setTimeout } = require('timers');
         if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
         if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} $(guild_mute_staff)** has muted **$(guild_mute_rank_username) $(guild_mute_username)** for **guild_mute_time**\n-----------------------------------------------------`)
+        let serverID = "522586672148381726";
+        let displayNickname = `${guild_mute_username}`;
+        let serverMembers = client.guilds.cache.get(serverID).members
+        let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
+        matchedMember.roles.add('529453283782164502')
       }
       
       bot.chatAddPattern(
@@ -477,6 +482,11 @@ const { setTimeout } = require('timers');
         if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
         if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} $(guild_mute_staff)** has muted **$(guild_mute_rank_username) $(guild_mute_username)** for **guild_mute_time**\n-----------------------------------------------------`)
+        let serverID = "522586672148381726";
+        let displayNickname = `${guild_mute_username}`;
+        let serverMembers = client.guilds.cache.get(serverID).members
+        let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
+        matchedMember.roles.remove('529453283782164502')
       }
 
 
