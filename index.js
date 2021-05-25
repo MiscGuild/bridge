@@ -454,6 +454,31 @@ const { setTimeout } = require('timers');
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
         colour.push('0x36393F')
       }
+      
+      bot.chatAddPattern(
+        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (.+)/,
+        'guild_mute',
+        'Guild mute Setup'
+      )
+      
+      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time) => {
+        if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
+        if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
+        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} $(guild_mute_staff)** has muted **$(guild_mute_rank_username) $(guild_mute_username)** for **guild_mute_time**\n-----------------------------------------------------`)
+      }
+      
+      bot.chatAddPattern(
+        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has unmuted (\[.+?\])? ?([A-Za-z0-9_]{3,16})/,
+        'guild_unmute',
+        'Guild unmute Setup'
+      )
+      
+      const guild_unmute = (guild_unmute_rank_staff, guild_unmute_staff, guild_unmute_rank_username, guild_unmute_username) => {
+        if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
+        if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
+        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} $(guild_mute_staff)** has muted **$(guild_mute_rank_username) $(guild_mute_username)** for **guild_mute_time**\n-----------------------------------------------------`)
+      }
+
 
       bot.chatAddPattern(
         /^From (?:\[.+?\])? ?([A-Za-z0-9_]{3,16}): (.+)/,
