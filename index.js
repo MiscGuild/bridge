@@ -560,6 +560,8 @@ const { setTimeout } = require('timers');
       // bot.on('guild_left_game', guild_left_game)
       bot.on('officer_chat', officer_chat)
       bot.on('msg_bot', msg_bot)
+      bot.on('guild_mute', guild_mute)
+      bot.on('guild_unmute', guild_unmute)
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
