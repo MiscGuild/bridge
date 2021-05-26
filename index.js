@@ -364,8 +364,8 @@ const { setTimeout } = require('timers');
 
       const guild_join = (Rank_guild_join, username_guild_join) => {
         if(!Rank_guild_join){var Rank_guild_join = ''}
-        messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** Joined the guild!\n-----------------------------------------------------`)
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** Joined the guild!\n-----------------------------------------------------`)
+        messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
+        // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
 
         setTimeout(() => {
           var randomID = crypto.randomBytes(5).toString('hex');
@@ -386,8 +386,8 @@ const { setTimeout } = require('timers');
 
       const guild_leave = (Rank_guild_leave, username_guild_leave) => {
         if(!Rank_guild_leave){var Rank_guild_leave = ''}
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** Left the guild!\n-----------------------------------------------------`)
-        messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** Left the guild!\n-----------------------------------------------------`)
+        // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
+        messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
       }
 
       bot.chatAddPattern(
@@ -427,8 +427,8 @@ const { setTimeout } = require('timers');
 
       const guild_requesting = (guild_requesting_rank, guild_requesting_username) => {
         if(!guild_requesting_rank){var guild_requesting_rank = ''}
-        // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
-        messages.push(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** Is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
+        // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
+        messages.push(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
       }
 
       bot.chatAddPattern(
@@ -441,7 +441,7 @@ const { setTimeout } = require('timers');
       const guild_left_game = (guild_left_game_name) => {
         // logger.info(`${guild_left_game_name} left the game.`)
         messages.push(`${guild_left_game_name} left the game.`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }      
       
       bot.chatAddPattern(
@@ -452,7 +452,7 @@ const { setTimeout } = require('timers');
       
       const guild_joined_game = (guild_joined_game_name) => {
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
-        colour.push('0x36393F')
+        colour.push('0x2f3136')
       }
       
       bot.chatAddPattern(
