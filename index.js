@@ -501,7 +501,7 @@ const { setTimeout } = require('timers');
       const msg_bot = (msg_bot_username, msg_bot_message) => {
 
         async function msg_bot_aysnc() {
-          if(msg_bot_message.startsWith('weeklygexp')){
+          if(msg_bot_message.startsWith('weeklygexp'||'weeklygxp')){
   
             var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${msg_bot_username}`)
             .then(res => res.json())
