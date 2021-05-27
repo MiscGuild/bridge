@@ -595,7 +595,11 @@ const { setTimeout } = require('timers');
     
     const messagesEmbed = new Discord.MessageEmbed()
     .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`) 
-    .setColor(colour[Math.floor(Math.random() * colour.length)])
+    var colourrand = '0x2f3136'
+    if (colour.length>1) {
+      while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
+    }
+    .setColor(colourrand)
     channel.send(messagesEmbed);
 
     colour = []
