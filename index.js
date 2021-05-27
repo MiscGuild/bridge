@@ -524,7 +524,7 @@ const { setTimeout } = require('timers');
                   };
               }
           });
-        }
+        } else if(msg_bot_message.startsWith('Boop!')) {bot.chat(`/boop ${msg_bot_username}}
 
         else{
           let usernameMention = msg_bot_message.split(" ")[0]
