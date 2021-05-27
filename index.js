@@ -493,7 +493,7 @@ const { setTimeout } = require('timers');
 
 
       bot.chatAddPattern(
-        /^From (?:\[.+?\])? ?([A-Za-z0-9_]{3,16}): (.+)/,
+        /^From (?:\[.+?\])? ?([A-Za-z0-9_]{3,16}): ([A-za-z0-9_-]+) ?([A-Za-z0-9_]{3,16})?/,
         'msg_bot',
         'bot msg in game Setup'
       )
