@@ -30,7 +30,7 @@ node index.js
 ```
 
 ## Contributing
-Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/dEsfnJkQcq) and go to `#programming-talk`
+Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/dgJXx6Hyzh) and go to `#programming-talk`
 
 Please test your code before committing it.
 ## License
