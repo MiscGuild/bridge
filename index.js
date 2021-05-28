@@ -9,7 +9,7 @@
   var log4js = require('log4js');
   var crypto = require("crypto");
   const dotenv = require('dotenv');
-const { setTimeout } = require('timers');
+  const { setTimeout } = require('timers');
   dotenv.config();
 
   var HypixelAPIKey = process.env.HypixelAPIKey
@@ -333,11 +333,11 @@ const { setTimeout } = require('timers');
 
 
         
-        if(rank_officer_chat == '[VIP]'){var rank_officer_chat_emoji = `**  **${VIP1}${VIP2}${VIP3}`}
-        if(rank_officer_chat == '[VIP+]'){var rank_officer_chat_emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
-        if(rank_officer_chat == '[MVP]'){var rank_officer_chat_emoji = `**   **${MVP1}${MVP2}${MVP3}`}
+        if(rank_officer_chat == '[VIP]'){var rank_officer_chat_emoji = `\u200D  ${VIP1}${VIP2}${VIP3}`}
+        if(rank_officer_chat == '[VIP+]'){var rank_officer_chat_emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
+        if(rank_officer_chat == '[MVP]'){var rank_officer_chat_emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`}
         if(rank_officer_chat == '[MVP+]'){var rank_officer_chat_emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`}
-        if(rank_officer_chat == '[MVP++]'){var rank_officer_chat_emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
+        if(rank_officer_chat == '[MVP++]'){var rank_officer_chat_emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
 
         // logger.info(`OFFICER > ${rank_guild_chat} ${username_guild_chat}: ${message_guild_chat}`)
         client.channels.cache.get(staffChannel).send(`${rank_officer_chat_emoji} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`)
