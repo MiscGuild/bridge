@@ -378,7 +378,7 @@
 
 
       bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) left the guild!/,
+        /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) left the guild!/,
         'guild_leave',
         'Guild leave Setup'
       )
@@ -391,7 +391,7 @@
       }
 
       bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was promoted from (.+) to (.+)/,
+        /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) was promoted from (.+) to (.+)/,
         'guild_promote',
         'Guild promote Setup'
       )
@@ -404,7 +404,7 @@
       }
 
       bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was demoted from (.+) to (.+)/,
+        /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) was demoted from (.+) to (.+)/,
         'guild_demote',
         'Guild demote Setup'
       )
@@ -419,7 +419,7 @@
 
 
       bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has requested to join the Guild!/,
+        /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) has requested to join the Guild!/,
         'guild_requesting',
         'Guild requesting Setup'
       )
@@ -456,7 +456,7 @@
       }
       
       bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (.+)/,
+        /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (.+)/,
         'guild_mute',
         'Guild mute Setup'
       )
@@ -474,7 +474,7 @@
       }
       
       bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has unmuted (\[.+?\])? ?([A-Za-z0-9_]{3,16})/,
+        /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) has unmuted (\[.+?\])? ?([A-Za-z0-9_]{3,16})/,
         'guild_unmute',
         'Guild unmute Setup'
       )
