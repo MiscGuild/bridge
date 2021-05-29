@@ -464,13 +464,13 @@
       const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time) => {
         if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
         if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
-        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} $(guild_mute_staff)** has muted **$(guild_mute_rank_username) $(guild_mute_username)** for **guild_mute_time**\n-----------------------------------------------------`)
-        let serverID = "522586672148381726";
-        let displayNickname = `${guild_mute_username}`;
-        let serverMembers = client.guilds.cache.get(serverID).members
-        let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
-        if (!matchedMember) {return}
-        matchedMember.roles.add('529453283782164502')
+        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}**\n-----------------------------------------------------`)
+        // let serverID = "522586672148381726";
+        // let displayNickname = `${guild_mute_username}`;
+        // let serverMembers = client.guilds.cache.get(serverID).members
+        // let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
+        // if (!matchedMember) {return}
+        // matchedMember.roles.add('529453283782164502')
       }
       
       bot.chatAddPattern(
@@ -482,13 +482,13 @@
       const guild_unmute = (guild_unmute_rank_staff, guild_unmute_staff, guild_unmute_rank_username, guild_unmute_username) => {
         if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
         if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
-        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} $(guild_mute_staff)** has muted **$(guild_mute_rank_username) $(guild_mute_username)** for **guild_mute_time**\n-----------------------------------------------------`)
-        let serverID = "522586672148381726";
-        let displayNickname = `${guild_mute_username}`;
-        let serverMembers = client.guilds.cache.get(serverID).members
-        let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
-        if (!matchedMember) {return}
-        matchedMember.roles.remove('529453283782164502')
+        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
+        // let serverID = "522586672148381726";
+        // let displayNickname = `${guild_mute_username}`;
+        // let serverMembers = client.guilds.cache.get(serverID).members
+        // let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
+        // if (!matchedMember) {return}
+        // matchedMember.roles.remove('529453283782164502')
       }
 
 
@@ -524,7 +524,7 @@
                   };
               }
           });
-        } else if(msg_bot_message.startsWith('Boop!')) {bot.chat(`/boop ${msg_bot_username}}
+        } else if(msg_bot_message.startsWith('Boop!')) {bot.chat(`/boop ${msg_bot_username}`)}
 
         else{
           let usernameMention = msg_bot_message.split(" ")[0]
@@ -599,7 +599,7 @@
     if (colour.length>1) {
       while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
     }
-    .setColor(colourrand)
+    messagesEmbed.setColor(colourrand)
     channel.send(messagesEmbed);
 
     colour = []
