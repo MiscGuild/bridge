@@ -12,6 +12,7 @@
   "dependencies": {
     "discord.js": "12.5.3",
     "dotenv": "^9.0.2",
+    "fs": "0.0.1-security",
     "log4js": "^6.3.0",
     "mineflayer": "3.6.0",
     "node-fetch": "^2.6.1",

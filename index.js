@@ -11,6 +11,8 @@
   const dotenv = require('dotenv');
   const { setTimeout } = require('timers');
   dotenv.config();
+  const fs = require('fs');
+  const blacklist = require('./blacklist.json');
 
   var HypixelAPIKey = process.env.HypixelAPIKey
 
@@ -108,7 +110,8 @@
     function relog() { // relogs #COOL
       console.log("Attempting to reconnect...");
       channel.send(`*Attempting to reconnect...*`);
-      init(options);
+      var bot = mineflayer.createBot(options);
+      bindEvents(bot);
     }
   }
   
@@ -362,17 +365,29 @@
         'Guild Join Setup'
       )
 
+      async function checkIfUserBlacklisted(user){
+        const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
+        .then(res => res.json())
+        for(var i in blacklist){
+          if(blacklist[i].uuid == MojangAPI.uuid)
+        if(blacklist[i].uuid == MojangAPI.uuid){
+          var randomID = crypto.randomBytes(7).toString('hex');
+          bot.chat(`/g kick ${user} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq) | ${randomID}`)
+        }
+      }
+    }
+
       const guild_join = (Rank_guild_join, username_guild_join) => {
         if(!Rank_guild_join){var Rank_guild_join = ''}
         messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
         // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
 
         setTimeout(() => {
-          var randomID = crypto.randomBytes(5).toString('hex');
+          var randomID = crypto.randomBytes(7).toString('hex');
           bot.chat(`Welcome to the guild, ${username_guild_join}! Make sure you join the discord with /g discord | ${randomID}`)
         }, 6000);
+        checkIfUserBlacklisted(username_guild_join)
       }
-
 
 
 
@@ -518,7 +533,7 @@
                       return sum; 
                     }
                     let gexpLIST = data.guild.members[item].expHistory
-                    var randomID = crypto.randomBytes(5).toString('hex');
+                    var randomID = crypto.randomBytes(7).toString('hex');
                     bot.chat(`/w ${msg_bot_username} ${msg_bot_username}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`); // 650
 
                   };
@@ -528,7 +543,7 @@
 
         else{
           let usernameMention = msg_bot_message.split(" ")[0]
-          var randomIDP = crypto.randomBytes(5).toString('hex');
+          var randomIDP = crypto.randomBytes(7).toString('hex');
 
         var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${usernameMention}`)
         .then(res => res.json())
@@ -549,7 +564,7 @@
                   return sum; 
                 }
                 let gexpLIST = data.guild.members[item].expHistory
-                var randomID = crypto.randomBytes(5).toString('hex');
+                var randomID = crypto.randomBytes(7).toString('hex');
                 bot.chat(`/w ${msg_bot_username} ${minecraftAPI.name}'s total weekly gexp: ${gexpDFunction(gexpLIST).toLocaleString()} | ${randomID}`); 
 
               };
@@ -595,7 +610,7 @@
     
     const messagesEmbed = new Discord.MessageEmbed()
     .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`) 
-    var colourrand = colour[Math.floor(Math.random() * colour.length)
+    var colourrand = colour[Math.floor(Math.random() * colour.length)]
     if (colour.length>1) {
       colourrand = '0x2f3136'
       while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
@@ -656,8 +671,11 @@
           return message.channel.send(`u need to tell me what to send!`);
         }
         return bot.chat(`[${user.displayName}]: ${args.join(" ").toString()}`)
-      }
-      else { return message.channel.send('no perms')}
+      } else {return message.channel.send({embed: {
+        color: 0x2f3136,
+        title: "Error",
+        description: `It seems you are lacking the permission to run this command.`,
+      }})}
       }
 
       else if (command === 'command') {
@@ -676,34 +694,154 @@
           //logger.info(message)
 
           return bot.chat(`/${args.join(" ").toString()}`)
-        }
-        else { return message.channel.send('no perms')}
+        } else {return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Error",
+          description: `It seems you are lacking the permission to run this command.`,
+        }})}
         }
 
-  else if (command === 'limbo') {
+  else if (command === 'blacklist') {
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+      if(!args[0]){
 
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
-    bot.chat(`/PLSSENDMEINTOLIMBOHYPIXELAHHHHH`)
+          const embed = new Discord.MessageEmbed()
+            .setTitle("Blacklist")
+            .setColor(0x2f3136)
+            .setDescription(`The list below shows everyone who is on the blacklist (Total: ${blacklist.length})`)
+            .setFooter("The name is based on the name that was givin at the time of blacklist, refer to the UUID if the user has changed their name.")
+
+
+            blacklist.forEach(element => 
+        embed.addField(`User: ${element.user}`, `UUID: ${element.uuid}`, false)
+        )
+
+  return message.channel.send({embed});
+    }
+    if(args[0]){
+
+
+      if(!args[1]){return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Error | Invalid Arguments",
+          description: '```'+ prefix +'blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to add to the blacklist```',
+        }});
+      }
+      if(args[0] == 'add'.toLowerCase()) {
+        async function blacklistadd() {
+
+      const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${args[1]}`)
+      .then(res => res.json())
+      if(!MojangAPI.uuid){return message.channel.send({embed: {
+        color: 0x2f3136,
+        title: "Error",
+        description: `I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``,
+      }});
+      }
+      for(const i in blacklist){
+        if(blacklist[i].uuid == MojangAPI.uuid ){return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Error",
+          description: `That user appears to already be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
+        }})}
+
+      }
+      function addUserToBlacklist(user, uuid) {    
+        return new Promise((resolve, reject) => {
+          blacklist.push({user, uuid})    
+          fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
+            if (err) reject(err)
+            message.channel.send({embed: {
+              color: 0x2f3136,
+              title: "Done ☑️",
+              thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
+              description: `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\``,
+            }})          
+          })
+        });
+      }
+      
+      addUserToBlacklist(MojangAPI.username, MojangAPI.uuid)
 
     }
-    else { return message.channel.send('no perms')}
+    blacklistadd();
+  }
+
+  function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i] === obj) {
+            return true;
+        }
     }
+    return false;
+}
+
+     if(args[0] == 'remove'.toLowerCase()) {
+      async function blacklistremove() {
+        try{
+    const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${args[1]}`)
+    .then(res => res.json())
+    if(!MojangAPI.uuid){return message.channel.send({embed: {
+      color: 0x2f3136,
+      title: "Error",
+      description: `I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``,
+    }});
+    } 
+
+      // if(!containsObject(MojangAPI.uuid, blacklist)){return message.channel.send({embed: {
+      //   color: 0x2f3136,
+      //   title: "Error",
+      //   description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
+      // }})}
+
+
+
+    
+    function removeUserFromBlacklist(uuid) {    
+      return new Promise((resolve, reject) => {
+        for(var i in blacklist){
+          if(blacklist[i].uuid !== MojangAPI.uuid)return message.channel.send({embed: {
+            color: 0x2f3136,
+            title: "Error",
+            description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
+          }})
+
+          if( blacklist[i].uuid == MojangAPI.uuid){
+            blacklist.splice(i, 1)
+            fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
+              if (err) reject(err)
+            message.channel.send({embed: {
+            color: 0x2f3136,
+            title: "Done ☑️",
+            thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
+            description: `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\``,
+          }})
+        })
+          }
+        }
+      })
+    }
+   removeUserFromBlacklist(MojangAPI.uuid)
   
+  }catch(err){message.channel.send({embed: {
+    color: 0x2f3136,
+    title: "Error",
+    description: `An unexpected error has occurred. Please contact Elijah or if hes at camp whoever he gave console to before he left.`,
+  }})
+  return console.log(err)
+  }
+}
+
+  blacklistremove();
+     }}
+    } 
+   } else {return message.channel.send({embed: {
+    color: 0x2f3136,
+    title: "Error",
+    description: `It seems you are lacking the permission to run this command.`,
+  }})
+  }
   })}})
   })
       client.login(process.env.TOKEN)
