@@ -595,8 +595,9 @@
     
     const messagesEmbed = new Discord.MessageEmbed()
     .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`) 
-    var colourrand = '0x2f3136'
+    var colourrand = colour[Math.floor(Math.random() * colour.length)
     if (colour.length>1) {
+      colourrand = '0x2f3136'
       while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
     }
     messagesEmbed.setColor(colourrand)
