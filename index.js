@@ -1,8 +1,9 @@
 
 
   // Load discord
-  const Discord = require('discord.js')
-  const client = new Discord.Client()
+  const { Client } = require('discord.js');
+  const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
+  const serverID = "522586672148381726";
   var channelID = '843517258755866664'
   var staffChannel = '842912638815043614'
   const fetch = require('node-fetch');
@@ -456,21 +457,29 @@
       }
       
       bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (.+)/,
+        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (\d*)([a-z])/,
         'guild_mute',
         'Guild mute Setup'
       )
       
-      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time) => {
+      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time, guild_mute_type) => {
         if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
         if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}**\n-----------------------------------------------------`)
-        // let serverID = "522586672148381726";
-        // let displayNickname = `${guild_mute_username}`;
-        // let serverMembers = client.guilds.cache.get(serverID).members
-        // let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
-        // if (!matchedMember) {return}
-        // matchedMember.roles.add('529453283782164502')
+        let displayNickname = guild_mute_username;
+        let serverMembers = client.guilds.cache.get(serverID).members.cache;
+        let matchedMember = serverMembers.findKey(user => user.nickname == displayNickname);
+        if (!matchedMember) {return}
+        serverMembers.get(matchedMember).roles.add('529453283782164502');
+        if (guild_mute_type=='s') {var guild_mute_time = guild_mute_time*1000}
+        if (guild_mute_type=='m') {var guild_mute_time = guild_mute_time*60000}
+        if (guild_mute_type=='h') {var guild_mute_time = guild_mute_time*3600000}
+        if (guild_mute_type=='d') {var guild_mute_time = guild_mute_time*86400000}
+        setTimeout(function() {
+          if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '529453283782164502')==true) {
+            serverMembers.get(matchedMember).roles.remove('529453283782164502');
+          } 
+         }, guild_mute_time)
       }
       
       bot.chatAddPattern(
@@ -483,12 +492,13 @@
         if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
         if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
-        // let serverID = "522586672148381726";
-        // let displayNickname = `${guild_mute_username}`;
-        // let serverMembers = client.guilds.cache.get(serverID).members
-        // let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
-        // if (!matchedMember) {return}
-        // matchedMember.roles.remove('529453283782164502')
+        let displayNickname = guild_unmute_username;
+        let serverMembers = client.guilds.cache.get(serverID).members.cache;
+        let matchedMember = serverMembers.findKey(user => user.nickname == displayNickname);
+        if (!matchedMember) {return}
+        if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '529453283782164502')==true){
+          serverMembers.get(matchedMember).roles.remove('529453283782164502');
+        }
       }
 
 
