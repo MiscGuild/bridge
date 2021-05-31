@@ -494,12 +494,12 @@
       }
       
       bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (\d*)([a-z])/,
+        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (.+)/,
         'guild_mute',
         'Guild mute Setup'
       )
       
-      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time, guild_mute_type) => {
+      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time) => {
         if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
         if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}**\n-----------------------------------------------------`)
@@ -530,13 +530,12 @@
         if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
         if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
-        let displayNickname = guild_unmute_username;
-        let serverMembers = client.guilds.cache.get(serverID).members.cache;
-        let matchedMember = serverMembers.findKey(user => user.nickname == displayNickname);
+        let serverID = "522586672148381726";
+        let displayNickname = `${guild_mute_username}`;
+        let serverMembers = client.guilds.cache.get(serverID).members
+        let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
         if (!matchedMember) {return}
-        if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '529453283782164502')==true){
-          serverMembers.get(matchedMember).roles.remove('529453283782164502');
-        }
+        matchedMember.roles.remove('529453283782164502')
       }
 
 
