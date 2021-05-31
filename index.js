@@ -483,7 +483,7 @@
         if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
         if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
-        let displayNickname = guild_mute_username;
+        let displayNickname = guild_unmute_username;
         let serverMembers = client.guilds.cache.get(serverID).members.cache;
         let matchedMember = serverMembers.findKey(user => user.nickname == displayNickname);
         if (!matchedMember) {return}
