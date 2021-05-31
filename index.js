@@ -90,56 +90,39 @@
     
     bot.on('error', function(err) { // if the bot errors or crashes i made a function cause cool
         console.log('Error attempting to reconnect: ' + err + '.');
-        if (err == undefined) {
-            relog(); 
-        }
+        channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 45s**')
+        setTimeout(function(){ 
+          console.log('Shutting down for automatic relog')    
+          channel.send('**SHUTTING DOWN FOR RELOG**')  
+          process.exit()
+        }, 45000);
     });
   
-    // bot.on('end', function() { //Once bot ends do this shit i cba to document code
-    //   channel.send(`***It appears I have been kicked, Attempting to reconnect in 30 seconds***`);
-    //   console.log('I was kicked!')
-    //   // Gotta set it to 31s or else badd
-    //     var waitTill = new Date(new Date().getTime() + 31 * 1000);
-    //     while(waitTill > new Date()){} 
-    //     relog();
-    // });
   
     bot.on('kicked', function(reason) {
       console.log(reason)
       console.log('I shall was kicked!')
+      channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 45s**')
       bot.end();
       setTimeout(function(){ 
-        console.log('trying to relog')      
-        bot = mineflayer.createBot(options);
-        bindEvents(bot);
+        console.log('Shutting down for automatic relog')    
+        channel.send('**SHUTTING DOWN FOR RELOG**')  
+        process.exit()
       }, 45000);
 
     });
 
   
   
-    function relog() { // relogs #COOL
-      console.log("Attempting to reconnect...");
-      channel.send(`*Attempting to reconnect...*`);
-      var bot = mineflayer.createBot(options);
-      bindEvents(bot);
-    }
-  }
-  
-//   function bindEvents(bot) {
-
-
-//     bot.on('kicked', function(reason) {
-//       console.log("I got kicked for", reason);
-//       setTimeout(function(){
-//         console.log("Trying to relogin!")
-//         bot = mineflayer.createBot(options);
-//         bindEvents(bot);
-//       }, 45000)
-
-//     });
-// }
-
+  //   function relog() { // relogs #COOL
+  //     console.log("Attempting to reconnect...");
+  //     channel.send(`*Shutting down for reconnect...*`);
+  //     setTimeout(function(){ 
+  //       console.log('Shutting down for automatic relog')    
+  //       channel.send('**SHUTTING DOWN FOR RELOG**')  
+  //       process.exit()
+  //     }, 45000);    }
+  // }
 
   var messages = [];
   var colour = [];
