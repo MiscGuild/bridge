@@ -457,12 +457,12 @@
       }
       
       bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (.+)/,
+        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (\d*)([a-z])/,
         'guild_mute',
         'Guild mute Setup'
       )
       
-      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time) => {
+      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time, guild_mute_type) => {
         if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
         if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}**\n-----------------------------------------------------`)
@@ -471,6 +471,15 @@
         let matchedMember = serverMembers.findKey(user => user.nickname == displayNickname);
         if (!matchedMember) {return}
         serverMembers.get(matchedMember).roles.add('529453283782164502');
+        if (guild_mute_type=='s') {var guild_mute_time = guild_mute_time*1000}
+        if (guild_mute_type=='m') {var guild_mute_time = guild_mute_time*60000}
+        if (guild_mute_type=='h') {var guild_mute_time = guild_mute_time*3600000}
+        if (guild_mute_type=='d') {var guild_mute_time = guild_mute_time*86400000}
+        setTimeout(function() {
+          if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '529453283782164502')==true) {
+            serverMembers.get(matchedMember).roles.remove('529453283782164502');
+          } 
+         }, guild_mute_time)
       }
       
       bot.chatAddPattern(
@@ -487,7 +496,9 @@
         let serverMembers = client.guilds.cache.get(serverID).members.cache;
         let matchedMember = serverMembers.findKey(user => user.nickname == displayNickname);
         if (!matchedMember) {return}
-        serverMembers.get(matchedMember).roles.remove('529453283782164502');
+        if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '529453283782164502')==true){
+          serverMembers.get(matchedMember).roles.remove('529453283782164502');
+        }
       }
 
 
