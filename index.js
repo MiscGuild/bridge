@@ -95,7 +95,7 @@
           console.log('Shutting down for automatic relog')    
           channel.send('**SHUTTING DOWN FOR RELOG**')  
           process.exit()
-        }, 65000);
+        }, 75000);
     });
   
   
@@ -108,7 +108,7 @@
         console.log('Shutting down for automatic relog')    
         channel.send('**SHUTTING DOWN FOR RELOG**')  
         process.exit()
-      }, 65000);
+      }, 75000);
 
     });
 
