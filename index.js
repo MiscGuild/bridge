@@ -102,7 +102,7 @@
     bot.on('kicked', function(reason) {
       console.log(reason)
       console.log('I shall was kicked!')
-      channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 65s**')
+      channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 65s**\n```'+ reason + '```')
       bot.end();
       setTimeout(function(){ 
         console.log('Shutting down for automatic relog')    
