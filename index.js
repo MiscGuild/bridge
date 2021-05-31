@@ -90,7 +90,7 @@
     
     bot.on('error', function(err) { // if the bot errors or crashes i made a function cause cool
         console.log('Error attempting to reconnect: ' + err + '.');
-        channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 65s**')
+        channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 75s**')
         setTimeout(function(){ 
           console.log('Shutting down for automatic relog')    
           channel.send('**SHUTTING DOWN FOR RELOG**')  
@@ -102,7 +102,7 @@
     bot.on('kicked', function(reason) {
       console.log(reason)
       console.log('I shall was kicked!')
-      channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 65s**\n```'+ reason + '```')
+      channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 75s**\n```'+ reason + '```')
       bot.end();
       setTimeout(function(){ 
         console.log('Shutting down for automatic relog')    
