@@ -1,8 +1,10 @@
 
 
   // Load discord
-  const { Client } = require('discord.js');
-  const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
+  const Discord = require('discord.js')
+  // const { Client } = require('discord.js');
+  const client = new Discord.Client()
+  // const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
   const serverID = "522586672148381726";
   var channelID = '843517258755866664'
   var staffChannel = '842912638815043614'
@@ -93,19 +95,27 @@
         }
     });
   
-    bot.on('end', function() { //Once bot ends do this shit i cba to document code
-      channel.send(`***It appears I have been kicked, Attempting to reconnect in 30 seconds***`);
-      console.log('I was kicked!')
-      // Gotta set it to 31s or else badd
-        var waitTill = new Date(new Date().getTime() + 31 * 1000);
-        while(waitTill > new Date()){} 
-        relog();
-    });
+    // bot.on('end', function() { //Once bot ends do this shit i cba to document code
+    //   channel.send(`***It appears I have been kicked, Attempting to reconnect in 30 seconds***`);
+    //   console.log('I was kicked!')
+    //   // Gotta set it to 31s or else badd
+    //     var waitTill = new Date(new Date().getTime() + 31 * 1000);
+    //     while(waitTill > new Date()){} 
+    //     relog();
+    // });
   
     bot.on('kicked', function(reason) {
       console.log(reason)
+      console.log('I shall was kicked!')
       bot.end();
+      setTimeout(function(){ 
+        console.log('trying to relog')      
+        bot = mineflayer.createBot(options);
+        bindEvents(bot);
+      }, 45000);
+
     });
+
   
   
     function relog() { // relogs #COOL
@@ -116,6 +126,19 @@
     }
   }
   
+//   function bindEvents(bot) {
+
+
+//     bot.on('kicked', function(reason) {
+//       console.log("I got kicked for", reason);
+//       setTimeout(function(){
+//         console.log("Trying to relogin!")
+//         bot = mineflayer.createBot(options);
+//         bindEvents(bot);
+//       }, 45000)
+
+//     });
+// }
 
 
   var messages = [];
@@ -234,7 +257,6 @@
       bot.chat('/wijfelkcewnrljglf')
       bot.chat('/wijfelkcewnrljglf')
       bot.chat('/chat g')
-
 
        
       bot.chatAddPattern(
@@ -483,7 +505,8 @@
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}**\n-----------------------------------------------------`)
         let displayNickname = guild_mute_username;
         let serverMembers = client.guilds.cache.get(serverID).members.cache;
-        let matchedMember = serverMembers.findKey(user => user.nickname == displayNickname);
+        
+        let matchedMember = serverMembers.findKey(user => user.displayName == displayNickname);
         if (!matchedMember) {return}
         serverMembers.get(matchedMember).roles.add('529453283782164502');
         if (guild_mute_type=='s') {var guild_mute_time = guild_mute_time*1000}
@@ -633,8 +656,7 @@
   }, 650); //How often should we send the message groupings (MS)
 
   client.on('message', message => {
-  
-    if(message.channel.id == channel){
+    if(message.channel.id == channelID){
     if(message.content.startsWith(prefix)){return}
     if(message.author.bot){return}
     if(message.attachments.size > 0){return}
