@@ -491,14 +491,14 @@
         
         let matchedMember = serverMembers.findKey(user => user.displayName == displayNickname);
         if (!matchedMember) {return}
-        serverMembers.get(matchedMember).roles.add('529453283782164502');
+        serverMembers.get(matchedMember).roles.add('849100433317298207');
         if (guild_mute_type=='s') {var guild_mute_time = guild_mute_time*1000}
         if (guild_mute_type=='m') {var guild_mute_time = guild_mute_time*60000}
         if (guild_mute_type=='h') {var guild_mute_time = guild_mute_time*3600000}
         if (guild_mute_type=='d') {var guild_mute_time = guild_mute_time*86400000}
         setTimeout(function() {
-          if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '529453283782164502')==true) {
-            serverMembers.get(matchedMember).roles.remove('529453283782164502');
+          if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '849100433317298207')==true) {
+            serverMembers.get(matchedMember).roles.remove('849100433317298207');
           } 
          }, guild_mute_time)
       }
