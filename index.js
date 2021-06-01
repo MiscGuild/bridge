@@ -133,8 +133,8 @@
     logger.info('Bot logged in!')
     // mineflayerViewer(bot, { port: 30271 })
     const loggedInEmbed = new Discord.MessageEmbed()
-    .setDescription(`**MiscellaneousBot** Has logged onto \`mc.hypixel.net\` and is now ready!`)
-    // .setColor(colour)
+    .setDescription(`**MiscellaneousBot** has logged onto \`mc.hypixel.net\` and is now ready!`)
+    .setColor('0x2f3136')
       channel.send(loggedInEmbed)
       const VIP1 = client.emojis.cache.get("843335876872110100");
       const VIP2 = client.emojis.cache.get("843335910287736842");
