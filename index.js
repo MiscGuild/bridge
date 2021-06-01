@@ -727,7 +727,7 @@
 
 
             blacklist.forEach(element => 
-        embed.addField(`User: ${element.user}`, `UUID: ${element.uuid}`, false)
+        embed.addField(`${element.user}`, `End: ${element.end}\nReason: ${element.reason}\nUUID: ${element.uuid}`, false)
         )
 
   return message.channel.send({embed});
@@ -743,6 +743,18 @@
       }
       if(args[0] == 'add'.toLowerCase()) {
         async function blacklistadd() {
+          if(!args[2]){return message.channel.send({embed: {
+            color: 0x2f3136,
+            title: "Error | Invalid Arguments",
+            description: '```'+ prefix +'blacklist add <user> <end> <reason>\n                      ^^^^^\nYou must specify an end date (It can be never)```',
+          }});
+        }
+        if(!args[3]){return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Error | Invalid Arguments",
+          description: '```'+ prefix +'blacklist add <user> <end> <reason>\n                               ^^^^^\nYou must specify a reason for the blacklist```',
+        }});
+      }
 
       const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${args[1]}`)
       .then(res => res.json())
@@ -760,12 +772,28 @@
         }})}
 
       }
-      function addUserToBlacklist(user, uuid) {    
+      function addUserToBlacklist(user, uuid, end, reason) {    
         return new Promise((resolve, reject) => {
-          blacklist.push({user, uuid})    
+          const embed = new Discord.MessageEmbed()
+          .setTitle(user)
+          .setAuthor("Blacklist", "https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png")          /*           * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.           */
+          .setColor('0x2f3136')
+          .setFooter(`UUID: ${uuid}`)
+          .setThumbnail(`https://visage.surgeplay.com/full/${uuid}`)
+          .setTimestamp()
+          .setURL(`http://plancke.io/hypixel/player/stats/${uuid}`)
+       
+          .addField("IGN:", user, false)
+          .addField("End:", end, false)
+          .addField("Reason:", reason, false)
+
+          client.channels.cache.get('709370599809613824').send(embed).then(blistmsg => {
+            var msgID = blistmsg.id
+            blacklist.push({user, uuid, end, reason, msgID})  }) 
+
           fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
             if (err) reject(err)
-            message.channel.send({embed: {
+            return message.channel.send({embed: {
               color: 0x2f3136,
               title: "Done ☑️",
               thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
@@ -774,22 +802,11 @@
           })
         });
       }
-      
-      addUserToBlacklist(MojangAPI.username, MojangAPI.uuid)
+      addUserToBlacklist(MojangAPI.username, MojangAPI.uuid, args[2], args.slice(3).join(' '))
 
     }
     blacklistadd();
   }
-
-  function containsObject(obj, list) {
-    var i;
-    for (i = 0; i < list.length; i++) {
-        if (list[i] === obj) {
-            return true;
-        }
-    }
-    return false;
-}
 
      if(args[0] == 'remove'.toLowerCase()) {
       async function blacklistremove() {
@@ -802,30 +819,26 @@
       description: `I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``,
     }});
     } 
+ 
 
-      // if(!containsObject(MojangAPI.uuid, blacklist)){return message.channel.send({embed: {
-      //   color: 0x2f3136,
-      //   title: "Error",
-      //   description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
-      // }})}
-
-
-
-    
     function removeUserFromBlacklist(uuid) {    
       return new Promise((resolve, reject) => {
         for(var i in blacklist){
-          if(blacklist[i].uuid !== MojangAPI.uuid)return message.channel.send({embed: {
+
+          if(!blacklist.some(a => a.uuid === MojangAPI.uuid)){
+          return message.channel.send({embed: {
             color: 0x2f3136,
             title: "Error",
             description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
           }})
-
+        }
           if( blacklist[i].uuid == MojangAPI.uuid){
+            client.channels.cache.get('709370599809613824').messages.fetch(blacklist[i].msgID).then(msg => {if(!message){return message.channel.send('The message was not found, please delete it manually')} msg.delete()})
             blacklist.splice(i, 1)
             fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
               if (err) reject(err)
-            message.channel.send({embed: {
+
+             return message.channel.send({embed: {
             color: 0x2f3136,
             title: "Done ☑️",
             thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
