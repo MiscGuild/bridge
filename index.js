@@ -849,12 +849,12 @@
 
   blacklistremove();
      }}
-    } 
-   } else {return message.channel.send({embed: {
-    color: 0x2f3136,
-    title: "Error",
-    description: `It seems you are lacking the permission to run this command.`,
-  }})
+    } else {return message.channel.send({embed: {
+      color: 0x2f3136,
+      title: "Error",
+      description: `It seems you are lacking the permission to run this command.`,
+    }})
+   } 
   }
   })}})
   })
