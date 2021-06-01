@@ -718,7 +718,8 @@
   else if (command === 'blacklist') {
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
       if(!args[0]){
-
+        
+}
           const embed = new Discord.MessageEmbed()
             .setTitle("Blacklist")
             .setColor(0x2f3136)
@@ -727,11 +728,17 @@
 
 
             blacklist.forEach(element => 
-        embed.addField(`${element.user}`, `End: ${element.end}\nReason: ${element.reason}\nUUID: ${element.uuid}`, false)
+        embed.addField(`${element.user}`, `**End:** ${element.end}\n**Reason:** ${element.reason}\n**UUID:** ${element.uuid}\n[Message Link](https://discord.com/channels/522586672148381726/709370599809613824/${element.msgID})`)
         )
-
-  return message.channel.send({embed});
-    }
+        if(embed.length >= 2000) {
+          const embed2 = new Discord.MessageEmbed()
+            .setColor(0x2f3136)
+            .setTitle('Error | Too many people on blacklist')
+            .setDescription("Discord has a character limit and we have reached it with the message trying to be sent. Look at the blacklist list in <#709370599809613824>")
+           return message.channel.send(embed2)
+        }
+        message.channel.send({embed});
+    
     if(args[0]){
 
 
@@ -873,3 +880,4 @@
   })
       client.login(process.env.TOKEN)
   
+
