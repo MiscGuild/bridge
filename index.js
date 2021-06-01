@@ -719,7 +719,7 @@
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
       if(!args[0]){
         
-}
+
           const embed = new Discord.MessageEmbed()
             .setTitle("Blacklist")
             .setColor(0x2f3136)
@@ -738,7 +738,7 @@
            return message.channel.send(embed2)
         }
         message.channel.send({embed});
-    
+      }
     if(args[0]){
 
 
@@ -832,16 +832,16 @@
       return new Promise((resolve, reject) => {
         for(var i in blacklist){
 
-          if(!blacklist.some(a => a.uuid === MojangAPI.uuid)){
-          return message.channel.send({embed: {
-            color: 0x2f3136,
-            title: "Error",
-            description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
-          }})
-        }
-          if( blacklist[i].uuid == MojangAPI.uuid){
-            client.channels.cache.get('709370599809613824').messages.fetch(blacklist[i].msgID).then(msg => {if(!message){return message.channel.send('The message was not found, please delete it manually')} msg.delete()})
-            blacklist.splice(i, 1)
+          // if(!blacklist.some(a => a.uuid === MojangAPI.uuid)){
+          // return message.channel.send({embed: {
+            // color: 0x2f3136,
+            // title: "Error",
+            // description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
+          // }})
+        // }
+         if( blacklist[i].uuid == MojangAPI.uuid){
+           client.channels.cache.get('709370599809613824').messages.fetch(blacklist[i].msgID).then(msg => {if(!message){return message.channel.send('The message was not found, please delete it manually')} msg.delete()})
+           blacklist.splice(i, 1)
             fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
               if (err) reject(err)
 
@@ -851,7 +851,13 @@
             thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
             description: `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#709370599809613824>`,
           }})
+             message.channel.send({embed: {
+            color: 0x2f3136,
+            title: "Error",
+            description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
+          }})
         })
+              
           }
         }
       })
@@ -880,4 +886,5 @@
   })
       client.login(process.env.TOKEN)
   
+
 
