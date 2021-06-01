@@ -768,7 +768,7 @@
             message.channel.send({embed: {
               color: 0x2f3136,
               title: "Done ☑️",
-              thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
+              thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}?size=512&overlay`, //Thank you to https://crafatar.com for providing avatars.
               description: `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\``,
             }})          
           })
