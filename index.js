@@ -797,7 +797,7 @@
               color: 0x2f3136,
               title: "Done ☑️",
               thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
-              description: `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\``,
+              description: `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#709370599809613824>`,
             }})          
           })
         });
@@ -842,7 +842,7 @@
             color: 0x2f3136,
             title: "Done ☑️",
             thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
-            description: `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\``,
+            description: `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#709370599809613824>`,
           }})
         })
           }
