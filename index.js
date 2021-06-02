@@ -3,7 +3,7 @@
   // Load discord
   const Discord = require('discord.js')
   // const { Client } = require('discord.js');
-  const client = new Discord.Client()
+  const client = new Discord.Client({autoReconnect:true})
   // const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
   const serverID = "522586672148381726";
   var channelID = '843517258755866664'
