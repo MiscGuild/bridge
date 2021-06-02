@@ -784,7 +784,7 @@
           const embed = new Discord.MessageEmbed()
           .setTitle(user)
           .setAuthor("Blacklist", "https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png")          /*           * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.           */
-          .setColor('0x2f3136')
+          .setColor('ff0000')
           .setFooter(`UUID: ${uuid}`)
           .setThumbnail(`https://visage.surgeplay.com/full/${uuid}`)
           .setTimestamp()
