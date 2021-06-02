@@ -3,11 +3,11 @@
   // Load discord
   const Discord = require('discord.js')
   // const { Client } = require('discord.js');
-  const client = new Discord.Client({autoReconnect:true})
+  const client = new Discord.Client()
   // const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
   const serverID = "522586672148381726";
   var channelID = '843517258755866664'
-  var staffChannel = '842912638815043614'
+  var staffChannel = '842912638815043614'bl
   const fetch = require('node-fetch');
   var log4js = require('log4js');
   var crypto = require("crypto");
@@ -784,7 +784,7 @@
           const embed = new Discord.MessageEmbed()
           .setTitle(user)
           .setAuthor("Blacklist", "https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png")          /*           * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.           */
-          .setColor('ff0000')
+          .setColor('6b0000')
           .setFooter(`UUID: ${uuid}`)
           .setThumbnail(`https://visage.surgeplay.com/full/${uuid}`)
           .setTimestamp()
