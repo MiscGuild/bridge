@@ -74,10 +74,9 @@
   // Load mineflayer
   const mineflayer = require('mineflayer')
   const mineflayerViewer = require('prismarine-viewer').mineflayer
-  var bot = mineflayer.createBot(options); 
+  var bot = mineflayer.createBot(options); //create bot object
 
 
-  var bot = mineflayer.createBot(options); // create the bot object cause noob
   bindEvents(bot);
   
   function init(options) 
