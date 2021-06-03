@@ -133,6 +133,13 @@
     logger.info('Bot logged in!')
     // mineflayerViewer(bot, { port: 30271 })
     const loggedInEmbed = new Discord.MessageEmbed()
+    setTimeout(function(){
+      bot.chat('/hub')
+      setTimeout (function(){
+        for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
+      },5000)
+      bot.chat('/chat g')
+    }, 3000000);
     .setDescription(`**MiscellaneousBot** has logged onto \`mc.hypixel.net\` and is now ready!`)
     .setColor('0x2f3136')
       channel.send(loggedInEmbed)
@@ -223,22 +230,9 @@
           const YELLOW_MVP_PLUS = client.emojis.cache.get("844352595828801566");
           const YELLOW_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352595631013890");
           const YELLOW_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352595791314944");
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
-      bot.chat('/wijfelkcewnrljglf')
+      setTimeout (function(){
+        for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
+      },5000)
       bot.chat('/chat g')
 
        
