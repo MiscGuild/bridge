@@ -24,7 +24,7 @@
     port: process.env.PORT,
     username: process.env.USERNAME,
     password: process.env.PASSWORD,
-    version: '1.8.9'
+    version: '1.16.5'
   }
 
   log4js.configure({
