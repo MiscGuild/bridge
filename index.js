@@ -131,7 +131,6 @@
 
     logger.info('Bot logged in!')
     // mineflayerViewer(bot, { port: 30271 })
-    const loggedInEmbed = new Discord.MessageEmbed()
     setTimeout(function(){
       bot.chat('/hub')
       setTimeout (function(){
@@ -139,6 +138,8 @@
       },5000)
       bot.chat('/chat g')
     }, 3000000);
+
+    const loggedInEmbed = new Discord.MessageEmbed()
     .setDescription(`**MiscellaneousBot** has logged onto \`mc.hypixel.net\` and is now ready!`)
     .setColor('0x2f3136')
       channel.send(loggedInEmbed)
