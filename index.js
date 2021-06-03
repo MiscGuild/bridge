@@ -5,9 +5,6 @@
   // const { Client } = require('discord.js');
   const client = new Discord.Client({autoReconnect:true})
   // const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
-  const serverID = "522586672148381726";
-  var channelID = '843517258755866664'
-  var staffChannel = '842912638815043614'
   const fetch = require('node-fetch');
   var log4js = require('log4js');
   var crypto = require("crypto");
@@ -17,6 +14,9 @@
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
 
+  var serverID = process.env.SERVERID
+  var channelID = process.env.OUTPUTCHANNEL
+  var staffChannel = process.env.STAFFCHANNEL
   var HypixelAPIKey = process.env.HypixelAPIKey
 
   var options = {
