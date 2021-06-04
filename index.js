@@ -211,7 +211,7 @@
           const DARK_RED_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351667343196211");
           const DARK_RED_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351667418955796");
           const GOLD_MVP_PLUS = client.emojis.cache.get("844351835224801290");
-          const GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("ID844351834994901043");
+          const GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351834994901043");
           const GOLD_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351834872479815");
           const GREEN_MVP_PLUS = client.emojis.cache.get("844352013751025664");
           const GREEN_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352013479182377");
