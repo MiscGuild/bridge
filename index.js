@@ -77,12 +77,6 @@
 
   bindEvents(bot);
   
-  function init(options) 
-  {
-    var bot = mineflayer.createBot(options);
-    bindEvents(bot);
-  }
-  
   function bindEvents(bot) {
     
     bot.on('error', function(err) { // if the bot errors or crashes i made a function cause cool
@@ -91,6 +85,7 @@
         setTimeout(function(){ 
           console.log('Shutting down for automatic relog')    
           channel.send('**SHUTTING DOWN FOR RELOG**')  
+          bot = mineflayer.createBot(options)
           process.exit()
         }, 75000);
     });
@@ -104,6 +99,7 @@
       setTimeout(function(){ 
         console.log('Shutting down for automatic relog')    
         channel.send('**SHUTTING DOWN FOR RELOG**')  
+        bot = mineflayer.createBot(options)
         process.exit()
       }, 75000);
 
