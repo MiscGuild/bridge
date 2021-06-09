@@ -637,8 +637,8 @@
     if(message.author.bot){return}
     if(message.attachments.size > 0){return}
     var user = message.guild.member(message.member)
-    if(message.content.length > 250){return message.channel.send(`Your message is too long! ${message.content.length}/250`)}
-    bot.chat(`${user.displayName} -> ${message.content}`)
+    if(message.content.length > 100){return message.channel.send(`Your message is too long! ${message.content.length}/100`)}
+    bot.chat(`${user.displayName} -> ${message.content.replace('/', './')}`)
       McChatLogger.info(`DISCORD > [${message.author.tag}/${message.author.id}]: ${message.content}`)
      
 
@@ -671,7 +671,7 @@
     const args = message.content.slice(prefix.length).trim().split(' ');
     const command = args.shift().toLowerCase();
 
-    if (command === 'chat') {
+    if (command === 'chat'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Officer')) {
           var user = message.guild.member(message.member)
 
@@ -686,7 +686,7 @@
       }})}
       }
 
-      else if (command === 'command') {
+      else if (command === 'command'.toLowerCase()) {
         if (message.member.roles.cache.some(role => role.name === 'Officer')) {
           var user = message.guild.member(message.member)
 
@@ -698,10 +698,8 @@
                 if(!args[1]){return message.channel.send(' empty msg ')}
             return bot.chat(`/oc [${user.displayName}] ${args.join(" ").toString().replace('oc', '')}`)}
 
-        
-          //logger.info(message)
-
           return bot.chat(`/${args.join(" ").toString()}`)
+          message.react('✅')
         } else {return message.channel.send({embed: {
           color: 0x2f3136,
           title: "Error",
@@ -709,7 +707,36 @@
         }})}
         }
 
-  else if (command === 'blacklist') {
+      else if (command === 'reboot'.toLowerCase()) {
+        if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+          var user = message.guild.member(message.member)
+
+          message.channel.send({embed: {
+            color: 0x2f3136,
+            title: "Rebooting",
+            description: `The bot will restart in \`45s\``,
+          }}), logger.info(`Bot will reboot in 45s due to ${user.displayName} running the reboot command`)
+          var randomID = crypto.randomBytes(7).toString('hex'); 
+          bot.chat(`Bot will reboot in 45s due to ${user.displayName} running the reboot command | ${randomID}`)
+             setTimeout(() => {
+              message.channel.send({embed: {
+                color: 0x2f3136,
+                title: "Rebooting",
+                description: `The bot is now restarting`,
+              }})
+              message.channel.send()
+              process.exit()
+             }, 45000)
+          
+          
+        } else {return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Error",
+          description: `It seems you are lacking the permission to run this command.`,
+        }})}
+        }
+
+  else if (command === 'blacklist'.toLowerCase()) {
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
       if(!args[0]){
         
