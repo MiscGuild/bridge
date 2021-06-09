@@ -2,9 +2,7 @@
 
   // Load discord
   const Discord = require('discord.js')
-  // const { Client } = require('discord.js');
   const client = new Discord.Client({autoReconnect:true})
-  // const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
   const serverID = "522586672148381726";
   var channelID = '843517258755866664'
   var staffChannel = '842912638815043614'
@@ -24,7 +22,7 @@
     port: process.env.PORT,
     username: process.env.USERNAME,
     password: process.env.PASSWORD,
-    version: '1.8.9'
+    version: '1.16.5'
   }
 
   log4js.configure({
@@ -140,7 +138,7 @@
     }, 3000000);
 
     const loggedInEmbed = new Discord.MessageEmbed()
-    .setDescription(`**MiscellaneousBot** has logged onto \`mc.hypixel.net\` and is now ready!`)
+    .setDescription(`**MiscellaneousBot** has logged onto \`${process.env.IP}\` and is now ready!`)
     .setColor('0x2f3136')
       channel.send(loggedInEmbed)
       const VIP1 = client.emojis.cache.get("843335876872110100");
@@ -211,7 +209,7 @@
           const DARK_RED_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351667343196211");
           const DARK_RED_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351667418955796");
           const GOLD_MVP_PLUS = client.emojis.cache.get("844351835224801290");
-          const GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("ID844351834994901043");
+          const GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351834994901043");
           const GOLD_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351834872479815");
           const GREEN_MVP_PLUS = client.emojis.cache.get("844352013751025664");
           const GREEN_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352013479182377");
