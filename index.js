@@ -636,10 +636,8 @@
     if(message.attachments.size > 0){return}
     var user = message.guild.member(message.member)
     if(message.content.length > 100){return message.channel.send(`Your message is too long! ${message.content.length}/100`)}
-    bot.chat(`${user.displayName} -> ${message.content.replace('/', './')}`)
-      McChatLogger.info(`DISCORD > [${message.author.tag}/${message.author.id}]: ${message.content}`)
-     
-
+    bot.chat(`/gc [${user.displayName}] - ${message.content}`)
+    McChatLogger.info(`DISCORD > [${message.author.tag}/${message.author.id}]: ${message.content}`)
     message.delete()
   }
   });
@@ -652,8 +650,8 @@
     if(message.attachments.size > 0){return}
     var user = message.guild.member(message.member)
     if(message.content.length > 250){return message.channel.send(`Your message is too long! ${message.content.length}/250`)}
-    bot.chat(`/oc ${user.displayName} -> ${message.content}`)
-      McChatLogger.info(`DISCORD (OFFICER CHAT)> [${message.author.tag}/${message.author.id}]: ${message.content}`)
+    bot.chat(`/oc [${user.displayName}] -  ${message.content}`)
+    McChatLogger.info(`DISCORD (OFFICER CHAT)> [${message.author.tag}/${message.author.id}]: ${message.content}`)
     message.delete()
   }
   });
