@@ -2,9 +2,10 @@
 
   // Load discord
   const Discord = require('discord.js')
-  // const { Client } = require('discord.js');
   const client = new Discord.Client({autoReconnect:true})
-  // const client = new Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS','GUILD_PRESENCES'] } }); 
+  const serverID = "522586672148381726";
+  var channelID = '843517258755866664'
+  var staffChannel = '842912638815043614'
   const fetch = require('node-fetch');
   var log4js = require('log4js');
   var crypto = require("crypto");
@@ -140,7 +141,7 @@
     }, 3000000);
 
     const loggedInEmbed = new Discord.MessageEmbed()
-    .setDescription(`**MiscellaneousBot** has logged onto \`mc.hypixel.net\` and is now ready!`)
+    .setDescription(`**MiscellaneousBot** has logged onto \`${process.env.IP}\` and is now ready!`)
     .setColor('0x2f3136')
       channel.send(loggedInEmbed)
       const VIP1 = client.emojis.cache.get("843335876872110100");
@@ -211,7 +212,7 @@
           const DARK_RED_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351667343196211");
           const DARK_RED_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351667418955796");
           const GOLD_MVP_PLUS = client.emojis.cache.get("844351835224801290");
-          const GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("ID844351834994901043");
+          const GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351834994901043");
           const GOLD_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351834872479815");
           const GREEN_MVP_PLUS = client.emojis.cache.get("844352013751025664");
           const GREEN_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352013479182377");
@@ -242,43 +243,38 @@
         'Custom Guild Chat Setup'
       )
       const guild_chat = (rank_guild_chat, username_guild_chat, tag_guild_chat, message_guild_chat) => {
-        if(!rank_guild_chat){var rankChat_Emoji = ''
-        colour.push('0xAAAAAA')
-      }
-
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
-        else {
-        if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
+        else if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
         else if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
         else if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
         else if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
-        else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
+        else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
+        
+        if(!rank_guild_chat){
+          var rankChat_Emoji = ''
+          colour.push('0xAAAAAA')
         }
-        if(rank_guild_chat == '[VIP]'){var rankChat_Emoji = `**  **${VIP1}${VIP2}${VIP3}` 
-        colour.push('0x55FF55') 
-        return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-      }
-        else {
-        if(rank_guild_chat == '[VIP+]'){var rankChat_Emoji = `**     **${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
-        colour.push('0x55FF55')
-        return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-      }
-        else if(rank_guild_chat == '[MVP]'){var rankChat_Emoji = `**   **${MVP1}${MVP2}${MVP3}`
-        colour.push('0x55FFFF')
-        return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-
+        else if(rank_guild_chat == '[VIP]'){
+          var rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
+          colour.push('0x55FF55') 
         }
-        else if(rank_guild_chat == '[MVP+]'){var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
-        colour.push('0x55FFFF')
+        else if(rank_guild_chat == '[VIP+]'){
+          var rankChat_Emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
+          colour.push('0x55FF55')
+        }
+        else if(rank_guild_chat == '[MVP]'){
+          var rankChat_Emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`
+          colour.push('0x55FFFF')
+        }
+        else if(rank_guild_chat == '[MVP+]'){
+          var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
+          colour.push('0x55FFFF')
+        }
+        else if(rank_guild_chat == '[MVP++]'){
+          var rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
+          colour.push('0xFFAA00')
+        }
         return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-
-  }
-      else if(rank_guild_chat == '[MVP++]'){var rankChat_Emoji = `${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
-      colour.push('0xFFAA00')
-      return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-
-}
-      }
 
       //   if(rank_guild_chat == '[MVP++]'){
       //   try {
@@ -337,10 +333,10 @@
 
         
         if(rank_officer_chat == '[VIP]'){var rank_officer_chat_emoji = `\u200D  ${VIP1}${VIP2}${VIP3}`}
-        if(rank_officer_chat == '[VIP+]'){var rank_officer_chat_emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
-        if(rank_officer_chat == '[MVP]'){var rank_officer_chat_emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`}
-        if(rank_officer_chat == '[MVP+]'){var rank_officer_chat_emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`}
-        if(rank_officer_chat == '[MVP++]'){var rank_officer_chat_emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
+        else if(rank_officer_chat == '[VIP+]'){var rank_officer_chat_emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
+        else if(rank_officer_chat == '[MVP]'){var rank_officer_chat_emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`}
+        else if(rank_officer_chat == '[MVP+]'){var rank_officer_chat_emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`}
+        else if(rank_officer_chat == '[MVP++]'){var rank_officer_chat_emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
 
         // logger.info(`OFFICER > ${rank_guild_chat} ${username_guild_chat}: ${message_guild_chat}`)
         client.channels.cache.get(staffChannel).send(`${rank_officer_chat_emoji} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`)
@@ -485,16 +481,17 @@
         
         let matchedMember = serverMembers.findKey(user => user.displayName == displayNickname);
         if (!matchedMember) {return}
+        var mute_time;
         serverMembers.get(matchedMember).roles.add('849100433317298207');
-        if (guild_mute_type=='s') {var guild_mute_time = guild_mute_time*1000}
-        if (guild_mute_type=='m') {var guild_mute_time = guild_mute_time*60000}
-        if (guild_mute_type=='h') {var guild_mute_time = guild_mute_time*3600000}
-        if (guild_mute_type=='d') {var guild_mute_time = guild_mute_time*86400000}
+        if (guild_mute_type=='s') {mute_time = guild_mute_time*1000}
+        else if (guild_mute_type=='m') {mute_time = guild_mute_time*60000}
+        else if (guild_mute_type=='h') {mute_time = guild_mute_time*3600000}
+        else if (guild_mute_type=='d') {mute_time = guild_mute_time*86400000}
         setTimeout(function() {
           if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '849100433317298207')==true) {
             serverMembers.get(matchedMember).roles.remove('849100433317298207');
           } 
-         }, guild_mute_time)
+         }, mute_time)
       }
       
       bot.chatAddPattern(
@@ -512,7 +509,9 @@
         let serverMembers = client.guilds.cache.get(serverID).members
         let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
         if (!matchedMember) {return}
-        matchedMember.roles.remove('529453283782164502')
+        if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '849100433317298207')==true) {
+          serverMembers.get(matchedMember).roles.remove('849100433317298207');
+        } 
       }
 
 
@@ -637,11 +636,9 @@
     if(message.author.bot){return}
     if(message.attachments.size > 0){return}
     var user = message.guild.member(message.member)
-    if(message.content.length > 250){return message.channel.send(`Your message is too long! ${message.content.length}/250`)}
-    bot.chat(`${user.displayName} -> ${message.content}`)
-      McChatLogger.info(`DISCORD > [${message.author.tag}/${message.author.id}]: ${message.content}`)
-     
-
+    if(message.content.length > 100){return message.channel.send(`Your message is too long! ${message.content.length}/100`)}
+    bot.chat(`/gc [${user.displayName}] - ${message.content}`)
+    McChatLogger.info(`DISCORD > [${message.author.tag}/${message.author.id}]: ${message.content}`)
     message.delete()
   }
   });
@@ -654,8 +651,8 @@
     if(message.attachments.size > 0){return}
     var user = message.guild.member(message.member)
     if(message.content.length > 250){return message.channel.send(`Your message is too long! ${message.content.length}/250`)}
-    bot.chat(`/oc ${user.displayName} -> ${message.content}`)
-      McChatLogger.info(`DISCORD (OFFICER CHAT)> [${message.author.tag}/${message.author.id}]: ${message.content}`)
+    bot.chat(`/oc [${user.displayName}] -  ${message.content}`)
+    McChatLogger.info(`DISCORD (OFFICER CHAT)> [${message.author.tag}/${message.author.id}]: ${message.content}`)
     message.delete()
   }
   });
@@ -671,7 +668,7 @@
     const args = message.content.slice(prefix.length).trim().split(' ');
     const command = args.shift().toLowerCase();
 
-    if (command === 'chat') {
+    if (command === 'chat'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Officer')) {
           var user = message.guild.member(message.member)
 
@@ -686,7 +683,7 @@
       }})}
       }
 
-      else if (command === 'command') {
+      else if (command === 'command'.toLowerCase()) {
         if (message.member.roles.cache.some(role => role.name === 'Officer')) {
           var user = message.guild.member(message.member)
 
@@ -698,10 +695,8 @@
                 if(!args[1]){return message.channel.send(' empty msg ')}
             return bot.chat(`/oc [${user.displayName}] ${args.join(" ").toString().replace('oc', '')}`)}
 
-        
-          //logger.info(message)
-
           return bot.chat(`/${args.join(" ").toString()}`)
+          message.react('✅')
         } else {return message.channel.send({embed: {
           color: 0x2f3136,
           title: "Error",
@@ -709,7 +704,36 @@
         }})}
         }
 
-  else if (command === 'blacklist') {
+      else if (command === 'reboot'.toLowerCase()) {
+        if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+          var user = message.guild.member(message.member)
+
+          message.channel.send({embed: {
+            color: 0x2f3136,
+            title: "Rebooting",
+            description: `The bot will restart in \`45s\``,
+          }}), logger.info(`Bot will reboot in 45s due to ${user.displayName} running the reboot command`)
+          var randomID = crypto.randomBytes(7).toString('hex'); 
+          bot.chat(`Bot will reboot in 45s due to ${user.displayName} running the reboot command | ${randomID}`)
+             setTimeout(() => {
+              message.channel.send({embed: {
+                color: 0x2f3136,
+                title: "Rebooting",
+                description: `The bot is now restarting`,
+              }})
+              message.channel.send()
+              process.exit()
+             }, 45000)
+          
+          
+        } else {return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Error",
+          description: `It seems you are lacking the permission to run this command.`,
+        }})}
+        }
+
+  else if (command === 'blacklist'.toLowerCase()) {
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
       if(!args[0]){
         
