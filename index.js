@@ -505,7 +505,9 @@
         let serverMembers = client.guilds.cache.get(serverID).members
         let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
         if (!matchedMember) {return}
-        matchedMember.roles.remove('529453283782164502')
+        if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '849100433317298207')==true) {
+          serverMembers.get(matchedMember).roles.remove('849100433317298207');
+        } 
       }
 
 
