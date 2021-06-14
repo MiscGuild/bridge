@@ -123,6 +123,8 @@
 
   var messages = [];
   var colour = [];
+  var sLogs = []
+
 
 
   bot.once('spawn', () => {
@@ -606,11 +608,22 @@
             if(msg == 'disconnect.spam'){return}
             if(msg == 'You were spawned in Limbo.'){return}
             if(msg == '/limbo for more information.'){return}
+            sLogs.push(msg)
 
             McChatLogger.info(msg)
             logger.info(msg)
 
            })
+
+           setInterval(() => {
+            if(!sLogs.length){return}    
+            const messagesEmbed = new Discord.MessageEmbed()
+            .setDescription(`\`\`\`${sLogs.join('\r\n')}\`\`\``) 
+            messagesEmbed.setColor('0x2f3136')
+            client.channels.cache.get(`854041342108106763`).send(messagesEmbed);
+        
+            sLogs = []
+          }, 1000); //How often should we send the message groupings (MS)
 
   setInterval(() => {
     if(!messages.length){return}    
