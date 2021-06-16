@@ -67,6 +67,12 @@
       logger.info(`I could not find the channel (${channelID})! -- 2`)
       process.exit(1)
     }
+    fetch("https://api.hypixel.net/playercount?key=7b4f320b-038a-484d-9a3d-8a072799694d")
+    .then(response => response.json())
+    .then(data => {
+      client.user.setPresence({ activity: { name: data.playerCount.toString()+" players" , type:"WATCHING" }, status: 'online' });
+      console.log("Set status!")
+    });
   
 
   // Load mineflayer
@@ -466,6 +472,16 @@
       }
       
       bot.chatAddPattern(
+        /^Online Members: (\d{1,3})/,
+        'guild_online',
+        'Guild online Setup'
+      )
+            
+      const guild_online = (guild_online_members) => {
+        client.user.setPresence({ activity: { name: data.playerCount.toString()+" guild members" , type:"WATCHING" }, status: 'online' });
+      }
+
+      bot.chatAddPattern(
         /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (\d*)([a-z])/,
         'guild_mute',
         'Guild mute Setup'
@@ -596,6 +612,7 @@
       bot.on('msg_bot', msg_bot)
       bot.on('guild_mute', guild_mute)
       bot.on('guild_unmute', guild_unmute)
+      bot.on('guild_online', guild_online)
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
