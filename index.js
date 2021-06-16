@@ -67,7 +67,7 @@
       logger.info(`I could not find the channel (${channelID})! -- 2`)
       process.exit(1)
     }
-    fetch("https://api.hypixel.net/playercount?key=7b4f320b-038a-484d-9a3d-8a072799694d")
+    fetch("https://api.hypixel.net/playercount?key=HypixelAPIKey")
     .then(response => response.json())
     .then(data => {
       client.user.setPresence({ activity: { name: data.playerCount.toString()+" players" , type:"WATCHING" }, status: 'online' });
