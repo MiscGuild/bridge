@@ -253,6 +253,14 @@
           var rankChat_Emoji = ''
           colour.push('0xAAAAAA')
         }
+        else if(rank_guild_chat == '[MVP+]'){
+          var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
+          colour.push('0x55FFFF')
+        }
+        else if(rank_guild_chat == '[MVP++]'){
+          var rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
+          colour.push('0xFFAA00')
+        }
         else if(rank_guild_chat == '[VIP]'){
           var rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
           colour.push('0x55FF55') 
@@ -265,16 +273,8 @@
           var rankChat_Emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`
           colour.push('0x55FFFF')
         }
-        else if(rank_guild_chat == '[MVP+]'){
-          var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
-          colour.push('0x55FFFF')
-        }
-        else if(rank_guild_chat == '[MVP++]'){
-          var rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
-          colour.push('0xFFAA00')
-        }
         return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-
+      }
 
       bot.chatAddPattern(
         /^Officer > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
