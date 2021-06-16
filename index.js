@@ -369,6 +369,18 @@
       }
 
       bot.chatAddPattern(
+        /You cannot say the same message twice!/,
+        'cannot_say_same_msg_twice',
+        'Sends a message when hypixel blocks the message.'
+      )
+
+
+      const cannot_say_same_msg_twice = () => {
+        // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
+        messages.push("**Error: ** `You cannot say the same message twice!`")
+      }
+
+      bot.chatAddPattern(
         /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was demoted from (.+) to (.+)/,
         'guild_demote',
         'Guild demote Setup'
@@ -551,6 +563,7 @@
       bot.on('msg_bot', msg_bot)
       bot.on('guild_mute', guild_mute)
       bot.on('guild_unmute', guild_unmute)
+      bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice)
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
