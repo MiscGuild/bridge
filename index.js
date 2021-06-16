@@ -247,7 +247,7 @@
         else if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
         else if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
         else if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
-        else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
+        else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
         
         if(!rank_guild_chat){
           var rankChat_Emoji = ''
