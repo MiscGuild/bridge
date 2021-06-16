@@ -130,6 +130,7 @@
     }, 3000000);
 
     setTimeout (function(){
+      bot.chat('/g online')
       for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
     },5000)
     bot.chat('/chat g')
@@ -185,8 +186,23 @@
   
       const OFFICER1 = client.emojis.cache.get("843900165937037372");
       const OFFICER2 = client.emojis.cache.get("843900165748555796");
-  
-  
+
+      setInterval(function(){ bot.chat('/g online') }, 300000); // run g online every 5 mins for the below function
+      bot.chatAddPattern(
+        /^Online Members: (\d{1,3})/,
+        'guild_online',
+        'Set status to amount of players in guild online'
+      )
+
+      const guild_online = (guild_online_members) => {
+        async function SetStatus() {
+        const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)
+        .then(response => response.json())
+        .catch(err =>{return console.log(err)})
+        client.user.setPresence({ activity: { name: `${guild_online_members.toLocaleString()} Misc members online and ${HyAPI.playerCount.toLocaleString()} online players!`, type:"WATCHING" }, status: 'online' });
+      }
+      SetStatus()
+    }
        
       bot.chatAddPattern(
         /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
@@ -516,6 +532,7 @@
       bot.on('guild_mute', guild_mute)
       bot.on('guild_unmute', guild_unmute)
       bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice)
+      bot.on('guild_online', guild_online)
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
