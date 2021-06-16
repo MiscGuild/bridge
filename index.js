@@ -191,45 +191,6 @@
       const OFFICER2 = client.emojis.cache.get("843900165748555796");
   
   
-  // + COLOURS
-          const RED_MVP_PLUS = client.emojis.cache.get("844352407902617650");
-          const PINK_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352250469941258");
-          const PINK_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352250440056892");
-          const BLACK_MVP_PLUS = client.emojis.cache.get("844350093431013447");
-          const BLACK_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844350093507035136");
-          const BLACK_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844350093472956416");
-          const BLUE_MVP_PLUS = client.emojis.cache.get("844350320565682246");
-          const BLUE_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844350320645767168");
-          const BLUE_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844350320355049495");
-          const DARK_AQUA_MVP_PLUS = client.emojis.cache.get("844350604436045834");
-          const DARK_AQUA_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844350604549160980");
-          const DARK_AQUA_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844350604464750622");
-          const DARK_PURPLE_MVP_PLUS = client.emojis.cache.get("844351554970452048");
-          const DARK_PURPLE_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351554945548338");
-          const DARK_PURPLE_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351555037429760");
-          const DARK_RED_MVP_PLUS = client.emojis.cache.get("844351667339395092");
-          const DARK_RED_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351667343196211");
-          const DARK_RED_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351667418955796");
-          const GOLD_MVP_PLUS = client.emojis.cache.get("844351835224801290");
-          const GOLD_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844351834994901043");
-          const GOLD_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844351834872479815");
-          const GREEN_MVP_PLUS = client.emojis.cache.get("844352013751025664");
-          const GREEN_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352013479182377");
-          const GREEN_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352013759414304");
-          const RED_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352407885709322");
-          const RED_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352407924506654");
-  
-          const DARK_GREEN_MVP_PLUS = client.emojis.cache.get("844350756214538280");
-          const DARK_GREEN_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844350756290166804");
-          const DARK_GREEN_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844350756366843945");
-  
-  
-          const WHITE_MVP_PLUS = client.emojis.cache.get("844352509103702027");
-          const WHITE_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352509355098142");
-          const WHITE_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352509388390420");
-          const YELLOW_MVP_PLUS = client.emojis.cache.get("844352595828801566");
-          const YELLOW_MVP_PLUS_PLUS_2 = client.emojis.cache.get("844352595631013890");
-          const YELLOW_MVP_PLUS_PLUS_1 = client.emojis.cache.get("844352595791314944");
       setTimeout (function(){
         for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
       },5000)
