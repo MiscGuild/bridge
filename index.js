@@ -397,7 +397,7 @@
       )
             
       const guild_online = (guild_online_members) => {
-        client.user.setPresence({ activity: { name: data.playerCount.toString()+" guild members" , type:"WATCHING" }, status: 'online' });
+        client.user.setPresence({ activity: { name: guild_online_members+" guild members" , type:"WATCHING" }, status: 'online' });
       }
 
       bot.chatAddPattern(
