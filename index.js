@@ -275,51 +275,6 @@
         }
         return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
 
-      //   if(rank_guild_chat == '[MVP++]'){
-      //   try {
-      //   async function GetPlusColourMVP_Plus_plus() {
-      //     var MinecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username_guild_chat}`)
-      //     .then(res => res.json())
-      //     if(!MinecraftAPI.id){return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from MojangAPI:  \n\`${MinecraftAPI}\` <@484411714637529088>`)}
-      //     if(MinecraftAPI.error){return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from MojangAPI: \n\`${MinecraftAPI.error} | ${MinecraftAPI.errorMessage} \` <@484411714637529088>`)}
-           
-      //     await fetch(`https://api.hypixel.net/player?key=${HypixelAPIKey}&uuid=${MinecraftAPI.id}`)
-      //     .then(res => res.json())
-      //     .then(data => {
-      //         if(!data.success) {return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from HypixelAPI: \n\`${data.cause}\` <@484411714637529088>`)}
-      //         if(!data.player) {return client.channels.cache.get(`523743721443950612`).send(`Error with Getting ${username_guild_chat}'s info from HypixelAPI: \n\`${data.player}\` -- No player?? <@484411714637529088>`)}
-      //         console.log(data.player.rankPlusColor)
-
-      //       if(data.player.rankPlusColor == 'RED'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${RED_MVP_PLUS_PLUS_1}${RED_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'GOLD'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${GOLD_MVP_PLUS_PLUS_1}${GOLD_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'GREEN'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${GREEN_MVP_PLUS_PLUS_1}${GREEN_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'YELLOW'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${YELLOW_MVP_PLUS_PLUS_1}${YELLOW_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'LIGHT_PURPLE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${PINK_MVP_PLUS_PLUS_1}${PINK_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'WHITE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${WHITE_MVP_PLUS_PLUS_1}${WHITE_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'BLUE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${BLUE_MVP_PLUS_PLUS_1}${BLUE_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'DARK_GREEN'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_GREEN_MVP_PLUS_PLUS_1}${DARK_GREEN_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'DARK_RED'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_RED_MVP_PLUS_PLUS_1}${DARK_RED_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'DARK_AQUA'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_AQUA_MVP_PLUS_PLUS_1}${DARK_AQUA_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'DARK_PURPLE'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_PURPLE_MVP_PLUS_PLUS_1}${DARK_PURPLE_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'DARK_GRAY'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${DARK_GRAY_MVP_PLUS_PLUS_1}${DARK_GRAY_MVP_PLUS_PLUS_2}`}
-      //       if(data.player.rankPlusColor == 'BLACK'){rankChat_Emoji = `**    **${MVPPLUSPLUS1}${MVPPLUSPLUS2}${BLACK_MVP_PLUS_PLUS_1}${BLACK_MVP_PLUS_PLUS_2}`}
-
-
-
-
-      //     }) 
-      //     colour.push('0xFFAA00')
-      //     return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-      //     }
-  
-      //     GetPlusColourMVP_Plus_plus()
-
-      // } catch(e) {
-      //   console.log("Err: " + err);
-      // }
-      // }
-    }
-  
 
       bot.chatAddPattern(
         /^Officer > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
