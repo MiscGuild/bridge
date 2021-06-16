@@ -10,7 +10,7 @@
   var log4js = require('log4js');
   var crypto = require("crypto");
   const dotenv = require('dotenv');
-  const { setTimeout } = require('timers');
+  const { setTimeout, setInterval } = require('timers');
   dotenv.config();
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
@@ -109,16 +109,6 @@
 
     });
 
-  
-  
-    // function relog() { // relogs #COOL
-    //   console.log("Attempting to reconnect...");
-    //   channel.send(`*Shutting down for reconnect...*`);
-    //   setTimeout(function(){ 
-    //     console.log('Shutting down for automatic relog')    
-    //     channel.send('**SHUTTING DOWN FOR RELOG**')  
-    //     process.exit()
-    //   }, 45000);    }
   }
 
   var messages = [];
@@ -131,13 +121,19 @@
 
     logger.info('Bot logged in!')
     // mineflayerViewer(bot, { port: 30271 })
-    setTimeout(function(){
+    setInterval(function(){
       bot.chat('/hub')
       setTimeout (function(){
         for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
       },5000)
       bot.chat('/chat g')
     }, 3000000);
+
+    setTimeout (function(){
+      for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
+    },5000)
+    bot.chat('/chat g')
+
 
     const loggedInEmbed = new Discord.MessageEmbed()
     .setDescription(`**MiscellaneousBot** has logged onto \`${process.env.IP}\` and is now ready!`)
@@ -191,11 +187,6 @@
       const OFFICER2 = client.emojis.cache.get("843900165748555796");
   
   
-      setTimeout (function(){
-        for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
-      },5000)
-      bot.chat('/chat g')
-
        
       bot.chatAddPattern(
         /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
