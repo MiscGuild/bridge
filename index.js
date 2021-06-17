@@ -240,7 +240,7 @@
         const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)
         .then(response => response.json())
         .catch(err =>{return console.log(err)})
-        client.user.setPresence({ activity: { name: `${guild_online_members.toLocaleString()} Misc members online and ${HyAPI.playerCount.toLocaleString()} online players!`, type:"WATCHING" }, status: 'online' });
+        client.user.setPresence({ activity: { name: `${guild_online_members.toLocaleString()} online Miscellaneous members and ${HyAPI.playerCount.toLocaleString()} players on Hypixel!`, type:"WATCHING" }, status: 'dnd' });
       }
       SetStatus()
     }
@@ -674,6 +674,7 @@
       }
 
       else if (command === 'command'.toLowerCase()) {
+        try {
         if (message.member.roles.cache.some(role => role.name === 'Officer')) {
           var user = message.guild.member(message.member)
 
@@ -684,21 +685,27 @@
               description: `You need to provide a message for me to send!`,
             }})
           }
-          if(args[1] == 'kick'.toLowerCase()){return bot.chat(`/${args.join(" ").toString()} [Kicker: ${user.displayName}]`)}
+          if(args[1] == 'kick'.toLowerCase()){return bot.chat(`/${args.join(" ").toString()} [Kicker: ${user.displayName}]`), message.react('✅')}
           if(args[0] == 'oc'.toLowerCase()){  
                 if(!args[1]){return message.channel.send({embed: {
                   color: 0x2f3136,
                   title: "Error",
                   description: `You need to provide a message for me to send!`,
                 }})}
-            return bot.chat(`/oc [${user.displayName}] ${args.join(" ").toString().replace('oc', '')}`)}
+            return bot.chat(`/oc [${user.displayName}] ${args.join(" ").toString().replace('oc', '')}`), message.react('✅')}
 
-          return bot.chat(`/${args.join(" ").toString()}`).then(message.react('✅'))
+          return bot.chat(`/${args.join(" ").toString()}`), message.react('✅')
         } else {return message.channel.send({embed: {
           color: 0x2f3136,
           title: "Error",
           description: `It seems you are lacking the permission to run this command.`,
         }})}
+      } catch(err){ errorLogs.error(err)
+        message.channel.send({embed: {
+        color: 0x2f3136,
+        title: "Error",
+        description: `An unknown error has occurred! Please contact @elijahsus to fix it!`,
+      }})}
         }
 
       else if (command === 'reboot'.toLowerCase()) {
@@ -897,7 +904,13 @@
 }
 
   blacklistremove();
-     } else {return message.channel.send({embed: {
+  
+     }else if(args[0] == 'dump'.toLowerCase()) {return message.channel.send({embed: {
+      color: 0x2f3136,
+      title: "Blacklist Dump",
+      description: `Attached is the blacklist database, blacklists are stored in an array in a separate \`.JSON\` file. `,
+    }, files: ["./blacklist.json"]})   
+     }  else {return message.channel.send({embed: {
       color: 0x2f3136,
       title: "Error | Invalid Args",
       description: `The second argument does not match up with my code. You must use \`add\`, \`remove\`, or \`dump\``,
@@ -916,6 +929,3 @@
   })}})
   })
       client.login(process.env.TOKEN)
-  
-
-
