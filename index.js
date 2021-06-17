@@ -757,13 +757,13 @@
     if(args[0]){
 
 
-      if(!args[1]){return message.channel.send({embed: {
+      if(args[0] == 'add'.toLowerCase()) {
+        if(!args[1]){return message.channel.send({embed: {
           color: 0x2f3136,
           title: "Error | Invalid Arguments",
           description: '```'+ prefix +'blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to add to the blacklist```',
         }});
       }
-      if(args[0] == 'add'.toLowerCase()) {
         async function blacklistadd() {
           if(!args[2]){return message.channel.send({embed: {
             color: 0x2f3136,
@@ -830,7 +830,13 @@
     blacklistadd();
   }
 
-     if(args[0] == 'remove'.toLowerCase()) {
+     else if(args[0] == 'remove'.toLowerCase()) {
+      if(!args[1]){return message.channel.send({embed: {
+        color: 0x2f3136,
+        title: "Error | Invalid Arguments",
+        description: '```'+ prefix +'blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to remove from the blacklist```',
+      }});
+    }
       async function blacklistremove() {
         try{
     const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${args[1]}`)
@@ -845,6 +851,20 @@
 
     function removeUserFromBlacklist(uuid) {    
       return new Promise((resolve, reject) => {
+        var found = false;
+        for(var i = 0; i < blacklist.length; i++) {
+            if (blacklist[i].uuid == uuid) {
+                found = true;
+                console.log('found uuid')
+                break;
+            }
+        }
+        if(!found){return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Error",
+          description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
+        }})}
+      if(found){
         for(var i in blacklist){
 
          if( blacklist[i].uuid == uuid){
@@ -852,22 +872,17 @@
            blacklist.splice(i, 1)
             fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
               if (err) reject(err)
-
-             return message.channel.send({embed: {
+            return message.channel.send({embed: {
             color: 0x2f3136,
             title: "Done ☑️",
             thumbnail: `https://crafatar.com/avatars/${MojangAPI.uuid}`,
             description: `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#709370599809613824>`,
           }})
-             message.channel.send({embed: {
-            color: 0x2f3136,
-            title: "Error",
-            description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
-          }})
         })
               
           }
         }
+      }
       })
     }
    removeUserFromBlacklist(MojangAPI.uuid)
@@ -882,7 +897,15 @@
 }
 
   blacklistremove();
-     }}
+     } else {return message.channel.send({embed: {
+      color: 0x2f3136,
+      title: "Error | Invalid Args",
+      description: `The second argument does not match up with my code. You must use \`add\`, \`remove\`, or \`dump\``,
+    }})
+
+     }
+    
+    }
     } else {return message.channel.send({embed: {
       color: 0x2f3136,
       title: "Error",
