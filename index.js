@@ -37,10 +37,35 @@
       layout: {
         type: 'pattern',
         pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-        maxLogSize: 5242880,
+        maxLogSize: 5000,
         compress: true
       },
+    
      },
+     Errors: { type: 'file', filename: 'logs/Errors.log',
+     layout: {
+       type: 'pattern',
+       pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
+       maxLogSize: 5000,
+       compress: true
+     },
+    },
+    Warn: { type: 'file', filename: 'logs/Warns.log',
+    layout: {
+      type: 'pattern',
+      pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
+      maxLogSize: 5000,
+      compress: true
+    },
+   },
+   Debug: { type: 'file', filename: 'logs/Debug.log',
+   layout: {
+     type: 'pattern',
+     pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
+     maxLogSize: 5000,
+     compress: true
+   },
+  },
     },
     categories: { 
       default: { 
@@ -48,6 +73,15 @@
       },
       McChatLogs: { 
         appenders: ['McChatLogs'], level: 'info' 
+      },
+      Errors: { 
+        appenders: ['Errors'], level: 'error' 
+      },
+      Warn: { 
+        appenders: ['Warn'], level: 'warn' 
+      },
+      Debug: { 
+        appenders: ['Debug'], level: 'debug' 
       },
 
     }
@@ -57,6 +91,9 @@
 
   var prefix = ')'
   const logger = log4js.getLogger("logs");
+  const errorLogs = log4js.getLogger("Errors");
+  const warnLogs = log4js.getLogger("Warn");
+  const debugLogs = log4js.getLogger("Debug");
 
 
   
@@ -67,7 +104,11 @@
       logger.info(`I could not find the channel (${channelID})! -- 2`)
       process.exit(1)
     }
-  
+
+    client
+    .on("debug", (debug => {debugLogs.debug(debug), console.log(debug)}))
+    .on("warn", (warn => {warnLogs.warn(warn), console.log(warn)}))
+    .on("error", (error => {errorLogs.error(error), console.log(error)}))
 
   // Load mineflayer
   const mineflayer = require('mineflayer')
