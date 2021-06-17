@@ -620,7 +620,11 @@
           var user = message.guild.member(message.member)
 
           if (!args.length) {
-          return message.channel.send(`u need to tell me what to send!`);
+       return message.channel.send({embed: {
+            color: 0x2f3136,
+            title: "Error",
+            description: `You need to provide a message for me to send!`,
+          }})
         }
         return bot.chat(`[${user.displayName}]: ${args.join(" ").toString()}`)
       } else {return message.channel.send({embed: {
@@ -635,15 +639,22 @@
           var user = message.guild.member(message.member)
 
           if (!args.length) {
-            return message.channel.send(`u need to tell me what to send!`);
+            return message.channel.send({embed: {
+              color: 0x2f3136,
+              title: "Error",
+              description: `You need to provide a message for me to send!`,
+            }})
           }
           if(args[1] == 'kick'.toLowerCase()){return bot.chat(`/${args.join(" ").toString()} [Kicker: ${user.displayName}]`)}
           if(args[0] == 'oc'.toLowerCase()){  
-                if(!args[1]){return message.channel.send(' empty msg ')}
+                if(!args[1]){return message.channel.send({embed: {
+                  color: 0x2f3136,
+                  title: "Error",
+                  description: `You need to provide a message for me to send!`,
+                }})}
             return bot.chat(`/oc [${user.displayName}] ${args.join(" ").toString().replace('oc', '')}`)}
 
-          return bot.chat(`/${args.join(" ").toString()}`)
-          message.react('✅')
+          return bot.chat(`/${args.join(" ").toString()}`).then(message.react('✅'))
         } else {return message.channel.send({embed: {
           color: 0x2f3136,
           title: "Error",
@@ -797,14 +808,7 @@
       return new Promise((resolve, reject) => {
         for(var i in blacklist){
 
-          // if(!blacklist.some(a => a.uuid === MojangAPI.uuid)){
-          // return message.channel.send({embed: {
-            // color: 0x2f3136,
-            // title: "Error",
-            // description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
-          // }})
-        // }
-         if( blacklist[i].uuid == MojangAPI.uuid){
+         if( blacklist[i].uuid == uuid){
            client.channels.cache.get('709370599809613824').messages.fetch(blacklist[i].msgID).then(msg => {if(!message){return message.channel.send('The message was not found, please delete it manually')} msg.delete()})
            blacklist.splice(i, 1)
             fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
