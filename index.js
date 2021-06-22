@@ -240,6 +240,8 @@
         const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)
         .then(response => response.json())
         .catch(err =>{return console.log(err)})
+        if(!HyAPI.playerCount){return client.user.setPresence({ activity: { name: `${guild_online_members.toLocaleString()} online Miscellaneous members and ??? players on Hypixel!`, type:"WATCHING" }, status: 'dnd' });
+      }
         client.user.setPresence({ activity: { name: `${guild_online_members.toLocaleString()} online Miscellaneous members and ${HyAPI.playerCount.toLocaleString()} players on Hypixel!`, type:"WATCHING" }, status: 'dnd' });
       }
       SetStatus()
