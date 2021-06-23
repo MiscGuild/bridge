@@ -652,7 +652,6 @@
   }
   });
 
-})
   if(client){
 
 
@@ -937,6 +936,6 @@
    } 
   }
   })}
-
+})
   })
       client.login(process.env.TOKEN)
