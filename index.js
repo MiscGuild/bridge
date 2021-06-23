@@ -14,6 +14,7 @@
   dotenv.config();
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
+  var cron = require('node-cron');
 
   var HypixelAPIKey = process.env.HypixelAPIKey
 
@@ -158,7 +159,7 @@
 
 
 
-  bot.once('spawn', () => {
+  // bot.once('spawn', () => {
 
     logger.info('Bot logged in!')
     // mineflayerViewer(bot, { port: 30271 })
@@ -934,6 +935,8 @@
     }})
    } 
   }
-  })}})
+  })}
+// }
+)
   })
       client.login(process.env.TOKEN)
