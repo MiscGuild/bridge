@@ -129,6 +129,7 @@
     
     bot.on('error', function(err) { // if the bot errors or crashes i made a function cause cool
         console.log('Error attempting to reconnect: ' + err + '.');
+        errorLogs.error('Error attempting to reconnect: ' + err + '.')
         channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 75s**')
         setTimeout(function(){ 
           console.log('Shutting down for automatic relog')    
@@ -162,7 +163,6 @@
   bot.once('spawn', () => {
 
     logger.info('Bot logged in!')
-        // mineflayerViewer(bot, { port: 30271 })
 
         cron.schedule('0 */2 * * *', () => {
           var randomIDO = crypto.randomBytes(5).toString('hex');
@@ -592,6 +592,8 @@
       const McChatLogger = log4js.getLogger("McChatLogs");
            bot.on('message', message => {
             var msg = message.toString()
+            logger.info(message.toString())
+
             if(msg == 'Unknown command. Type "help" for help.'){return}
             if(msg == 'A kick occurred in your connection, so you have been routed to limbo!'){return}
             if(msg == 'disconnect.spam'){return}
@@ -600,7 +602,6 @@
             sLogs.push(msg)
 
             McChatLogger.info(msg)
-            logger.info(msg)
 
            })
 
