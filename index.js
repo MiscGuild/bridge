@@ -1,3 +1,4 @@
+process.env.DEBUG = 'minecraft-protocol'
 
 
   // Load discord
@@ -15,7 +16,6 @@
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
   var cron = require('node-cron');
-  process.env.DEBUG = 'minecraft-protocol'
 
   var serverID = process.env.SERVERID
   var channelID = process.env.OUTPUTCHANNEL
