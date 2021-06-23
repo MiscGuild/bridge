@@ -163,11 +163,13 @@
     logger.info('Bot logged in!')
     // mineflayerViewer(bot, { port: 30271 })
     setInterval(function(){
+      var randomIDQ = crypto.randomBytes(5).toString('hex');
       bot.chat('/hub')
       setTimeout (function(){
         for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
       },5000)
       bot.chat('/chat g')
+      bot.chat(`We have a HUGE event going on in our discord.gg/misc Enter by making a ticket in #tickets! | ${randomIDQ}`)
     }, 3000000);
 
     setTimeout (function(){
@@ -176,6 +178,10 @@
     },5000)
     bot.chat('/chat g')
 
+    setTimeout (function(){
+      var randomIDQ = crypto.randomBytes(5).toString('hex');
+      bot.chat(`We have a HUGE event going on in our discord.gg/misc Enter by making a ticket in #tickets! | ${randomIDQ}`)
+    }, 10000)
 
     const loggedInEmbed = new Discord.MessageEmbed()
     .setDescription(`**MiscellaneousBot** has logged onto \`${process.env.IP}\` and is now ready!`)
