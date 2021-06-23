@@ -162,7 +162,13 @@
   bot.once('spawn', () => {
 
     logger.info('Bot logged in!')
-    // mineflayerViewer(bot, { port: 30271 })
+        // mineflayerViewer(bot, { port: 30271 })
+
+        cron.schedule('0 */2 * * *', () => {
+          var randomIDO = crypto.randomBytes(5).toString('hex');
+          bot.chat(`I will AUTO Reboot in ONE Minute. I will be back in 30 Seconds! | ${randomIDO}`)
+        });
+
     setInterval(function(){
       var randomIDQ = crypto.randomBytes(5).toString('hex');
       bot.chat('/hub')
@@ -935,7 +941,6 @@
     }})
    } 
   }
-  })}
-})
+  })}})
   })
       client.login(process.env.TOKEN)
