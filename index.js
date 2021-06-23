@@ -166,7 +166,7 @@
 
         cron.schedule('0 */2 * * *', () => {
           var randomIDO = crypto.randomBytes(5).toString('hex');
-          bot.chat(`I will AUTO Reboot in ONE Minute. I will be back in 30 Seconds! | ${randomIDO}`)
+          bot.chat(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds! | ${randomIDO}`)
         });
 
     setInterval(function(){
