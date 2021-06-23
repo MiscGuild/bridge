@@ -16,6 +16,9 @@
   const blacklist = require('./blacklist.json');
   var cron = require('node-cron');
 
+  var serverID = process.env.SERVERID
+  var channelID = process.env.OUTPUTCHANNEL
+  var staffChannel = process.env.STAFFCHANNEL
   var HypixelAPIKey = process.env.HypixelAPIKey
 
   var options = {
@@ -166,7 +169,7 @@
 
         cron.schedule('0 */2 * * *', () => {
           var randomIDO = crypto.randomBytes(5).toString('hex');
-          bot.chat(`I will AUTO Reboot in ONE Minute. I will be back in 30 Seconds! | ${randomIDO}`)
+          bot.chat(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds! | ${randomIDO}`)
         });
 
     setInterval(function(){
@@ -191,7 +194,7 @@
     }, 10000)
 
     const loggedInEmbed = new Discord.MessageEmbed()
-    .setDescription(`**MiscellaneousBot** has logged onto \`${process.env.IP}\` and is now ready!`)
+    .setDescription(`**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!`)
     .setColor('0x2f3136')
       channel.send(loggedInEmbed)
       const VIP1 = client.emojis.cache.get("843335876872110100");
