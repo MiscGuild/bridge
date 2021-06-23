@@ -16,6 +16,9 @@
   const blacklist = require('./blacklist.json');
   var cron = require('node-cron');
 
+  var serverID = process.env.SERVERID
+  var channelID = process.env.OUTPUTCHANNEL
+  var staffChannel = process.env.STAFFCHANNEL
   var HypixelAPIKey = process.env.HypixelAPIKey
 
   var options = {
