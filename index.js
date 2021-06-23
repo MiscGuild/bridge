@@ -194,7 +194,7 @@
     }, 10000)
 
     const loggedInEmbed = new Discord.MessageEmbed()
-    .setDescription(`**MiscellaneousBot** has logged onto \`${process.env.IP}\` and is now ready!`)
+    .setDescription(`**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!`)
     .setColor('0x2f3136')
       channel.send(loggedInEmbed)
       const VIP1 = client.emojis.cache.get("843335876872110100");
