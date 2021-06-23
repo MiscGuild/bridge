@@ -159,7 +159,7 @@
 
 
 
-  // bot.once('spawn', () => {
+  bot.once('spawn', () => {
 
     logger.info('Bot logged in!')
     // mineflayerViewer(bot, { port: 30271 })
@@ -652,6 +652,7 @@
   }
   });
 
+})
   if(client){
 
 
@@ -936,7 +937,6 @@
    } 
   }
   })}
-// }
-// )
+
   })
       client.login(process.env.TOKEN)
