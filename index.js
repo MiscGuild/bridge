@@ -20,7 +20,7 @@
   // var serverID = process.env.SERVERID
   // var channelID = process.env.OUTPUTCHANNEL
   // var staffChannel = process.env.STAFFCHANNEL
-  // var HypixelAPIKey = process.env.HypixelAPIKey
+  var HypixelAPIKey = process.env.HypixelAPIKey
 
   var options = {
     host: process.env.IP,
