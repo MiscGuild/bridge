@@ -637,9 +637,6 @@
   }, 650); //How often should we send the message groupings (MS)
 
   client.on('message', message => {
-    if(message.author.id == "710946890560307293") {
-      message.reply("tell me why u suck at bridge again?")
-    }
     if(message.channel.id == channelID){
     if(message.content.startsWith(prefix)){return}
     if(message.author.bot){return}
