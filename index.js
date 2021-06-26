@@ -353,14 +353,20 @@
       }
     }
 
+      var welcomeIndex=0;
       const guild_join = (Rank_guild_join, username_guild_join) => {
+        var welcomeMessages = [`Welcome to the #22 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,`Welcome to the guild! Make sure to join the discord at discord.gg/misc`,`Welcome to the guild, ${username_guild_join}! Join the discord at discord.gg/misc
+`,`Welcome to the guild, ${username_guild_join}! Interact with the community more at discord.gg/misc`];
         if(!Rank_guild_join){var Rank_guild_join = ''}
         messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
         // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
 
         setTimeout(() => {
-          var randomID = crypto.randomBytes(7).toString('hex');
-          bot.chat(`Welcome to the guild, ${username_guild_join}! Make sure you join the discord with /g discord | ${randomID}`)
+          bot.chat(welcomeMessages[welcomeIndex])
+          welcomeIndex ++;
+          if (welcomeIndex===4) {
+            welcomeIndex=0;
+          }
         }, 6000);
         checkIfUserBlacklisted(username_guild_join)
       }
