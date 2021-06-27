@@ -346,10 +346,10 @@
         .then(res => res.json())
         for(var i in blacklist){
           if(blacklist[i].uuid == MojangAPI.uuid){
-            bot.chat(`/g kick ${user} You have been blacklisted from the guild for ${blacklist[i].reason}`)
+            bot.chat(`/g kick ${user} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
           }
+        }
       }
-    }
 
       var welcomeIndex=0;
       const guild_join = (Rank_guild_join, username_guild_join) => {
