@@ -345,11 +345,9 @@
         const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
         .then(res => res.json())
         for(var i in blacklist){
-          if(blacklist[i].uuid == MojangAPI.uuid)
-        if(blacklist[i].uuid == MojangAPI.uuid){
-          var randomID = crypto.randomBytes(7).toString('hex');
-          bot.chat(`/g kick ${user} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq) | ${randomID}`)
-        }
+          if(blacklist[i].uuid == MojangAPI.uuid){
+            bot.chat(`/g kick ${user} You have been blacklisted from the guild for ${blacklist[i].reason}`)
+          }
       }
     }
 
