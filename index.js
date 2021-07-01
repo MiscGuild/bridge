@@ -168,7 +168,7 @@
 
     logger.info('Bot logged in!')
 
-        cron.schedule('0 */2 * * *', () => {
+        cron.schedule('0 * * * *', () => {
           var randomIDO = crypto.randomBytes(5).toString('hex');
           bot.chat(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds! | ${randomIDO}`)
         });
