@@ -180,7 +180,6 @@
         for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
       },5000)
       bot.chat('/chat g')
-      bot.chat(`We have a HUGE event going on in our discord.gg/misc Enter by making a ticket in #tickets! | ${randomIDQ}`)
     }, 3000000);
 
     setTimeout (function(){
@@ -191,7 +190,6 @@
 
     setTimeout (function(){
       var randomIDQ = crypto.randomBytes(5).toString('hex');
-      bot.chat(`We have a HUGE event going on in our discord.gg/misc Enter by making a ticket in #tickets! | ${randomIDQ}`)
     }, 10000)
 
     const loggedInEmbed = new Discord.MessageEmbed()
