@@ -678,7 +678,7 @@
     const command = args.shift().toLowerCase();
 
     if (command === 'help'.toLowerCase()) {
-       const embed = new Discord.MessageEmbed()
+       const embed3 = new Discord.MessageEmbed()
         .setTitle("Commands")
         .setColor(0x2f3136)
         .setFooter("The name is based on the name that was givin at the time of blacklist, refer to the UUID if the user has changed their name.")
@@ -687,6 +687,7 @@
         .addField("chat", "Any chat message ingame *officer only*", false)
         .addField("command", "Run a command *officer only*", false)
         .addField("blacklist", "Add, list, or remove people on the blacklist *officer only*", false)
+       message.channel.send({embed3});
     }
     else if (command === 'chat'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Officer')) {
