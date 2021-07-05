@@ -677,7 +677,19 @@
     const args = message.content.slice(prefix.length).trim().split(' ');
     const command = args.shift().toLowerCase();
 
-    if (command === 'chat'.toLowerCase()) {
+    if (command === 'help'.toLowerCase()) {
+       const embed = new Discord.MessageEmbed()
+        .setTitle("Commands")
+        .setColor(0x2f3136)
+        .setDescription(`The list below shows everyone who is on the blacklist (Total: ${blacklist.length})`)
+        .setFooter("The name is based on the name that was givin at the time of blacklist, refer to the UUID if the user has changed their name.")
+        .addField("help", "Prints this message", false)
+        .addField("reboot", "Restarts the bot *officer only*", false)
+        .addField("chat", "Any chat message ingame *officer only*", false)
+        .addField("command", "Run a command *officer only*", false)
+        .addField("blacklist", "Add, list, or remove people on the blacklist *officer only*", false)
+    }
+    else if (command === 'chat'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Officer')) {
           var user = message.guild.member(message.member)
 
@@ -766,10 +778,9 @@
         
 
           const embed = new Discord.MessageEmbed()
-            .setTitle("Blacklist")
+            .setTitle("Commands")
             .setColor(0x2f3136)
-            .setDescription(`The list below shows everyone who is on the blacklist (Total: ${blacklist.length})`)
-            .setFooter("The name is based on the name that was givin at the time of blacklist, refer to the UUID if the user has changed their name.")
+            .setFooter("You can use the bot by saying things in <#843517258755866664>")
 
 
             blacklist.forEach(element => 
