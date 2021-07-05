@@ -681,7 +681,6 @@
        const embed = new Discord.MessageEmbed()
         .setTitle("Commands")
         .setColor(0x2f3136)
-        .setDescription(`The list below shows everyone who is on the blacklist (Total: ${blacklist.length})`)
         .setFooter("The name is based on the name that was givin at the time of blacklist, refer to the UUID if the user has changed their name.")
         .addField("help", "Prints this message", false)
         .addField("reboot", "Restarts the bot *officer only*", false)
@@ -772,16 +771,16 @@
         }})}
         }
 
-  else if (command === 'blacklist'.toLowerCase()) {
+    else if (command === 'blacklist'.toLowerCase()) {
     if (message.member.roles.cache.some(role => role.name === 'Officer')) {
       if(!args[0]){
-        
+
 
           const embed = new Discord.MessageEmbed()
-            .setTitle("Commands")
+            .setTitle("Blacklist")
             .setColor(0x2f3136)
-            .setFooter("You can use the bot by saying things in <#843517258755866664>")
-
+            .setDescription(`The list below shows everyone who is on the blacklist (Total: ${blacklist.length})`)
+            .setFooter("The name is based on the name that was givin at the time of blacklist, refer to the UUID if the user has changed their name.")
 
             blacklist.forEach(element => 
         embed.addField(`${element.user}`, `**End:** ${element.end}\n**Reason:** ${element.reason}\n**UUID:** ${element.uuid}\n[Message Link](https://discord.com/channels/522586672148381726/709370599809613824/${element.msgID})`)
