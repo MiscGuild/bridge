@@ -466,6 +466,8 @@
         'Guild mute Setup'
       )
       
+      var mute_time;
+    
       const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time, guild_mute_type) => {
         if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
         if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
@@ -475,7 +477,6 @@
         
         let matchedMember = serverMembers.findKey(user => user.displayName == displayNickname);
         if (!matchedMember) {return}
-        var mute_time;
         serverMembers.get(matchedMember).roles.add('849100433317298207');
         if (guild_mute_type=='s') {mute_time = guild_mute_time*1000}
         else if (guild_mute_type=='m') {mute_time = guild_mute_time*60000}
