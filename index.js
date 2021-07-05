@@ -731,7 +731,7 @@
         }
 
       else if (command === 'reboot'.toLowerCase()) {
-        if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+        if (message.member.roles.cache.some(role => role.name === 'Officer') || message.author.id === '308343641598984203') {
           var user = message.guild.member(message.member)
 
           message.channel.send({embed: {
