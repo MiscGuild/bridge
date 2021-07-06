@@ -690,27 +690,27 @@
           },
           {
             name: 'reboot',
-			      value: 'Restarts the bot *officer only*',
+			      value: 'Restarts the bot*',
 			      inline: false,
           },
           {
             name: 'chat',
-			      value: 'Any chat message ingame *officer only*',
+			      value: 'Any chat message ingame*',
 			      inline: false,
           },
           {
             name: 'command',
-			      value: 'Run a command *officer only*',
+			      value: 'Run a command*',
 			      inline: false,
           },
           {
             name: 'blacklist',
-			      value: 'Add, list, or remove people on the blacklist *officer only*',
+			      value: 'Add, list, or remove people on the blacklist*',
 			      inline: false,
           },
         ],
         footer: {
-          text: 'You can send messages ingame by typing in <#843517258755866664>'
+          text: `*Staff only\nYou can send messages ingame by typing in <#843517258755866664>`
         },
       }})
     }
