@@ -678,41 +678,57 @@
     const command = args.shift().toLowerCase();
 
     if (command === 'help'.toLowerCase()) {
+      if (message.member.roles.cache.some(role => role.name === 'Officer') || message.author.id === '308343641598984203') {
       return message.channel.send({embed: {
-        color: 0x2f3136,
-        title: "Commands",
-        description: `You need to provide a message for me to send!`,
-        fields: [
-          {
-            name: 'help',
-			      value: 'Prints this message',
+          color: 0x2f3136,
+          title: "Commands",
+          fields: [
+            {
+              name: 'help',
+		  	      value: 'Prints this message',
 			      inline: false,
           },
           {
             name: 'reboot',
-			      value: 'Restarts the bot*',
+			      value: 'Restarts the bot',
 			      inline: false,
           },
           {
             name: 'chat',
-			      value: 'Any chat message ingame*',
+			      value: 'Any chat message ingame',
 			      inline: false,
           },
           {
             name: 'command',
-			      value: 'Run a command*',
+			      value: 'Run a command',
 			      inline: false,
           },
           {
             name: 'blacklist',
-			      value: 'Add, list, or remove people on the blacklist*',
+			      value: 'Add, list, or remove people on the blacklist',
 			      inline: false,
           },
         ],
         footer: {
-          text: `*Staff only\nYou can send messages ingame by typing in #bridge`
+          text: `You can send messages ingame by typing in #bridge`
         },
       }})
+      } else {
+      	return message.channel.send({embed: {
+          color: 0x2f3136,
+          title: "Commands",
+          fields: [
+            {
+              name: 'help',
+		value: 'Prints this message',
+		inline: false,
+            },
+	  ]
+	  footer: {
+          	text: `You can send messages ingame by typing in #bridge`
+          },
+	}})
+      }
     }
     else if (command === 'chat'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Officer')) {
