@@ -710,7 +710,7 @@
           },
         ],
         footer: {
-          text: `*Staff only\nYou can send messages ingame by typing in <#843517258755866664>`
+          text: `*Staff only\nYou can send messages ingame by typing in #bridge`
         },
       }})
     }
