@@ -723,7 +723,7 @@
 		value: 'Prints this message',
 		inline: false,
             },
-	  ]
+	  ],
 	  footer: {
           	text: `You can send messages ingame by typing in #bridge`
           },
