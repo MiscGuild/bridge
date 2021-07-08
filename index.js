@@ -668,7 +668,12 @@
 
   if(client){
 
-
+    const chesterlinks = ['https://bit.ly/3zVao27', 'https://bit.ly/3wTpNOK', 'https://bit.ly/3wTpNOK', 'https://bit.ly/2T2gXiX',
+                'https://bit.ly/3qjLS6F', 'https://bit.ly/3h1zJyH', 'https://bit.ly/2SYlQcN', 'https://bit.ly/3xN3vy5',
+                'https://bit.ly/3j3sZDj', 'https://bit.ly/35Lu9v8', 'https://bit.ly/35Lu9v8', 'https://bit.ly/2Usk2Jn',
+                'https://bit.ly/3wSxTXS', 'https://bit.ly/3qnEYNO', 'https://bit.ly/3gOwJa3', 'https://bit.ly/3zVSVXE',
+                'https://bit.ly/3zKYDv8', 'https://bit.ly/3xNHn6U', 'https://bit.ly/35MdUOz', 'https://bit.ly/35MHfIJ']
+    
   client.on('message', message => {
 
 
@@ -676,7 +681,7 @@
 
     const args = message.content.slice(prefix.length).trim().split(' ');
     const command = args.shift().toLowerCase();
-
+	  
     if (command === 'help'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Officer') || message.author.id === '308343641598984203') {
       return message.channel.send({embed: {
@@ -708,6 +713,11 @@
 			      value: 'Add, list, or remove people on the blacklist',
 			      inline: false,
           },
+	  {
+            name: 'chester',
+			      value: 'Gives you a random chester image',
+			      inline: false,
+          },
         ],
         footer: {
           text: `You can send messages ingame by typing in #bridge`
@@ -723,12 +733,20 @@
 		value: 'Prints this message',
 		inline: false,
             },
+	    {
+            	name: 'chester',
+			      value: 'Gives you a random chester image',
+			      inline: false,
+            },
 	  ],
 	  footer: {
           	text: `You can send messages ingame by typing in #bridge`
           },
 	}})
       }
+    }
+    else if (command === 'chester'.toLowerCase()) {
+	return message.channel.send(chesterlinks[Math.floor(Math.random() * chesterlinks.length)])
     }
     else if (command === 'chat'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Officer')) {
