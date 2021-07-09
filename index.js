@@ -639,7 +639,7 @@
     if(!messages.length){return}    
     
     const messagesEmbed = new Discord.MessageEmbed()
-    .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`) 
+    .setDescription(`${messages.join('\r\n').replace("_", "\\_").replace("*","\\*").replace("`","\\`").replace("~","\\~)}`) 
     var colourrand = colour[Math.floor(Math.random() * colour.length)]
     if (colour.length>1) {
       colourrand = '0x2f3136'
