@@ -397,7 +397,7 @@
       }
 
       bot.chatAddPattern(
-        /You cannot say the same message twice!/,
+        /^You cannot say the same message twice!/,
         'cannot_say_same_msg_twice',
         'Sends a message when hypixel blocks the message.'
       )
