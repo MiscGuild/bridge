@@ -10,7 +10,7 @@
   const fetch = require('node-fetch');
   var log4js = require('log4js');
   var crypto = require("crypto");
-  const dotenv = require('dotenv');
+  const dotenv = require('dotenv');.r
   const { setTimeout, setInterval } = require('timers');
   dotenv.config();
   const fs = require('fs');
@@ -639,7 +639,7 @@
     if(!messages.length){return}    
     
     const messagesEmbed = new Discord.MessageEmbed()
-    .setDescription(`${messages.join('\r\n').replace("_", "\\_").replace("*","\\*").replace("`","\\`").replace("~","\\~)}`) 
+    .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`) 
     var colourrand = colour[Math.floor(Math.random() * colour.length)]
     if (colour.length>1) {
       colourrand = '0x2f3136'
