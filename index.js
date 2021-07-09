@@ -677,7 +677,7 @@
     const command = args.shift().toLowerCase();
 	  
     if (command === 'help'.toLowerCase()) {
-      if (message.member.roles.cache.some(role => role.name === 'Officer') || message.author.id === '308343641598984203') {
+      if (message.member.roles.cache.some(role => role.name === 'Officer')) {
       return message.channel.send({embed: {
           color: 0x2f3136,
           title: "Commands",
