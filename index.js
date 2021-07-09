@@ -399,13 +399,25 @@
       bot.chatAddPattern(
         /^You cannot say the same message twice!/,
         'cannot_say_same_msg_twice',
-        'Sends a message when hypixel blocks the message.'
+        'Sends a message when hypixel blocks for spam.'
       )
 
 
       const cannot_say_same_msg_twice = () => {
         // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
         messages.push("**Error: ** `You cannot say the same message twice!`")
+      }
+      
+      bot.chatAddPattern(
+        /^We blocked your comment "(.+)" as it is breaking our rules because (.+)/,
+        'comment_blocked',
+        'Sends a message when hypixel blocks for breaking chat rules.'
+      )
+
+
+      const comment_blocked = (comment_blocked_comment, comment_blocked_reason) => {
+        // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
+        messages.push(`**Error: ** \`Your comment, \'${comment_blocked_comment}\' was blocked for \'${comment_blocked_reason}\'\``)
       }
 
       bot.chatAddPattern(
@@ -593,6 +605,7 @@
       bot.on('guild_mute', guild_mute)
       bot.on('guild_unmute', guild_unmute)
       bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice)
+      bot.on('comment_blocked',comment_blocked)
       bot.on('guild_online', guild_online)
 
 
