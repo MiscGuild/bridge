@@ -169,8 +169,7 @@
     logger.info('Bot logged in!')
 
         cron.schedule('0 * * * *', () => {
-          var randomIDO = crypto.randomBytes(5).toString('hex');
-          channel.send(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds! | ${randomIDO}`)
+          channel.send(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds!`)
         });
 
     setInterval(function(){
@@ -806,7 +805,7 @@
             description: `The bot will restart in \`45s\``,
           }}), logger.info(`Bot will reboot in 45s due to ${user.displayName} running the reboot command`)
           var randomID = crypto.randomBytes(7).toString('hex'); 
-          channel.send(`Bot will reboot in 45s due to ${user.displayName} running the reboot command | ${randomID}`)
+          channel.send(`Bot will reboot in 45s due to ${user.displayName} running the reboot command`)
              setTimeout(() => {
               message.channel.send({embed: {
                 color: 0x2f3136,
