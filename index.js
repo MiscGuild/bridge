@@ -10,7 +10,7 @@
   const fetch = require('node-fetch');
   var log4js = require('log4js');
   var crypto = require("crypto");
-  const dotenv = require('dotenv');.r
+  const dotenv = require('dotenv');
   const { setTimeout, setInterval } = require('timers');
   dotenv.config();
   const fs = require('fs');
