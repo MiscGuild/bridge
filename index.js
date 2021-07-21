@@ -486,7 +486,7 @@
         let displayNickname = guild_mute_username;
         let serverMembers = client.guilds.cache.get(serverID).members.cache;
         
-        let matchedMember = serverMembers.findKey(user => user.displayName == displayNickname);
+        let matchedMember = serverMembers.findKey(user => user.displayName.split(" ")[0] === displayNickname);
         if (!matchedMember) {return}
         serverMembers.get(matchedMember).roles.add('849100433317298207');
         if (guild_mute_type=='s') {mute_time = guild_mute_time*1000}
