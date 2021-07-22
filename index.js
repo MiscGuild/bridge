@@ -689,7 +689,7 @@
     const command = args.shift().toLowerCase();
 	  
     if (command === 'help'.toLowerCase()) {
-      if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+      if (message.member.roles.cache.some(role => role.name === 'Staff')) {
       return message.channel.send({embed: {
           color: 0x2f3136,
           title: "Commands",
@@ -742,7 +742,7 @@
       }
     }
     else if (command === 'chat'.toLowerCase()) {
-      if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+      if (message.member.roles.cache.some(role => role.name === 'Staff')) {
           var user = message.guild.member(message.member)
 
           if (!args.length) {
@@ -762,7 +762,7 @@
 
       else if (command === 'command'.toLowerCase()) {
         try {
-        if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+        if (message.member.roles.cache.some(role => role.name === 'Staff')) {
           var user = message.guild.member(message.member)
 
           if (!args.length) {
@@ -796,7 +796,7 @@
         }
 
       else if (command === 'reboot'.toLowerCase()) {
-        if (message.member.roles.cache.some(role => role.name === 'Officer') || message.author.id === '308343641598984203') {
+        if (message.member.roles.cache.some(role => role.name === 'Staff') || message.author.id === '308343641598984203') {
           var user = message.guild.member(message.member)
 
           message.channel.send({embed: {
@@ -825,7 +825,7 @@
         }
 
     else if (command === 'blacklist'.toLowerCase()) {
-    if (message.member.roles.cache.some(role => role.name === 'Officer')) {
+    if (message.member.roles.cache.some(role => role.name === 'Staff')) {
       if(!args[0]){
 
 
