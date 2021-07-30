@@ -16,7 +16,7 @@
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
   var cron = require('node-cron');
-
+  var welcomeIndex=0;
   // var serverID = process.env.SERVERID
   // var channelID = process.env.OUTPUTCHANNEL
   // var staffChannel = process.env.STAFFCHANNEL
@@ -348,9 +348,9 @@
         }
       }
 
-      var welcomeIndex=0;
+
       const guild_join = (Rank_guild_join, username_guild_join) => {
-        var welcomeMessages = [`Welcome to the #22 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,`Welcome to the guild! Make sure to join the discord at discord.gg/misc`,`Welcome to the guild, ${username_guild_join}! Join the discord at discord.gg/misc
+        var welcomeMessages = [`Welcome to the #21 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,`Welcome to the guild! Make sure to join the discord at discord.gg/misc`,`Welcome to the guild, ${username_guild_join}! Join the discord at discord.gg/misc
 `,`Welcome to the guild, ${username_guild_join}! Interact with the community more at discord.gg/misc`];
         if(!Rank_guild_join){var Rank_guild_join = ''}
         messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
