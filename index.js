@@ -645,6 +645,7 @@
       bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice)
       bot.on('comment_blocked',comment_blocked)
       bot.on('guild_online', guild_online)
+      bot.on('blacklist_check', blacklist_check)
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
