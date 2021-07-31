@@ -274,7 +274,6 @@
 	guildMembers.forEach(function (player, index) {
 	  if (checkIfUserBlacklisted(player))
 	    bot.chat(`/g kick ${player} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
-	  }
 	});
       } 
       bot.chatAddPattern(
