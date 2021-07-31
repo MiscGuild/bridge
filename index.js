@@ -358,9 +358,8 @@
         const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
         .then(res => res.json())
         for(var i in blacklist){
-          if(blacklist[i].uuid == MojangAPI.uuid){
+          if(blacklist[i].uuid === MojangAPI.uuid)
             return true;
-          }
         }
 	return false;
       }
