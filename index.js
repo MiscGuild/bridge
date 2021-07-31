@@ -379,9 +379,9 @@
             welcomeIndex=0;
           }
         }, 6000);
-	if (checkIfUserBlacklisted(username_guild_join)) {
-		bot.chat(`/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
-	}
+// 	if (checkIfUserBlacklisted(username_guild_join)===true) {
+// 		bot.chat(`/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
+// 	}
       }
 
 
@@ -643,7 +643,7 @@
       bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice)
       bot.on('comment_blocked',comment_blocked)
       bot.on('guild_online', guild_online)
-      bot.on('blacklist_check', blacklist_check)
+//       bot.on('blacklist_check', blacklist_check)
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
