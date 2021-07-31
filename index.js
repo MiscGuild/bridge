@@ -250,7 +250,7 @@
         'guild_online',
         'Set status to amount of players in guild online'
       )
-
+	  
       const guild_online = (guild_online_members) => {
         async function SetStatus() {
         const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)
@@ -264,10 +264,25 @@
     }
        
       bot.chatAddPattern(
+        /(^(?:(?:\[.+?\])? ?(?:[A-Za-z0-9_]{3,16}) ●  )+)/,
+        'blacklist_check',
+        'Look for blacklisted players in the guild'
+      )
+	  
+      const blacklist_check = (blacklist_check_content) => {
+      	var guildMembers = blacklist_check_content.split(" ●  ");
+	guildMembers.forEach(function (player, index) {
+	  if (checkIfUserBlacklisted(player))
+	    bot.chat(`/g kick ${player} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
+	  }
+	});
+      } 
+      bot.chatAddPattern(
         /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
         'guild_chat',
         'Custom Guild Chat Setup'
       )
+	  
       const guild_chat = (rank_guild_chat, username_guild_chat, tag_guild_chat, message_guild_chat) => {
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
         else if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
@@ -345,9 +360,10 @@
         .then(res => res.json())
         for(var i in blacklist){
           if(blacklist[i].uuid == MojangAPI.uuid){
-            bot.chat(`/g kick ${user} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
+            return true;
           }
         }
+	return false;
       }
 
 
@@ -365,7 +381,9 @@
             welcomeIndex=0;
           }
         }, 6000);
-        checkIfUserBlacklisted(username_guild_join)
+	if (checkIfUserBlacklisted(username_guild_join)) {
+		bot.chat(`/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
+	}
       }
 
 
