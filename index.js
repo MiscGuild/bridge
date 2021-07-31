@@ -15,7 +15,7 @@
   dotenv.config();
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
-  var cron = require('node-cron');
+  var cron = require('node-cron'); THROW ME A FUCKING ERROR
   var welcomeIndex=0;
   // var serverID = process.env.SERVERID
   // var channelID = process.env.OUTPUTCHANNEL
