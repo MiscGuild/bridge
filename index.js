@@ -271,9 +271,11 @@
 	  
       const blacklist_check = (blacklist_check_content) => {
       	var guildMembers = blacklist_check_content.split(" ●  ");
+	console.log(guildMembers)
 	guildMembers.forEach(function (player, index) {
 	  if (checkIfUserBlacklisted(player))
-	    bot.chat(`/g kick ${player} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
+// 	    bot.chat(`/g kick ${player} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
+	    console.log("Kicking " + player + "because they are blacklisted")
 	});
       } 
       bot.chatAddPattern(
@@ -359,8 +361,10 @@
         .then(res => res.json())
         for(var i in blacklist){
           if(blacklist[i].uuid === MojangAPI.uuid)
+	    console.log(blacklist[i]+"is equal to "+MojangAPI.uuid+", returning true.")
             return true;
         }
+	console.log("not blacklisted returning false")
 	return false;
       }
 
@@ -379,9 +383,11 @@
             welcomeIndex=0;
           }
         }, 6000);
-// 	if (checkIfUserBlacklisted(username_guild_join)===true) {
+	console.log(checkIfUserBlacklisted(username_guild_join)
+	if (checkIfUserBlacklisted(username_guild_join)===true) {
 // 		bot.chat(`/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
-// 	}
+		console.log("Kicking "+username_guild_join + " because they are blacklisted")
+	}
       }
 
 
@@ -643,7 +649,7 @@
       bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice)
       bot.on('comment_blocked',comment_blocked)
       bot.on('guild_online', guild_online)
-//       bot.on('blacklist_check', blacklist_check)
+      bot.on('blacklist_check', blacklist_check)
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
