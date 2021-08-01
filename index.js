@@ -383,7 +383,7 @@
             welcomeIndex=0;
           }
         }, 6000);
-	console.log(checkIfUserBlacklisted(username_guild_join)
+	console.log(checkIfUserBlacklisted(username_guild_join))
 	if (checkIfUserBlacklisted(username_guild_join)===true) {
 // 		bot.chat(`/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
 		console.log("Kicking "+username_guild_join + " because they are blacklisted")
