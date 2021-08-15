@@ -273,9 +273,10 @@
       	var guildMembers = blacklist_check_content.split(" ●  ");
 	console.log(guildMembers)
 	guildMembers.forEach(function (player, index) {
-	  if (checkIfUserBlacklisted(player))
+	  if (checkIfUserBlacklisted(player)) {
 // 	    bot.chat(`/g kick ${player} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
 	    console.log("Kicking " + player + "because they are blacklisted")
+	  }
 	});
       } 
       bot.chatAddPattern(
@@ -360,9 +361,10 @@
         const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
         .then(res => res.json())
         for(var i in blacklist){
-          if(blacklist[i].uuid === MojangAPI.uuid)
+          if(blacklist[i].uuid === MojangAPI.uuid) {
 	    console.log(blacklist[i]+"is equal to "+MojangAPI.uuid+", returning true.")
             return true;
+	  }
         }
 	console.log("not blacklisted returning false")
 	return false;
