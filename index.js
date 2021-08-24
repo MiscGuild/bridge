@@ -5,24 +5,24 @@
   const Discord = require('discord.js')
   const client = new Discord.Client({autoReconnect:true})
   const serverID = "522586672148381726";
-  var channelID = '843517258755866664'
-  var staffChannel = '842912638815043614'
+  const channelID = '843517258755866664'
+  const staffChannel = '842912638815043614'
   const fetch = require('node-fetch');
-  var log4js = require('log4js');
-  var crypto = require("crypto");
+  const log4js = require('log4js');
+  const crypto = require("crypto");
   const dotenv = require('dotenv');
   const { setTimeout, setInterval } = require('timers');
   dotenv.config();
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
-  var cron = require('node-cron');
-  var welcomeIndex=0;
-  // var serverID = process.env.SERVERID
-  // var channelID = process.env.OUTPUTCHANNEL
-  // var staffChannel = process.env.STAFFCHANNEL
-  var HypixelAPIKey = process.env.HypixelAPIKey
+  const cron = require('node-cron');
+  const welcomeIndex=0;
+  // const serverID = process.env.SERVERID
+  // const channelID = process.env.OUTPUTCHANNEL
+  // const staffChannel = process.env.STAFFCHANNEL
+  const HypixelAPIKey = process.env.HypixelAPIKey
 
-  var options = {
+  const options = {
     host: process.env.IP,
     port: process.env.PORT,
     username: process.env.USERNAME,
@@ -94,7 +94,7 @@
 
 
 
-  var prefix = ')'
+  const prefix = ')'
   const logger = log4js.getLogger("logs");
   const errorLogs = log4js.getLogger("Errors");
   const warnLogs = log4js.getLogger("Warn");
@@ -104,7 +104,7 @@
   
   client.on('ready', () => {
     logger.info(`The discord bot logged in! Username: ${client.user.username}!`)
-    var channel = client.channels.cache.get(channelID)
+    const channel = client.channels.cache.get(channelID)
     if (!channel) {
       logger.info(`I could not find the channel (${channelID})! -- 2`)
       process.exit(1)
@@ -118,14 +118,14 @@
   // Load mineflayer
   const mineflayer = require('mineflayer')
   const mineflayerViewer = require('prismarine-viewer').mineflayer
-  var bot = mineflayer.createBot(options); //create bot object
+  const bot = mineflayer.createBot(options); //create bot object
 
 
   bindEvents(bot);
   
   function init(options) 
   {
-    var bot = mineflayer.createBot(options);
+    const bot = mineflayer.createBot(options);
     bindEvents(bot);
   }
   
@@ -158,9 +158,9 @@
 
   }
 
-  var messages = [];
-  var colour = [];
-  var sLogs = []
+  const messages = [];
+  const colour = [];
+  const sLogs = []
 
   function getNetworkLevel(exp){
     return (Math.sqrt((2 * exp) + 30625) / 50) - 2.5
@@ -175,22 +175,22 @@
         });
 
     setInterval(function(){
-      var randomIDQ = crypto.randomBytes(5).toString('hex');
+      const randomIDQ = crypto.randomBytes(5).toString('hex');
       bot.chat('/hub')
       setTimeout (function(){
-        for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
+        for (const i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
       },5000)
       bot.chat('/chat g')
     }, 3000000);
 
     setTimeout (function(){
       bot.chat('/g online')
-      for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
+      for (const i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
     },5000)
     bot.chat('/chat g')
 
     setTimeout (function(){
-      var randomIDQ = crypto.randomBytes(5).toString('hex');
+      const randomIDQ = crypto.randomBytes(5).toString('hex');
     }, 10000)
 
     const loggedInEmbed = new Discord.MessageEmbed()
@@ -270,7 +270,7 @@
       )
 	  
       const blacklist_check = (blacklist_check_content) => {
-      	var guildMembers = blacklist_check_content.split(" ●  ");
+      	const guildMembers = blacklist_check_content.split(" ●  ");
 	console.log(guildMembers)
 	guildMembers.forEach(function (player, index) {
 	  if (checkIfUserBlacklisted(player)) {
@@ -286,35 +286,35 @@
       )
 	  
       const guild_chat = (rank_guild_chat, username_guild_chat, tag_guild_chat, message_guild_chat) => {
-        if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
-        else if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
-        else if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
-        else if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
-        else if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
-        else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
+        if(tag_guild_chat == '[MISC]'){const tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
+        else if(tag_guild_chat == '[Active]'){const tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
+        else if(tag_guild_chat == '[Res]'){const tag_chat_emojis = `${RES1}${RES2}${RES3}`}
+        else if(tag_guild_chat == '[GM]'){const tag_chat_emojis = `${GM1}${GM2}`}
+        else if(tag_guild_chat == '[Admin]'){const tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
+        else if(tag_guild_chat == '[O]'){const tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
         
         if(!rank_guild_chat){
-          var rankChat_Emoji = ''
+          const rankChat_Emoji = ''
           colour.push('0xAAAAAA')
         }
         else if(rank_guild_chat == '[MVP+]'){
-          var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
+          const rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
           colour.push('0x55FFFF')
         }
         else if(rank_guild_chat == '[MVP++]'){
-          var rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
+          const rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
           colour.push('0xFFAA00')
         }
         else if(rank_guild_chat == '[VIP]'){
-          var rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
+          const rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
           colour.push('0x55FF55') 
         }
         else if(rank_guild_chat == '[VIP+]'){
-          var rankChat_Emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
+          const rankChat_Emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
           colour.push('0x55FF55')
         }
         else if(rank_guild_chat == '[MVP]'){
-          var rankChat_Emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`
+          const rankChat_Emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`
           colour.push('0x55FFFF')
         }
         return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
@@ -327,12 +327,12 @@
       )
       const officer_chat = (rank_officer_chat, username_officer_chat, officer_chat_tag, message_officer_chat) => {
         
-        if(!rank_officer_chat){var rank_officer_chat_emoji = ''}
-        else if(rank_officer_chat == '[MVP+]'){var rank_officer_chat_emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`}
-        else if(rank_officer_chat == '[MVP++]'){var rank_officer_chat_emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
-        else if(rank_officer_chat == '[VIP]'){var rank_officer_chat_emoji = `\u200D  ${VIP1}${VIP2}${VIP3}`}
-        else if(rank_officer_chat == '[VIP+]'){var rank_officer_chat_emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
-        else if(rank_officer_chat == '[MVP]'){var rank_officer_chat_emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`}
+        if(!rank_officer_chat){const rank_officer_chat_emoji = ''}
+        else if(rank_officer_chat == '[MVP+]'){const rank_officer_chat_emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`}
+        else if(rank_officer_chat == '[MVP++]'){const rank_officer_chat_emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
+        else if(rank_officer_chat == '[VIP]'){const rank_officer_chat_emoji = `\u200D  ${VIP1}${VIP2}${VIP3}`}
+        else if(rank_officer_chat == '[VIP+]'){const rank_officer_chat_emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
+        else if(rank_officer_chat == '[MVP]'){const rank_officer_chat_emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`}
 
         // logger.info(`OFFICER > ${rank_guild_chat} ${username_guild_chat}: ${message_guild_chat}`)
         client.channels.cache.get(staffChannel).send(`${rank_officer_chat_emoji} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`)
@@ -345,8 +345,8 @@
       )
 
       const guild_kick = (Rank1_guild_kick, username1_guild_kick, Rank2_guild_kick, username2_guild_kick) => {
-        if(!Rank1_guild_kick){var Rank1_guild_kick = ''}
-        if(!Rank2_guild_kick){var Rank1_guild_kick = ''}
+        if(!Rank1_guild_kick){const Rank1_guild_kick = ''}
+        if(!Rank2_guild_kick){const Rank1_guild_kick = ''}
         // logger.info(`-----------------------------------------------------\n**${Rank1_guild_kick} ${username1_guild_kick}** was kicked from the guild by **${Rank2_guild_kick} ${username2_guild_kick}**\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${Rank1_guild_kick} ${username1_guild_kick}** was kicked from the guild by **${Rank2_guild_kick} ${username2_guild_kick}**\n-----------------------------------------------------`)
       }
@@ -360,7 +360,7 @@
       async function checkIfUserBlacklisted(user){
         const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
         .then(res => res.json())
-        for(var i in blacklist){
+        for(const i in blacklist){
           if(blacklist[i].uuid === MojangAPI.uuid) {
 	    console.log(blacklist[i]+"is equal to "+MojangAPI.uuid+", returning true.")
             return true;
@@ -372,9 +372,9 @@
 
 
       const guild_join = (Rank_guild_join, username_guild_join) => {
-        var welcomeMessages = [`Welcome to the #21 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,`Welcome to the guild! Make sure to join the discord at discord.gg/misc`,`Welcome to the guild, ${username_guild_join}! Join the discord at discord.gg/misc
+        const welcomeMessages = [`Welcome to the #21 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,`Welcome to the guild! Make sure to join the discord at discord.gg/misc`,`Welcome to the guild, ${username_guild_join}! Join the discord at discord.gg/misc
 `,`Welcome to the guild, ${username_guild_join}! Interact with the community more at discord.gg/misc`];
-        if(!Rank_guild_join){var Rank_guild_join = ''}
+        if(!Rank_guild_join){const Rank_guild_join = ''}
         messages.push(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
         // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
 
@@ -403,7 +403,7 @@
 
 
       const guild_leave = (Rank_guild_leave, username_guild_leave) => {
-        if(!Rank_guild_leave){var Rank_guild_leave = ''}
+        if(!Rank_guild_leave){const Rank_guild_leave = ''}
         // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
       }
@@ -416,7 +416,7 @@
 
 
       const guild_promote = (guild_promote_rank, guild_promote_username, guild_promote_oldRank, guild_promote_newRank) => {
-        if(!guild_promote_rank){var guild_promote_rank = ''}
+        if(!guild_promote_rank){const guild_promote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from ${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
       }
@@ -453,7 +453,7 @@
 
 
       const guild_demote = (guild_demote_rank, guild_demote_username, guild_demote_oldRank, guild_demote_newRank) => {
-        if(!guild_demote_rank){var guild_demote_rank = ''}
+        if(!guild_demote_rank){const guild_demote_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was demoted from ${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
       }
@@ -468,13 +468,13 @@
 
 
       const guild_requesting = (guild_requesting_rank, guild_requesting_username) => {
-        if(!guild_requesting_rank){var guild_requesting_rank = ''}
+        if(!guild_requesting_rank){const guild_requesting_rank = ''}
         // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
         async function check_requesting_user(){
           const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${guild_requesting_username}`)
         .then(res => res.json())
-        for(var i in blacklist){
-          var guild_requesting_uuid = MojangAPI.uuid
+        for(const i in blacklist){
+          const guild_requesting_uuid = MojangAPI.uuid
           if(blacklist[i].uuid == guild_requesting_uuid){
           return bot.chat(`/oc The player ${guild_requesting_username} is on the blacklist! Do **NOT** accept their request.`)
           }
@@ -522,11 +522,11 @@
         'Guild mute Setup'
       )
       
-      var mute_time;
+      const mute_time;
     
       const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time, guild_mute_type) => {
-        if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
-        if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
+        if(!guild_mute_rank_staff){const guild_mute_rank_staff = ''}
+        if(!guild_mute_rank_username){const guild_mute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}${guild_mute_type}**\n-----------------------------------------------------`)
         let displayNickname = guild_mute_username;
         let serverMembers = client.guilds.cache.get(serverID).members.cache;
@@ -552,8 +552,8 @@
       )
       
       const guild_unmute = (guild_unmute_rank_staff, guild_unmute_staff, guild_unmute_rank_username, guild_unmute_username) => {
-        if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
-        if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
+        if(!guild_unmute_rank_staff){const guild_unmute_rank_staff = ''}
+        if(!guild_unmute_rank_username){const guild_unmute_rank_username = ''}
         client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
         let serverID = "522586672148381726";
         let displayNickname = guild_unmute_username;
@@ -577,12 +577,12 @@
         async function msg_bot_aysnc() {
           if(msg_bot_message.startsWith('weeklygexp'||'weeklygxp')){
   
-            var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${msg_bot_username}`)
+            const minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${msg_bot_username}`)
             .then(res => res.json())
           fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${minecraftAPI.id}`)
           .then(res => res.json())
           .then(data => {
-              for (var item in data.guild.members) {
+              for (const item in data.guild.members) {
                   if (data.guild.members[item].uuid == minecraftAPI.id) {
                     function gexpFunction(gexpLIST) {
                       let sum = 0;
@@ -592,7 +592,7 @@
                       return sum; 
                     }
                     let gexpLIST = data.guild.members[item].expHistory
-                    var randomID = crypto.randomBytes(7).toString('hex');
+                    const randomID = crypto.randomBytes(7).toString('hex');
                     bot.chat(`/w ${msg_bot_username} ${msg_bot_username}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`); // 650
 
                   };
@@ -602,9 +602,9 @@
 
         else{
           let usernameMention = msg_bot_message.split(" ")[0]
-          var randomIDP = crypto.randomBytes(7).toString('hex');
+          const randomIDP = crypto.randomBytes(7).toString('hex');
 
-        var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${usernameMention}`)
+        const minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${usernameMention}`)
         .then(res => res.json())
         if(!minecraftAPI){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
 
@@ -612,7 +612,7 @@
       .then(res => res.json())
       .then(data => {
         if(!data.guild){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
-          for (var item in data.guild.members) {
+          for (const item in data.guild.members) {
               if (data.guild.members[item].uuid == minecraftAPI.id) {
                 function gexpDFunction(gexpLIST) {
                   let sum = 0;
@@ -623,7 +623,7 @@
                   return sum; 
                 }
                 let gexpLIST = data.guild.members[item].expHistory
-                var randomID = crypto.randomBytes(7).toString('hex');
+                const randomID = crypto.randomBytes(7).toString('hex');
                 bot.chat(`/w ${msg_bot_username} ${minecraftAPI.name}'s total weekly gexp: ${gexpDFunction(gexpLIST).toLocaleString()} | ${randomID}`); 
 
               };
@@ -656,7 +656,7 @@
 
       const McChatLogger = log4js.getLogger("McChatLogs");
            bot.on('message', message => {
-            var msg = message.toString()
+            const msg = message.toString()
             logger.info(message.toString())
 
             if(msg == 'Unknown command. Type "help" for help.'){return}
@@ -685,7 +685,7 @@
     
     const messagesEmbed = new Discord.MessageEmbed()
     .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`)
-    var colourrand = colour[Math.floor(Math.random() * colour.length)]
+    const colourrand = colour[Math.floor(Math.random() * colour.length)]
     if (colour.length>1) {
       colourrand = '0x2f3136'
       while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
@@ -702,7 +702,7 @@
     if(message.content.startsWith(prefix)){return}
     if(message.author.bot){return}
     if(message.attachments.size > 0){return}
-    var user = message.guild.member(message.member)
+    const user = message.guild.member(message.member)
     if(message.content.length > 100){return message.channel.send(`Your message is too long! ${message.content.length}/100`)}
     bot.chat(`/gc [${user.displayName.split(" ")[0]}] - ${message.content}`)
     McChatLogger.info(`DISCORD > [${message.author.tag}/${message.author.id}]: ${message.content}`)
@@ -716,7 +716,7 @@
     if(message.content.startsWith(prefix)){return}
     if(message.author.bot){return}
     if(message.attachments.size > 0){return}
-    var user = message.guild.member(message.member)
+    const user = message.guild.member(message.member)
     if(message.content.length > 250){return message.channel.send(`Your message is too long! ${message.content.length}/250`)}
     bot.chat(`/oc [${user.displayName.split(" ")[0]}] -  ${message.content}`)
     McChatLogger.info(`DISCORD (OFFICER CHAT)> [${message.author.tag}/${message.author.id}]: ${message.content}`)
@@ -789,7 +789,7 @@
     }
     else if (command === 'chat'.toLowerCase()) {
       if (message.member.roles.cache.some(role => role.name === 'Staff')) {
-          var user = message.guild.member(message.member)
+          const user = message.guild.member(message.member)
 
           if (!args.length) {
        return message.channel.send({embed: {
@@ -809,7 +809,7 @@
       else if (command === 'command'.toLowerCase()) {
         try {
         if (message.member.roles.cache.some(role => role.name === 'Staff')) {
-          var user = message.guild.member(message.member)
+          const user = message.guild.member(message.member)
 
           if (!args.length) {
             return message.channel.send({embed: {
@@ -843,14 +843,14 @@
 
       else if (command === 'reboot'.toLowerCase()) {
         if (message.member.roles.cache.some(role => role.name === 'Staff') || message.author.id === '308343641598984203') {
-          var user = message.guild.member(message.member)
+          const user = message.guild.member(message.member)
 
           message.channel.send({embed: {
             color: 0x2f3136,
             title: "Rebooting",
             description: `The bot will restart in \`45s\``,
           }}), logger.info(`Bot will reboot in 45s due to ${user.displayName} running the reboot command`)
-          var randomID = crypto.randomBytes(7).toString('hex'); 
+          const randomID = crypto.randomBytes(7).toString('hex'); 
           channel.send(`Bot will reboot in 45s due to ${user.displayName} running the reboot command`)
              setTimeout(() => {
               message.channel.send({embed: {
@@ -949,7 +949,7 @@
           .addField("Reason:", reason, false)
 
           client.channels.cache.get('709370599809613824').send(embed).then(blistmsg => {
-            var msgID = blistmsg.id
+            const msgID = blistmsg.id
             blacklist.push({user, uuid, end, reason, msgID})  }) 
 
           fs.writeFile('blacklist.json', JSON.stringify(blacklist), (err) => {
@@ -990,8 +990,8 @@
 
     function removeUserFromBlacklist(uuid) {    
       return new Promise((resolve, reject) => {
-        var found = false;
-        for(var i = 0; i < blacklist.length; i++) {
+        const found = false;
+        for(const i = 0; i < blacklist.length; i++) {
             if (blacklist[i].uuid == uuid) {
                 found = true;
                 console.log('found uuid')
@@ -1004,7 +1004,7 @@
           description: `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${prefix}blacklist\` command`,
         }})}
       if(found){
-        for(var i in blacklist){
+        for(const i in blacklist){
 
          if( blacklist[i].uuid == uuid){
            client.channels.cache.get('709370599809613824').messages.fetch(blacklist[i].msgID).then(msg => {if(!message){return message.channel.send('The message was not found, please delete it manually')} msg.delete()})
