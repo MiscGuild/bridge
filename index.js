@@ -15,6 +15,7 @@
   dotenv.config();
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
+  const regexes = require('./regex')
   var cron = require('node-cron');
   var welcomeIndex=0;
   // var serverID = process.env.SERVERID
@@ -245,11 +246,6 @@
       const OFFICER2 = client.emojis.cache.get("843900165748555796");
 
       setInterval(function(){ bot.chat('/g online') }, 300000); // run g online every 5 mins for the below function
-      bot.chatAddPattern(
-        /^Online Members: (\d{1,3})/,
-        'guild_online',
-        'Set status to amount of players in guild online'
-      )
 	  
       const guild_online = (guild_online_members) => {
         async function SetStatus() {
@@ -262,12 +258,7 @@
       }
       SetStatus()
     }
-       
-      bot.chatAddPattern(
-        /(^(?:(?:\[.+?\])? ?(?:[A-Za-z0-9_]{3,16}) ●  )+)/,
-        'blacklist_check',
-        'Look for blacklisted players in the guild'
-      )
+
 	  
       const blacklist_check = (blacklist_check_content) => {
       	var guildMembers = blacklist_check_content.split(" ●  ");
@@ -279,11 +270,7 @@
 	  }
 	});
       } 
-      bot.chatAddPattern(
-        /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
-        'guild_chat',
-        'Custom Guild Chat Setup'
-      )
+
 	  
       const guild_chat = (rank_guild_chat, username_guild_chat, tag_guild_chat, message_guild_chat) => {
         if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
@@ -320,11 +307,7 @@
         return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
       }
 
-      bot.chatAddPattern(
-        /^Officer > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/,
-        'officer_chat',
-        'Custom Officer guild Chat Setup'
-      )
+
       const officer_chat = (rank_officer_chat, username_officer_chat, officer_chat_tag, message_officer_chat) => {
         
         if(!rank_officer_chat){var rank_officer_chat_emoji = ''}
@@ -338,11 +321,6 @@
         client.channels.cache.get(staffChannel).send(`${rank_officer_chat_emoji} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`)
       }
 
-      bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was kicked from the guild by (\[.+?\])? ?([A-Za-z0-9_]{3,16})!/,
-        'guild_kick',
-        'Guild Kick Setup'
-      )
 
       const guild_kick = (Rank1_guild_kick, username1_guild_kick, Rank2_guild_kick, username2_guild_kick) => {
         if(!Rank1_guild_kick){var Rank1_guild_kick = ''}
@@ -351,11 +329,6 @@
         messages.push(`-----------------------------------------------------\n**${Rank1_guild_kick} ${username1_guild_kick}** was kicked from the guild by **${Rank2_guild_kick} ${username2_guild_kick}**\n-----------------------------------------------------`)
       }
 
-      bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) joined the guild!/,
-        'guild_join',
-        'Guild Join Setup'
-      )
 
       async function checkIfUserBlacklisted(user){
         const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
@@ -395,24 +368,12 @@
 
 
 
-      bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) left the guild!/,
-        'guild_leave',
-        'Guild leave Setup'
-      )
-
-
       const guild_leave = (Rank_guild_leave, username_guild_leave) => {
         if(!Rank_guild_leave){var Rank_guild_leave = ''}
         // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
         messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
       }
 
-      bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was promoted from (.+) to (.+)/,
-        'guild_promote',
-        'Guild promote Setup'
-      )
 
 
       const guild_promote = (guild_promote_rank, guild_promote_username, guild_promote_oldRank, guild_promote_newRank) => {
@@ -421,23 +382,12 @@
         messages.push(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from ${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
       }
 
-      bot.chatAddPattern(
-        /^You cannot say the same message twice!/,
-        'cannot_say_same_msg_twice',
-        'Sends a message when hypixel blocks for spam.'
-      )
-
 
       const cannot_say_same_msg_twice = () => {
         // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
         messages.push("**Error: ** `You cannot say the same message twice!`")
       }
       
-      bot.chatAddPattern(
-        /^We blocked your comment "(.+)" as it is breaking our rules because (.+)/,
-        'comment_blocked',
-        'Sends a message when hypixel blocks for breaking chat rules.'
-      )
 
 
       const comment_blocked = (comment_blocked_comment, comment_blocked_reason) => {
@@ -445,11 +395,6 @@
         messages.push(`**Error: ** \`Your comment, \'${comment_blocked_comment}\' was blocked for \'${comment_blocked_reason}\'\``)
       }
 
-      bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was demoted from (.+) to (.+)/,
-        'guild_demote',
-        'Guild demote Setup'
-      )
 
 
       const guild_demote = (guild_demote_rank, guild_demote_username, guild_demote_oldRank, guild_demote_newRank) => {
@@ -458,13 +403,6 @@
         messages.push(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was demoted from ${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
       }
 
-
-
-      bot.chatAddPattern(
-        /(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has requested to join the Guild!/,
-        'guild_requesting',
-        'Guild requesting Setup'
-      )
 
 
       const guild_requesting = (guild_requesting_rank, guild_requesting_username) => {
@@ -492,35 +430,19 @@
         check_requesting_user()
       }
 
-      bot.chatAddPattern(
-        /^Guild > ([A-Za-z0-9_]{3,16}) left\./,
-        'guild_left_game',
-        'Guild left game Setup'
-      )
-
 
       const guild_left_game = (guild_left_game_name) => {
         // logger.info(`${guild_left_game_name} left the game.`)
         messages.push(`${guild_left_game_name} left the game.`)
         colour.push('0x2f3136')
       }      
-      
-      bot.chatAddPattern(
-        /^Guild > ([A-Za-z0-9_]{3,16}) joined\./,
-        'guild_joined_game',
-        'Guild joined game Setup'
-      )
+
       
       const guild_joined_game = (guild_joined_game_name) => {
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
         colour.push('0x2f3136')
       }
       
-      bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (\d*)([a-z])/,
-        'guild_mute',
-        'Guild mute Setup'
-      )
       
       var mute_time;
     
@@ -545,11 +467,7 @@
          }, mute_time)
       }
       
-      bot.chatAddPattern(
-        /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has unmuted (\[.+?\])? ?([A-Za-z0-9_]{3,16})/,
-        'guild_unmute',
-        'Guild unmute Setup'
-      )
+
       
       const guild_unmute = (guild_unmute_rank_staff, guild_unmute_staff, guild_unmute_rank_username, guild_unmute_username) => {
         if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
@@ -566,11 +484,6 @@
       }
 
 
-      bot.chatAddPattern(
-        /^From (?:\[.+?\])? ?([A-Za-z0-9_]{3,16}): (.+)/,
-        'msg_bot',
-        'bot msg in game Setup'
-      )
       
       const msg_bot = (msg_bot_username, msg_bot_message) => {
 
@@ -635,23 +548,41 @@
 }
   
 
-      bot.on('guild_chat', guild_chat)
-      bot.on('guild_kick', guild_kick)
-      bot.on('guild_join', guild_join)
-      bot.on('guild_leave', guild_leave)
-      bot.on('guild_promote', guild_promote)
-      bot.on('guild_demote', guild_demote)
-      bot.on('guild_requesting', guild_requesting)
-      bot.on('guild_joined_game', guild_joined_game)
+      bot.on('guild_chat', guild_chat);
+      bot.on('guild_kick', guild_kick);
+      bot.on('guild_join', guild_join);
+      bot.on('guild_leave', guild_leave);
+      bot.on('guild_promote', guild_promote);
+      bot.on('guild_demote', guild_demote);
+      bot.on('guild_requesting', guild_requesting);
+      bot.on('guild_joined_game', guild_joined_game);
       // bot.on('guild_left_game', guild_left_game)
-      bot.on('officer_chat', officer_chat)
-      bot.on('msg_bot', msg_bot)
-      bot.on('guild_mute', guild_mute)
-      bot.on('guild_unmute', guild_unmute)
-      bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice)
-      bot.on('comment_blocked',comment_blocked)
-      bot.on('guild_online', guild_online)
-      bot.on('blacklist_check', blacklist_check)
+      bot.on('officer_chat', officer_chat);
+      bot.on('msg_bot', msg_bot);
+      bot.on('guild_mute', guild_mute);
+      bot.on('guild_unmute', guild_unmute);
+      bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice);
+      bot.on('comment_blocked',comment_blocked);
+      bot.on('guild_online', guild_online);
+      bot.on('blacklist_check', blacklist_check);
+
+      bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
+      bot.chatAddPattern(regexes.blacklistCheck, 'blacklist_check', 'Look for blacklisted players in the guild');
+      bot.chatAddPattern(regexes.guildChat, 'guild_chat', 'Custom Guild Chat Setup');
+      bot.chatAddPattern(regexes.officerChat, 'officer_chat', 'Custom Officer guild Chat Setup');
+      bot.chatAddPattern(regexes.guildKick, 'guild_kick', 'Guild Kick Setup');
+      bot.chatAddPattern(regexes.guildJoin, 'guild_join', 'Guild Join Setup');
+      bot.chatAddPattern(regexes.guildLeave, 'guild_leave', 'Guild leave Setup');
+      bot.chatAddPattern(regexes.guildPromote, 'guild_promote', 'Guild promote Setup');
+      bot.chatAddPattern(regexes.cannotSaySameMessageTwice, 'cannot_say_same_msg_twice', 'Sends a message when hypixel blocks for spam.');
+      bot.chatAddPattern(regexes.commentBlocked, 'comment_blocked', 'Sends a message when hypixel blocks for breaking chat rules.');
+      bot.chatAddPattern(regexes.guildDemote, 'guild_demote', 'Guild demote Setup');
+      bot.chatAddPattern(regexes.guildRequesting, 'guild_requesting', 'Guild requesting Setup');
+      bot.chatAddPattern(regexes.guildLeftGame, 'guild_left_game', 'Guild left game Setup');
+      bot.chatAddPattern(regexes.guildJoinedGame, 'guild_joined_game', 'Guild joined game Setup');
+      bot.chatAddPattern(regexes.guildMute, 'guild_mute', 'Guild mute Setup');
+      bot.chatAddPattern(regexes.guildUnmute, 'guild_unmute', 'Guild unmute Setup');
+      bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
 
 
       const McChatLogger = log4js.getLogger("McChatLogs");
