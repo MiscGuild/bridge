@@ -5,8 +5,8 @@
   const Discord = require('discord.js')
   const client = new Discord.Client({autoReconnect:true})
   const serverID = "522586672148381726";
-  var channelID = '843517258755866664'
-  var staffChannel = '842912638815043614'
+  var channelID = '843517258755866664';
+  var staffChannel = '842912638815043614';
   const fetch = require('node-fetch');
   var log4js = require('log4js');
   var crypto = require("crypto");
@@ -15,7 +15,8 @@
   dotenv.config();
   const fs = require('fs');
   const blacklist = require('./blacklist.json');
-  const regexes = require('./regex')
+  const regexes = require('./regex');
+  const eventFunctions = fs.readdirSync('./eventFunctions').filter((file) => file.endsWith('.js'));
   var cron = require('node-cron');
   var welcomeIndex=0;
   // var serverID = process.env.SERVERID
@@ -26,7 +27,7 @@
   var options = {
     host: process.env.IP,
     port: process.env.PORT,
-    username: process.env.USERNAME,
+    username: process.env.EMAIL,
     password: process.env.PASSWORD,
     version: '1.16.5'
   }
@@ -247,17 +248,7 @@
 
       setInterval(function(){ bot.chat('/g online') }, 300000); // run g online every 5 mins for the below function
 	  
-      const guild_online = (guild_online_members) => {
-        async function SetStatus() {
-        const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)
-        .then(response => response.json())
-        .catch(err =>{return console.log(err)})
-        if(!HyAPI.playerCount){return client.user.setPresence({ activity: { name: `${guild_online_members.toLocaleString()} online Miscellaneous members and ??? players on Hypixel!`, type:"WATCHING" }, status: 'dnd' });
-      }
-        client.user.setPresence({ activity: { name: `${guild_online_members.toLocaleString()} online Miscellaneous members and ${HyAPI.playerCount.toLocaleString()} players on Hypixel!`, type:"WATCHING" }, status: 'dnd' });
-      }
-      SetStatus()
-    }
+      
 
 	  
       const blacklist_check = (blacklist_check_content) => {
@@ -469,19 +460,7 @@
       
 
       
-      const guild_unmute = (guild_unmute_rank_staff, guild_unmute_staff, guild_unmute_rank_username, guild_unmute_username) => {
-        if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
-        if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
-        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
-        let serverID = "522586672148381726";
-        let displayNickname = guild_unmute_username;
-        let serverMembers = client.guilds.cache.get(serverID).members
-        let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
-        if (!matchedMember) {return}
-        if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '849100433317298207')==true) {
-          serverMembers.get(matchedMember).roles.remove('849100433317298207');
-        } 
-      }
+      
 
 
       
@@ -560,11 +539,16 @@
       bot.on('officer_chat', officer_chat);
       bot.on('msg_bot', msg_bot);
       bot.on('guild_mute', guild_mute);
-      bot.on('guild_unmute', guild_unmute);
+      //bot.on('guild_unmute', guild_unmute);
       bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice);
       bot.on('comment_blocked',comment_blocked);
-      bot.on('guild_online', guild_online);
-      bot.on('blacklist_check', blacklist_check);
+      //bot.on('guild_online', guild_online);
+      // bot.on('blacklist_check', blacklist_check);
+
+      for (let file of eventFunctions) {
+        const event = require(`./eventFunctions/${file}`);
+        bot.on(event.name, (...args) => event.execute(...args));
+      }
 
       bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
       bot.chatAddPattern(regexes.blacklistCheck, 'blacklist_check', 'Look for blacklisted players in the guild');
@@ -991,4 +975,5 @@
   }
   })}})
   })
-      client.login(process.env.TOKEN)
+    module.exports = {client, staffChannel};
+    client.login(process.env.TOKEN)
