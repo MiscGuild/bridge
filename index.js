@@ -2,10 +2,10 @@
 //----------------------------------------------------------Discord--------------------------------------------------------------------------
 const Discord = require('discord.js');
 const client = new Discord.Client({autoReconnect:true});
-var prefix = ')';
+const prefix = ')';
 const serverID = "859916798111907871";
-var channelID = '870857510083518515';
-var staffChannelID = '880226624681951312';
+const channelID = '870857510083518515';
+const staffChannelID = '880226624681951312';
 var channel;
 // var serverID = process.env.SERVERID;
 // var channelID = process.env.OUTPUTCHANNEL;
@@ -14,10 +14,10 @@ var channel;
 
 //-------------------------------------------------------Integrations-------------------------------------------------------------------------
 const fetch = require('node-fetch');
-var crypto = require("crypto");
+const crypto = require("crypto");
 const { setTimeout, setInterval } = require('timers');
 const fs = require('fs');
-var log4js = require('log4js');
+const log4js = require('log4js');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -303,7 +303,7 @@ return false;
         async function msg_bot_aysnc() {
           if(msg_bot_message.startsWith('weeklygexp'||'weeklygxp')){
   
-            var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${msg_bot_username}`)
+            const minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${msg_bot_username}`)
             .then(res => res.json())
           fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${minecraftAPI.id}`)
           .then(res => res.json())
@@ -318,7 +318,7 @@ return false;
                       return sum; 
                     }
                     let gexpLIST = data.guild.members[item].expHistory
-                    var randomID = crypto.randomBytes(7).toString('hex');
+                    let randomID = crypto.randomBytes(7).toString('hex');
                     bot.chat(`/w ${msg_bot_username} ${msg_bot_username}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`); // 650
 
                   };
@@ -328,16 +328,16 @@ return false;
 
         else{
           let usernameMention = msg_bot_message.split(" ")[0]
-          var randomIDP = crypto.randomBytes(7).toString('hex');
+          let randomID = crypto.randomBytes(7).toString('hex');
 
         var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${usernameMention}`)
         .then(res => res.json())
-        if(!minecraftAPI){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
+        if(!minecraftAPI){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomID} `)}
 
       fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${minecraftAPI.id}`)
       .then(res => res.json())
       .then(data => {
-        if(!data.guild){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
+        if(!data.guild){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomID} `)}
           for (var item in data.guild.members) {
               if (data.guild.members[item].uuid == minecraftAPI.id) {
                 function gexpDFunction(gexpLIST) {
@@ -349,7 +349,7 @@ return false;
                   return sum; 
                 }
                 let gexpLIST = data.guild.members[item].expHistory
-                var randomID = crypto.randomBytes(7).toString('hex');
+                let randomID = crypto.randomBytes(7).toString('hex');
                 bot.chat(`/w ${msg_bot_username} ${minecraftAPI.name}'s total weekly gexp: ${gexpDFunction(gexpLIST).toLocaleString()} | ${randomID}`); 
 
               };
@@ -426,7 +426,7 @@ const blacklist_check = (blacklist_check_content) => {
         
         const messagesEmbed = new Discord.MessageEmbed()
         .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`)
-        var colourrand = colour[Math.floor(Math.random() * colour.length)]
+        let colourrand = colour[Math.floor(Math.random() * colour.length)]
         if (colour.length>1) {
           colourrand = '0x2f3136'
           while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
@@ -867,7 +867,7 @@ const blacklist_check = (blacklist_check_content) => {
       })}
 
 bot.on('message', message => {
-  var msg = message.toString()
+  let msg = message.toString()
   logger.info(message.toString())
 
   if(msg == 'Unknown command. Type "help" for help.'){return}
