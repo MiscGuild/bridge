@@ -60,12 +60,7 @@ for (let file of eventFunctions) {
 
 for (let file of botEvents) {
   const event = require(`./botevents/${file}`);
-  if (event.runOnce){
-    bot.on(event.name, (...args) => event.execute(...args));
-  }
-  else {
-    bot.on(event.name, (...args) => event.execute(...args));
-  }
+  bot.on(event.name, (...args) => event.execute(...args));
 }
 
   
