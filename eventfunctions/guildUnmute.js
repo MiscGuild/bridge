@@ -1,6 +1,6 @@
 const index = require('./../index.js');
 const client = index.client;
-const staffChannel = index.staffChannel;
+const staffChannelID = index.staffChannelID;
 const serverID = index.serverID;
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
   async execute(guild_unmute_rank_staff, guild_unmute_staff, guild_unmute_rank_username, guild_unmute_username){
     if(!guild_unmute_rank_staff){var guild_unmute_rank_staff = ''}
     if(!guild_unmute_rank_username){var guild_unmute_rank_username = ''}
-    client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
+    client.channels.cache.get(staffChannelID).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
     let displayNickname = guild_unmute_username;
     let serverMembers = client.guilds.cache.get(serverID).members
     let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);

@@ -5,7 +5,7 @@ const client = new Discord.Client({autoReconnect:true});
 var prefix = ')';
 const serverID = "859916798111907871";
 var channelID = '870857510083518515';
-var staffChannel = '880226624681951312';
+var staffChannelID = '880226624681951312';
 var channel;
 // var serverID = process.env.SERVERID;
 // var channelID = process.env.OUTPUTCHANNEL;
@@ -17,7 +17,7 @@ const fetch = require('node-fetch');
 var crypto = require("crypto");
 const { setTimeout, setInterval } = require('timers');
 const fs = require('fs');
-var cron = require('node-cron');
+var log4js = require('log4js');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -30,9 +30,8 @@ bot = mineflayer.createBot({
   port: process.env.PORT,
   username: process.env.EMAIL,
   password: process.env.PASSWORD,
-  version: '1.8.9',
+  version: '1.16.4',
 });
-bindEvents(bot);
 
 
 //----------------------------------------------------------Variables-------------------------------------------------------------------------
@@ -42,23 +41,32 @@ var messages = [];
 var colour = [];
 var sLogs = []
 
-module.exports = {client, staffChannel, bot, serverID};
+module.exports = {client, bot, channelID, staffChannelID, serverID, log4js};
 
 
 //---------------------------------------------------------Bot Files--------------------------------------------------------------------------
+const eventFunctions = fs.readdirSync('./eventfunctions').filter((file) => file.endsWith('.js'));
+const botEvents = fs.readdirSync('./botevents').filter((file) => file.endsWith('.js'));
 const blacklist = require('./blacklist.json');
 const regexes = require('./regex');
-const eventFunctions = fs.readdirSync('./eventFunctions').filter((file) => file.endsWith('.js'));
 const emojis = require('./emojis');
 
 //File Loops:
 //Event Functions
 for (let file of eventFunctions) {
-  const event = require(`./eventFunctions/${file}`);
+  const event = require(`./eventfunctions/${file}`);
   bot.on(event.name, (...args) => event.execute(...args));
 }
 
-
+for (let file of botEvents) {
+  const event = require(`./botevents/${file}`);
+  if (event.runOnce){
+    bot.on(event.name, (...args) => event.execute(...args));
+  }
+  else {
+    bot.on(event.name, (...args) => event.execute(...args));
+  }
+}
 
   
 client.on('ready', () => {
@@ -135,7 +143,7 @@ const officer_chat = (rank_officer_chat, username_officer_chat, officer_chat_tag
   else if(rank_officer_chat == '[MVP]'){var rank_officer_chat_emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`}
 
   // logger.info(`OFFICER > ${rank_guild_chat} ${username_guild_chat}: ${message_guild_chat}`)
-  client.channels.cache.get(staffChannel).send(`${rank_officer_chat_emoji} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`)
+  client.channels.cache.get(staffChannelID).send(`${rank_officer_chat_emoji} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`)
 }
 
 
@@ -266,7 +274,7 @@ return false;
       const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time, guild_mute_type) => {
         if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
         if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
-        client.channels.cache.get(staffChannel).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}${guild_mute_type}**\n-----------------------------------------------------`)
+        client.channels.cache.get(staffChannelID).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}${guild_mute_type}**\n-----------------------------------------------------`)
         let displayNickname = guild_mute_username;
         let serverMembers = client.guilds.cache.get(serverID).members.cache;
         
@@ -356,63 +364,6 @@ return false;
     return (Math.sqrt((2 * exp) + 30625) / 50) - 2.5
   }
 
-    
-function bindEvents(bot) {
-  bot.on('error', function(err) { // if the bot errors or crashes i made a function cause cool
-      console.log('Error attempting to reconnect: ' + err + '.');
-      errorLogs.error('Error attempting to reconnect: ' + err + '.')
-      channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 75s**')
-      setTimeout(function(){ 
-        console.log('Shutting down for automatic relog')    
-        channel.send('**SHUTTING DOWN FOR RELOG**')  
-        process.exit()
-      }, 75000);
-  });
-
-
-  bot.on('kicked', function(reason) {
-    console.log(reason)
-    console.log('I was kicked, auto relog will start in ~75s')
-    channel.send('**BOT WAS KICKED, IT WILL REBOOT IN 75s**\n```'+ reason + '```')
-    bot.end();
-    setTimeout(function(){ 
-      console.log('Shutting down for automatic relog')    
-      channel.send('**SHUTTING DOWN FOR RELOG**')  
-      process.exit()
-    }, 75000);
-  });
-};
-    
-bot.once('spawn', () => {
-  logger.info('Bot logged in!')
-
-  cron.schedule('0 * * * *', () => {
-    channel.send(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds!`)
-  });
-
-  setInterval(function(){
-    var randomIDQ = crypto.randomBytes(5).toString('hex');
-    bot.chat('/hub')
-    setTimeout (function(){
-      for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
-    },5000)
-    bot.chat('/chat g')
-  }, 3000000);
-
-  setTimeout (function(){
-    bot.chat('/g online')
-    for (var i = 0; i<15; i++) {bot.chat('/PLSSENDMETOLIMBO')}
-  },5000)
-  bot.chat('/chat g')
-
-  setTimeout (function(){
-    var randomIDQ = crypto.randomBytes(5).toString('hex');
-  }, 10000)
-
-  setInterval(function(){
-     bot.chat('/g online') 
-  }, 300000); // run g online every 5 mins
-})
 
 bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
 bot.chatAddPattern(regexes.blacklistCheck, 'blacklist_check', 'Look for blacklisted players in the guild');
@@ -502,7 +453,7 @@ const blacklist_check = (blacklist_check_content) => {
     
       client.on('message', message => {
       
-        if(message.channel.id == staffChannel){
+        if(message.channel.id == staffChannelID){
         if(message.content.startsWith(prefix)){return}
         if(message.author.bot){return}
         if(message.attachments.size > 0){return}
@@ -514,7 +465,7 @@ const blacklist_check = (blacklist_check_content) => {
       }
       });
 
-      var log4js = require('log4js');
+      
       log4js.configure({
         appenders: { 
           logs: { type: 'console', 
