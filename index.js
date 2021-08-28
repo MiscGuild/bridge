@@ -39,11 +39,10 @@ bot = mineflayer.createBot({
 
 //----------------------------------------------------------Variables-------------------------------------------------------------------------
 var welcomeIndex=0;
-var HypixelAPIKey = process.env.HypixelAPIKey;
 var messages = [];
 var colour = [];
 
-module.exports = {client, bot, channelID, staffChannelID, serverID, log4js};
+module.exports = {client, bot, channelID, staffChannelID, serverID};
 
 
 //---------------------------------------------------------Bot Files--------------------------------------------------------------------------

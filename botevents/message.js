@@ -1,9 +1,10 @@
 
 const index = require('./../index.js');
 const Discord = require('discord.js');
+const log4js =  require('log4js');
 const client = index.client;
-const logger = index.log4js.getLogger("Logs");
-const McChatLogger = index.log4js.getLogger("McChatLogs");
+const logger = log4js.getLogger("Logs");
+const McChatLogger = log4js.getLogger("McChatLogs");
 
 let sLogs = [];
 
