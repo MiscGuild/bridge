@@ -289,71 +289,7 @@ return false;
       
 
       
-      
-
-
-      
-      const msg_bot = (msg_bot_username, msg_bot_message) => {
-
-        async function msg_bot_aysnc() {
-          if(msg_bot_message.startsWith('weeklygexp'||'weeklygxp')){
-  
-            var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${msg_bot_username}`)
-            .then(res => res.json())
-          fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${minecraftAPI.id}`)
-          .then(res => res.json())
-          .then(data => {
-              for (var item in data.guild.members) {
-                  if (data.guild.members[item].uuid == minecraftAPI.id) {
-                    function gexpFunction(gexpLIST) {
-                      let sum = 0;
-                      for (let gexp of Object.values(gexpLIST)) {
-                        sum += gexp;
-                      }
-                      return sum; 
-                    }
-                    let gexpLIST = data.guild.members[item].expHistory
-                    var randomID = crypto.randomBytes(7).toString('hex');
-                    bot.chat(`/w ${msg_bot_username} ${msg_bot_username}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`); // 650
-
-                  };
-              }
-          });
-        } else if(msg_bot_message.startsWith('Boop!')) {bot.chat(`/boop ${msg_bot_username}`)}
-
-        else{
-          let usernameMention = msg_bot_message.split(" ")[0]
-          var randomIDP = crypto.randomBytes(7).toString('hex');
-
-        var minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${usernameMention}`)
-        .then(res => res.json())
-        if(!minecraftAPI){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
-
-      fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${minecraftAPI.id}`)
-      .then(res => res.json())
-      .then(data => {
-        if(!data.guild){return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomIDP} `)}
-          for (var item in data.guild.members) {
-              if (data.guild.members[item].uuid == minecraftAPI.id) {
-                function gexpDFunction(gexpLIST) {
-                  let sum = 0;
-                  for (let gexp of Object.values(gexpLIST)) {
-                    sum += gexp;
-                  }
-                
-                  return sum; 
-                }
-                let gexpLIST = data.guild.members[item].expHistory
-                var randomID = crypto.randomBytes(7).toString('hex');
-                bot.chat(`/w ${msg_bot_username} ${minecraftAPI.name}'s total weekly gexp: ${gexpDFunction(gexpLIST).toLocaleString()} | ${randomID}`); 
-
-              };
-          }
-      });
-    }
-  }
-  msg_bot_aysnc()
-}
+    
 
   function getNetworkLevel(exp){
     return (Math.sqrt((2 * exp) + 30625) / 50) - 2.5
@@ -860,30 +796,5 @@ const blacklist_check = (blacklist_check_content) => {
        } 
       }
       })}
-
-bot.on('message', message => {
-  var msg = message.toString()
-  logger.info(message.toString())
-  console.log(msg);
-
-  if(msg == 'Unknown command. Type "help" for help.'){return}
-  if(msg == 'A kick occurred in your connection, so you have been routed to limbo!'){return}
-  if(msg == 'disconnect.spam'){return}
-  if(msg == 'You were spawned in Limbo.'){return}
-  if(msg == '/limbo for more information.'){return}
-
-  sLogs.push(msg)
-  McChatLogger.info(msg)
-})
-
-setInterval(() => {
-  if(!sLogs.length){return}    
-  const messagesEmbed = new Discord.MessageEmbed()
-  .setDescription(`\`\`\`${sLogs.join('\r\n')}\`\`\``) 
-  messagesEmbed.setColor('0x2f3136')
-  client.channels.cache.get(`880218361529770014`).send(messagesEmbed);
-
-  sLogs = []
-}, 1000); //How often should we send the message groupings (MS)
 
 client.login(process.env.TOKEN);
