@@ -60,12 +60,7 @@ for (let file of eventFunctions) {
 
 for (let file of botEvents) {
   const event = require(`./botevents/${file}`);
-  if (event.runOnce){
-    bot.on(event.name, (...args) => event.execute(...args));
-  }
-  else {
-    bot.on(event.name, (...args) => event.execute(...args));
-  }
+  bot.on(event.name, (...args) => event.execute(...args));
 }
 
   
@@ -869,6 +864,7 @@ const blacklist_check = (blacklist_check_content) => {
 bot.on('message', message => {
   var msg = message.toString()
   logger.info(message.toString())
+  console.log(msg);
 
   if(msg == 'Unknown command. Type "help" for help.'){return}
   if(msg == 'A kick occurred in your connection, so you have been routed to limbo!'){return}

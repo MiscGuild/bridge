@@ -8,7 +8,6 @@ const logger = index.log4js.getLogger("Logs");
 
 module.exports = {
     name: 'spawn',
-    runOnce: true,
     execute () {
         logger.info('Bot logged in!')
     

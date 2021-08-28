@@ -5,7 +5,6 @@ const channel = client.channels.cache.get(index.channelID);
 
 module.exports = {
     name: 'kicked',
-    runOnce: false,
     execute(reason) {
         console.log(reason)
         console.log('I was kicked, auto relog will start in ~75s')
