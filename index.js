@@ -286,33 +286,6 @@ return false;
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
         colour.push('0x2f3136')
       }
-      
-      
-      var mute_time;
-    
-      const guild_mute = (guild_mute_rank_staff, guild_mute_staff, guild_mute_rank_username, guild_mute_username, guild_mute_time, guild_mute_type) => {
-        if(!guild_mute_rank_staff){var guild_mute_rank_staff = ''}
-        if(!guild_mute_rank_username){var guild_mute_rank_username = ''}
-        client.channels.cache.get(staffChannelID).send(`-----------------------------------------------------\n**${guild_mute_rank_staff} ${guild_mute_staff}** has muted **${guild_mute_rank_username} ${guild_mute_username}** for **${guild_mute_time}${guild_mute_type}**\n-----------------------------------------------------`)
-        let displayNickname = guild_mute_username;
-        let serverMembers = client.guilds.cache.get(serverID).members.cache;
-        
-        let matchedMember = serverMembers.findKey(user => user.displayName.split(" ")[0] === displayNickname);
-        if (!matchedMember) {return}
-        serverMembers.get(matchedMember).roles.add('849100433317298207');
-        if (guild_mute_type=='s') {mute_time = guild_mute_time*1000}
-        else if (guild_mute_type=='m') {mute_time = guild_mute_time*60000}
-        else if (guild_mute_type=='h') {mute_time = guild_mute_time*3600000}
-        else if (guild_mute_type=='d') {mute_time = guild_mute_time*86400000}
-        setTimeout(function() {
-          if (serverMembers.get(matchedMember).roles.cache.some(role => role.id === '849100433317298207')==true) {
-            serverMembers.get(matchedMember).roles.remove('849100433317298207');
-          } 
-         }, mute_time)
-      }
-      
-
-      
     
 
   function getNetworkLevel(exp){
@@ -340,21 +313,6 @@ bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
         
           
     
-        
-const blacklist_check = (blacklist_check_content) => {
-  var guildMembers = blacklist_check_content.split(" ●  ");
-  console.log(guildMembers)
-  guildMembers.forEach(function (player, index) {
-    if (checkIfUserBlacklisted(player)) {
-      //bot.chat(`/g kick ${player} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
-    console.log("Kicking " + player + "because they are blacklisted")
-    }
-  })
-}
-    
-        
-          
-      
     
           bot.on('guild_chat', guild_chat);
           bot.on('guild_kick', guild_kick);
@@ -367,7 +325,7 @@ const blacklist_check = (blacklist_check_content) => {
           // bot.on('guild_left_game', guild_left_game)
           bot.on('officer_chat', officer_chat);
           //bot.on('msg_bot', msg_bot);
-          bot.on('guild_mute', guild_mute);
+          //bot.on('guild_mute', guild_mute);
           //bot.on('guild_unmute', guild_unmute);
           bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice);
           bot.on('comment_blocked',comment_blocked);
