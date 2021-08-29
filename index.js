@@ -47,8 +47,8 @@ module.exports = {client, bot, channelID, staffChannelID, serverID};
 
 //---------------------------------------------------------Bot Files--------------------------------------------------------------------------
 const eventFunctions = fs.readdirSync('./eventfunctions').filter((file) => file.endsWith('.js'));
-const botEvents = fs.readdirSync('./botevents').filter((file) => file.endsWith('.js'));
-const clientEvents = fs.readdirSync('./clientevents').filter((file) => file.endsWith('.js'));
+const botEvents = fs.readdirSync('./events/minecraft').filter((file) => file.endsWith('.js'));
+const clientEvents = fs.readdirSync('./events/discord').filter((file) => file.endsWith('.js'));
 const blacklist = require('./resources/blacklist.json');
 const regexes = require('./resources/regex');
 const emojis = require('./resources/emojis');
@@ -61,12 +61,12 @@ for (let file of eventFunctions) {
 }
 
 for (let file of botEvents) {
-  const event = require(`./botevents/${file}`);
+  const event = require(`./events/minecraft/${file}`);
   bot.on(event.name, (...args) => event.execute(...args));
 }
 
 for (let file of clientEvents) {
-  const event = require(`./clientevents/${file}`);
+  const event = require(`./events/discord/${file}`);
   client.on(event.name, (...args) => event.execute(...args));
 }
   
