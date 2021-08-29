@@ -249,32 +249,6 @@ return false;
 
 
 
-      const guild_requesting = (guild_requesting_rank, guild_requesting_username) => {
-        if(!guild_requesting_rank){var guild_requesting_rank = ''}
-        // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
-        async function check_requesting_user(){
-          const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${guild_requesting_username}`)
-        .then(res => res.json())
-        for(var i in blacklist){
-          var guild_requesting_uuid = MojangAPI.uuid
-          if(blacklist[i].uuid == guild_requesting_uuid){
-          return bot.chat(`/oc The player ${guild_requesting_username} is on the blacklist! Do **NOT** accept their request.`)
-          }
-        }
-        
-        const HyAPI = await fetch(`https://api.hypixel.net/player?key=${process.env.HypixelAPIKey}&uuid=${guild_requesting_uuid}&player=${guild_requesting_username}`)
-        .then(response => response.json())
-        if (getNetworkLevel(HyAPI.player.networkExp) > 50) {
-          bot.chat(`/g accept ${guild_requesting_username}`)
-        }
-        else {
-          bot.chat(`/oc The player ${guild_requesting_username} is not network level 50!`)
-        }
-        }
-        check_requesting_user()
-      }
-
-
       const guild_left_game = (guild_left_game_name) => {
         // logger.info(`${guild_left_game_name} left the game.`)
         messages.push(`${guild_left_game_name} left the game.`)
@@ -286,11 +260,6 @@ return false;
         messages.push(`Welcome back, **${guild_joined_game_name}**!`)
         colour.push('0x2f3136')
       }
-    
-
-  function getNetworkLevel(exp){
-    return (Math.sqrt((2 * exp) + 30625) / 50) - 2.5
-  }
 
 
 bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
@@ -320,7 +289,7 @@ bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
           bot.on('guild_leave', guild_leave);
           bot.on('guild_promote', guild_promote);
           bot.on('guild_demote', guild_demote);
-          bot.on('guild_requesting', guild_requesting);
+          //bot.on('guild_requesting', guild_requesting);
           bot.on('guild_joined_game', guild_joined_game);
           // bot.on('guild_left_game', guild_left_game)
           bot.on('officer_chat', officer_chat);
