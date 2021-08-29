@@ -49,9 +49,9 @@ module.exports = {client, bot, channelID, staffChannelID, serverID};
 const eventFunctions = fs.readdirSync('./eventfunctions').filter((file) => file.endsWith('.js'));
 const botEvents = fs.readdirSync('./botevents').filter((file) => file.endsWith('.js'));
 const clientEvents = fs.readdirSync('./clientevents').filter((file) => file.endsWith('.js'));
-const blacklist = require('./blacklist.json');
-const regexes = require('./regex');
-const emojis = require('./emojis');
+const blacklist = require('./resources/blacklist.json');
+const regexes = require('./resources/regex');
+const emojis = require('./resources/emojis');
 
 //File Loops:
 //Event Functions
