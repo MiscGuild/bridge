@@ -14,7 +14,12 @@ dotenv.config();
 
 //----------------------------------------------------------Discord--------------------------------------------------------------------------
 const Discord = require('discord.js');
-const client = new Discord.Client({autoReconnect:true});
+const { Client, Intents } = require('discord.js');
+
+// const client = new Discord.Client({autoReconnect:true});
+const myIntents = new Intents(32509);
+const client = new Client({ intents: myIntents });
+
 var channelID = process.env.OUTPUTCHANNEL;
 var channel;
 
@@ -23,7 +28,7 @@ async function sendToDiscord(msg, color='0x2f3136', channel=channelID) {
   embed = new Discord.MessageEmbed()
   .setDescription(msg)
   .setColor(color);
-  channel.send(embed);
+  channel.send({embeds: [embed]});
 }
 
 
@@ -87,7 +92,7 @@ client.on('ready', () => {
     process.exit(1);
   }
   else {
-    sendToDiscord(`**${bot.username}** has logged onto \`${process.env.IP}\` and is now ready!`);
+    sendToDiscord(`**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!`);
   }
 
 
