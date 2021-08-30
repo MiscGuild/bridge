@@ -10,6 +10,14 @@ var channel;
 // var channelID = process.env.OUTPUTCHANNEL;
 // var staffChannel = process.env.STAFFCHANNEL;
 
+async function sendToDiscord(msg, color='0x2f3136', channel=channelID) {
+  channel = client.channels.cache.get(channel);
+  embed = new Discord.MessageEmbed()
+  .setDescription(msg)
+  .setColor(color);
+  channel.send(embed);
+}
+
 
 //-------------------------------------------------------Integrations-------------------------------------------------------------------------
 const fetch = require('node-fetch');
@@ -42,7 +50,7 @@ var welcomeIndex=0;
 var messages = [];
 var colour = [];
 
-module.exports = {client, bot, channelID, staffChannelID, serverID};
+module.exports = {client, bot, channelID, staffChannelID, serverID, sendToDiscord};
 
 
 //---------------------------------------------------------Bot Files--------------------------------------------------------------------------
@@ -51,7 +59,6 @@ const botEvents = fs.readdirSync('./events/minecraft').filter((file) => file.end
 const clientEvents = fs.readdirSync('./events/discord').filter((file) => file.endsWith('.js'));
 const blacklist = require('./resources/blacklist.json');
 const regexes = require('./resources/regex');
-const emojis = require('./resources/emojis');
 
 //File Loops:
 //Event Functions
@@ -69,17 +76,15 @@ for (let file of clientEvents) {
   const event = require(`./events/discord/${file}`);
   client.on(event.name, (...args) => event.execute(...args));
 }
+
+
   
 client.on('ready', () => {
 
   setInterval(function() {
     bot.chat('/g online');
   }, 300000)
-  
-  // Emojis
-  emojis.forEach((emojiID, emojiName) => {
-    eval('global.'+emojiName+'='+'client.emojis.cache.get("'+emojiID+'")');
-  });
+
   channel = client.channels.cache.get(channelID);
   
 
@@ -89,10 +94,7 @@ client.on('ready', () => {
     process.exit(1);
   }
   else {
-    const loggedInEmbed = new Discord.MessageEmbed()
-  .setDescription(`**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!`)
-  .setColor('0x2f3136')
-    channel.send(loggedInEmbed);
+    sendToDiscord("**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!");
   }
 
 
@@ -103,54 +105,10 @@ client.on('ready', () => {
 })
 
 
-const guild_chat = (rank_guild_chat, username_guild_chat, tag_guild_chat, message_guild_chat) => {
-  if(tag_guild_chat == '[MISC]'){var tag_chat_emojis = `${MISC1}${MISC2}${MISC3}`}
-  else if(tag_guild_chat == '[Active]'){var tag_chat_emojis = `${ACTIVE1}${ACTIVE2}${ACTIVE3}${ACTIVE4}`}
-  else if(tag_guild_chat == '[Res]'){var tag_chat_emojis = `${RES1}${RES2}${RES3}`}
-  else if(tag_guild_chat == '[GM]'){var tag_chat_emojis = `${GM1}${GM2}`}
-  else if(tag_guild_chat == '[Admin]'){var tag_chat_emojis = `${ADMIN1}${ADMIN2}${ADMIN3}${ADMIN4}`}
-  else if(tag_guild_chat == '[O]'){var tag_chat_emojis = `${OFFICER1}${OFFICER2}`}
-  
-  if(!rank_guild_chat){
-    var rankChat_Emoji = ''
-    colour.push('0xAAAAAA')
-  }
-  else if(rank_guild_chat == '[MVP+]'){
-    var rankChat_Emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`
-    colour.push('0x55FFFF')
-  }
-  else if(rank_guild_chat == '[MVP++]'){
-    var rankChat_Emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`
-    colour.push('0xFFAA00')
-  }
-  else if(rank_guild_chat == '[VIP]'){
-    var rankChat_Emoji = `\u200D  ${VIP1}${VIP2}${VIP3}` 
-    colour.push('0x55FF55') 
-  }
-  else if(rank_guild_chat == '[VIP+]'){
-    var rankChat_Emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}` 
-    colour.push('0x55FF55')
-  }
-  else if(rank_guild_chat == '[MVP]'){
-    var rankChat_Emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`
-    colour.push('0x55FFFF')
-  }
-  return messages.push(`${rankChat_Emoji} **${username_guild_chat}** ${tag_chat_emojis}: ${message_guild_chat}`)
-}
 
 
-const officer_chat = (rank_officer_chat, username_officer_chat, officer_chat_tag, message_officer_chat) => {
-  
-  if(!rank_officer_chat){var rank_officer_chat_emoji = ''}
-  else if(rank_officer_chat == '[MVP+]'){var rank_officer_chat_emoji = `${MVPPLUS1}${MVPPLUS2}${MVPPLUS3}${MVPPLUS4}`}
-  else if(rank_officer_chat == '[MVP++]'){var rank_officer_chat_emoji = `\u200D    ${MVPPLUSPLUS1}${MVPPLUSPLUS2}${MVPPLUSPLUS3}${MVPPLUSPLUS4}`}
-  else if(rank_officer_chat == '[VIP]'){var rank_officer_chat_emoji = `\u200D  ${VIP1}${VIP2}${VIP3}`}
-  else if(rank_officer_chat == '[VIP+]'){var rank_officer_chat_emoji = `\u200D     ${VIPPLUS1}${VIPPLUS2}${VIPPLUS3}`}
-  else if(rank_officer_chat == '[MVP]'){var rank_officer_chat_emoji = `\u200D   ${MVP1}${MVP2}${MVP3}`}
 
-  // logger.info(`OFFICER > ${rank_guild_chat} ${username_guild_chat}: ${message_guild_chat}`)
-  client.channels.cache.get(staffChannelID).send(`${rank_officer_chat_emoji} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`)
-}
+
 
 
 const guild_kick = (Rank1_guild_kick, username1_guild_kick, Rank2_guild_kick, username2_guild_kick) => {
@@ -283,7 +241,7 @@ bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
           
     
     
-          bot.on('guild_chat', guild_chat);
+          //bot.on('guild_chat', guild_chat);
           bot.on('guild_kick', guild_kick);
           bot.on('guild_join', guild_join);
           bot.on('guild_leave', guild_leave);
@@ -292,7 +250,7 @@ bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
           //bot.on('guild_requesting', guild_requesting);
           bot.on('guild_joined_game', guild_joined_game);
           // bot.on('guild_left_game', guild_left_game)
-          bot.on('officer_chat', officer_chat);
+          //bot.on('officer_chat', officer_chat);
           //bot.on('msg_bot', msg_bot);
           //bot.on('guild_mute', guild_mute);
           //bot.on('guild_unmute', guild_unmute);
