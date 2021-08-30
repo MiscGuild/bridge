@@ -13,7 +13,7 @@ setInterval(() => {
     .setDescription(`\`\`\`${sLogs.join('\r\n')}\`\`\``) 
     messagesEmbed.setColor('0x2f3136')
     client.channels.cache.get(process.env.LOGCHANNELID).send({embeds: [messagesEmbed]});
-  
+        // sLogs.push(msg)
     sLogs = []
 }, 1000); //How often should we send the message groupings (MS)
 
