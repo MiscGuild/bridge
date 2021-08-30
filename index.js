@@ -87,7 +87,7 @@ client.on('ready', () => {
     process.exit(1);
   }
   else {
-    sendToDiscord(`**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!`);
+    sendToDiscord(`**${bot.username}** has logged onto \`${process.env.IP}\` and is now ready!`);
   }
 
 
