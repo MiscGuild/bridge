@@ -103,56 +103,6 @@ client.on('ready', () => {
 })
 
 
-
-async function checkIfUserBlacklisted(user){
-  const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
-  .then(res => res.json())
-  for(var i in blacklist){
-    if(blacklist[i].uuid === MojangAPI.uuid) {
-console.log(blacklist[i]+"is equal to "+MojangAPI.uuid+", returning true.")
-      return true;
-}
-  }
-console.log("not blacklisted returning false")
-return false;
-}
-
-
-      const guild_join = (Rank_guild_join, username_guild_join) => {
-        var welcomeMessages = [
-          `Welcome to the #21 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,
-          `Welcome to the guild! Make sure to join the discord at discord.gg/misc`,
-          `Welcome to the guild, ${username_guild_join}! Join the discord at discord.gg/misc
-`,
-          `Welcome to the guild, ${username_guild_join}! Interact with the community more at discord.gg/misc`,
-        ];
-        if (!Rank_guild_join) {
-          var Rank_guild_join = "";
-        }
-        messages.push(
-          `-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`
-        );
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
-
-        setTimeout(() => {
-          bot.chat(welcomeMessages[welcomeIndex]);
-          welcomeIndex++;
-          if (welcomeIndex === 4) {
-            welcomeIndex = 0;
-          }
-        }, 6000);
-        console.log(checkIfUserBlacklisted(username_guild_join));
-        if (checkIfUserBlacklisted(username_guild_join) === true) {
-          bot.chat(
-            `/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
-          );
-          console.log(
-            "Kicking " + username_guild_join + " because they are blacklisted"
-          );
-        }
-      };   
-
-
 bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
 bot.chatAddPattern(regexes.blacklistCheck, 'blacklist_check', 'Look for blacklisted players in the guild');
 bot.chatAddPattern(regexes.guildChat, 'guild_chat', 'Custom Guild Chat Setup');
@@ -170,112 +120,87 @@ bot.chatAddPattern(regexes.guildJoinedGame, 'guild_joined_game', 'Guild joined g
 bot.chatAddPattern(regexes.guildMute, 'guild_mute', 'Guild mute Setup');
 bot.chatAddPattern(regexes.guildUnmute, 'guild_unmute', 'Guild unmute Setup');
 bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
-        
-          
-    
-    
-          //bot.on('guild_chat', guild_chat);
-          //bot.on('guild_kick', guild_kick);
-          bot.on('guild_join', guild_join);
-          //bot.on('guild_leave', guild_leave);
-          //bot.on('guild_promote', guild_promote);
-          //bot.on('guild_demote', guild_demote);
-          //bot.on('guild_requesting', guild_requesting);
-          //bot.on('guild_joined_game', guild_joined_game);
-          // bot.on('guild_left_game', guild_left_game)
-          //bot.on('officer_chat', officer_chat);
-          //bot.on('msg_bot', msg_bot);
-          //bot.on('guild_mute', guild_mute);
-          //bot.on('guild_unmute', guild_unmute);
-          //bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice);
-          //bot.on('comment_blocked',comment_blocked);
-          //bot.on('guild_online', guild_online);
-          // bot.on('blacklist_check', blacklist_check);
+  
 
+setInterval(() => {
+  if(!messages.length){return}    
+  
+  const messagesEmbed = new Discord.MessageEmbed()
+  .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`)
+  var colourrand = colour[Math.floor(Math.random() * colour.length)]
+  if (colour.length>1) {
+    colourrand = '0x2f3136'
+    while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
+  }
+  messagesEmbed.setColor(colourrand)
+  channel.send(messagesEmbed);
+
+  colour = []
+  messages = []
+}, 650); //How often should we send the message groupings (MS)
     
-    
-      setInterval(() => {
-        if(!messages.length){return}    
-        
-        const messagesEmbed = new Discord.MessageEmbed()
-        .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`)
-        var colourrand = colour[Math.floor(Math.random() * colour.length)]
-        if (colour.length>1) {
-          colourrand = '0x2f3136'
-          while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
-        }
-        messagesEmbed.setColor(colourrand)
-        channel.send(messagesEmbed);
-    
-        colour = []
-        messages = []
-      }, 650); //How often should we send the message groupings (MS)
-    
-      
-    
-      
 
       
-      log4js.configure({
-        appenders: { 
-          logs: { type: 'console', 
-          layout: {
-            type: 'pattern',
-            pattern: '%[%d{yyyy/MM/dd-hh.mm.ss}%] --> %m',
-          },
-        },
-          McChatLogs: { type: 'file', filename: 'logs/logs.log',
-          layout: {
-            type: 'pattern',
-            pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-            maxLogSize: 5000,
-            compress: true
-          },
-        
-          },
-          Errors: { type: 'file', filename: 'logs/Errors.log',
-          layout: {
-            type: 'pattern',
-            pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-            maxLogSize: 5000,
-            compress: true
-          },
-        },
-        Warn: { type: 'file', filename: 'logs/Warns.log',
-        layout: {
-          type: 'pattern',
-          pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-          maxLogSize: 5000,
-          compress: true
-        },
-        },
-        Debug: { type: 'file', filename: 'logs/Debug.log',
-        layout: {
-          type: 'pattern',
-          pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-          maxLogSize: 5000,
-          compress: true
-        },
-      },
-        },
-        categories: { 
-          default: { 
-            appenders: ['logs'], level: 'info' 
-          },
-          McChatLogs: { 
-            appenders: ['McChatLogs'], level: 'info' 
-          },
-          Errors: { 
-            appenders: ['Errors'], level: 'error' 
-          },
-          Warn: { 
-            appenders: ['Warn'], level: 'warn' 
-          },
-          Debug: { 
-            appenders: ['Debug'], level: 'debug' 
-          },
-      
-        }
-      });
+log4js.configure({
+  appenders: { 
+    logs: { type: 'console', 
+    layout: {
+      type: 'pattern',
+      pattern: '%[%d{yyyy/MM/dd-hh.mm.ss}%] --> %m',
+    },
+  },
+    McChatLogs: { type: 'file', filename: 'logs/logs.log',
+    layout: {
+      type: 'pattern',
+      pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
+      maxLogSize: 5000,
+      compress: true
+    },
+  
+    },
+    Errors: { type: 'file', filename: 'logs/Errors.log',
+    layout: {
+      type: 'pattern',
+      pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
+      maxLogSize: 5000,
+      compress: true
+    },
+  },
+  Warn: { type: 'file', filename: 'logs/Warns.log',
+  layout: {
+    type: 'pattern',
+    pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
+    maxLogSize: 5000,
+    compress: true
+  },
+  },
+  Debug: { type: 'file', filename: 'logs/Debug.log',
+  layout: {
+    type: 'pattern',
+    pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
+    maxLogSize: 5000,
+    compress: true
+  },
+},
+  },
+  categories: { 
+    default: { 
+      appenders: ['logs'], level: 'info' 
+    },
+    McChatLogs: { 
+      appenders: ['McChatLogs'], level: 'info' 
+    },
+    Errors: { 
+      appenders: ['Errors'], level: 'error' 
+    },
+    Warn: { 
+      appenders: ['Warn'], level: 'warn' 
+    },
+    Debug: { 
+      appenders: ['Debug'], level: 'debug' 
+    },
+
+  }
+});
 
 client.login(process.env.TOKEN);
