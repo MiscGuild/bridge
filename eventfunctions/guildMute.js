@@ -1,7 +1,7 @@
 const index = require('./../index.js');
 const client = index.client;
-const staffChannelID = index.staffChannelID;
-const serverID = index.serverID;
+const staffChannelID = process.env.STAFFCHANNEL;
+const serverID = process.env.SERVERID;
 
 module.exports = {
     name: 'guild_mute',

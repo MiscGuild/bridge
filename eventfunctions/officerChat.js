@@ -1,5 +1,5 @@
 const index = require('./../index.js');
-const staffChannelID = index.staffChannelID;
+const staffChannelID = process.env.STAFFCHANNEL;
 const getEmojiColor = require('../utilities/chatEmojis').getRankEmoji;
 
 module.exports = {

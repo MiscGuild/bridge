@@ -1,24 +1,3 @@
-
-//----------------------------------------------------------Discord--------------------------------------------------------------------------
-const Discord = require('discord.js');
-const client = new Discord.Client({autoReconnect:true});
-const serverID = "859916798111907871";
-var channelID = '870857510083518515';
-var staffChannelID = '880226624681951312';
-var channel;
-// var serverID = process.env.SERVERID;
-// var channelID = process.env.OUTPUTCHANNEL;
-// var staffChannel = process.env.STAFFCHANNEL;
-
-async function sendToDiscord(msg, color='0x2f3136', channel=channelID) {
-  channel = client.channels.cache.get(channel);
-  embed = new Discord.MessageEmbed()
-  .setDescription(msg)
-  .setColor(color);
-  channel.send(embed);
-}
-
-
 //-------------------------------------------------------Integrations-------------------------------------------------------------------------
 const fetch = require('node-fetch');
 const { setTimeout, setInterval } = require('timers');
@@ -31,6 +10,21 @@ const debugLogs = log4js.getLogger("Debug");
     
 const dotenv = require('dotenv');
 dotenv.config();
+
+
+//----------------------------------------------------------Discord--------------------------------------------------------------------------
+const Discord = require('discord.js');
+const client = new Discord.Client({autoReconnect:true});
+var channelID = process.env.OUTPUTCHANNEL;
+var channel;
+
+async function sendToDiscord(msg, color='0x2f3136', channel=channelID) {
+  channel = client.channels.cache.get(channel);
+  embed = new Discord.MessageEmbed()
+  .setDescription(msg)
+  .setColor(color);
+  channel.send(embed);
+}
 
 
 //---------------------------------------------------PrismarineJS/Mineflayer------------------------------------------------------------------
@@ -50,7 +44,7 @@ var welcomeIndex=0;
 var messages = [];
 var colour = [];
 
-module.exports = {client, bot, channelID, staffChannelID, serverID, sendToDiscord};
+module.exports = {client, bot, sendToDiscord};
 
 
 //---------------------------------------------------------Bot Files--------------------------------------------------------------------------
@@ -84,7 +78,6 @@ client.on('ready', () => {
   setInterval(function() {
     bot.chat('/g online');
   }, 300000)
-
   channel = client.channels.cache.get(channelID);
   
 
@@ -94,7 +87,7 @@ client.on('ready', () => {
     process.exit(1);
   }
   else {
-    sendToDiscord("**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!");
+    sendToDiscord(`**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!`);
   }
 
 

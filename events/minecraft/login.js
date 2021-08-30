@@ -3,7 +3,7 @@ const cron = require('node-cron');
 const log4js =  require('log4js');
 const client = index.client;
 const bot = index.bot;
-const channel = client.channels.cache.get(index.channelID);
+const channelID = process.env.OUTPUTCHANNEL;
 const logger = log4js.getLogger("Logs");
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
         logger.info('The bot has logged in!');
 
         cron.schedule('0 * * * *', () => {
-            channel.send(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds!`);
+            client.channels.cache.get(channelID).send(`I will AUTO Reboot in ONE minute. I will be back in 30 seconds!`);
         });
 
         setInterval(function(){

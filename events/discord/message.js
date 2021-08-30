@@ -1,7 +1,7 @@
 const index = require("../../index.js");
 const log4js =  require('log4js');
 const bot = index.bot;
-const channelID = index.channelID;
+const channelID = process.env.OUTPUTCHANNEL;
 const McChatLogger = log4js.getLogger("McChatLogs");
 
 module.exports = {

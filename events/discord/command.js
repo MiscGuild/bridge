@@ -5,7 +5,7 @@ const Discord = require("discord.js");
 const fetch = require('node-fetch');
 const bot = index.bot;
 const client = index.client;
-const channelID = index.channelID;
+const channelID = process.env.OUTPUTCHANNEL;
 
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");
