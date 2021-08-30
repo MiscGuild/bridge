@@ -104,19 +104,6 @@ client.on('ready', () => {
 
 
 
-
-
-
-
-
-const guild_kick = (Rank1_guild_kick, username1_guild_kick, Rank2_guild_kick, username2_guild_kick) => {
-  if(!Rank1_guild_kick){var Rank1_guild_kick = ''}
-  if(!Rank2_guild_kick){var Rank1_guild_kick = ''}
-  // logger.info(`-----------------------------------------------------\n**${Rank1_guild_kick} ${username1_guild_kick}** was kicked from the guild by **${Rank2_guild_kick} ${username2_guild_kick}**\n-----------------------------------------------------`)
-  messages.push(`-----------------------------------------------------\n**${Rank1_guild_kick} ${username1_guild_kick}** was kicked from the guild by **${Rank2_guild_kick} ${username2_guild_kick}**\n-----------------------------------------------------`)
-}
-
-
 async function checkIfUserBlacklisted(user){
   const MojangAPI = await fetch(`https://api.ashcon.app/mojang/v2/user/${user}`)
   .then(res => res.json())
@@ -163,59 +150,7 @@ return false;
             "Kicking " + username_guild_join + " because they are blacklisted"
           );
         }
-      };
-
-
-
-
-      const guild_leave = (Rank_guild_leave, username_guild_leave) => {
-        if(!Rank_guild_leave){var Rank_guild_leave = ''}
-        // logger.info(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
-        messages.push(`-----------------------------------------------------\n**${Rank_guild_leave} ${username_guild_leave}** left the guild!\n-----------------------------------------------------`)
-      }
-
-
-
-      const guild_promote = (guild_promote_rank, guild_promote_username, guild_promote_oldRank, guild_promote_newRank) => {
-        if(!guild_promote_rank){var guild_promote_rank = ''}
-        // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
-        messages.push(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from ${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
-      }
-
-
-      const cannot_say_same_msg_twice = () => {
-        // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
-        messages.push("**Error: ** `You cannot say the same message twice!`")
-      }
-      
-
-
-      const comment_blocked = (comment_blocked_comment, comment_blocked_reason) => {
-        // logger.info(`-----------------------------------------------------\n**${guild_promote_rank} ${guild_promote_username}** was promoted from **${guild_promote_oldRank} to ${guild_promote_newRank}!\n-----------------------------------------------------`)
-        messages.push(`**Error: ** \`Your comment, \'${comment_blocked_comment}\' was blocked for \'${comment_blocked_reason}\'\``)
-      }
-
-
-
-      const guild_demote = (guild_demote_rank, guild_demote_username, guild_demote_oldRank, guild_demote_newRank) => {
-        if(!guild_demote_rank){var guild_demote_rank = ''}
-        // logger.info(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was promoted from **${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
-        messages.push(`-----------------------------------------------------\n**${guild_demote_rank} ${guild_demote_username}** was demoted from ${guild_demote_oldRank} to ${guild_demote_newRank}!\n-----------------------------------------------------`)
-      }
-
-
-
-      const guild_left_game = (guild_left_game_name) => {
-        // logger.info(`${guild_left_game_name} left the game.`)
-        messages.push(`${guild_left_game_name} left the game.`)
-        colour.push('0x2f3136')
-      }      
-
-      
-      const guild_joined_game = (guild_joined_game_name) => {
-        messages.push(`Welcome back, **${guild_joined_game_name}**!`)
-        colour.push('0x2f3136')
-      }
+      };   
 
 
 bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
@@ -240,20 +175,20 @@ bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
     
     
           //bot.on('guild_chat', guild_chat);
-          bot.on('guild_kick', guild_kick);
+          //bot.on('guild_kick', guild_kick);
           bot.on('guild_join', guild_join);
-          bot.on('guild_leave', guild_leave);
-          bot.on('guild_promote', guild_promote);
-          bot.on('guild_demote', guild_demote);
+          //bot.on('guild_leave', guild_leave);
+          //bot.on('guild_promote', guild_promote);
+          //bot.on('guild_demote', guild_demote);
           //bot.on('guild_requesting', guild_requesting);
-          bot.on('guild_joined_game', guild_joined_game);
+          //bot.on('guild_joined_game', guild_joined_game);
           // bot.on('guild_left_game', guild_left_game)
           //bot.on('officer_chat', officer_chat);
           //bot.on('msg_bot', msg_bot);
           //bot.on('guild_mute', guild_mute);
           //bot.on('guild_unmute', guild_unmute);
-          bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice);
-          bot.on('comment_blocked',comment_blocked);
+          //bot.on('cannot_say_same_msg_twice', cannot_say_same_msg_twice);
+          //bot.on('comment_blocked',comment_blocked);
           //bot.on('guild_online', guild_online);
           // bot.on('blacklist_check', blacklist_check);
 
