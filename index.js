@@ -56,7 +56,6 @@ module.exports = {client, bot, sendToDiscord};
 const eventFunctions = fs.readdirSync('./eventfunctions').filter((file) => file.endsWith('.js'));
 const botEvents = fs.readdirSync('./events/minecraft').filter((file) => file.endsWith('.js'));
 const clientEvents = fs.readdirSync('./events/discord').filter((file) => file.endsWith('.js'));
-const blacklist = require('./resources/blacklist.json');
 const regexes = require('./resources/regex');
 
 //File Loops:
@@ -79,7 +78,6 @@ for (let file of clientEvents) {
 
   
 client.on('ready', () => {
-
   setInterval(function() {
     bot.chat('/g online');
   }, 300000)
@@ -120,24 +118,6 @@ bot.chatAddPattern(regexes.guildJoinedGame, 'guild_joined_game', 'Guild joined g
 bot.chatAddPattern(regexes.guildMute, 'guild_mute', 'Guild mute Setup');
 bot.chatAddPattern(regexes.guildUnmute, 'guild_unmute', 'Guild unmute Setup');
 bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
-  
-
-setInterval(() => {
-  if(!messages.length){return}    
-  
-  const messagesEmbed = new Discord.MessageEmbed()
-  .setDescription(`${messages.join('\r\n').replace("_", "\\_")}`)
-  var colourrand = colour[Math.floor(Math.random() * colour.length)]
-  if (colour.length>1) {
-    colourrand = '0x2f3136'
-    while (colourrand=='0x2f3136') {colourrand = colour[Math.floor(Math.random() * colour.length)];}
-  }
-  messagesEmbed.setColor(colourrand)
-  channel.send(messagesEmbed);
-
-  colour = []
-  messages = []
-}, 650); //How often should we send the message groupings (MS)
     
 
       
