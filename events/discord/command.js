@@ -22,8 +22,20 @@ module.exports = {
       .trim()
       .split(" ");
     const command = args.shift().toLowerCase();
+    if (command === "ping".toLowerCase()) {
+        message.reply({embeds: [{
+            description: `Pinging`,
+            color: 'RED'
+        }],  allowedMentions: { repliedUser: false }}).then(m => {
+            const ping = m.createdTimestamp - message.createdTimestamp;
+  
+            const embed = new MessageEmbed()
+            .setDescription(`Your ping is ${ping} ms`)
+            .setColor("GREEN")
 
-    if (command === "help".toLowerCase()) {
+            m.edit({embeds:[embed]})
+        });
+    } else if (command === "help".toLowerCase()) {
       if (message.member.roles.cache.some((role) => role.name === "Staff")) {
         const embed = new Discord.MessageEmbed()
           .setTitle("Commands")
