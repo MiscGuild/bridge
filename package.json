@@ -12,13 +12,15 @@
   "dependencies": {
     "discord.js": "13.1.0",
     "dotenv": "^9.0.2",
-    "node-cron": "^3.0.0",
     "fs": "0.0.1-security",
+    "glob": "^7.1.7",
     "log4js": "^6.3.0",
     "mineflayer": "3.6.0",
+    "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
     "prismarine-chat": "^1.0.3",
     "prismarine-viewer": "^1.19.3",
-    "sync-fetch": "^0.3.0"
+    "sync-fetch": "^0.3.0",
+    "util": "^0.12.4"
   }
 }

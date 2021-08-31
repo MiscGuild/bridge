@@ -8,9 +8,9 @@ dotenv.config();
 
 //----------------------------------------------------------Discord--------------------------------------------------------------------------
 const Discord = require('discord.js');
-const { Client, Intents } = require('discord.js');
-const myIntents = new Intents(32509);
-const client = new Client({ intents: myIntents });
+const { Client, Intents, Collection } = require('discord.js');
+const client = new Client({ intents: 32509 });
+module.exports = client;
 
 var channelID = process.env.OUTPUTCHANNEL;
 
@@ -58,6 +58,12 @@ for (let file of clientEvents) {
   const event = require(`./events/discord/${file}`);
   client.on(event.name, (...args) => event.execute(...args));
 }
+
+// Command Handler
+client.commands = new Collection();
+client.slashCommands = new Collection();
+
+require("./handler")(client);
 
 
 bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
