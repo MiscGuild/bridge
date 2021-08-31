@@ -20,18 +20,32 @@ The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord
 
 ## Installation
 
-* Install [NodeJs](https://nodejs.org/en/) version 14.x.x or later. 
+### Prerequisites
+- NodeJS 16.6.0 or later
+- Discord.js 13
+- NPM latest version
+- A full access Minecraft Java Edition account
+
+### Setup
+* Install [NodeJs](https://nodejs.org/en/) version 16.6 or later. 
 * Fill out the `TEMPLATE.env` file with your credentials and rename it to `.env`
 * Run the following commands in a terminal or command prompt in the bots directory.
 
 ```bash
+npm install discord.js
 npm install
 node index.js
 ```
 
 ## Contributing
-Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/dEsfnJkQcq) and go to `#programming-talk`
+Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/dEsfnJkQcq) and go to `#programming-talk`.
 
 Please test your code before committing it.
+
+## Acknowledgements
+Parts of this project use code from the following repositories:
+
+[Hypixel Guild Chat Bot](https://github.com/xMdb/hypixel-guild-chat-bot) Under GPL-3.0 License.
+
 ## License
-[MIT](https://github.com/MiscGuild/BridgeBot/blob/master/LICENSE)
+This is an open-source project licensed under the [MIT License.](https://github.com/MiscGuild/BridgeBot/blob/master/LICENSE)
