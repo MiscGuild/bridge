@@ -10,9 +10,13 @@ module.exports = {
             .then(response => response.json())
             .catch(err =>{return console.log(err)})
             if(!HyAPI.playerCount){return client.user.setPresence({ activities: [{ name: `${guild_online_members.toLocaleString()} online Miscellaneous members and ??? players on Hypixel!`, type:"WATCHING" }], status: 'dnd' });
+
             }
+
             client.user.setPresence({ activities: [{ name: `${guild_online_members.toLocaleString()} online Miscellaneous members and ${HyAPI.playerCount.toLocaleString()} players on Hypixel!`, type:"WATCHING" }], status: 'dnd' });
         }
      SetStatus()
+     client.user.setStatus('dnd');
+
     }  
 }
