@@ -1,6 +1,7 @@
 //-------------------------------------------------------Integrations-------------------------------------------------------------------------
 const fs = require('fs');
 var log4js = require('log4js');
+const log4jsConfig = require("./resources/log4jsConfigure.json")
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -8,8 +9,6 @@ dotenv.config();
 //----------------------------------------------------------Discord--------------------------------------------------------------------------
 const Discord = require('discord.js');
 const { Client, Intents } = require('discord.js');
-
-// const client = new Discord.Client({autoReconnect:true});
 const myIntents = new Intents(32509);
 const client = new Client({ intents: myIntents });
 
@@ -79,68 +78,6 @@ bot.chatAddPattern(regexes.guildMute, 'guild_mute', 'Guild mute Setup');
 bot.chatAddPattern(regexes.guildUnmute, 'guild_unmute', 'Guild unmute Setup');
 bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
     
-
-      
-log4js.configure({
-  appenders: { 
-    logs: { type: 'console', 
-    layout: {
-      type: 'pattern',
-      pattern: '%[%d{yyyy/MM/dd-hh.mm.ss}%] --> %m',
-    },
-  },
-    McChatLogs: { type: 'file', filename: 'logs/logs.log',
-    layout: {
-      type: 'pattern',
-      pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-      maxLogSize: 5000,
-      compress: true
-    },
-  
-    },
-    Errors: { type: 'file', filename: 'logs/Errors.log',
-    layout: {
-      type: 'pattern',
-      pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-      maxLogSize: 5000,
-      compress: true
-    },
-  },
-  Warn: { type: 'file', filename: 'logs/Warns.log',
-  layout: {
-    type: 'pattern',
-    pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-    maxLogSize: 5000,
-    compress: true
-  },
-  },
-  Debug: { type: 'file', filename: 'logs/Debug.log',
-  layout: {
-    type: 'pattern',
-    pattern: '%d{yyyy/MM/dd-hh.mm.ss} -> %m',
-    maxLogSize: 5000,
-    compress: true
-  },
-},
-  },
-  categories: { 
-    default: { 
-      appenders: ['logs'], level: 'info' 
-    },
-    McChatLogs: { 
-      appenders: ['McChatLogs'], level: 'info' 
-    },
-    Errors: { 
-      appenders: ['Errors'], level: 'error' 
-    },
-    Warn: { 
-      appenders: ['Warn'], level: 'warn' 
-    },
-    Debug: { 
-      appenders: ['Debug'], level: 'debug' 
-    },
-
-  }
-});
+log4js.configure(log4jsConfig);
 
 client.login(process.env.TOKEN);
