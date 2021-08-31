@@ -43,7 +43,7 @@ const botEvents = fs.readdirSync('./events/minecraft').filter((file) => file.end
 const clientEvents = fs.readdirSync('./events/discord').filter((file) => file.endsWith('.js'));
 const regexes = require('./resources/regex');
 
-//File Loops:
+//File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
 for (let file of eventFunctions) {
   const event = require(`./eventfunctions/${file}`);
   bot.on(event.name, (...args) => event.execute(...args));
