@@ -8,10 +8,12 @@ module.exports = {
     run: async (client, interaction, args) => {
         const embed = new MessageEmbed()
             .setTitle('Pinging...')
+            .setColor('RED')
         interaction.followUp({ embeds: [embed] }).then(msg => {
             const ping = msg.createdTimestamp - interaction.createdTimestamp;
             const embed2 = new MessageEmbed()
             .setTitle(`Your ping is ${ping} ms`)
+            .setColor('GREEN')
             msg.edit({embeds:[embed2]})
         })
 
