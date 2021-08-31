@@ -1,5 +1,5 @@
 const index = require("./../index.js");
-const blacklist = require("./../resources/blacklist.json");
+const blacklist = require("../blacklist.json");
 const getNetworkLevel = require("./../utilities/getNetworkLevel");
 const fetch = require("node-fetch");
 const bot = index.bot;
@@ -34,6 +34,6 @@ module.exports = {
       bot.chat(
         `/oc The player ${guild_requesting_username} is not network level 50!`
       );
-    }
+    } 
   },
 };
