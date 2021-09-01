@@ -77,7 +77,7 @@ module.exports = {
         .setDescription(
           `It seems you are lacking the permission to run this command.`
         );
-      return interaction.followUp({ embeds: [embed] });
+      return interaction.followUp({ embeds: [embed], ephemeral: true });
     }
 
     if (args[0] == "list") {
@@ -103,7 +103,7 @@ module.exports = {
           .setDescription(
             `Discord has a character limit and we have reached it with the message trying to be sent. Look at the blacklist list in <#${process.env.BLACKLIST_CHANNEL}>`
           );
-        return interaction.followUp({ embeds: [embed2] });
+        return interaction.followUp({ embeds: [embed2], ephemeral: true });
       }
       return interaction.followUp({ embeds: [embed] });
     } else if (args[0] == "dump") {
@@ -124,7 +124,7 @@ module.exports = {
             "```/blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to add to the blacklist```"
           );
 
-        return interaction.followUp({ embeds: [embed] });
+        return interaction.followUp({ embeds: [embed], ephemeral: true });
       }
 
       async function blacklistadd() {
@@ -136,7 +136,7 @@ module.exports = {
               "```/blacklist add <user> <end> <reason>\n                      ^^^^^\nYou must specify an end date (It can be never)```"
             );
 
-          return interaction.followUp({ embeds: [embed] });
+          return interaction.followUp({ embeds: [embed], ephemeral: true });
         }
 
         if (!args[3]) {
@@ -147,7 +147,7 @@ module.exports = {
               "```/blacklist add <user> <end> <reason>\n                               ^^^^^\nYou must specify a reason for the blacklist```"
             );
 
-          return interaction.followUp({ embeds: [embed] });
+          return interaction.followUp({ embeds: [embed], ephemeral: true });
         }
 
         const MojangAPI = await fetch(
@@ -160,7 +160,7 @@ module.exports = {
             .setDescription(
               `I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
             );
-          return interaction.followUp({ embeds: [embed] });
+          return interaction.followUp({ embeds: [embed], ephemeral: true });
         }
 
         for (const i in blacklist) {
@@ -171,7 +171,7 @@ module.exports = {
               .setDescription(
                 `That user appears to already be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
               );
-            return interaction.followUp({ embeds: [embed] });
+            return interaction.followUp({ embeds: [embed], ephemeral: true });
           }
         }
 
@@ -238,7 +238,7 @@ module.exports = {
           .setDescription(
             "```/blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to remove from the blacklist```"
           );
-        return interaction.followUp({ embeds: [embed] });
+        return interaction.followUp({ embeds: [embed], ephemeral: true });
       }
       async function blacklistremove() {
         try {
@@ -252,7 +252,7 @@ module.exports = {
               .setDescription(
                 `I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
               );
-            return interaction.followUp({ embeds: [embed] });
+            return interaction.followUp({ embeds: [embed], ephemeral: true });
           }
 
           function removeUserFromBlacklist(uuid) {
@@ -272,7 +272,7 @@ module.exports = {
                   .setDescription(
                     `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`/blacklist\` command`
                   );
-                return interaction.followUp({ embeds: [embed] });
+                return interaction.followUp({ embeds: [embed], ephemeral: true });
               }
               if (found) {
                 for (var i in blacklist) {
@@ -283,7 +283,7 @@ module.exports = {
                       .then((msg) => {
                         if (!msg) {
                           return interaction.followUp(
-                            "The message was not found, please delete it manually"
+                            "The message was not found, please delete it manually", ephemeral: true
                           );
                         }
                         msg.delete();
