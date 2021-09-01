@@ -38,7 +38,7 @@ module.exports = {
                 "It seems you are lacking the permission to run this command."
               );
     
-            return interaction.followUp({ embeds: [embed] });
+            return interaction.followUp({ embeds: [embed], ephemeral: true });
           }
     },
 };
