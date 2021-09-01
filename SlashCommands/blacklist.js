@@ -117,7 +117,7 @@ module.exports = {
             );
           return interaction.followUp({
             embeds: [embed],
-            files: [`${process.cwd()}/resources/blacklist.json`],
+            files: [`${process.cwd()}/blacklist.json`],
           });
         } else if(args[0] == 'add') {
 
