@@ -13,7 +13,7 @@ module.exports = {
 
         if (
             interaction.member.roles.cache.some((role) => role.name === "Staff") ||
-            interaction.author.id === "308343641598984203"
+            interaction.member.id === "308343641598984203"
           ) {
             const embed = new Discord.MessageEmbed()
               .setTitle("Rebooting")
