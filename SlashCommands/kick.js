@@ -29,7 +29,7 @@ module.exports = {
             .setDescription(
             "It seems you are lacking the permission to run this command."
           );
-        return interaction.followUp({ embeds: [embed] })
+        return interaction.followUp({ embeds: [embed], ephemeral: true })
         }
         
         bot.chat(`/g kick ${args[0]} ${args[1]} [Kicker: ${interaction.member.displayName}]`)
