@@ -283,7 +283,7 @@ module.exports = {
                       .then((msg) => {
                         if (!msg) {
                           return interaction.followUp(
-                            "The message was not found, please delete it manually", ephemeral: true
+                            "The message was not found, please delete it manually", {ephemeral: true}
                           );
                         }
                         msg.delete();

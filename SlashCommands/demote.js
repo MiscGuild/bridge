@@ -23,7 +23,7 @@ module.exports = {
             .setDescription(
             "It seems you are lacking the permission to run this command."
           );
-        return interaction.followUp({ embeds: [embed], ephemeral: true })
+        return interaction.followUp({ embeds: [embed], ephemeral: false })
         }
         
         bot.chat(`/g demote ${args[0]}`)

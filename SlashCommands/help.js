@@ -28,7 +28,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle('Commands')
             arrayOfSlashCommands.forEach(i => embed.addField(i.name, i.description)) 
-        interaction.followUp({ embeds: [embed] })
+        interaction.followUp({ embeds: [embed], ephemeral: false })
         
 
     },
