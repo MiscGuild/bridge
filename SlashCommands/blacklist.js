@@ -16,50 +16,62 @@ module.exports = {
     name: "blacklist",
     description: "add / remove a user to the blacklist or list and dump the blacklisted users",
     type: 'CHAT_INPUT',
-        options: [
-          {
-            "type": 3,
-            "name": "type",
-            "description": "what would you like to do on the blacklist?",
-            "required": true,
-            "choices": [
-              {
-                "name": "add",
-                "value": "add"
-              },
-              {
-                "name": "remove",
-                "value": "remove"
-              },
-              {
-                "name": "list",
-                "value": "list"
+    options: [
+      {
+         "name": "add",
+         "description": "Add a user to the blacklist",
+         "type": 1, 
+         "options": [
+                      {
+                          "name": "user",
+                          "description": "The user to add to the blacklist",
+                          "type": 3,
+                          "required": true
+                      },
+                      {
+                          "name": "end",
+                          "description": "The end date of the blacklist",
+                          "type": 3, 
+                          "required": true
+                      },
+                      {
+                        "name": "reason",
+                        "description": "The reason of the blacklist",
+                        "type": 3,
+                        "required": true
+                    }
+                  ], 
+                },        
+                  {
+                  "name": "remove",
+                  "description": "Removes a user from the blacklist",
+                  "type": 1, // 1 is type SUB_COMMAND
+                  "options": [
+                               {
+                                   "name": "user",
+                                   "description": "The user to add to the blacklist",
+                                   "type": 3,
+                                   "required": true
+                               },
+                           ],
+      },
+      {
+          "name": "list",
+          "description": "lists all users on the blacklist",
+          "type": 1,
+          
               },
               {
                 "name": "dump",
-                "value": "dump"
-              }
-            ]
-          },
-          {
-            "type": 3,
-            "name": "ign",
-            "description": "What is the ign of the player you would like to add/remove?",
-            "required": false
-          },
-          {
-            "type": 3,
-            "name": "end_date",
-            "description": "When should the blacklist end?",
-            "required": false
-          },
-          {
-            "type": 3,
-            "name": "reason",
-            "description": "What is the reason behind the blacklist? ",
-            "required": false
-          }
-        ],
+                "description": "Dumps the blacklist database",
+                "type": 1,
+                
+                    },
+                  
+                ],
+            
+      
+
    
     run: async (client, interaction, args) => {
 
@@ -195,7 +207,6 @@ module.exports = {
                   
                   blacklist.push({ user, uuid, end, reason, msgID });
 
-                  console.log(blacklist)
                 fs.writeFile(
                   "blacklist.json", // Cant accses the /resources for some reason
                   JSON.stringify(blacklist),
@@ -264,7 +275,7 @@ module.exports = {
                       .setTitle("Error")
                       // .setColor(CLR)
                       .setDescription(
-                        `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
+                        `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`/blacklist\` command`
                       );
                     return interaction.followUp({ embeds: [embed] });
                   }
