@@ -32,7 +32,7 @@ bot = mineflayer.createBot({
   username: process.env.EMAIL,
   password: process.env.PASSWORD,
   version: '1.16.4',
-  auth: microsoft,
+  auth: 'microsoft',
 });
 
 module.exports = {client, bot, sendToDiscord};
