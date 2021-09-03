@@ -6,24 +6,7 @@ const bot = index.bot;
 const sendToDiscord = index.sendToDiscord;
 const blacklist = require("../blacklist.json");
 
-async function checkIfUserBlacklisted(user) {
-  const MojangAPI = fetch(`https://api.ashcon.app/mojang/v2/user/${user}`).then(
-    (res) => res.json().then(json => {
 
-      console.log(json)
-      for (var i in blacklist) {
-        if (blacklist[i].uuid === json.uuid) {
-          console.log(
-            blacklist[i] + "is equal to " + json.uuid + ", returning true."
-          );
-          return true;
-        }
-      }
-      console.log('NOT BLACKLISTRED')
-      return false;
-    }));
-
-    };
     
 
 
@@ -49,15 +32,36 @@ module.exports = {
           bot.chat(welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)]);
         }, 3000);
         
+        async function checkIfUserBlacklisted(user) {
+          const MojangAPI = fetch(`https://api.ashcon.app/mojang/v2/user/${user}`).then(
+            (res) => res.json().then(json => {
+        
+              for (var i in blacklist) {
+                if (blacklist[i].uuid === json.uuid) {
+                  console.log(
+                    blacklist[i] + "is equal to " + json.uuid + ", returning true."
+                  );
+                  // return true;
+                  console.log('User Blacklisted, Kicking')
 
-        if (await checkIfUserBlacklisted(username_guild_join)) {
+                  bot.chat(`/g kick ${user} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`)
+                }
+              }
+              console.log('NOT BLACKLISTRED')
+              return false;
+            }));
+        
+            };
 
-          bot.chat(
-            `/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
-          );
-          console.log(
-            "Kicking " + username_guild_join + " because they are blacklisted"
-          );
-        }
+checkIfUserBlacklisted(username_guild_join)
+        // if (await checkIfUserBlacklisted(username_guild_join)) {
+
+        //   bot.chat(
+        //     `/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
+        //   );
+        //   console.log(
+        //     "Kicking " + username_guild_join + " because they are blacklisted"
+        //   );
+        // }
     }
 }
