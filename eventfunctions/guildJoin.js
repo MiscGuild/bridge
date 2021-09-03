@@ -10,6 +10,7 @@ async function checkIfUserBlacklisted(user) {
   const MojangAPI = fetch(`https://api.ashcon.app/mojang/v2/user/${user}`).then(
     (res) => res.json()
   );
+  console.log(MojangAPI)
   for (var i in blacklist) {
     if (blacklist[i].uuid === MojangAPI.uuid) {
       console.log(
@@ -18,6 +19,7 @@ async function checkIfUserBlacklisted(user) {
       return true;
     }
   }
+  console.log('NOT BLACKLISTRED')
   return false;
 };
 
