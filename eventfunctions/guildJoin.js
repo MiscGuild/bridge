@@ -1,5 +1,5 @@
 const index = require("./../index.js");
-const checkIfUserBlacklisted = require("./../utilities/checkIfUserBlacklisted.js");
+// const checkIfUserBlacklisted = require("./../utilities/checkIfUserBlacklisted.js");
 
 const bot = index.bot;
 const sendToDiscord = index.sendToDiscord;
