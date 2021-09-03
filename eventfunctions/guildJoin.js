@@ -8,20 +8,23 @@ const blacklist = require("../blacklist.json");
 
 async function checkIfUserBlacklisted(user) {
   const MojangAPI = fetch(`https://api.ashcon.app/mojang/v2/user/${user}`).then(
-    (res) => res.json()
-  );
-  console.log(MojangAPI)
-  for (var i in blacklist) {
-    if (blacklist[i].uuid === MojangAPI.uuid) {
-      console.log(
-        blacklist[i] + "is equal to " + MojangAPI.uuid + ", returning true."
-      );
-      return true;
-    }
-  }
-  console.log('NOT BLACKLISTRED')
-  return false;
-};
+    (res) => res.json().then(json => {
+
+      console.log(MojangAPI)
+      for (var i in blacklist) {
+        if (blacklist[i].uuid === MojangAPI.uuid) {
+          console.log(
+            blacklist[i] + "is equal to " + MojangAPI.uuid + ", returning true."
+          );
+          return true;
+        }
+      }
+      console.log('NOT BLACKLISTRED')
+      return false;
+    }));
+
+    };
+    
 
 
 module.exports = {
