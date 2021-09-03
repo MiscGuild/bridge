@@ -1,5 +1,6 @@
 const index = require("./../index.js");
-const checkIfUserBlacklisted = require("./../utilities/checkIfUserBlacklisted.js");
+const checkIfUserBlacklisted = require("./../utilities/checkIfUserBlacklisted.js").checkIfUserBlacklisted;
+
 const bot = index.bot;
 const sendToDiscord = index.sendToDiscord;
 
@@ -26,7 +27,9 @@ module.exports = {
           bot.chat(welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)]);
         }, 3000);
         
+
         if (await checkIfUserBlacklisted(username_guild_join)) {
+
           bot.chat(
             `/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
           );
