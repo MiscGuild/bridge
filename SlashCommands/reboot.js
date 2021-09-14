@@ -9,7 +9,7 @@ module.exports = {
     type: 'CHAT_INPUT',
  
     run: async (client, interaction, args) => {
-        let channel = client.channels.cache.get(process.env.OUTPUTCHANNEL);
+        let channel = client.channels.cache.get(process.env.OUTPUTCHANNELID);
 
         if (
             interaction.member.roles.cache.some((role) => role.name === "Staff") ||

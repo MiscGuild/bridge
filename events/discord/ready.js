@@ -2,7 +2,7 @@ const index = require("../../index.js");
 const client = index.client;
 const bot = index.bot;
 const sendToDiscord = index.sendToDiscord;
-const channelID = process.env.OUTPUTCHANNEL;
+const channelID = process.env.OUTPUTCHANNELID;
 
 const log4js = require("log4js");
 const logger = log4js.getLogger("logs");

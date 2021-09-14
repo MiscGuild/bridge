@@ -1,7 +1,7 @@
 const index = require('../../index.js');
 const client = index.client;
 const bot = index.bot;
-const channelID = process.env.OUTPUTCHANNEL;
+const channelID = process.env.OUTPUTCHANNELID;
 
 module.exports = {
     name: 'kicked',

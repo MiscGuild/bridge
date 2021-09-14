@@ -1,7 +1,7 @@
 const index = require('../../index.js');
 const log4js =  require('log4js');
 const client = index.client;
-const channelID = process.env.OUTPUTCHANNEL;
+const channelID = process.env.OUTPUTCHANNELID;
 const errorLogs = log4js.getLogger("Errors");
 
 module.exports = { 

@@ -12,7 +12,7 @@ const { Client, Intents, Collection } = require('discord.js');
 const client = new Client({ intents: 32509 });
 module.exports = client;
 
-var channelID = process.env.OUTPUTCHANNEL;
+var channelID = process.env.OUTPUTCHANNELID;
 
 async function sendToDiscord(msg, color='0x2f3136', channel=channelID) {
   channel = client.channels.cache.get(channel);
