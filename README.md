@@ -32,7 +32,6 @@ The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord
 * Run the following commands in a terminal or command prompt in the bots directory.
 
 ```bash
-npm install discord.js
 npm install
 node index.js
 ```
