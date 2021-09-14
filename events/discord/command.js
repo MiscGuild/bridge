@@ -1,5 +1,5 @@
 const index = require("../../index.js");
-const blacklist = require("../../blacklist.json");
+const blacklist = require("../../resources/blacklist.json");
 const log4js = require("log4js");
 const Discord = require("discord.js");
 const fetch = require("node-fetch");

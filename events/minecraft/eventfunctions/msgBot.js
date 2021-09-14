@@ -1,4 +1,4 @@
-const index = require('./../index.js');
+const index = require('../../../index.js');
 const bot = index.bot;
 const fetch = require('node-fetch');
 const crypto = require('crypto');

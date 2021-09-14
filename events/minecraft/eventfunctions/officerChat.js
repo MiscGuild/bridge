@@ -1,7 +1,7 @@
-const index = require('./../index.js');
+const index = require('../../../index.js');
 const sendToDiscord = index.sendToDiscord;
 const staffChannelID = process.env.STAFFCHANNEL;
-const chatEmojis = require('../utilities/chatEmojis')
+const chatEmojis = require('../../../utilities/chatEmojis')
 const getRankEmoji = chatEmojis.getRankEmoji;
 const getTagEmoji = chatEmojis.getTagEmoji;
 

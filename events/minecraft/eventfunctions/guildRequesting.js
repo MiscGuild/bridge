@@ -1,6 +1,6 @@
-const index = require("./../index.js");
-const blacklist = require("../blacklist.json");
-const getNetworkLevel = require("./../utilities/getNetworkLevel");
+const index = require("../../../index.js");
+const blacklist = require("../../../resources/blacklist.json");
+const getNetworkLevel = require("../../../utilities/getNetworkLevel.js");
 const fetch = require("node-fetch");
 const bot = index.bot;
 

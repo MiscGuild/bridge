@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const blacklist = require("../blacklist.json");
+const blacklist = require("../resources/blacklist.json");
 
 module.exports = async function checkIfUserBlacklisted(user) {
   const MojangAPI = fetch(`https://api.ashcon.app/mojang/v2/user/${user}`).then(

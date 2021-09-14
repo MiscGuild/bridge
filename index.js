@@ -39,14 +39,14 @@ module.exports = {client, bot, sendToDiscord};
 
 
 //---------------------------------------------------------Bot Files--------------------------------------------------------------------------
-const eventFunctions = fs.readdirSync('./eventfunctions').filter((file) => file.endsWith('.js'));
+const eventFunctions = fs.readdirSync('./events/minecraft/eventfunctions').filter((file) => file.endsWith('.js'));
 const botEvents = fs.readdirSync('./events/minecraft').filter((file) => file.endsWith('.js'));
 const clientEvents = fs.readdirSync('./events/discord').filter((file) => file.endsWith('.js'));
 const regexes = require('./resources/regex');
 
 //File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
 for (let file of eventFunctions) {
-  const event = require(`./eventfunctions/${file}`);
+  const event = require(`./events/minecraft/eventfunctions/${file}`);
   bot.on(event.name, (...args) => event.execute(...args));
 }
 

@@ -1,6 +1,6 @@
-const index = require('./../index.js');
+const index = require('../../../index.js');
 const sendToDiscord = index.sendToDiscord;
-const chatEmojis = require('../utilities/chatEmojis.js');
+const chatEmojis = require('../../../utilities/chatEmojis.js');
 const getRankEmoji = chatEmojis.getRankEmoji;
 const getTagEmoji = chatEmojis.getTagEmoji;
 
