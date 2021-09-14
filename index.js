@@ -1,7 +1,8 @@
 //-------------------------------------------------------Integrations-------------------------------------------------------------------------
 const fs = require('fs');
-var log4js = require('log4js');
+const log4js = require('log4js');
 const log4jsConfig = require("./resources/log4jsConfigure.json")
+log4js.configure(log4jsConfig);
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -10,7 +11,6 @@ dotenv.config();
 const Discord = require('discord.js');
 const { Client, Intents, Collection } = require('discord.js');
 const client = new Client({ intents: 32509 });
-module.exports = client;
 
 var channelID = process.env.OUTPUTCHANNELID;
 
@@ -88,7 +88,5 @@ bot.chatAddPattern(regexes.guildJoinedGame, 'guild_joined_game', 'Guild joined g
 bot.chatAddPattern(regexes.guildMute, 'guild_mute', 'Guild mute Setup');
 bot.chatAddPattern(regexes.guildUnmute, 'guild_unmute', 'Guild unmute Setup');
 bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
-    
-log4js.configure(log4jsConfig);
 
 client.login(process.env.TOKEN);

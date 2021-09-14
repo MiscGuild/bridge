@@ -197,7 +197,7 @@ module.exports = {
               .get(process.env.BLACKLIST_CHANNEL)
               .send({ embeds: [embed] })
               .then((blistmsg) => {
-                var msgID = blistmsg.id;
+                let msgID = blistmsg.id;
 
                 blacklist.push({ user, uuid, end, reason, msgID });
 
@@ -257,8 +257,8 @@ module.exports = {
 
           function removeUserFromBlacklist(uuid) {
             return new Promise((resolve, reject) => {
-              var found = false;
-              for (var i = 0; i < blacklist.length; i++) {
+              let found = false;
+              for (let i = 0; i < blacklist.length; i++) {
                 if (blacklist[i].uuid == uuid) {
                   found = true;
                   console.log("found uuid");
@@ -275,7 +275,7 @@ module.exports = {
                 return interaction.followUp({ embeds: [embed], ephemeral: true });
               }
               if (found) {
-                for (var i in blacklist) {
+                for (let i in blacklist) {
                   if (blacklist[i].uuid == uuid) {
                     client.channels.cache
                       .get(process.env.BLACKLIST_CHANNEL)

@@ -1,4 +1,4 @@
-const index = require('./../index.js');
+const index = require('../../../index.js');
 const client = index.client;
 const staffChannelID = process.env.STAFFCHANNELID;
 const serverID = process.env.SERVERID;

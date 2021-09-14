@@ -6,7 +6,7 @@ module.exports = async function checkIfUserBlacklisted(user) {
     (res) => res.json()
   );
   
-  for (var i in blacklist) {
+  for (let i in blacklist) {
     if (blacklist[i].uuid === MojangAPI.uuid) {
       return true;
     }
