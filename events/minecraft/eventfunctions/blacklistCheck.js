@@ -4,8 +4,8 @@ const bot = index.bot;
 
 module.exports = {
   name: "blacklist_check",
-  async execute(blacklist_check_content) {
-    let guildMembers = blacklist_check_content.split(" ●  ");
+  async execute(message) {
+    let guildMembers = message.split(" ●  ");
     for (let member of guildMembers) {
       if (await checkIfUserBlacklisted(member)) {
         bot.chat(

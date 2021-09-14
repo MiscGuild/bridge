@@ -5,29 +5,29 @@ const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlackliste
 
 module.exports = {
   name: "guild_join",
-  async execute(Rank_guild_join, username_guild_join) {
+  async execute(rank, username) {
     sendToDiscord(
-      `-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`
+      `-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`
     );
     // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
 
-    if (await checkIfUserBlacklisted(username_guild_join)) {
+    if (await checkIfUserBlacklisted(username)) {
       bot.chat(
-        `/g kick ${username_guild_join} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
+        `/g kick ${username} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
       );
       console.log(
-        "Kicking " + username_guild_join + " because they are blacklisted"
+        "Kicking " + username + " because they are blacklisted"
       );
     } else {
       const welcomeMessages = [
         `Welcome to the #19 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,
         `Welcome to the guild! Make sure to join the discord at discord.gg/misc`,
-        `Welcome to the guild, ${username_guild_join}! Join the discord at discord.gg/misc`,
-        `Welcome to the guild, ${username_guild_join}! Interact with the community more at discord.gg/misc`,
+        `Welcome to the guild, ${username}! Join the discord at discord.gg/misc`,
+        `Welcome to the guild, ${username}! Interact with the community more at discord.gg/misc`,
       ];
 
-      if (!Rank_guild_join) {
-        Rank_guild_join = "";
+      if (!rank) {
+        rank = "";
       }
 
       setTimeout(() => {

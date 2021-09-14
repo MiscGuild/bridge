@@ -5,11 +5,11 @@ const serverID = process.env.SERVERID;
 
 module.exports = {
   name: 'guild_unmute',
-  async execute(guild_unmute_rank_staff, guild_unmute_staff, guild_unmute_rank_username, guild_unmute_username){
-    if(!guild_unmute_rank_staff){guild_unmute_rank_staff = ''}
-    if(!guild_unmute_rank_username){guild_unmute_rank_username = ''}
-    client.channels.cache.get(staffChannelID).send(`-----------------------------------------------------\n**${guild_unmute_rank_staff} ${guild_unmute_staff}** has unmuted **${guild_unmute_rank_username} ${guild_unmute_username}**\n-----------------------------------------------------`)
-    let displayNickname = guild_unmute_username;
+  async execute(staffRank, staffUsername, unmutedRank, unmutedUsername){
+    if(!staffRank){staffRank = ''}
+    if(!unmutedRank){unmutedRank = ''}
+    client.channels.cache.get(staffChannelID).send(`-----------------------------------------------------\n**${staffRank} ${staffUsername}** has unmuted **${unmutedRank} ${unmutedUsername}**\n-----------------------------------------------------`)
+    let displayNickname = unmutedUsername;
     let serverMembers = client.guilds.cache.get(serverID).members
     let matchedMember = serverMembers.cache.find(m => m.displayName === displayNickname);
     if (!matchedMember) {return}

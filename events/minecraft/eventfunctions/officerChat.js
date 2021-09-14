@@ -7,16 +7,16 @@ const getTagEmoji = chatEmojis.getTagEmoji;
 
 module.exports = {
   name: "officer_chat",
-  async execute(rank_officer_chat, username_officer_chat, officer_chat_tag, message_officer_chat) {
-    let list =  await getRankEmoji(rank_officer_chat);
-    rank_officer_chat = list[0];
+  async execute(rank, username, tag, message) {
+    let list =  await getRankEmoji(rank);
+    rank = list[0];
     let color = list[1];
 
-    officer_chat_tag = await getTagEmoji(officer_chat_tag);
+    tag = await getTagEmoji(tag);
 
     // logger.info(`OFFICER > ${rank_guild_chat} ${username_guild_chat}: ${message_guild_chat}`)
     sendToDiscord(
-      `${rank_officer_chat} **${username_officer_chat}** ${officer_chat_tag}: ${message_officer_chat}`,
+      `${rank} **${username}** ${tag}: ${message}`,
       color,
       staffChannelID
     );

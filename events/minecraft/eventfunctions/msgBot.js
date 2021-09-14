@@ -13,13 +13,13 @@ function gexpFunction(gexpLIST) {
 
 module.exports = {
     name: 'msg_bot',
-    async execute (msg_bot_username, msg_bot_message){
+    async execute (username, message){
         async function msg_bot_aysnc() {
             let randomID = crypto.randomBytes(7).toString('hex');
             HypixelAPIKey = process.env.HypixelAPIKey;
-            if(msg_bot_message.startsWith('weeklygexp'||'weeklygxp')){
+            if(message.startsWith('weeklygexp'||'weeklygxp')){
 
-            let minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${msg_bot_username}`)
+            let minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
             .then(res => res.json())
             fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${minecraftAPI.id}`)
             .then(res => res.json())
@@ -27,15 +27,15 @@ module.exports = {
                 for (let item in data.guild.members) {
                     if (data.guild.members[item].uuid == minecraftAPI.id) {
                         let gexpLIST = data.guild.members[item].expHistory
-                        bot.chat(`/w ${msg_bot_username} ${msg_bot_username}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`);
+                        bot.chat(`/w ${username} ${username}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`);
                     };
                 }
             });
             } 
-            else if(msg_bot_message.startsWith('Boop!')) {bot.chat(`/boop ${msg_bot_username}`)}
+            else if(message.startsWith('Boop!')) {bot.chat(`/boop ${username}`)}
 
             else{
-                let usernameMention = msg_bot_message.split(" ")[0];
+                let usernameMention = message.split(" ")[0];
                 let validUser = true;
                 minecraftAPI = await fetch(`https://api.mojang.com/users/profiles/minecraft/${usernameMention}`)
                 .then(res => { 
@@ -44,7 +44,7 @@ module.exports = {
                     }
                     else {
                         validUser = false;
-                        return bot.chat(`/w ${msg_bot_username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomID}`);
+                        return bot.chat(`/w ${username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomID}`);
                     }
                 })
                 
@@ -53,11 +53,11 @@ module.exports = {
                     .then(res => {return res.json()})
                     .then(data => {
                         if(!data.guild){
-                            return bot.chat(`/w ${msg_bot_username} "${usernameMention}" does not seem to be in a guild | ${randomID} `)}
+                            return bot.chat(`/w ${username} "${usernameMention}" does not seem to be in a guild | ${randomID} `)}
                         for (let item in data.guild.members) {
                             if (data.guild.members[item].uuid == minecraftAPI.id) {
                                 let gexpLIST = data.guild.members[item].expHistory;
-                                return bot.chat(`/w ${msg_bot_username} ${minecraftAPI.name}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`); 
+                                return bot.chat(`/w ${username} ${minecraftAPI.name}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`); 
                             };
                         }
                     });
