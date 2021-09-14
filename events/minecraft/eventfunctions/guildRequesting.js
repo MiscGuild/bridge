@@ -8,7 +8,7 @@ module.exports = {
   name: "guild_requesting",
   async execute(guild_requesting_rank, guild_requesting_username) {
     if (!guild_requesting_rank) {
-      var guild_requesting_rank = "";
+      guild_requesting_rank = "";
     }
     // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
 

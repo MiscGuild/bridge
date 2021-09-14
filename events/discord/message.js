@@ -17,7 +17,7 @@ module.exports = {
       if (message.attachments.size > 0) {
         return;
       }
-      var user = message.member
+      let user = message.member
       if (message.content.length > 100) {
         return message.channel.send(
           `Your message is too long! ${message.content.length}/100`

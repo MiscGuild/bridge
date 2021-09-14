@@ -9,7 +9,8 @@ const channelID = process.env.OUTPUTCHANNELID;
 const fs = require("fs");
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");
-var CLR;
+let CLR;
+
 module.exports = {
   name: "message",
   async execute(message) {
@@ -82,7 +83,7 @@ module.exports = {
     } else if (command === "command".toLowerCase()) {
       try {
         if (message.member.roles.cache.some((role) => role.name === "Staff")) {
-          var user = message.member
+          let user = message.member
 
           if (!args.length) {
             const embed = new Discord.MessageEmbed()
@@ -298,7 +299,7 @@ module.exports = {
                     .get(process.env.BLACKLIST_CHANNEL)
                     .send({ embeds: [embed] })
                     .then((blistmsg) => {
-                      var msgID = blistmsg.id;
+                      let msgID = blistmsg.id;
                       blacklist.push({ user, uuid, end, reason, msgID });
                     });
 
@@ -357,8 +358,8 @@ module.exports = {
 
                 function removeUserFromBlacklist(uuid) {
                   return new Promise((resolve, reject) => {
-                    var found = false;
-                    for (var i = 0; i < blacklist.length; i++) {
+                    let found = false;
+                    for (let i = 0; i < blacklist.length; i++) {
                       if (blacklist[i].uuid == uuid) {
                         found = true;
                         console.log("found uuid");
@@ -375,7 +376,7 @@ module.exports = {
                       return message.channel.send({ embeds: [embed] });
                     }
                     if (found) {
-                      for (var i in blacklist) {
+                      for (let i in blacklist) {
                         if (blacklist[i].uuid == uuid) {
                           client.channels.cache
                             .get(process.env.BLACKLIST_CHANNEL)

@@ -27,7 +27,7 @@ module.exports = {
       ];
 
       if (!Rank_guild_join) {
-        var Rank_guild_join = "";
+        Rank_guild_join = "";
       }
 
       setTimeout(() => {

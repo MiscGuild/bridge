@@ -20,7 +20,7 @@ module.exports = {
     name: 'message',
     runOnce: false,
     async execute(message){
-        var msg = message.toString()
+        let msg = message.toString()
         logger.info(message.toString())
         if(!msg){return}
         if(msg == 'Unknown command. Type "help" for help.'){return}
