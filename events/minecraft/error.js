@@ -6,6 +6,7 @@ const errorLogs = log4js.getLogger("Errors");
 
 module.exports = { 
     name: 'error',
+    runOnce: false,
     execute(err) {
         console.log('Error attempting to reconnect: ' + err + '.');
         errorLogs.error('Error attempting to reconnect: ' + err + '.')

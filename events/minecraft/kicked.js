@@ -5,6 +5,7 @@ const channelID = process.env.OUTPUTCHANNEL;
 
 module.exports = {
     name: 'kicked',
+    runOnce: false,
     execute(reason) {
         console.log(reason)
         console.log('I was kicked, auto relog will start in ~75s')

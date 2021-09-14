@@ -22,6 +22,12 @@ async function sendToDiscord(msg, color='0x2f3136', channel=channelID) {
   channel.send({embeds: [embed]});
 }
 
+// Command Handler
+client.commands = new Collection();
+client.slashCommands = new Collection();
+
+require("./handler")(client);
+
 
 //---------------------------------------------------PrismarineJS/Mineflayer------------------------------------------------------------------
 const mineflayer = require('mineflayer');
@@ -52,19 +58,17 @@ for (let file of eventFunctions) {
 
 for (let file of botEvents) {
   const event = require(`./events/minecraft/${file}`);
-  bot.on(event.name, (...args) => event.execute(...args));
+  if (event.runOnce){
+    bot.once(event.name, (...args) => event.execute(...args));
+  } else {
+    bot.on(event.name, (...args) => event.execute(...args));
+  }
 }
 
 for (let file of clientEvents) {
   const event = require(`./events/discord/${file}`);
   client.on(event.name, (...args) => event.execute(...args));
 }
-
-// Command Handler
-client.commands = new Collection();
-client.slashCommands = new Collection();
-
-require("./handler")(client);
 
 
 bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');

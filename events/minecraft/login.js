@@ -8,6 +8,7 @@ const logger = log4js.getLogger("Logs");
 
 module.exports = {
     name: 'login',
+    runOnce: true,
     async execute(){
         logger.info('The bot has logged in!');
 
@@ -20,8 +21,10 @@ module.exports = {
             bot.chat('/ac \u00a7');
         }, 3000000);
 
-        bot.chat('/ac \u00a7')
-        bot.chat('/chat g');
-        bot.chat('/g online');
+        setTimeout(function(){
+            bot.chat('/ac \u00a7')
+            bot.chat('/chat g');
+            bot.chat('/g online');
+        }, 3000);
     }
 }

@@ -18,6 +18,7 @@ setInterval(() => {
 
 module.exports = {
     name: 'message',
+    runOnce: false,
     async execute(message){
         var msg = message.toString()
         logger.info(message.toString())
