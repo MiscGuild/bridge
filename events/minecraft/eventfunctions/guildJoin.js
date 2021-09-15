@@ -9,7 +9,7 @@ module.exports = {
     sendToDiscord(
       `-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`
     );
-    // logger.info(`-----------------------------------------------------\n**${Rank_guild_join} ${username_guild_join}** joined the guild!\n-----------------------------------------------------`)
+    // logger.info(`-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`)
 
     if (await checkIfUserBlacklisted(username)) {
       bot.chat(

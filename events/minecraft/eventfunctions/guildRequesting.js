@@ -10,7 +10,7 @@ module.exports = {
     if (!rank) {
       rank = "";
     }
-    // logger.info(`-----------------------------------------------------\n**${guild_requesting_rank} ${guild_requesting_username}** is requesting to join the guild! \nA staff member can do \`)command g accept ${guild_requesting_username}\`\n-----------------------------------------------------`)
+    // logger.info(`-----------------------------------------------------\n**${rank} ${username}** is requesting to join the guild! \nA staff member can do \`)command g accept ${username}\`\n-----------------------------------------------------`)
 
     if (await checkIfUserBlacklisted(username)) {
       bot.chat(

@@ -14,7 +14,7 @@ module.exports = {
 
     tag = await getTagEmoji(tag);
 
-    // logger.info(`OFFICER > ${rank_guild_chat} ${username_guild_chat}: ${message_guild_chat}`)
+    // logger.info(`OFFICER > ${rank} ${username}: ${message}`)
     sendToDiscord(
       `${rank} **${username}** ${tag}: ${message}`,
       color,

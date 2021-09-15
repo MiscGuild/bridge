@@ -4,7 +4,7 @@ const sendToDiscord = index.sendToDiscord;
 module.exports = {
     name: "guild_left_game",
     async execute(username){
-        // logger.info(`${guild_left_game_name} left the game.`);
+        // logger.info(`${username} left the game.`);
         sendToDiscord(`**${username}** left the game.`);
     }   
 }
