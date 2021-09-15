@@ -53,7 +53,6 @@ const regexes = require('./resources/regex');
 //File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
 for (let file of eventFunctions) {
   const event = require(`./events/minecraft/eventfunctions/${file}`);
-  const eventName = event.name;
   bot.on(event.name, (...args) => event.execute(...args));
   bot.chatAddPattern(regexes[event.name], `${event.name}`);
 }
