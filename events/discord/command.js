@@ -39,8 +39,8 @@ module.exports = {
           .setFooter(
             "You can send messages ingame by typing in #bridge | Prefix: " +
               process.env.PREFIX
-          )
-          // .setColor(CLR);
+          );
+        // .setColor(CLR);
 
         return message.channel.send({ embeds: [embed] });
       } else {
@@ -50,8 +50,8 @@ module.exports = {
           .setFooter(
             "You can send messages ingame by typing in #bridge | Prefix: " +
               process.env.PREFIX
-          )
-          // .setColor(CLR);
+          );
+        // .setColor(CLR);
 
         return message.channel.send({ embeds: [embed] });
       }
@@ -83,7 +83,7 @@ module.exports = {
     } else if (command === "command".toLowerCase()) {
       try {
         if (message.member.roles.cache.some((role) => role.name === "Staff")) {
-          let user = message.member
+          let user = message.member;
 
           if (!args.length) {
             const embed = new Discord.MessageEmbed()
@@ -96,7 +96,9 @@ module.exports = {
           if (args[1] == "kick".toLowerCase()) {
             return (
               bot.chat(
-                `/${args.join(" ").toString()} [Kicker: ${message.member.displayName}]`
+                `/${args.join(" ").toString()} [Kicker: ${
+                  message.member.displayName
+                }]`
               ),
               message.react("✅")
             );
@@ -136,7 +138,7 @@ module.exports = {
         }
       } catch (err) {
         errorLogs.error(err);
-        console.log(err)
+        console.log(err);
         const embed = new Discord.MessageEmbed()
           .setTitle("Error")
           // .setColor(CLR)
@@ -223,33 +225,119 @@ module.exports = {
               return message.channel.send({ embeds: [embed] });
             }
 
-            async function blacklistadd() {
-              if (!args[2]) {
+            if (!args[2]) {
+              const embed = new Discord.MessageEmbed()
+                .setTitle("Error | Invalid Arguments")
+                // .setColor(CLR)
+                .setDescription(
+                  "```" +
+                    process.env.PREFIX +
+                    "blacklist add <user> <end> <reason>\n                      ^^^^^\nYou must specify an end date (It can be never)```"
+                );
+
+              return message.channel.send({ embeds: [embed] });
+            }
+
+            if (!args[3]) {
+              const embed = new Discord.MessageEmbed()
+                .setTitle("Error | Invalid Arguments")
+                // .setColor(CLR)
+                .setDescription(
+                  "```" +
+                    process.env.PREFIX +
+                    "blacklist add <user> <end> <reason>\n                               ^^^^^\nYou must specify a reason for the blacklist```"
+                );
+
+              return message.channel.send({ embeds: [embed] });
+            }
+
+            const MojangAPI = await fetch(
+              `https://api.ashcon.app/mojang/v2/user/${args[1]}`
+            ).then((res) => res.json());
+            if (!MojangAPI.uuid) {
+              const embed = new Discord.MessageEmbed()
+                .setTitle("Error")
+                // .setColor(CLR)
+                .setDescription(
+                  `I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
+                );
+              return message.channel.send({ embeds: [embed] });
+            }
+
+            for (const i in blacklist) {
+              if (blacklist[i].uuid == MojangAPI.uuid) {
                 const embed = new Discord.MessageEmbed()
-                  .setTitle("Error | Invalid Arguments")
+                  .setTitle("Error")
                   // .setColor(CLR)
                   .setDescription(
-                    "```" +
-                      process.env.PREFIX +
-                      "blacklist add <user> <end> <reason>\n                      ^^^^^\nYou must specify an end date (It can be never)```"
+                    `That user appears to already be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
                   );
-
                 return message.channel.send({ embeds: [embed] });
               }
+            }
 
-              if (!args[3]) {
-                const embed = new Discord.MessageEmbed()
-                  .setTitle("Error | Invalid Arguments")
-                  // .setColor(CLR)
-                  .setDescription(
-                    "```" +
-                      process.env.PREFIX +
-                      "blacklist add <user> <end> <reason>\n                               ^^^^^\nYou must specify a reason for the blacklist```"
-                  );
+            let user = MojangAPI.username;
+            let uuid = MojangAPI.uuid;
+            let end = args[2];
+            let reason = args.slice(3).join(" ");
+            return new Promise((resolve, reject) => {
+              const embed = new Discord.MessageEmbed()
+                .setTitle(user)
+                .setAuthor(
+                  "Blacklist",
+                  "https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png"
+                ) /*           * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.           */
+                .setColor("ff0000")
+                .setFooter(`UUID: ${uuid}`)
+                .setThumbnail(`https://visage.surgeplay.com/full/${uuid}.png`)
+                .setTimestamp()
+                .setURL(`http://plancke.io/hypixel/player/stats/${uuid}`)
 
-                return message.channel.send({ embeds: [embed] });
-              }
+                .addField("IGN:", user, false)
+                .addField("End:", end, false)
+                .addField("Reason:", reason, false);
 
+              client.channels.cache
+                .get(process.env.BLACKLISTCHANNEL)
+                .send({ embeds: [embed] })
+                .then((blistmsg) => {
+                  let msgID = blistmsg.id;
+                  blacklist.push({ user, uuid, end, reason, msgID });
+                });
+
+              fs.writeFile(
+                "blacklist.json",
+                JSON.stringify(blacklist),
+                (err) => {
+                  if (err) reject(err);
+                  const embed = new Discord.MessageEmbed()
+                    .setTitle("Done ☑️")
+                    // .setColor(
+                    .setThumbnail(
+                      `https://crafatar.com/avatars/${MojangAPI.uuid}`
+                    )
+
+                    .setDescription(
+                      `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+                    );
+                  return message.channel.send({ embeds: [embed] });
+                }
+              );
+            });
+          } else if (args[0] == "remove".toLowerCase()) {
+            if (!args[1]) {
+              const embed = new Discord.MessageEmbed()
+                .setTitle("Error | Invalid Arguments")
+                // .setColor(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
+                .setDescription(
+                  "```" +
+                    process.env.PREFIX +
+                    "blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to remove from the blacklist```"
+                );
+              return message.channel.send({ embeds: [embed] });
+            }
+
+            try {
               const MojangAPI = await fetch(
                 `https://api.ashcon.app/mojang/v2/user/${args[1]}`
               ).then((res) => res.json());
@@ -263,167 +351,70 @@ module.exports = {
                 return message.channel.send({ embeds: [embed] });
               }
 
-              for (const i in blacklist) {
-                if (blacklist[i].uuid == MojangAPI.uuid) {
+              let uuid = MojangAPI.uuid;
+              return new Promise((resolve, reject) => {
+                let found = false;
+                for (let i = 0; i < blacklist.length; i++) {
+                  if (blacklist[i].uuid == uuid) {
+                    found = true;
+                    console.log("found uuid");
+                    break;
+                  }
+                }
+                if (!found) {
                   const embed = new Discord.MessageEmbed()
                     .setTitle("Error")
                     // .setColor(CLR)
                     .setDescription(
-                      `That user appears to already be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
+                      `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
                     );
                   return message.channel.send({ embeds: [embed] });
                 }
-              }
-
-              function addUserToBlacklist(user, uuid, end, reason) {
-                return new Promise((resolve, reject) => {
-                  const embed = new Discord.MessageEmbed()
-                    .setTitle(user)
-                    .setAuthor(
-                      "Blacklist",
-                      "https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png"
-                    ) /*           * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.           */
-                     .setColor("ff0000")
-                    .setFooter(`UUID: ${uuid}`)
-                    .setThumbnail(
-                      `https://visage.surgeplay.com/full/${uuid}.png`
-                    )
-                    .setTimestamp()
-                    .setURL(`http://plancke.io/hypixel/player/stats/${uuid}`)
-
-                    .addField("IGN:", user, false)
-                    .addField("End:", end, false)
-                    .addField("Reason:", reason, false);
-
-                  client.channels.cache
-                    .get(process.env.BLACKLISTCHANNEL)
-                    .send({ embeds: [embed] })
-                    .then((blistmsg) => {
-                      let msgID = blistmsg.id;
-                      blacklist.push({ user, uuid, end, reason, msgID });
-                    });
-
-                  fs.writeFile(
-                    "blacklist.json",
-                    JSON.stringify(blacklist),
-                    (err) => {
-                      if (err) reject(err);
-                      const embed = new Discord.MessageEmbed()
-                        .setTitle("Done ☑️")
-                        // .setColor(
-                          .setThumbnail(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
-                        
-                        .setDescription(
-                          `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
-                        );
-                      return message.channel.send({ embeds: [embed] });
+                if (found) {
+                  for (let i in blacklist) {
+                    if (blacklist[i].uuid == uuid) {
+                      client.channels.cache
+                        .get(process.env.BLACKLISTCHANNEL)
+                        .messages.fetch(blacklist[i].msgID)
+                        .then((msg) => {
+                          if (!message) {
+                            return message.channel.send(
+                              "The message was not found, please delete it manually"
+                            );
+                          }
+                          msg.delete();
+                        });
+                      blacklist.splice(i, 1);
+                      fs.writeFile(
+                        "blacklist.json",
+                        JSON.stringify(blacklist),
+                        (err) => {
+                          if (err) reject(err);
+                          const embed = new Discord.MessageEmbed()
+                            .setTitle("Done ☑️")
+                            // .setColor(CLR)
+                            .setThumbnail(
+                              `https://crafatar.com/avatars/${MojangAPI.uuid}`
+                            )
+                            .setDescription(
+                              `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+                            );
+                          return message.channel.send({ embeds: [embed] });
+                        }
+                      );
                     }
-                  );
-                });
-              }
-              addUserToBlacklist(
-                MojangAPI.username,
-                MojangAPI.uuid,
-                args[2],
-                args.slice(3).join(" ")
-              );
-            }
-            blacklistadd();
-          } else if (args[0] == "remove".toLowerCase()) {
-            if (!args[1]) {
+                  }
+                }
+              });
+            } catch (err) {
               const embed = new Discord.MessageEmbed()
-                .setTitle("Error | Invalid Arguments")
-                // .setColor(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
+                .setTitle("Error")
+                // .setColor(CLR)
                 .setDescription(
-                  "```" +
-                    process.env.PREFIX +
-                    "blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to remove from the blacklist```"
+                  `An unexpected error has occurred. Please contact ElijahROOS.`
                 );
               return message.channel.send({ embeds: [embed] });
             }
-            async function blacklistremove() {
-              try {
-                const MojangAPI = await fetch(
-                  `https://api.ashcon.app/mojang/v2/user/${args[1]}`
-                ).then((res) => res.json());
-                if (!MojangAPI.uuid) {
-                  const embed = new Discord.MessageEmbed()
-                    .setTitle("Error")
-                    // .setColor(CLR)
-                    .setDescription(
-                      `I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
-                    );
-                  return message.channel.send({ embeds: [embed] });
-                }
-
-                function removeUserFromBlacklist(uuid) {
-                  return new Promise((resolve, reject) => {
-                    let found = false;
-                    for (let i = 0; i < blacklist.length; i++) {
-                      if (blacklist[i].uuid == uuid) {
-                        found = true;
-                        console.log("found uuid");
-                        break;
-                      }
-                    }
-                    if (!found) {
-                      const embed = new Discord.MessageEmbed()
-                        .setTitle("Error")
-                        // .setColor(CLR)
-                        .setDescription(
-                          `That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
-                        );
-                      return message.channel.send({ embeds: [embed] });
-                    }
-                    if (found) {
-                      for (let i in blacklist) {
-                        if (blacklist[i].uuid == uuid) {
-                          client.channels.cache
-                            .get(process.env.BLACKLISTCHANNEL)
-                            .messages.fetch(blacklist[i].msgID)
-                            .then((msg) => {
-                              if (!message) {
-                                return message.channel.send(
-                                  "The message was not found, please delete it manually"
-                                );
-                              }
-                              msg.delete();
-                            });
-                          blacklist.splice(i, 1);
-                          fs.writeFile(
-                            "blacklist.json",
-                            JSON.stringify(blacklist),
-                            (err) => {
-                              if (err) reject(err);
-                              const embed = new Discord.MessageEmbed()
-                                .setTitle("Done ☑️")
-                                // .setColor(CLR)
-                                .setThumbnail(
-                                  `https://crafatar.com/avatars/${MojangAPI.uuid}`
-                                )
-                                .setDescription(
-                                  `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
-                                );
-                              return message.channel.send({ embeds: [embed] });
-                            }
-                          );
-                        }
-                      }
-                    }
-                  });
-                }
-                removeUserFromBlacklist(MojangAPI.uuid);
-              } catch (err) {
-                const embed = new Discord.MessageEmbed()
-                  .setTitle("Error")
-                  // .setColor(CLR)
-                  .setDescription(
-                    `An unexpected error has occurred. Please contact ElijahROOS.`
-                  );
-                return message.channel.send({ embeds: [embed] });
-              }
-            }
-            blacklistremove();
           } else if (args[0] == "dump".toLowerCase()) {
             const embed = new Discord.MessageEmbed()
               .setTitle("Blacklist Dump")
