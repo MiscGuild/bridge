@@ -22,5 +22,9 @@
     "prismarine-viewer": "^1.19.3",
     "sync-fetch": "^0.3.0",
     "util": "^0.12.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-google": "^0.14.0"
   }
 }

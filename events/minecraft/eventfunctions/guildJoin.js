@@ -4,37 +4,38 @@ const sendToDiscord = index.sendToDiscord;
 const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlacklisted.js");
 
 module.exports = {
-  name: "guildJoin",
-  async execute(rank, username) {
-    sendToDiscord(
-      `-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`
-    );
-    // logger.info(`-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`)
+	name: "guildJoin",
+	async execute(rank, username) {
+		sendToDiscord(
+			`-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`
+		);
+		// logger.info(`-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`)
 
-    if (await checkIfUserBlacklisted(username)) {
-      bot.chat(
-        `/g kick ${username} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
-      );
-      console.log(
-        "Kicking " + username + " because they are blacklisted"
-      );
-    } else {
-      const welcomeMessages = [
-        `Welcome to the #19 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc`,
-        `Welcome to the guild! Make sure to join the discord at discord.gg/misc`,
-        `Welcome to the guild, ${username}! Join the discord at discord.gg/misc`,
-        `Welcome to the guild, ${username}! Interact with the community more at discord.gg/misc`,
-      ];
+		if (await checkIfUserBlacklisted(username)) {
+			bot.chat(
+				`/g kick ${username} You have been blacklisted from the guild, Mistake? --> (discord.gg/dEsfnJkQcq)`
+			);
+			console.log(
+				"Kicking " + username + " because they are blacklisted"
+			);
+		}
+		else {
+			const welcomeMessages = [
+				"Welcome to the #19 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc",
+				"Welcome to the guild! Make sure to join the discord at discord.gg/misc",
+				`Welcome to the guild, ${username}! Join the discord at discord.gg/misc`,
+				`Welcome to the guild, ${username}! Interact with the community more at discord.gg/misc`,
+			];
 
-      if (!rank) {
-        rank = "";
-      }
+			if (!rank) {
+				rank = "";
+			}
 
-      setTimeout(() => {
-        bot.chat(
-          welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)]
-        );
-      }, 3000);
-    }
-  },
+			setTimeout(() => {
+				bot.chat(
+					welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)]
+				);
+			}, 3000);
+		}
+	},
 };

@@ -1,13 +1,13 @@
-const regexes = {}
+const regexes = {};
 
 // --On /g online
 regexes.guildOnline = /^Online Members: (\d{1,3})/;
 
 // --Blacklist check
-regexes.blacklistCheck = /(^(?:(?:\[.+?\])? ?(?:[A-Za-z0-9_]{3,16}) ●  )+)/;
+regexes.blacklistCheck = /(^(?:(?:\[.+?\])? ?(?:[A-Za-z0-9_]{3,16}) ● {2})+)/;
 
 // --On guild chat
-regexes.guildChat =  /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/;
+regexes.guildChat = /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/;
 
 // --On officer chat
 regexes.officerChat = /^Officer > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/;
@@ -43,7 +43,7 @@ regexes.guildLeftGame = /^Guild > ([A-Za-z0-9_]{3,16}) left\./;
 regexes.guildJoinedGame = /^Guild > ([A-Za-z0-9_]{3,16}) joined\./;
 
 // --On guild mute
-regexes.guildMute =  /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (\d*)([a-z])/;
+regexes.guildMute = /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has muted (\[.+?\])? ?([A-Za-z0-9_]{3,16}) for (\d*)([a-z])/;
 
 // --On guild unmute
 regexes.guildUnmute = /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has unmuted (\[.+?\])? ?([A-Za-z0-9_]{3,16})/;
