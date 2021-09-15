@@ -3,7 +3,7 @@ const client = index.client;
 const fetch = require('node-fetch');
 
 module.exports = { 
-    name: 'guild_online',
+    name: 'guildOnline',
     async execute (onlineMembers){
         async function SetStatus() {
             const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)

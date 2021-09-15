@@ -2,7 +2,7 @@ const index = require("../../../index.js");
 const sendToDiscord = index.sendToDiscord;
 
 module.exports = {
-  name: "guild_leave",
+  name: "guildLeave",
   async execute(rank, username) {
     if (!rank) {
       rank = "";

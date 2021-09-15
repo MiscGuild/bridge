@@ -4,7 +4,7 @@ const staffChannelID = process.env.STAFFCHANNELID;
 const serverID = process.env.SERVERID;
 
 module.exports = {
-    name: 'guild_mute',
+    name: 'guildMute',
     async execute(staffRank, staffUsername, mutedRank, mutedUsername, time, timeMultiplier){
         let muteTime;
         if(!staffRank){staffRank = ''}

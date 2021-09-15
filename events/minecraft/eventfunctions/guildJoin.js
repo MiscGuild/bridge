@@ -4,7 +4,7 @@ const sendToDiscord = index.sendToDiscord;
 const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlacklisted.js");
 
 module.exports = {
-  name: "guild_join",
+  name: "guildJoin",
   async execute(rank, username) {
     sendToDiscord(
       `-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`

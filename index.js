@@ -53,7 +53,9 @@ const regexes = require('./resources/regex');
 //File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
 for (let file of eventFunctions) {
   const event = require(`./events/minecraft/eventfunctions/${file}`);
+  const eventName = event.name;
   bot.on(event.name, (...args) => event.execute(...args));
+  bot.chatAddPattern(regexes[event.name], `${event.name}`);
 }
 
 for (let file of botEvents) {
@@ -69,24 +71,5 @@ for (let file of clientEvents) {
   const event = require(`./events/discord/${file}`);
   client.on(event.name, (...args) => event.execute(...args));
 }
-
-
-bot.chatAddPattern(regexes.guildOnline,'guild_online', 'Set status to number of players in guild online');
-bot.chatAddPattern(regexes.blacklistCheck, 'blacklist_check', 'Look for blacklisted players in the guild');
-bot.chatAddPattern(regexes.guildChat, 'guild_chat', 'Custom Guild Chat Setup');
-bot.chatAddPattern(regexes.officerChat, 'officer_chat', 'Custom Officer guild Chat Setup');
-bot.chatAddPattern(regexes.guildKick, 'guild_kick', 'Guild Kick Setup');
-bot.chatAddPattern(regexes.guildJoin, 'guild_join', 'Guild Join Setup');
-bot.chatAddPattern(regexes.guildLeave, 'guild_leave', 'Guild leave Setup');
-bot.chatAddPattern(regexes.guildPromote, 'guild_promote', 'Guild promote Setup');
-bot.chatAddPattern(regexes.cannotSaySameMessageTwice, 'cannot_say_same_msg_twice', 'Sends a message when hypixel blocks for spam.');
-bot.chatAddPattern(regexes.commentBlocked, 'comment_blocked', 'Sends a message when hypixel blocks for breaking chat rules.');
-bot.chatAddPattern(regexes.guildDemote, 'guild_demote', 'Guild demote Setup');
-bot.chatAddPattern(regexes.guildRequesting, 'guild_requesting', 'Guild requesting Setup');
-bot.chatAddPattern(regexes.guildLeftGame, 'guild_left_game', 'Guild left game Setup');
-bot.chatAddPattern(regexes.guildJoinedGame, 'guild_joined_game', 'Guild joined game Setup');
-bot.chatAddPattern(regexes.guildMute, 'guild_mute', 'Guild mute Setup');
-bot.chatAddPattern(regexes.guildUnmute, 'guild_unmute', 'Guild unmute Setup');
-bot.chatAddPattern(regexes.msgBot, 'msg_bot', 'Bot msg in game Setup');
 
 client.login(process.env.TOKEN);

@@ -3,7 +3,7 @@ const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlackliste
 const bot = index.bot;
 
 module.exports = {
-  name: "blacklist_check",
+  name: "blacklistCheck",
   async execute(message) {
     let guildMembers = message.split(" ●  ");
     for (let member of guildMembers) {

@@ -6,7 +6,7 @@ const getRankEmoji = chatEmojis.getRankEmoji;
 const getTagEmoji = chatEmojis.getTagEmoji;
 
 module.exports = {
-  name: "officer_chat",
+  name: "officerChat",
   async execute(rank, username, tag, message) {
     let list =  await getRankEmoji(rank);
     rank = list[0];

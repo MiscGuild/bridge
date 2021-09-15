@@ -5,7 +5,7 @@ const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlackliste
 const getNetworkLevel = require("../../../utilities/getNetworkLevel.js");
 
 module.exports = {
-  name: "guild_requesting",
+  name: "guildRequesting",
   async execute(rank, username) {
     if (!rank) {
       rank = "";

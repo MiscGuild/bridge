@@ -12,7 +12,7 @@ function gexpFunction(gexpLIST) {
 }
 
 module.exports = {
-    name: 'msg_bot',
+    name: 'whisperBot',
     async execute (username, message){
         async function msgBot() {
             let randomID = crypto.randomBytes(7).toString('hex');

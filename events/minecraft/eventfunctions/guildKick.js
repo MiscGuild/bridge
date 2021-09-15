@@ -2,7 +2,7 @@ const index = require("../../../index.js");
 const sendToDiscord = index.sendToDiscord;
 
 module.exports = {
-    name: "guild_kick",
+    name: "guildKick",
     async execute(userRank, username, staffRank, staffUsername){
         if(!userRank){userRank = ''}
         if(!staffRank){userRank = ''}
