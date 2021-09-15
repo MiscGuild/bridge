@@ -101,7 +101,7 @@ module.exports = {
         const embed2 = new Discord.MessageEmbed()
           .setTitle("Error | Too many people on blacklist")
           .setDescription(
-            `Discord has a character limit and we have reached it with the message trying to be sent. Look at the blacklist list in <#${process.env.BLACKLIST_CHANNEL}>`
+            `Discord has a character limit and we have reached it with the message trying to be sent. Look at the blacklist list in <#${process.env.BLACKLISTCHANNEL}>`
           );
         return interaction.followUp({ embeds: [embed2], ephemeral: true });
       }
@@ -194,7 +194,7 @@ module.exports = {
               .addField("Reason:", reason, false);
 
             client.channels.cache
-              .get(process.env.BLACKLIST_CHANNEL)
+              .get(process.env.BLACKLISTCHANNEL)
               .send({ embeds: [embed] })
               .then((blistmsg) => {
                 let msgID = blistmsg.id;
@@ -214,7 +214,7 @@ module.exports = {
                       )
 
                       .setDescription(
-                        `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLIST_CHANNEL}>`
+                        `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
                       );
                     return interaction.followUp({ embeds: [embed] });
                   }
@@ -278,7 +278,7 @@ module.exports = {
                 for (let i in blacklist) {
                   if (blacklist[i].uuid == uuid) {
                     client.channels.cache
-                      .get(process.env.BLACKLIST_CHANNEL)
+                      .get(process.env.BLACKLISTCHANNEL)
                       .messages.fetch(blacklist[i].msgID)
                       .then((msg) => {
                         if (!msg) {
@@ -301,7 +301,7 @@ module.exports = {
                             `https://crafatar.com/avatars/${MojangAPI.uuid}`
                           )
                           .setDescription(
-                            `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLIST_CHANNEL}>`
+                            `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
                           );
                         return interaction.followUp({ embeds: [embed] });
                       }

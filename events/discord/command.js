@@ -296,7 +296,7 @@ module.exports = {
                     .addField("Reason:", reason, false);
 
                   client.channels.cache
-                    .get(process.env.BLACKLIST_CHANNEL)
+                    .get(process.env.BLACKLISTCHANNEL)
                     .send({ embeds: [embed] })
                     .then((blistmsg) => {
                       let msgID = blistmsg.id;
@@ -314,7 +314,7 @@ module.exports = {
                           .setThumbnail(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
                         
                         .setDescription(
-                          `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLIST_CHANNEL}>`
+                          `I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
                         );
                       return message.channel.send({ embeds: [embed] });
                     }
@@ -379,7 +379,7 @@ module.exports = {
                       for (let i in blacklist) {
                         if (blacklist[i].uuid == uuid) {
                           client.channels.cache
-                            .get(process.env.BLACKLIST_CHANNEL)
+                            .get(process.env.BLACKLISTCHANNEL)
                             .messages.fetch(blacklist[i].msgID)
                             .then((msg) => {
                               if (!message) {
@@ -402,7 +402,7 @@ module.exports = {
                                   `https://crafatar.com/avatars/${MojangAPI.uuid}`
                                 )
                                 .setDescription(
-                                  `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLIST_CHANNEL}>`
+                                  `I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
                                 );
                               return message.channel.send({ embeds: [embed] });
                             }
