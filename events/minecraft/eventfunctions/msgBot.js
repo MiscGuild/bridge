@@ -14,7 +14,7 @@ function gexpFunction(gexpLIST) {
 module.exports = {
     name: 'msg_bot',
     async execute (username, message){
-        async function msg_bot_aysnc() {
+        async function msgBot() {
             let randomID = crypto.randomBytes(7).toString('hex');
             HypixelAPIKey = process.env.HypixelAPIKey;
             if(message.startsWith('weeklygexp'||'weeklygxp')){
@@ -64,6 +64,6 @@ module.exports = {
                 }
             }
         }
-    msg_bot_aysnc()
+    msgBot()
     }   
 }
