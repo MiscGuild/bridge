@@ -1,11 +1,14 @@
 // -------------------------------------------------------Integrations-------------------------------------------------------------------------
 const fs = require("fs");
-const log4js = require("log4js");
+const eventFunctions = fs.readdirSync("./events/minecraft/eventfunctions").filter((file) => file.endsWith(".js"));
+const botEvents = fs.readdirSync("./events/minecraft").filter((file) => file.endsWith(".js"));
+const clientEvents = fs.readdirSync("./events/discord").filter((file) => file.endsWith(".js"));
+const regexes = require("./resources/regex");
 const log4jsConfig = require("./resources/log4jsConfigure.json");
-log4js.configure(log4jsConfig);
+const log4js = require("log4js");
 const dotenv = require("dotenv");
+log4js.configure(log4jsConfig);
 dotenv.config();
-
 
 // ----------------------------------------------------------Discord--------------------------------------------------------------------------
 const Discord = require("discord.js");
@@ -44,12 +47,7 @@ bot = mineflayer.createBot({
 module.exports = { client, bot, sendToDiscord };
 
 
-// ---------------------------------------------------------Bot Files--------------------------------------------------------------------------
-const eventFunctions = fs.readdirSync("./events/minecraft/eventfunctions").filter((file) => file.endsWith(".js"));
-const botEvents = fs.readdirSync("./events/minecraft").filter((file) => file.endsWith(".js"));
-const clientEvents = fs.readdirSync("./events/discord").filter((file) => file.endsWith(".js"));
-const regexes = require("./resources/regex");
-
+// --------------------------------------------------------Bind Events--------------------------------------------------------------------------
 // File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
 for (const file of eventFunctions) {
 	const event = require(`./events/minecraft/eventfunctions/${file}`);
