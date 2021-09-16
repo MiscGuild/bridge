@@ -75,6 +75,9 @@ history/
 .env
 .env.test
 
+# User blacklist file
+blacklist.json
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
