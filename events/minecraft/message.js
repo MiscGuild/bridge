@@ -5,15 +5,12 @@ const client = index.client;
 const logger = log4js.getLogger("Logs");
 const McChatLogger = log4js.getLogger("McChatLogs");
 
-let sLogs = [];
+let discordChatLogs = [];
 setInterval(() => {
-	if(!sLogs.length) {return;}
-	const messagesEmbed = new Discord.MessageEmbed()
-		.setDescription(`\`\`\`${sLogs.join("\r\n")}\`\`\``);
-	messagesEmbed.setColor("0x2f3136");
-	client.channels.cache.get(process.env.LOGCHANNELID).send({ embeds: [messagesEmbed] });
-	sLogs = [];
-}, 1000); // How often should we send the message groupings (MS)
+	if(!discordChatLogs.length) {return;}
+	client.channels.cache.get(process.env.LOGCHANNELID).send("```" + `${discordChatLogs.join("\n")}` + "```");
+	discordChatLogs = [];
+}, 1000);
 
 module.exports = {
 	name: "message",
@@ -28,7 +25,7 @@ module.exports = {
 		if(msg == "You were spawned in Limbo.") {return;}
 		if(msg == "/limbo for more information.") {return;}
 		// sLogs.push(msg)
-		sLogs.push(msg);
+		discordChatLogs.push(msg);
 		McChatLogger.info(msg);
 	}
 };
