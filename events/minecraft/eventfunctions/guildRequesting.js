@@ -19,7 +19,7 @@ module.exports = {
 			);
 		}
 		else {
-			const mojangAPI = mojangGrabber(username);
+			const mojangAPI = await mojangGrabber(username);
 			const HyAPI = await fetch(
 				`https://api.hypixel.net/player?key=${process.env.HypixelAPIKey}&uuid=${mojangAPI.id}&player=${username}`
 			).then((res) => res.json());
