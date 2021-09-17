@@ -4,9 +4,9 @@ const fetch = require("node-fetch");
 const crypto = require("crypto");
 const mojangGrabber = require("../../../utilities/mojangGrabber.js");
 
-function gexpFunction(gexpLIST) {
+function gexpFunction(gexpList) {
 	let sum = 0;
-	for (const gexp of Object.values(gexpLIST)) {
+	for (const gexp of Object.values(gexpList)) {
 		sum += gexp;
 	}
 	return sum;
@@ -40,7 +40,7 @@ module.exports = {
 
 			if (!mojangAPI) {
 				validUser = false;
-				return bot.chat(`/w ${username} "${usernameMention}" was not found (Try giving me a username and/or check spelling) | ${randomID}`);
+				return bot.chat(`/w ${username} ${usernameMention} was not found (Try giving me a username and/or check spelling) | ${randomID}`);
 			}
 
 			if (validUser) {
@@ -48,12 +48,12 @@ module.exports = {
 					.then(res => {return res.json();})
 					.then(data => {
 						if(!data.guild) {
-							return bot.chat(`/w ${username} "${usernameMention}" does not seem to be in a guild | ${randomID}`);
+							return bot.chat(`/w ${username} ${usernameMention} does not seem to be in a guild | ${randomID}`);
 						}
 						for (const item in data.guild.members) {
 							if (data.guild.members[item].uuid == mojangAPI.id) {
-								const gexpLIST = data.guild.members[item].expHistory;
-								return bot.chat(`/w ${username} ${mojangAPI.name}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`);
+								const gexpList = data.guild.members[item].expHistory;
+								return bot.chat(`/w ${username} ${mojangAPI.name}'s total weekly gexp: ${gexpFunction(gexpList).toLocaleString()} | ${randomID}`);
 							}
 						}
 					});

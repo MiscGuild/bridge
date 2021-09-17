@@ -14,7 +14,6 @@ dotenv.config();
 const Discord = require("discord.js");
 const { Client, Intents, Collection } = require("discord.js");
 const client = new Client({ intents: 32509 });
-
 const channelID = process.env.OUTPUTCHANNELID;
 
 async function sendToDiscord(msg, color = "0x2f3136", channel = channelID) {

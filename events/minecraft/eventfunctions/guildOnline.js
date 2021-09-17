@@ -14,8 +14,6 @@ module.exports = {
 		}
 
 		client.user.setPresence({ activities: [{ name: `${onlineMembers.toLocaleString()} online Miscellaneous members and ${HyAPI.playerCount.toLocaleString()} players on Hypixel!`, type:"WATCHING" }], status: "dnd" });
-        
 		client.user.setStatus("dnd");
-
 	}
 };
