@@ -2,7 +2,6 @@ const { Client, CommandInteraction } = require("discord.js");
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
 const fs = require("fs");
-
 const blacklist = require("../resources/blacklist.json"); // Cant accses the ../resources for some reason
 const index = require("../index.js");
 const client = index.client;

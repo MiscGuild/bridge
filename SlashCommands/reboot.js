@@ -2,6 +2,7 @@ const { Client, CommandInteraction } = require("discord.js");
 const Discord = require("discord.js");
 const log4js = require("log4js");
 const logger = log4js.getLogger("logs");
+
 const errorColor = "0xDE3163";
 
 module.exports = {
