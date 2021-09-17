@@ -1,4 +1,5 @@
 const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
+const successColor = "0x00A86B";
 
 module.exports = {
 	name: "ping",
@@ -8,12 +9,12 @@ module.exports = {
 	run: async (client, interaction, args) => {
 		const embed = new MessageEmbed()
 			.setTitle("Pinging...")
-			.setColor("RED");
+			.setColor(successColor);
 		interaction.followUp({ embeds: [embed] }).then(msg => {
 			const ping = msg.createdTimestamp - interaction.createdTimestamp;
 			const embed2 = new MessageEmbed()
 				.setTitle(`Your ping is ${ping} ms`)
-				.setColor("GREEN");
+				.setColor(successColor);
 			msg.edit({ embeds:[embed2] });
 		});
 	},

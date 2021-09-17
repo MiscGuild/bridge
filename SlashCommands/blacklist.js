@@ -5,8 +5,10 @@ const fs = require("fs");
 
 const blacklist = require("../resources/blacklist.json"); // Cant accses the ../resources for some reason
 const index = require("../index.js");
-
 const client = index.client;
+
+const successColor = "0x00A86B";
+const errorColor = "0xDE3163";
 
 const errorEmbed = new Discord.MessageEmbed()
 	.setTitle("Error")
@@ -132,7 +134,7 @@ module.exports = {
 			if (!args[2]) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error | Invalid Arguments")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						"```/blacklist add <user> <end> <reason>\n                      ^^^^^\nYou must specify an end date (It can be never)```"
 					);
@@ -143,7 +145,7 @@ module.exports = {
 			if (!args[3]) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error | Invalid Arguments")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						"```/blacklist add <user> <end> <reason>\n                               ^^^^^\nYou must specify a reason for the blacklist```"
 					);
@@ -157,7 +159,7 @@ module.exports = {
 			if (!MojangAPI.uuid) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						`I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
 					);
@@ -168,7 +170,7 @@ module.exports = {
 				if (blacklist[i].uuid == MojangAPI.uuid) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
-					// .setColor(CLR)
+						.setColor(errorColor)
 						.setDescription(
 							`That user appears to already be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
 						);
@@ -215,11 +217,10 @@ module.exports = {
 								}
 								const embed = new Discord.MessageEmbed()
 									.setTitle("Done ☑️")
-								// .setColor(
+									.setColor(successColor)
 									.setThumbnail(
 										`https://crafatar.com/avatars/${MojangAPI.uuid}`
 									)
-
 									.setDescription(
 										`I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
 									);
@@ -247,7 +248,7 @@ module.exports = {
 				if (!MojangAPI.uuid) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
-					// .setColor(CLR)
+						.setColor(errorColor)
 						.setDescription(
 							`I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
 						);
@@ -267,7 +268,7 @@ module.exports = {
 					if (!found) {
 						const embed = new Discord.MessageEmbed()
 							.setTitle("Error")
-						// .setColor(CLR)
+							.setColor(errorColor)
 							.setDescription(
 								"That user appears to not be on the blacklist. To check who is on the blacklist please run the `/blacklist` command"
 							);
@@ -301,7 +302,7 @@ module.exports = {
 										}
 										const embed = new Discord.MessageEmbed()
 											.setTitle("Done ☑️")
-										// .setColor(CLR)
+											.setColor(successColor)
 											.setThumbnail(
 												`https://crafatar.com/avatars/${MojangAPI.uuid}`
 											)
@@ -320,7 +321,7 @@ module.exports = {
 			catch (err) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						"An unexpected error has occurred. Please contact ElijahROOS."
 					);

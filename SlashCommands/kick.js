@@ -3,6 +3,8 @@ const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
 const bot = index.bot;
 const Discord = ("discord.js");
 
+const errorColor = "0xDE3163";
+
 module.exports = {
 	name: "kick",
 	description: "Kicks a user from the guild!",
@@ -26,6 +28,7 @@ module.exports = {
 		if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
 			const embed = new MessageEmbed()
 				.setTitle("Error")
+				.setColor(errorColor)
 				.setDescription(
 					"It seems you are lacking the permission to run this command."
 				);
@@ -35,6 +38,7 @@ module.exports = {
 		bot.chat(`/g kick ${args[0]} ${args[1]} [Kicker: ${interaction.member.displayName}]`);
 		const embed = new MessageEmbed()
 			.setTitle("Kicked!")
+			.setColor(errorColor)
 			.setDescription(
 				`I have kicked \`${args[0]}\` with the reason \`${args[1]}\``
 			);

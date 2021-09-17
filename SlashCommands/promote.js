@@ -3,6 +3,9 @@ const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
 const bot = index.bot;
 const Discord = ("discord.js");
 
+const successColor = "0x00A86B";
+const errorColor = "0xDE3163";
+
 module.exports = {
 	name: "promote",
 	description: "Promotes a user in the guild!",
@@ -20,6 +23,7 @@ module.exports = {
 		if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
 			const embed = new MessageEmbed()
 				.setTitle("Error")
+				.setColor(errorColor)
 				.setDescription(
 					"It seems you are lacking the permission to run this command."
 				);
@@ -29,6 +33,7 @@ module.exports = {
 		bot.chat(`/g promote ${args[0]}`);
 		const embed = new MessageEmbed()
 			.setTitle("Promoted!")
+			.setColor(successColor)
 			.setDescription(
 				`I have promoted \`${args[0]}\`!`
 			);

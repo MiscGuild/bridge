@@ -2,6 +2,7 @@ const { Client, CommandInteraction } = require("discord.js");
 const Discord = require("discord.js");
 const log4js = require("log4js");
 const logger = log4js.getLogger("logs");
+const errorColor = "0xDE3163";
 
 module.exports = {
 	name: "reboot",
@@ -34,7 +35,7 @@ module.exports = {
 		else {
 			const embed = new Discord.MessageEmbed()
 				.setTitle("Error")
-			// .setColor(CLR)
+				.setColor(errorColor)
 				.setDescription(
 					"It seems you are lacking the permission to run this command."
 				);

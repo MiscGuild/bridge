@@ -3,13 +3,16 @@ const blacklist = require("../../resources/blacklist.json");
 const log4js = require("log4js");
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
-const bot = index.bot;
-const client = index.client;
-const channelID = process.env.OUTPUTCHANNELID;
 const fs = require("fs");
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");
-let CLR;
+
+const bot = index.bot;
+const client = index.client;
+
+const channelID = process.env.OUTPUTCHANNELID;
+const successColor = "0x00A86B";
+const errorColor = "0xDE3163";
 
 module.exports = {
 	name: "message",
@@ -36,10 +39,8 @@ module.exports = {
 						"Add, list or remove users that are blacklisted"
 					)
 					.setFooter(
-						"You can send messages ingame by typing in #bridge | Prefix: " +
-              process.env.PREFIX
+						"You can send messages ingame by typing in #bridge | Prefix: " + process.env.PREFIX
 					);
-				// .setColor(CLR);
 
 				return message.channel.send({ embeds: [embed] });
 			}
@@ -48,10 +49,8 @@ module.exports = {
 					.setTitle("Commands")
 					.addField("help", "Prints this message")
 					.setFooter(
-						"You can send messages ingame by typing in #bridge | Prefix: " +
-              process.env.PREFIX
+						"You can send messages ingame by typing in #bridge | Prefix: " + process.env.PREFIX
 					);
-				// .setColor(CLR);
 
 				return message.channel.send({ embeds: [embed] });
 			}
@@ -61,7 +60,7 @@ module.exports = {
 				if (!args.length) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
-					// .setColor(CLR)
+						.setColor(errorColor)
 						.setDescription("You need to provide a message for me to send!");
 
 					return message.channel.send({ embeds: [embed] });
@@ -75,7 +74,7 @@ module.exports = {
 			else {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						"It seems you are lacking the permission to run this command."
 					);
@@ -91,7 +90,7 @@ module.exports = {
 					if (!args.length) {
 						const embed = new Discord.MessageEmbed()
 							.setTitle("Error")
-						// .setColor(CLR)
+							.setColor(errorColor)
 							.setDescription("You need to provide a message for me to send!");
 
 						return message.channel.send({ embeds: [embed] });
@@ -110,7 +109,7 @@ module.exports = {
 						if (!args[1]) {
 							const embed = new Discord.MessageEmbed()
 								.setTitle("Error")
-							// .setColor(CLR)
+								.setColor(errorColor)
 								.setDescription(
 									"You need to provide a message for me to send!"
 								);
@@ -133,7 +132,7 @@ module.exports = {
 				else {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
-					// .setColor(CLR)
+						.setColor(errorColor)
 						.setDescription(
 							"It seems you are lacking the permission to run this command."
 						);
@@ -146,7 +145,7 @@ module.exports = {
 				console.log(err);
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						"Someting wong happen pls contact elijahsus to fix!!"
 					);
@@ -161,7 +160,7 @@ module.exports = {
 			) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Rebooting")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription("The bot will reboot in `45s`");
 
 				message.channel.send({ embeds: [embed] });
@@ -179,7 +178,7 @@ module.exports = {
 			else {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						"It seems you are lacking the permission to run this command."
 					);
@@ -192,7 +191,7 @@ module.exports = {
 				if (!args[0]) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Blacklist")
-					// .setColor(CLR)
+						.setColor(errorColor)
 						.setDescription(
 							`The list below shows everyone who is on the blacklist (Total: ${blacklist.length})`
 						)
@@ -209,7 +208,7 @@ module.exports = {
 
 					if (embed.length >= 2000) {
 						const embed2 = new Discord.MessageEmbed()
-						// .setColor(CLR)
+							.setColor(errorColor)
 							.setTitle("Error | Too many people on blacklist")
 							.setDescription(
 								"Discord has a character limit and we have reached it with the message trying to be sent. Look at the blacklist list in <#709370599809613824>"
@@ -223,7 +222,7 @@ module.exports = {
 						if (!args[1]) {
 							const embed = new Discord.MessageEmbed()
 								.setTitle("Error | Invalid Arguments")
-							// .setColor(CLR)
+								.setColor(errorColor)
 								.setDescription(
 									"```" +
                     process.env.PREFIX +
@@ -236,7 +235,7 @@ module.exports = {
 						if (!args[2]) {
 							const embed = new Discord.MessageEmbed()
 								.setTitle("Error | Invalid Arguments")
-							// .setColor(CLR)
+							 	.setColor(errorColor)
 								.setDescription(
 									"```" +
                     process.env.PREFIX +
@@ -249,7 +248,7 @@ module.exports = {
 						if (!args[3]) {
 							const embed = new Discord.MessageEmbed()
 								.setTitle("Error | Invalid Arguments")
-							// .setColor(CLR)
+							 	.setColor(errorColor)
 								.setDescription(
 									"```" +
                     process.env.PREFIX +
@@ -265,7 +264,7 @@ module.exports = {
 						if (!MojangAPI.uuid) {
 							const embed = new Discord.MessageEmbed()
 								.setTitle("Error")
-							// .setColor(CLR)
+								.setColor(errorColor)
 								.setDescription(
 									`I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
 								);
@@ -276,7 +275,7 @@ module.exports = {
 							if (blacklist[i].uuid == MojangAPI.uuid) {
 								const embed = new Discord.MessageEmbed()
 									.setTitle("Error")
-								// .setColor(CLR)
+									.setColor(errorColor)
 									.setDescription(
 										`That user appears to already be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
 									);
@@ -320,7 +319,7 @@ module.exports = {
 									if (err) {reject(err);}
 									const embed = new Discord.MessageEmbed()
 										.setTitle("Done ☑️")
-									// .setColor(
+										.setColor(successColor)
 										.setThumbnail(
 											`https://crafatar.com/avatars/${MojangAPI.uuid}`
 										)
@@ -337,7 +336,7 @@ module.exports = {
 						if (!args[1]) {
 							const embed = new Discord.MessageEmbed()
 								.setTitle("Error | Invalid Arguments")
-							// .setColor(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
+								.setColor(errorColor)
 								.setDescription(
 									"```" +
                     process.env.PREFIX +
@@ -353,7 +352,7 @@ module.exports = {
 							if (!MojangAPI.uuid) {
 								const embed = new Discord.MessageEmbed()
 									.setTitle("Error")
-								// .setColor(CLR)
+									.setColor(errorColor)
 									.setDescription(
 										`I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
 									);
@@ -373,7 +372,7 @@ module.exports = {
 								if (!found) {
 									const embed = new Discord.MessageEmbed()
 										.setTitle("Error")
-									// .setColor(CLR)
+										.setColor(errorColor)
 										.setDescription(
 											`That user appears to not be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
 										);
@@ -401,7 +400,7 @@ module.exports = {
 													if (err) {reject(err);}
 													const embed = new Discord.MessageEmbed()
 														.setTitle("Done ☑️")
-													// .setColor(CLR)
+														.setColor(successColor)
 														.setThumbnail(
 															`https://crafatar.com/avatars/${MojangAPI.uuid}`
 														)
@@ -419,7 +418,7 @@ module.exports = {
 						catch (err) {
 							const embed = new Discord.MessageEmbed()
 								.setTitle("Error")
-							// .setColor(CLR)
+								.setColor(errorColor)
 								.setDescription(
 									"An unexpected error has occurred. Please contact ElijahROOS."
 								);
@@ -429,7 +428,7 @@ module.exports = {
 					else if (args[0] == "dump".toLowerCase()) {
 						const embed = new Discord.MessageEmbed()
 							.setTitle("Blacklist Dump")
-						// .setColor(CLR)
+							.setColor(successColor)
 							.setDescription(
 								"Attached is the blacklist database, blacklists are stored in an array in a separate `.JSON` file. "
 							);
@@ -441,7 +440,7 @@ module.exports = {
 					else {
 						const embed = new Discord.MessageEmbed()
 							.setTitle("Error | Invalid Args")
-						// .setColor(CLR)
+							.setColor(errorColor)
 							.setDescription(
 								"The second argument does not match up with my code. You must use `add`, `remove`, or `dump`"
 							);
@@ -452,7 +451,7 @@ module.exports = {
 			else {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
-				// .setColor(CLR)
+					.setColor(errorColor)
 					.setDescription(
 						"It seems you are lacking the permission to run this command."
 					);

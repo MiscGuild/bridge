@@ -3,7 +3,7 @@ const client = index.client;
 const staffChannelID = process.env.STAFFCHANNELID;
 const serverID = process.env.SERVERID;
 
-const msPerUnit = { "s": 1000, "m": 60000, "h": 3600000, "d": 86400000}
+const msPerUnit = { "s": 1000, "m": 60000, "h": 3600000, "d": 86400000 };
 
 module.exports = {
 	name: "guildMute",
