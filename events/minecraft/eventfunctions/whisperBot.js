@@ -2,7 +2,7 @@ const index = require("../../../index.js");
 const bot = index.bot;
 const fetch = require("node-fetch");
 const crypto = require("crypto");
-const mojangGrabber = require("../../../utilities/mojangGrabber.js");
+const ashconGrabber = require("../../../utilities/ashconGrabber.js");
 
 function gexpFunction(gexpList) {
 	let sum = 0;
@@ -19,14 +19,14 @@ module.exports = {
 		const HypixelAPIKey = process.env.HypixelAPIKey;
 
 		if(message.startsWith("weeklygexp" || "weeklygxp")) {
-			const mojangAPI = await mojangGrabber(username);
-			fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${mojangAPI.id}`)
+			const ashconAPI = await ashconGrabber(username);
+			fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${ashconAPI.uuid}`)
 				.then(res => res.json())
 				.then(data => {
 					for (const item in data.guild.members) {
-						if (data.guild.members[item].uuid == mojangAPI.id) {
+						if (data.guild.members[item].uuid == ashconAPI.uuid) {
 							const gexpLIST = data.guild.members[item].expHistory;
-							bot.chat(`/w ${username} ${username}'s total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`);
+							bot.chat(`/w ${username} Your total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`);
 						}
 					}
 				});
@@ -36,24 +36,24 @@ module.exports = {
 		else{
 			const usernameMention = message.split(" ")[0];
 			let validUser = true;
-			const mojangAPI = await mojangGrabber(usernameMention);
+			const ashconAPI = await ashconGrabber(usernameMention);
 
-			if (!mojangAPI) {
+			if (!ashconAPI.uuid) {
 				validUser = false;
 				return bot.chat(`/w ${username} ${usernameMention} was not found (Try giving me a username and/or check spelling) | ${randomID}`);
 			}
 
 			if (validUser) {
-				fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${mojangAPI.id}`)
+				fetch(`https://api.hypixel.net/guild?key=${HypixelAPIKey}&player=${ashconAPI.uuid}`)
 					.then(res => {return res.json();})
 					.then(data => {
 						if(!data.guild) {
 							return bot.chat(`/w ${username} ${usernameMention} does not seem to be in a guild | ${randomID}`);
 						}
 						for (const item in data.guild.members) {
-							if (data.guild.members[item].uuid == mojangAPI.id) {
+							if (data.guild.members[item].uuid == ashconAPI.uuid) {
 								const gexpList = data.guild.members[item].expHistory;
-								return bot.chat(`/w ${username} ${mojangAPI.name}'s total weekly gexp: ${gexpFunction(gexpList).toLocaleString()} | ${randomID}`);
+								return bot.chat(`/w ${username} ${ashconAPI.name}'s total weekly gexp: ${gexpFunction(gexpList).toLocaleString()} | ${randomID}`);
 							}
 						}
 					});

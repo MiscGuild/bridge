@@ -3,7 +3,7 @@ const bot = index.bot;
 const fetch = require("node-fetch");
 const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlacklisted.js");
 const getNetworkLevel = require("../../../utilities/getNetworkLevel.js");
-const mojangGrabber = require("../../../utilities/mojangGrabber.js");
+const ashconGrabber = require("../../../utilities/ashconGrabber.js");
 
 module.exports = {
 	name: "guildRequesting",
@@ -19,9 +19,9 @@ module.exports = {
 			);
 		}
 		else {
-			const mojangAPI = await mojangGrabber(username);
+			const ashconAPI = await ashconGrabber(username);
 			const HyAPI = await fetch(
-				`https://api.hypixel.net/player?key=${process.env.HypixelAPIKey}&uuid=${mojangAPI.id}&player=${username}`
+				`https://api.hypixel.net/player?key=${process.env.HypixelAPIKey}&uuid=${ashconAPI.uuid}&player=${username}`
 			).then((res) => res.json());
 
 			if ((await getNetworkLevel(HyAPI.player.networkExp)) >= 50) {

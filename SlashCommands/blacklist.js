@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const fetch = require("node-fetch");
 const fs = require("fs");
 const blacklist = require("../resources/blacklist.json");
+const ashconGrabber = require("../utilities/ashconGrabber.js");
 
 const successColor = "0x00A86B";
 const errorColor = "0xDE3163";
@@ -144,21 +145,19 @@ module.exports = {
 				return interaction.followUp({ embeds: [embed], ephemeral: true });
 			}
 
-			const MojangAPI = await fetch(
-				`https://api.ashcon.app/mojang/v2/user/${args[1]}`
-			).then((res) => res.json());
-			if (!MojangAPI.uuid) {
+			const ashconAPI = await ashconGrabber(args[1]);
+			if (!ashconAPI.uuid) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
 					.setColor(errorColor)
 					.setDescription(
-						`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
+						`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${ashconAPI.code}, ${ashconAPI.error}\nReason: ${ashconAPI.reason}\`\`\``
 					);
 				return interaction.followUp({ embeds: [embed], ephemeral: true });
 			}
 
 			for (const i in blacklist) {
-				if (blacklist[i].uuid == MojangAPI.uuid) {
+				if (blacklist[i].uuid == ashconAPI.uuid) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
 						.setColor(errorColor)
@@ -169,8 +168,8 @@ module.exports = {
 				}
 			}
 
-			const user = MojangAPI.username;
-			const uuid = MojangAPI.uuid;
+			const user = ashconAPI.username;
+			const uuid = ashconAPI.uuid;
 			const end = args[2];
 			const reason = args.slice(3).join(" ");
 
@@ -210,10 +209,10 @@ module.exports = {
 									.setTitle("Done ☑️")
 									.setColor(successColor)
 									.setThumbnail(
-										`https://crafatar.com/avatars/${MojangAPI.uuid}`
+										`https://crafatar.com/avatars/${ashconAPI.uuid}`
 									)
 									.setDescription(
-										`The user \`${MojangAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+										`The user \`${ashconAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
 									);
 								return interaction.followUp({ embeds: [embed] });
 							}
@@ -233,20 +232,18 @@ module.exports = {
 			}
 
 			try {
-				const MojangAPI = await fetch(
-					`https://api.ashcon.app/mojang/v2/user/${args[1]}`
-				).then((res) => res.json());
-				if (!MojangAPI.uuid) {
+				const ashconAPI = await ashconGrabber(args[1]);
+				if (!ashconAPI.uuid) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
+							`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${ashconAPI.code}, ${ashconAPI.error}\nReason: ${ashconAPI.reason}\`\`\``
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
 
-				const uuid = MojangAPI.uuid;
+				const uuid = ashconAPI.uuid;
 				return new Promise((resolve, reject) => {
 					let found = false;
 					for (let i = 0; i < blacklist.length; i++) {
@@ -294,10 +291,10 @@ module.exports = {
 											.setTitle("Done ☑️")
 											.setColor(successColor)
 											.setThumbnail(
-												`https://crafatar.com/avatars/${MojangAPI.uuid}`
+												`https://crafatar.com/avatars/${ashconAPI.uuid}`
 											)
 											.setDescription(
-												`\`${MojangAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+												`\`${ashconAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
 											);
 										return interaction.followUp({ embeds: [embed] });
 									}
