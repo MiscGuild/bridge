@@ -19,19 +19,19 @@ module.exports = {
 		) {
 			const embed = new Discord.MessageEmbed()
 				.setTitle("Rebooting")
-				.setDescription("The bot will reboot in `45s`");
+				.setDescription("The bot will reboot in `30s`");
     
 			interaction.followUp({ embeds: [embed] });
     
 			logger.info(
-				`Bot will reboot in 45s due to ${interaction.member.displayName} running the reboot command`
+				`UNSCHEDULED BOT REBOOT DUE TO ${interaction.member.displayName} RUNNING THE REBOOT COMMAND`
 			);
 			channel.send(
-				`Bot will reboot in 45s due to ${interaction.member.displayName} running the reboot command`
+				`Bot will reboot in 30s due to ${interaction.member.displayName} running the reboot command`
 			);
 			setTimeout(() => {
 				process.exit();
-			}, 45000);
+			}, 30000);
 		}
 		else {
 			const embed = new Discord.MessageEmbed()

@@ -23,7 +23,7 @@ module.exports = {
 					`Your message is too long! ${message.content.length}/250`
 				);
 			}
-			bot.chat(`/oc [${user.displayName.split(" ")[0]}] -  ${message.content}`);
+			bot.chat(`/oc [${user.displayName.split(" ")[0]}] - ${message.content}`);
 			McChatLogger.info(
 				`DISCORD (OFFICER CHAT)> [${message.author.tag}/${message.author.id}]: ${message.content}`
 			);

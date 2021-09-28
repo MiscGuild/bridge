@@ -35,7 +35,7 @@ module.exports = {
             .setTitle("Unmuted!")
             .setColor(successColor)
             .setDescription(
-                `I have unmuted the user \`${args[0]}\``
+                `The user \`${args[0]}\` has been unmuted!`
             );
         return interaction.followUp({ embeds: [embed] });
     }

@@ -40,7 +40,7 @@ module.exports = {
 			.setTitle("Kicked!")
 			.setColor(errorColor)
 			.setDescription(
-				`I have kicked \`${args[0]}\` with the reason \`${args[1]}\``
+				`The user \`${args[0]}\` has been kicked for the reason \`${args[1]}\``
 			);
 		return interaction.followUp({ embeds: [embed] });
 	},

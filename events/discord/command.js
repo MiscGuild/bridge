@@ -13,6 +13,12 @@ const client = index.client;
 const channelID = process.env.OUTPUTCHANNELID;
 const successColor = "0x00A86B";
 const errorColor = "0xDE3163";
+const errorEmbed = new Discord.MessageEmbed()
+	.setTitle("Error")
+	.setColor(errorColor)
+	.setDescription(
+		"An error has occurred while running this command. Please contact ElijahRus#9099"
+	);
 
 module.exports = {
 	name: "message",
@@ -32,14 +38,14 @@ module.exports = {
 					.setTitle("Commands")
 					.addField("help", "Prints this message")
 					.addField("reboot", "Restarts the bot")
-					.addField("chat", "Send a chat message in game")
+					.addField("chat", "Send a chat message in-game")
 					.addField("command", "Runs an in-game command")
 					.addField(
 						"blacklist",
 						"Add, list or remove users that are blacklisted"
 					)
 					.setFooter(
-						"You can send messages ingame by typing in #bridge | Prefix: " + process.env.PREFIX
+						"You can send messages in-game by typing in #bridge | Prefix: " + process.env.PREFIX
 					);
 
 				return message.channel.send({ embeds: [embed] });
@@ -49,7 +55,7 @@ module.exports = {
 					.setTitle("Commands")
 					.addField("help", "Prints this message")
 					.setFooter(
-						"You can send messages ingame by typing in #bridge | Prefix: " + process.env.PREFIX
+						"You can send messages in-game by typing in #bridge | Prefix: " + process.env.PREFIX
 					);
 
 				return message.channel.send({ embeds: [embed] });
@@ -143,14 +149,7 @@ module.exports = {
 			catch (err) {
 				errorLogs.error(err);
 				console.log(err);
-				const embed = new Discord.MessageEmbed()
-					.setTitle("Error")
-					.setColor(errorColor)
-					.setDescription(
-						"Someting wong happen pls contact elijahsus to fix!!"
-					);
-
-				return message.channel.send({ embeds: [embed] });
+				return message.channel.send({ embeds: [errorEmbed] });
 			}
 		}
 		else if (command === "reboot".toLowerCase()) {
@@ -416,13 +415,7 @@ module.exports = {
 							});
 						}
 						catch (err) {
-							const embed = new Discord.MessageEmbed()
-								.setTitle("Error")
-								.setColor(errorColor)
-								.setDescription(
-									"An unexpected error has occurred. Please contact ElijahROOS."
-								);
-							return message.channel.send({ embeds: [embed] });
+							return message.channel.send({ embeds: [errorEmbed] });
 						}
 					}
 					else if (args[0] == "dump".toLowerCase()) {

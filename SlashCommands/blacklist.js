@@ -11,8 +11,9 @@ const errorColor = "0xDE3163";
 
 const errorEmbed = new Discord.MessageEmbed()
 	.setTitle("Error")
+	.setColor(errorColor)
 	.setDescription(
-		"An error has occurred while running this command. Please contact elijahsus"
+		"An error has occurred while running this command. Please contact ElijahRus#9099"
 	);
 
 module.exports = {
@@ -88,7 +89,7 @@ module.exports = {
 					`The list below shows everyone who is on the blacklist (Total: ${blacklist.length})`
 				)
 				.setFooter(
-					"The name is based on the name that was givin at the time of blacklist, refer to the UUID if the user has changed their name."
+					"The name is based on the name that was given at the time of blacklist, refer to the UUID if the user has changed their name."
 				);
 
 			blacklist.forEach((element) =>
@@ -102,7 +103,7 @@ module.exports = {
 				const embed2 = new Discord.MessageEmbed()
 					.setTitle("Error | Too many people on blacklist")
 					.setDescription(
-						`Discord has a character limit and we have reached it with the message trying to be sent. Look at the blacklist list in <#${process.env.BLACKLISTCHANNEL}>`
+						`There are too many people on the blacklist to send. Please refer to <#${process.env.BLACKLISTCHANNEL}> for a list of blacklisted users.`
 					);
 				return interaction.followUp({ embeds: [embed2], ephemeral: true });
 			}
@@ -112,7 +113,7 @@ module.exports = {
 			const embed = new Discord.MessageEmbed()
 				.setTitle("Blacklist Dump")
 				.setDescription(
-					"Attached is the blacklist database, blacklists are stored in an array in a separate `.JSON` file. "
+					"Attached is a copy of the blacklist database in `.JSON` format."
 				);
 			return interaction.followUp({
 				embeds: [embed],
@@ -160,7 +161,7 @@ module.exports = {
 					.setTitle("Error")
 					.setColor(errorColor)
 					.setDescription(
-						`I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
+						`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
 					);
 				return interaction.followUp({ embeds: [embed], ephemeral: true });
 			}
@@ -171,7 +172,7 @@ module.exports = {
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							`That user appears to already be on the blacklist. To check who is on the blacklist please run the \`${process.env.PREFIX}blacklist\` command`
+							`That user appears to already be on the blacklist. To check who is on the blacklist please run \`${process.env.PREFIX}blacklist\``
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
@@ -221,7 +222,7 @@ module.exports = {
 										`https://crafatar.com/avatars/${MojangAPI.uuid}`
 									)
 									.setDescription(
-										`I have added the user \`${MojangAPI.username}\` to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+										`The user \`${MojangAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
 									);
 								return interaction.followUp({ embeds: [embed] });
 							}
@@ -233,7 +234,7 @@ module.exports = {
 			if (!args[1]) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error | Invalid Arguments")
-				// .setColor(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
+				// .setThumbnail(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
 					.setDescription(
 						"```/blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to remove from the blacklist```"
 					);
@@ -249,7 +250,7 @@ module.exports = {
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							`I have encountered an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
+							`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${MojangAPI.code}, ${MojangAPI.error}\nReason: ${MojangAPI.reason}\`\`\``
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
@@ -260,7 +261,6 @@ module.exports = {
 					for (let i = 0; i < blacklist.length; i++) {
 						if (blacklist[i].uuid == uuid) {
 							found = true;
-							console.log("found uuid");
 							break;
 						}
 					}
@@ -269,7 +269,7 @@ module.exports = {
 							.setTitle("Error")
 							.setColor(errorColor)
 							.setDescription(
-								"That user appears to not be on the blacklist. To check who is on the blacklist please run the `/blacklist` command"
+								`That user doesn't appear be on the blacklist. To check who is on the blacklist please run \`${process.env.PREFIX}blacklist\``
 							);
 						return interaction.followUp({
 							embeds: [embed],
@@ -306,7 +306,7 @@ module.exports = {
 												`https://crafatar.com/avatars/${MojangAPI.uuid}`
 											)
 											.setDescription(
-												`I have removed the user \`${MojangAPI.username}\` from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+												`\`${MojangAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
 											);
 										return interaction.followUp({ embeds: [embed] });
 									}
@@ -318,13 +318,7 @@ module.exports = {
 
 			}
 			catch (err) {
-				const embed = new Discord.MessageEmbed()
-					.setTitle("Error")
-					.setColor(errorColor)
-					.setDescription(
-						"An unexpected error has occurred. Please contact ElijahROOS."
-					);
-				return interaction.followUp({ embeds: [embed] });
+				return interaction.followUp({ embeds: [errorEmbed] });
 			}
 		}
 		else {

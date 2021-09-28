@@ -8,13 +8,13 @@ const errorColor = "0xDE3163";
 
 module.exports = {
 	name: "command",
-	description: "Sends a command as the bot!",
+	description: "Sends a command in-game!",
 	type: "CHAT_INPUT",
 	options: [
 		{
 			"type": 3,
 			"name": "command",
-			"description": "What would you like to do?",
+			"description": "What command would you like to run?",
 			"required": true
 		}
 	],
@@ -35,7 +35,7 @@ module.exports = {
 			.setTitle("Sent!")
 			.setColor(successColor)
 			.setDescription(
-				`I have sent the command \`${args[0]}\` in game!`
+				`The command \`${args[0]}\` has been sent!`
 			);
 		return interaction.followUp({ embeds: [embed] });
 	},

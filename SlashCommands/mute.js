@@ -39,7 +39,7 @@ module.exports = {
             .setTitle("Muted!")
             .setColor(errorColor)
             .setDescription(
-                `I have muted the user \`${args[0]}\` for \`${args[1]}\``
+                `The user \`${args[0]}\` has been muted for \`${args[1]}\``
             );
         return interaction.followUp({ embeds: [embed] });
     }

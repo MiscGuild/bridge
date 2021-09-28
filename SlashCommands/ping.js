@@ -3,7 +3,7 @@ const successColor = "0x00A86B";
 
 module.exports = {
 	name: "ping",
-	description: "Returns bots ping",
+	description: "See the bot's ping (ms) to Discord!",
 	type: "CHAT_INPUT",
  
 	run: async (client, interaction, args) => {

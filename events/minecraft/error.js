@@ -10,11 +10,11 @@ module.exports = {
 	execute(err) {
 		console.log("Error attempting to reconnect: " + err + ".");
 		errorLogs.error("Error attempting to reconnect: " + err + ".");
-		client.channels.cache.get(channelID).send("**BOT WAS KICKED, IT WILL REBOOT IN 75s**");
+		client.channels.cache.get(channelID).send("**BOT WAS KICKED, IT WILL REBOOT IN 60s**");
 		setTimeout(function() {
 			console.log("Shutting down for automatic relog");
 			channel.send("**SHUTTING DOWN FOR RELOG**");
 			process.exit();
-		}, 75000);
+		}, 60000);
 	}
 };

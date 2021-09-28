@@ -2,7 +2,7 @@ const index = require("../../index.js");
 const client = index.client;
 const bot = index.bot;
 const sendToDiscord = index.sendToDiscord;
-const channelID = process.env.OUTPUTCHANNELID;
+const channels = [process.env.OUTPUTCHANNELID, process.env.STAFFCHANNELID, process.env.LOGCHANNELID, process.env.BLACKLISTCHANNEL]
 
 const log4js = require("log4js");
 const logger = log4js.getLogger("logs");
@@ -13,16 +13,16 @@ const debugLogs = log4js.getLogger("Debug");
 module.exports = {
 	name: "ready",
 	async execute() {
-		channel = client.channels.cache.get(channelID);
-        
 		logger.info(`The discord bot logged in! Username: ${client.user.username}!`);
-		if (!channel) {
-			logger.info(`I could not find the channel (${channelID})! -- 2`);
-			process.exit(1);
+		for (let i = 0; i < channels.length; i++) {
+			const channel = client.channels.cache.get(channels[i]);
+			if (!channel) {
+				logger.info(`The channel ${channels[i]} could not be found. Check the channel ID and if the bot has access to the server!`);
+				process.exit(1);
+			}
 		}
-		else {
-			sendToDiscord(`**MiscBot** has logged onto \`${process.env.IP}\` and is now ready!`);
-		}
+
+		sendToDiscord(`${bot.username} has logged onto \`${process.env.IP}\` and is now ready!`);
       
 		client
 			.on("debug", (debug => {debugLogs.debug(debug), console.log(debug);}))

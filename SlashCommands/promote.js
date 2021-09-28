@@ -35,7 +35,7 @@ module.exports = {
 			.setTitle("Promoted!")
 			.setColor(successColor)
 			.setDescription(
-				`I have promoted \`${args[0]}\`!`
+				`The user \`${args[0]}\` has been promoted!`
 			);
 		return interaction.followUp({ embeds: [embed] });
 	},

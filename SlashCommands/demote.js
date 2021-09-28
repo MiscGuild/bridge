@@ -34,7 +34,7 @@ module.exports = {
 			.setTitle("Demoted!")
 			.setColor(errorColor)
 			.setDescription(
-				`I have demoted \`${args[0]}\`!`
+				`The user \`${args[0]}\` has been demoted!`
 			);
 		return interaction.followUp({ embeds: [embed] });
 	},

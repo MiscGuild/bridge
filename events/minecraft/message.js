@@ -17,12 +17,13 @@ module.exports = {
 	async execute(message) {
 		const msg = message.toString();
 		logger.info(msg);
+		
 		if(!msg) {return;}
-		if(msg == "Unknown command. Type \"help\" for help.") {return;}
-		if(msg == "A kick occurred in your connection, so you have been routed to limbo!") {return;}
-		if(msg == "Illegal characters in chat") {return;}
-		if(msg == "You were spawned in Limbo.") {return;}
-		if(msg == "/limbo for more information.") {return;}
+		else if(msg == "Unknown command. Type \"help\" for help.") {return;}
+		else if(msg == "A kick occurred in your connection, so you have been routed to limbo!") {return;}
+		else if(msg == "Illegal characters in chat") {return;}
+		else if(msg == "You were spawned in Limbo.") {return;}
+		else if(msg == "/limbo for more information.") {return;}
 
 		discordChatLogs.push(msg);
 		McChatLogger.info(msg);
