@@ -3,11 +3,9 @@ const Discord = require("discord.js");
 const fetch = require("node-fetch");
 const fs = require("fs");
 const blacklist = require("../resources/blacklist.json"); // Cant accses the ../resources for some reason
-const index = require("../index.js");
 
 const successColor = "0x00A86B";
 const errorColor = "0xDE3163";
-
 const errorEmbed = new Discord.MessageEmbed()
 	.setTitle("Error")
 	.setColor(errorColor)

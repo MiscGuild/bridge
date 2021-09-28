@@ -1,7 +1,6 @@
 const index = require("../../index.js");
 const client = index.client;
 const bot = index.bot;
-const sendToDiscord = index.sendToDiscord;
 const channels = [process.env.OUTPUTCHANNELID, process.env.STAFFCHANNELID, process.env.LOGCHANNELID, process.env.BLACKLISTCHANNEL];
 
 const log4js = require("log4js");
@@ -21,8 +20,6 @@ module.exports = {
 				process.exit(1);
 			}
 		}
-
-		sendToDiscord(`The bot has logged in to \`${process.env.IP}\` and is now ready!`);
       
 		client
 			.on("debug", (debug => {debugLogs.debug(debug), console.log(debug);}))
