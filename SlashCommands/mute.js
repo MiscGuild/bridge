@@ -5,10 +5,10 @@ const bot = index.bot;
 const errorColor = "0xDE3163";
 
 module.exports = {
-    name: "mute",
+	name: "mute",
 	description: "Mute a player in-game",
 	type: "CHAT_INPUT",
-    options: [
+	options: [
 		{
 			"type": 3,
 			"name": "user",
@@ -23,8 +23,8 @@ module.exports = {
 		}
 	],
 
-    run: async (client, interaction, args) => {
-        if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
+	run: async (client, interaction, args) => {
+		if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
 			const embed = new MessageEmbed()
 				.setTitle("Error")
 				.setColor(errorColor)
@@ -34,13 +34,13 @@ module.exports = {
 			return interaction.followUp({ embeds: [embed], ephemeral: true });
 		}
 
-        bot.chat(`/g mute ${args[0]} ${args[1]}`);
-        const embed = new MessageEmbed()
-            .setTitle("Muted!")
-            .setColor(errorColor)
-            .setDescription(
-                `The user \`${args[0]}\` has been muted for \`${args[1]}\``
-            );
-        return interaction.followUp({ embeds: [embed] });
-    }
-}
+		bot.chat(`/g mute ${args[0]} ${args[1]}`);
+		const embed = new MessageEmbed()
+			.setTitle("Muted!")
+			.setColor(errorColor)
+			.setDescription(
+				`The user \`${args[0]}\` has been muted for \`${args[1]}\``
+			);
+		return interaction.followUp({ embeds: [embed] });
+	}
+};

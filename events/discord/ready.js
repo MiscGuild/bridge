@@ -2,7 +2,7 @@ const index = require("../../index.js");
 const client = index.client;
 const bot = index.bot;
 const sendToDiscord = index.sendToDiscord;
-const channels = [process.env.OUTPUTCHANNELID, process.env.STAFFCHANNELID, process.env.LOGCHANNELID, process.env.BLACKLISTCHANNEL]
+const channels = [process.env.OUTPUTCHANNELID, process.env.STAFFCHANNELID, process.env.LOGCHANNELID, process.env.BLACKLISTCHANNEL];
 
 const log4js = require("log4js");
 const logger = log4js.getLogger("logs");
@@ -22,7 +22,7 @@ module.exports = {
 			}
 		}
 
-		sendToDiscord(`${bot.username} has logged onto \`${process.env.IP}\` and is now ready!`);
+		sendToDiscord(`The bot has logged in to \`${process.env.IP}\` and is now ready!`);
       
 		client
 			.on("debug", (debug => {debugLogs.debug(debug), console.log(debug);}))

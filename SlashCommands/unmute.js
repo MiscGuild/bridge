@@ -1,5 +1,4 @@
 const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
-const Discord = require("discord.js");
 const index = require("../index.js");
 const bot = index.bot;
 
@@ -7,10 +6,10 @@ const successColor = "0x00A86B";
 const errorColor = "0xDE3163";
 
 module.exports = {
-    name: "unmute",
+	name: "unmute",
 	description: "Unmute a player in-game",
 	type: "CHAT_INPUT",
-    options: [
+	options: [
 		{
 			"type": 3,
 			"name": "user",
@@ -19,8 +18,8 @@ module.exports = {
 		},
 	],
 
-    run: async (client, interaction, args) => {
-        if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
+	run: async (client, interaction, args) => {
+		if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
 			const embed = new MessageEmbed()
 				.setTitle("Error")
 				.setColor(errorColor)
@@ -30,13 +29,13 @@ module.exports = {
 			return interaction.followUp({ embeds: [embed], ephemeral: true });
 		}
 
-        bot.chat(`/g unmute ${args[0]}`);
-        const embed = new MessageEmbed()
-            .setTitle("Unmuted!")
-            .setColor(successColor)
-            .setDescription(
-                `The user \`${args[0]}\` has been unmuted!`
-            );
-        return interaction.followUp({ embeds: [embed] });
-    }
-}
+		bot.chat(`/g unmute ${args[0]}`);
+		const embed = new MessageEmbed()
+			.setTitle("Unmuted!")
+			.setColor(successColor)
+			.setDescription(
+				`The user \`${args[0]}\` has been unmuted!`
+			);
+		return interaction.followUp({ embeds: [embed] });
+	}
+};

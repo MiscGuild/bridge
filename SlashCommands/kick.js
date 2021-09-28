@@ -1,7 +1,6 @@
 const index = require("../index.js");
 const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
 const bot = index.bot;
-const Discord = ("discord.js");
 
 const errorColor = "0xDE3163";
 

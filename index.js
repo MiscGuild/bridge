@@ -18,7 +18,7 @@ const channelID = process.env.OUTPUTCHANNELID;
 
 async function sendToDiscord(msg, color = "0x2f3136", channel = channelID) {
 	channel = client.channels.cache.get(channel);
-	embed = new Discord.MessageEmbed()
+	const embed = new Discord.MessageEmbed()
 		.setDescription(msg)
 		.setColor(color);
 	channel.send({ embeds: [embed] });
