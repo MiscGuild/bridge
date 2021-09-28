@@ -2,7 +2,7 @@ const { Client, CommandInteraction } = require("discord.js");
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
 const fs = require("fs");
-const blacklist = require("../resources/blacklist.json"); // Cant accses the ../resources for some reason
+const blacklist = require("../resources/blacklist.json");
 
 const successColor = "0x00A86B";
 const errorColor = "0xDE3163";
@@ -107,15 +107,9 @@ module.exports = {
 			return interaction.followUp({ embeds: [embed] });
 		}
 		else if (args[0] == "dump") {
-			const embed = new Discord.MessageEmbed()
-				.setTitle("Blacklist Dump")
-				.setDescription(
-					"Attached is a copy of the blacklist database in `.JSON` format."
-				);
-			return interaction.followUp({
-				embeds: [embed],
-				files: [`${process.cwd()}/blacklist.json`],
-			});
+			return interaction.followUp(
+				{ content: "Attached is a copy of the blacklist.", files: [`${process.cwd()}/resources/blacklist.json`] }
+			);
 		}
 		else if (args[0] == "add") {
 			if (!args[1]) {
@@ -206,7 +200,7 @@ module.exports = {
 						blacklist.push({ user, uuid, end, reason, msgID });
 
 						fs.writeFile(
-							"blacklist.json", // Cant accses the /resources for some reason
+							"./resources/blacklist.json",
 							JSON.stringify(blacklist),
 							(err) => {
 								if (err) {
@@ -290,7 +284,7 @@ module.exports = {
 									});
 								blacklist.splice(i, 1);
 								fs.writeFile(
-									"blacklist.json",
+									"./resources/blacklist.json",
 									JSON.stringify(blacklist),
 									(err) => {
 										if (err) {
