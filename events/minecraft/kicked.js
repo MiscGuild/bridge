@@ -9,13 +9,13 @@ module.exports = {
 	execute(reason) {
 		console.log(reason);
 		console.log("I was kicked, auto relog will start in 60s");
-		// channel.send("**BOT WAS KICKED, IT WILL REBOOT IN 60s**\n```" + reason + "```");
-		// bot.end();
+		channel.send("**BOT WAS KICKED, IT WILL REBOOT IN 60s**\n```" + reason + "```");
+		bot.end();
 
-		// setTimeout(function() {
-		// 	console.log("Shutting down for automatic relog");
-		// 	channel.send("**SHUTTING DOWN FOR RELOG**");
-		// 	process.exit();
-		// }, 60000);
+		setTimeout(function() {
+			console.log("Shutting down for automatic relog");
+			channel.send("**SHUTTING DOWN FOR RELOG**");
+			process.exit();
+		}, 60000);
 	}
 };
