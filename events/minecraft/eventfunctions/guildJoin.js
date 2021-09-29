@@ -21,10 +21,10 @@ module.exports = {
 		}
 		else {
 			const welcomeMessages = [
-				"Welcome to the #19 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/misc",
-				"Welcome to the guild! Make sure to join the discord at discord.gg/misc",
-				`Welcome to the guild, ${username}! Join the discord at discord.gg/misc`,
-				`Welcome to the guild, ${username}! Interact with the community more at discord.gg/misc`,
+				"Welcome to the #19 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/bHFWukp",
+				"Welcome to the guild! Make sure to join the discord at discord.gg/bHFWukp",
+				`Welcome to the guild, ${username}! Join the discord at discord.gg/bHFWukp`,
+				`Welcome to the guild, ${username}! Interact with the community more at discord.gg/bHFWukp`,
 			];
 
 			if (!rank) {
