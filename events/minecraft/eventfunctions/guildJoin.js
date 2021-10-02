@@ -6,6 +6,10 @@ const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlackliste
 module.exports = {
 	name: "guildJoin",
 	async execute(rank, username) {
+		if (!rank) {
+			rank = "";
+		}
+		
 		sendToDiscord(
 			`-----------------------------------------------------\n**${rank} ${username}** joined the guild!\n-----------------------------------------------------`
 		);
@@ -26,10 +30,6 @@ module.exports = {
 				`Welcome to the guild, ${username}! Join the discord at discord.gg/bHFWukp`,
 				`Welcome to the guild, ${username}! Interact with the community more at discord.gg/bHFWukp`,
 			];
-
-			if (!rank) {
-				rank = "";
-			}
 
 			setTimeout(() => {
 				bot.chat(
