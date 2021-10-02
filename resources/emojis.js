@@ -37,4 +37,4 @@ const emojis = new Map([
 	["GM2", "843900120901746689"]
 ]);
 
-module.exports = emojis;
+export default emojis;

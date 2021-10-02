@@ -1,9 +1,8 @@
-const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
-const index = require("../index.js");
-const bot = index.bot;
+import { bot } from "../index.js";
+import { MessageEmbed } from "discord.js";
 const errorColor = "0xDE3163";
 
-module.exports = {
+export default {
 	name: "mute",
 	description: "Mute a player in-game",
 	type: "CHAT_INPUT",

@@ -1,9 +1,7 @@
-const index = require("../../index.js");
-const client = index.client;
-const bot = index.bot;
+import { client, bot } from "../../index.js";
 const channel = client.channels.cache.get(process.env.OUTPUTCHANNELID);
 
-module.exports = {
+export default {
 	name: "kicked",
 	runOnce: false,
 	execute(reason) {

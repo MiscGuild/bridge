@@ -1,18 +1,17 @@
 // -------------------------------------------------------Integrations-------------------------------------------------------------------------
-const fs = require("fs");
+import fs from "fs";
 const eventFunctions = fs.readdirSync("./events/minecraft/eventfunctions").filter((file) => file.endsWith(".js"));
 const botEvents = fs.readdirSync("./events/minecraft").filter((file) => file.endsWith(".js"));
 const clientEvents = fs.readdirSync("./events/discord").filter((file) => file.endsWith(".js"));
-const regexes = require("./resources/regex");
-const log4jsConfig = require("./resources/log4jsConfigure.json");
-const log4js = require("log4js");
-const dotenv = require("dotenv");
+import regexes from "./resources/regex.js";
+import log4jsConfig from "./resources/log4jsConfigure.js";
+import log4js from "log4js";
+import dotenv from "dotenv";
 log4js.configure(log4jsConfig);
 dotenv.config();
 
 // ----------------------------------------------------------Discord--------------------------------------------------------------------------
-const Discord = require("discord.js");
-const { Client, Intents, Collection } = require("discord.js");
+import Discord, { Client, Collection } from "discord.js";
 const client = new Client({ intents: 32509 });
 const channelID = process.env.OUTPUTCHANNELID;
 
@@ -28,13 +27,11 @@ async function sendToDiscord(msg, color = "0x2f3136", channel = channelID) {
 client.commands = new Collection();
 client.slashCommands = new Collection();
 
-require("./handler")(client);
-
 
 // ---------------------------------------------------PrismarineJS/Mineflayer------------------------------------------------------------------
-const mineflayer = require("mineflayer");
-const mineflayerViewer = require("prismarine-viewer").mineflayer;
-bot = mineflayer.createBot({
+import mineflayer from "mineflayer";
+import { mineflayer as mineflayerViewer } from "prismarine-viewer";
+const bot = mineflayer.createBot({
 	host: process.env.IP,
 	port: process.env.PORT,
 	username: process.env.EMAIL,
@@ -43,30 +40,39 @@ bot = mineflayer.createBot({
 	auth: "microsoft",
 });
 
-module.exports = { client, bot, sendToDiscord };
+export { client, bot, sendToDiscord };
 
 
 // --------------------------------------------------------Bind Events--------------------------------------------------------------------------
 // File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
 for (const file of eventFunctions) {
-	const event = require(`./events/minecraft/eventfunctions/${file}`);
-	bot.on(event.name, (...args) => event.execute(...args));
-	bot.chatAddPattern(regexes[event.name], `${event.name}`);
+	import(`./events/minecraft/eventfunctions/${file}`)
+	.then((event) => {
+		event = event.default;
+		bot.on(event.name, (...args) => event.execute(...args));
+		bot.chatAddPattern(regexes[event.name], `${event.name}`);
+	});
 }
 
 for (const file of botEvents) {
-	const event = require(`./events/minecraft/${file}`);
-	if (event.runOnce) {
-		bot.once(event.name, (...args) => event.execute(...args));
-	}
-	else {
-		bot.on(event.name, (...args) => event.execute(...args));
-	}
+	import(`./events/minecraft/${file}`)
+	.then((event) => {
+		event = event.default;
+		if (event.runOnce) {
+			bot.once(event.name, (...args) => event.execute(...args));
+		}
+		else {
+			bot.on(event.name, (...args) => event.execute(...args));
+		}
+	});
 }
 
 for (const file of clientEvents) {
-	const event = require(`./events/discord/${file}`);
-	client.on(event.name, (...args) => event.execute(...args));
+	import(`./events/discord/${file}`)
+	.then((event) => {
+		event = event.default;
+		client.on(event.name, (...args) => event.execute(...args));
+	});
 }
 
 client.login(process.env.TOKEN);

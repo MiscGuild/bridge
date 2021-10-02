@@ -1,10 +1,9 @@
-const index = require("../../index.js");
-const log4js = require("log4js");
-const bot = index.bot;
-const channelID = process.env.OUTPUTCHANNELID;
+import { bot } from "../../index.js";
+import log4js from "log4js";
 const McChatLogger = log4js.getLogger("McChatLogs");
+const channelID = process.env.OUTPUTCHANNELID;
 
-module.exports = {
+export default {
 	name: "message",
 	async execute(message) {
 		if (message.channel.id == channelID) {

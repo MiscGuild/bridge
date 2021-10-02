@@ -1,11 +1,10 @@
-const { Client, CommandInteraction } = require("discord.js");
-const Discord = require("discord.js");
-const log4js = require("log4js");
+import Discord from "discord.js";
+import log4js from "log4js";
 const logger = log4js.getLogger("logs");
 
 const errorColor = "0xDE3163";
 
-module.exports = {
+export default {
 	name: "reboot",
 	description: "Reboots the bot",
 	type: "CHAT_INPUT",

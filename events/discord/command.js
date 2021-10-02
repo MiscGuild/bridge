@@ -1,8 +1,7 @@
-const index = require("../../index.js");
-const log4js = require("log4js");
-const Discord = require("discord.js");
+import { bot } from "../../index.js";
+import log4js from "log4js";
+import Discord from "discord.js";
 const errorLogs = log4js.getLogger("Errors");
-const bot = index.bot;
 
 const errorColor = "0xDE3163";
 const errorEmbed = new Discord.MessageEmbed()
@@ -12,7 +11,7 @@ const errorEmbed = new Discord.MessageEmbed()
 		"An error has occurred while running this command. Please contact ElijahRus#9099"
 	);
 
-module.exports = {
+export default {
 	name: "message",
 	async execute(message) {
 		if (!message.content.startsWith(process.env.PREFIX) || message.author.bot) {return;}

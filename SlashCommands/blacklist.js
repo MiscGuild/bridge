@@ -1,9 +1,7 @@
-const { Client, CommandInteraction } = require("discord.js");
-const Discord = require("discord.js");
-const fetch = require("node-fetch");
-const fs = require("fs");
-const blacklist = require("../resources/blacklist.json");
-const ashconGrabber = require("../utilities/ashconGrabber.js");
+import Discord from "discord.js";
+import fs from "fs";
+import blacklist from "../resources/blacklist.js";
+import ashconGrabber from "../utilities/ashconGrabber.js";
 
 const successColor = "0x00A86B";
 const errorColor = "0xDE3163";
@@ -14,7 +12,7 @@ const errorEmbed = new Discord.MessageEmbed()
 		"An error has occurred while running this command. Please contact ElijahRus#9099"
 	);
 
-module.exports = {
+export default {
 	name: "blacklist",
 	description:
     "add / remove a user to the blacklist or list and dump the blacklisted users",
@@ -109,7 +107,7 @@ module.exports = {
 		}
 		else if (args[0] == "dump") {
 			return interaction.followUp(
-				{ content: "Attached is a copy of the blacklist.", files: [`${process.cwd()}/resources/blacklist.json`] }
+				{ content: "Attached is a copy of the blacklist.", files: [`${process.cwd()}/resources/blacklist.js`] }
 			);
 		}
 		else if (args[0] == "add") {
@@ -197,10 +195,12 @@ module.exports = {
 						const msgID = blistmsg.id;
 
 						blacklist.push({ user, uuid, end, reason, msgID });
+						const JSONData = JSON.stringify(blacklist);
+						const content = `export default ${JSONData}`;
 
 						fs.writeFile(
-							"./resources/blacklist.json",
-							JSON.stringify(blacklist),
+							"./resources/blacklist.js",
+							content,
 							(err) => {
 								if (err) {
 									reject(err);
@@ -280,9 +280,11 @@ module.exports = {
 										msg.delete();
 									});
 								blacklist.splice(i, 1);
+								const JSONData = JSON.stringify(blacklist);
+								const content = `export default ${JSONData}`;
 								fs.writeFile(
-									"./resources/blacklist.json",
-									JSON.stringify(blacklist),
+									"./resources/blacklist.js",
+									content,
 									(err) => {
 										if (err) {
 											reject(err);

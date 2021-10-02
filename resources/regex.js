@@ -51,4 +51,4 @@ regexes.guildUnmute = /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) has unmuted (\[.+?\])? 
 // --On /msg bot
 regexes.whisperBot = /^From (?:\[.+?\])? ?([A-Za-z0-9_]{3,16}): (.+)/;
 
-module.exports = regexes;
+export default regexes;

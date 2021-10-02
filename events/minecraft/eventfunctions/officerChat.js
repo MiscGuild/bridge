@@ -1,18 +1,14 @@
-const index = require("../../../index.js");
-const sendToDiscord = index.sendToDiscord;
+import { sendToDiscord } from "../../../index.js";
+import { getRankEmoji, getTagEmoji } from "../../../utilities/chatEmojis.js";
 const staffChannelID = process.env.STAFFCHANNELID;
-const chatEmojis = require("../../../utilities/chatEmojis");
-const getRankEmoji = chatEmojis.getRankEmoji;
-const getTagEmoji = chatEmojis.getTagEmoji;
 
-module.exports = {
+export default {
 	name: "officerChat",
 	async execute(rank, username, tag, message) {
-		const list = await getRankEmoji(rank);
-		rank = list[0];
-		const color = list[1];
-
 		tag = await getTagEmoji(tag);
+		rank = await getRankEmoji(rank);
+		const color = rank[1];
+		rank = rank[0];
 
 		// logger.info(`OFFICER > ${rank} ${username}: ${message}`)
 		sendToDiscord(

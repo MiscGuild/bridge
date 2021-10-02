@@ -1,6 +1,6 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-module.exports = async function uuidGrabber(username) {
+export default async function uuidGrabber(username) {
 	return await fetch(
 		`https://api.ashcon.app/mojang/v2/user/${username}`
 	).then((res) => {

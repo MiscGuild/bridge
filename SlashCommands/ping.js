@@ -1,7 +1,7 @@
-const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
+import { MessageEmbed } from "discord.js";
 const successColor = "0x00A86B";
 
-module.exports = {
+export default {
 	name: "ping",
 	description: "See the bot's ping (ms) to Discord!",
 	type: "CHAT_INPUT",

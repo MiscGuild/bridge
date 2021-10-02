@@ -1,18 +1,17 @@
-const index = require("../../index.js");
-const client = index.client;
-const bot = index.bot;
-const channels = [process.env.OUTPUTCHANNELID, process.env.STAFFCHANNELID, process.env.LOGCHANNELID, process.env.BLACKLISTCHANNEL];
-
-const log4js = require("log4js");
+import { client, bot } from "../../index.js";
+import fs from "fs";
+import log4js from "log4js";
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");
 const warnLogs = log4js.getLogger("Warn");
 const debugLogs = log4js.getLogger("Debug");
+const channels = [process.env.OUTPUTCHANNELID, process.env.STAFFCHANNELID, process.env.LOGCHANNELID, process.env.BLACKLISTCHANNEL];
 
-module.exports = {
+export default {
 	name: "ready",
 	async execute() {
 		logger.info(`The discord bot logged in! Username: ${client.user.username}!`);
+
 		for (let i = 0; i < channels.length; i++) {
 			const channel = client.channels.cache.get(channels[i]);
 			if (!channel) {
@@ -20,7 +19,31 @@ module.exports = {
 				process.exit(1);
 			}
 		}
-      
+		
+		// Slash Commands
+		const slashCommands = fs.readdirSync("./SlashCommands").filter((file) => file.endsWith(".js"));
+		const slashCommandsArr = [];
+		slashCommands.forEach((value, i) => {
+			import(`../../SlashCommands/${value}`)
+			.then((file) => {
+				file = file.default;
+				client.slashCommands.set(file.name, file);
+			
+				if (["MESSAGE", "USER"].includes(file.type)) {
+					delete file.description;
+				}
+				slashCommandsArr.push(file);
+
+				if (i == slashCommands.length - 1) {
+					client.guilds.cache
+					.get(process.env.SERVERID)
+					.commands.set(slashCommandsArr);
+				} 
+			});
+		})
+
+
+		// Bind logs
 		client
 			.on("debug", (debug => {debugLogs.debug(debug), console.log(debug);}))
 			.on("warn", (warn => {warnLogs.warn(warn), console.log(warn);}))

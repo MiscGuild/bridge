@@ -2,6 +2,7 @@
   "name": "MiscChat",
   "description": "Miscellanous chat bot",
   "version": "2.0.7",
+  "type": "module",
   "contributors": [
     {
       "name": "ElijahRus",

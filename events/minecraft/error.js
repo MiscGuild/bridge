@@ -1,10 +1,9 @@
-const index = require("../../index.js");
-const log4js = require("log4js");
-const client = index.client;
-const channel = client.channels.cache.get(process.env.OUTPUTCHANNELID);
+import { client } from "../../index.js";
+import log4js from "log4js";
 const errorLogs = log4js.getLogger("Errors");
+const channel = client.channels.cache.get(process.env.OUTPUTCHANNELID);
 
-module.exports = {
+export default {
 	name: "error",
 	runOnce: false,
 	execute(err) {

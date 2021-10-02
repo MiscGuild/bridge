@@ -1,9 +1,8 @@
-const index = require("../../../index.js");
-const client = index.client;
+import { client } from "../../../index.js";
 const staffChannelID = process.env.STAFFCHANNELID;
 const serverID = process.env.SERVERID;
 
-module.exports = {
+export default {
 	name: "guildUnmute",
 	async execute(staffRank, staffUsername, unmutedRank, unmutedUsername) {
 		const serverMembers = client.guilds.cache.get(serverID).members;

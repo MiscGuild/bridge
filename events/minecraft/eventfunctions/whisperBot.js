@@ -1,8 +1,7 @@
-const index = require("../../../index.js");
-const bot = index.bot;
-const fetch = require("node-fetch");
-const crypto = require("crypto");
-const ashconGrabber = require("../../../utilities/ashconGrabber.js");
+import { bot } from "../../../index.js";
+import fetch from "node-fetch";
+import crypto from "crypto";
+import ashconGrabber from "../../../utilities/ashconGrabber.js";
 
 function gexpFunction(gexpList) {
 	let sum = 0;
@@ -12,7 +11,7 @@ function gexpFunction(gexpList) {
 	return sum;
 }
 
-module.exports = {
+export default {
 	name: "whisperBot",
 	async execute(username, message) {
 		const randomID = crypto.randomBytes(7).toString("hex");

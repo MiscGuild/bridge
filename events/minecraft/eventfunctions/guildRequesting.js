@@ -1,11 +1,10 @@
-const index = require("../../../index.js");
-const bot = index.bot;
-const fetch = require("node-fetch");
-const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlacklisted.js");
-const getNetworkLevel = require("../../../utilities/getNetworkLevel.js");
-const ashconGrabber = require("../../../utilities/ashconGrabber.js");
+import { bot } from "../../../index.js";
+import fetch from "node-fetch";
+import checkIfUserBlacklisted from "../../../utilities/checkIfUserBlacklisted.js";
+import getNetworkLevel from "../../../utilities/getNetworkLevel.js";
+import ashconGrabber from "../../../utilities/ashconGrabber.js";
 
-module.exports = {
+export default {
 	name: "guildRequesting",
 	async execute(rank, username) {
 		if (!rank) {

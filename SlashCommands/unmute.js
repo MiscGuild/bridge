@@ -1,11 +1,10 @@
-const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
-const index = require("../index.js");
-const bot = index.bot;
+import { bot } from "../index.js";
+import { MessageEmbed } from "discord.js";
 
 const successColor = "0x00A86B";
 const errorColor = "0xDE3163";
 
-module.exports = {
+export default {
 	name: "unmute",
 	description: "Unmute a player in-game",
 	type: "CHAT_INPUT",

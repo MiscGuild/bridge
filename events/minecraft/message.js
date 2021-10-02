@@ -1,17 +1,9 @@
-const index = require("../../index.js");
-const log4js = require("log4js");
-const client = index.client;
+import { client } from "../../index.js";
+import log4js from "log4js";
 const logger = log4js.getLogger("Logs");
 const McChatLogger = log4js.getLogger("McChatLogs");
 
-let discordChatLogs = [];
-setInterval(() => {
-	if(!discordChatLogs.length) {return;}
-	client.channels.cache.get(process.env.LOGCHANNELID).send("```" + `${discordChatLogs.join("\n")}` + "```");
-	discordChatLogs = [];
-}, 1000);
-
-module.exports = {
+export default {
 	name: "message",
 	runOnce: false,
 	async execute(message) {
@@ -25,7 +17,7 @@ module.exports = {
 		else if(msg == "You were spawned in Limbo.") {return;}
 		else if(msg == "/limbo for more information.") {return;}
 
-		discordChatLogs.push(msg);
+		client.channels.cache.get(process.env.LOGCHANNELID).send("```" + `${msg}` + "```");
 		McChatLogger.info(msg);
 	}
 };

@@ -1,9 +1,7 @@
-const index = require("../../../index.js");
-const bot = index.bot;
-const sendToDiscord = index.sendToDiscord;
-const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlacklisted.js");
+import { bot, sendToDiscord } from "../../../index.js";
+import checkIfUserBlacklisted  from "../../../utilities/checkIfUserBlacklisted.js";
 
-module.exports = {
+export default {
 	name: "guildJoin",
 	async execute(rank, username) {
 		if (!rank) {

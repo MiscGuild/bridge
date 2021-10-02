@@ -1,4 +1,4 @@
-{
+export default {
   "appenders": {
     "logs": {
       "type": "console",
@@ -70,4 +70,4 @@
       "level": "debug"
     }
   }
-}
+};

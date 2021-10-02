@@ -1,14 +1,10 @@
-const index = require("../../index.js");
-const cron = require("node-cron");
-const log4js = require("log4js");
+import { client, bot, sendToDiscord } from "../../index.js";
+import cron from "node-cron";
+import log4js from "log4js";
 const logger = log4js.getLogger("Logs");
-
-const client = index.client;
-const bot = index.bot;
-const sendToDiscord = index.sendToDiscord;
 const channelID = process.env.OUTPUTCHANNELID;
 
-module.exports = {
+export default {
 	name: "login",
 	runOnce: true,
 	async execute() {

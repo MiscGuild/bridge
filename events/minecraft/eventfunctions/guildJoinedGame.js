@@ -1,7 +1,6 @@
-const index = require("../../../index.js");
-const sendToDiscord = index.sendToDiscord;
+import { sendToDiscord } from "../../../index.js";
 
-module.exports = {
+export default {
 	name: "guildJoinedGame",
 	async execute(username) {
 		sendToDiscord(`Welcome back, **${username}**!`);

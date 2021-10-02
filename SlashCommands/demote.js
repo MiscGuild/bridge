@@ -1,10 +1,9 @@
-const index = require("../index.js");
-const { Client, CommandInteraction, MessageEmbed } = require("discord.js");
-const bot = index.bot;
+import { bot } from "../index.js";
+import { MessageEmbed } from "discord.js";
 
 const errorColor = "0xDE3163";
 
-module.exports = {
+export default {
 	name: "demote",
 	description: "Demotes a user in the guild!",
 	type: "CHAT_INPUT",

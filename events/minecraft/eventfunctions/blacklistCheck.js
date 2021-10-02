@@ -1,8 +1,7 @@
-const index = require("../../../index.js");
-const checkIfUserBlacklisted = require("../../../utilities/checkIfUserBlacklisted.js");
-const bot = index.bot;
+import { bot } from "../../../index.js";
+import checkIfUserBlacklisted from "../../../utilities/checkIfUserBlacklisted.js";
 
-module.exports = {
+export default {
 	name: "blacklistCheck",
 	async execute(message) {
 		const guildMembers = message.split(" ●  ");

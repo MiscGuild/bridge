@@ -1,8 +1,7 @@
-const index = require("../../../index.js");
-const client = index.client;
-const fetch = require("node-fetch");
+import { client } from "../../../index.js";
+import fetch from "node-fetch";
 
-module.exports = {
+export default {
 	name: "guildOnline",
 	async execute(onlineMembers) {
 		const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)
