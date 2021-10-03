@@ -12,4 +12,4 @@ export default async function checkIfUserBlacklisted(user) {
 		}
 	}
 	return false;
-};
+}

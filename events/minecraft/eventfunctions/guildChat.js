@@ -1,5 +1,5 @@
 import { sendToDiscord } from "../../../index.js";
-import { getRankEmoji, getTagEmoji } from "../../../utilities/chatEmojis.js";
+import { getRankEmoji, getTagEmoji } from "../../../utilities/chatEmojiGrabber.js";
 
 export default {
 	name: "guildChat",

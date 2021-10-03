@@ -11,14 +11,14 @@ export default {
 		const slashCommandsArr = [];
 		slashCommands.map((file) => {
 			import(file)
-			.then((file) => {
-				file = file.default;
-				if (!file?.name) {return;}
-				client.slashCommands.set(file.name, file);
+				.then((file) => {
+					file = file.default;
+					if (!file?.name) {return;}
+					client.slashCommands.set(file.name, file);
 		
-				if (["MESSAGE", "USER"].includes(file.type)) {delete file.description;}
-				slashCommandsArr.push(file);
-			});
+					if (["MESSAGE", "USER"].includes(file.type)) {delete file.description;}
+					slashCommandsArr.push(file);
+				});
 		});
     
 

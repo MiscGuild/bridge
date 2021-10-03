@@ -33,4 +33,4 @@ export default {
 			if (command) {command.run(client, interaction);}
 		}
 	},
-}
+};

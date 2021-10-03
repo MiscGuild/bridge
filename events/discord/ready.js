@@ -25,22 +25,22 @@ export default {
 		const slashCommandsArr = [];
 		slashCommands.forEach((value, i) => {
 			import(`../../SlashCommands/${value}`)
-			.then((file) => {
-				file = file.default;
-				client.slashCommands.set(file.name, file);
+				.then((file) => {
+					file = file.default;
+					client.slashCommands.set(file.name, file);
 			
-				if (["MESSAGE", "USER"].includes(file.type)) {
-					delete file.description;
-				}
-				slashCommandsArr.push(file);
+					if (["MESSAGE", "USER"].includes(file.type)) {
+						delete file.description;
+					}
+					slashCommandsArr.push(file);
 
-				if (i == slashCommands.length - 1) {
-					client.guilds.cache
-					.get(process.env.SERVERID)
-					.commands.set(slashCommandsArr);
-				} 
-			});
-		})
+					if (i == slashCommands.length - 1) {
+						client.guilds.cache
+							.get(process.env.SERVERID)
+							.commands.set(slashCommandsArr);
+					}
+				});
+		});
 
 
 		// Bind logs

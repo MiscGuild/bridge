@@ -1,5 +1,4 @@
 import { bot } from "../../../index.js";
-import fetch from "node-fetch";
 import checkIfUserBlacklisted from "../../../utilities/checkIfUserBlacklisted.js";
 import getNetworkLevel from "../../../utilities/getNetworkLevel.js";
 import ashconGrabber from "../../../utilities/ashconGrabber.js";

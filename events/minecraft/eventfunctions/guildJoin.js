@@ -1,5 +1,5 @@
 import { bot, sendToDiscord } from "../../../index.js";
-import checkIfUserBlacklisted  from "../../../utilities/checkIfUserBlacklisted.js";
+import checkIfUserBlacklisted from "../../../utilities/checkIfUserBlacklisted.js";
 
 export default {
 	name: "guildJoin",

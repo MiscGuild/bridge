@@ -6,8 +6,8 @@ export default async function uuidGrabber(username) {
 	).then((res) => res.json()
 	).then((data) => {
 		if (data.uuid) {
-			data.uuid = data.uuid.replaceAll("-","");
+			data.uuid = data.uuid.replaceAll("-", "");
 		}
 		return data;
 	});
-};
+}
