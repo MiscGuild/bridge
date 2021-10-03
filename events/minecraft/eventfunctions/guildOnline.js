@@ -1,18 +1,12 @@
 import { client } from "../../../index.js";
-import fetch from "node-fetch";
+import getPlayerCount from "../../../utilities/getPlayercount.js";
 
 export default {
 	name: "guildOnline",
 	async execute(onlineMembers) {
-		const HyAPI = await fetch(`https://api.hypixel.net/playercount?key=${process.env.HypixelAPIKey}`)
-			.then(response => response.json())
-			.catch(err =>{return console.log(err);});
-		if(!HyAPI.playerCount) {
-			return client.user.setPresence({ activities: [{ name: `${onlineMembers.toLocaleString()} online Miscellaneous members and ??? players on Hypixel!`, type:"WATCHING" }], status: "dnd" });
-
-		}
-
-		client.user.setPresence({ activities: [{ name: `${onlineMembers.toLocaleString()} online Miscellaneous members and ${HyAPI.playerCount.toLocaleString()} players on Hypixel!`, type:"WATCHING" }], status: "dnd" });
-		client.user.setStatus("dnd");
+		const hypixelPlayerCount = await getPlayerCount();
+		return hypixelPlayerCount.playerCount ? 
+		client.user.setPresence({ activities: [{ name: `${onlineMembers.toLocaleString()} Miscellaneous members and ${hypixelPlayerCount.playerCount.toLocaleString()} players on Hypixel!`, type:"WATCHING" }], status: "dnd" }) :
+		client.user.setPresence({ activities: [{ name: `${onlineMembers.toLocaleString()} Miscellaneous members!`, type:"WATCHING" }], status: "dnd" });	 
 	}
 };
