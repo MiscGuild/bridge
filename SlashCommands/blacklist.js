@@ -9,6 +9,13 @@ export default {
 	description:
     "add / remove a user to the blacklist or list and dump the blacklisted users",
 	type: "CHAT_INPUT",
+	permissions: [
+		{
+			id: '538015368782807040',
+			type: 'ROLE',
+			permission: false,
+		},
+	],
 	options: [
 		{
 			name: "add",
