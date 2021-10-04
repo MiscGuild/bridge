@@ -110,38 +110,6 @@ export default {
 			);
 		}
 		else if (args[0] == "add") {
-			if (!args[1]) {
-				const embed = new Discord.MessageEmbed()
-					.setTitle("Error | Invalid Arguments")
-					.setDescription(
-						"```/blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to add to the blacklist```"
-					);
-
-				return interaction.followUp({ embeds: [embed], ephemeral: true });
-			}
-
-			if (!args[2]) {
-				const embed = new Discord.MessageEmbed()
-					.setTitle("Error | Invalid Arguments")
-					.setColor(errorColor)
-					.setDescription(
-						"```/blacklist add <user> <end> <reason>\n                      ^^^^^\nYou must specify an end date (It can be never)```"
-					);
-
-				return interaction.followUp({ embeds: [embed], ephemeral: true });
-			}
-
-			if (!args[3]) {
-				const embed = new Discord.MessageEmbed()
-					.setTitle("Error | Invalid Arguments")
-					.setColor(errorColor)
-					.setDescription(
-						"```/blacklist add <user> <end> <reason>\n                               ^^^^^\nYou must specify a reason for the blacklist```"
-					);
-
-				return interaction.followUp({ embeds: [embed], ephemeral: true });
-			}
-
 			const ashconAPI = await ashconGrabber(args[1]);
 			if (!ashconAPI.uuid) {
 				const embed = new Discord.MessageEmbed()
@@ -220,16 +188,6 @@ export default {
 			});
 		}
 		else if (args[0] == "remove") {
-			if (!args[1]) {
-				const embed = new Discord.MessageEmbed()
-					.setTitle("Error | Invalid Arguments")
-				// .setThumbnail(`https://crafatar.com/avatars/${MojangAPI.uuid}`)
-					.setDescription(
-						"```/blacklist <add/remove> <user>\n                        ^^^^^^\nYou must specify a user to remove from the blacklist```"
-					);
-				return interaction.followUp({ embeds: [embed], ephemeral: true });
-			}
-
 			try {
 				const ashconAPI = await ashconGrabber(args[1]);
 				if (!ashconAPI.uuid) {
