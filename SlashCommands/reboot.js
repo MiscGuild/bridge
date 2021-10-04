@@ -1,4 +1,4 @@
-import { errorColor } from "../resources/consts.js";
+import { channelID, errorColor } from "../resources/consts.js";
 import Discord from "discord.js";
 import log4js from "log4js";
 const logger = log4js.getLogger("logs");
@@ -9,7 +9,7 @@ export default {
 	type: "CHAT_INPUT",
  
 	run: async (client, interaction, args) => {
-		const channel = client.channels.cache.get(process.env.OUTPUTCHANNELID);
+		const channel = client.channels.cache.get(channelID);
 
 		if (
 			interaction.member.roles.cache.some((role) => role.name === "Staff") ||

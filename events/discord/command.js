@@ -1,16 +1,16 @@
 import { bot } from "../../index.js";
 import Discord from "discord.js";
-import { errorColor, errorEmbed } from "../../resources/consts.js";
+import { prefix, errorColor, errorEmbed } from "../../resources/consts.js";
 import log4js from "log4js";
 const errorLogs = log4js.getLogger("Errors");
 
 export default {
 	name: "message",
 	async execute(message) {
-		if (!message.content.startsWith(process.env.PREFIX) || message.author.bot) {return;}
+		if (!message.content.startsWith(prefix) || message.author.bot) {return;}
 
 		const args = message.content
-			.slice(process.env.PREFIX.length)
+			.slice(prefix.length)
 			.trim()
 			.split(" ");
 		const command = args.shift().toLowerCase();

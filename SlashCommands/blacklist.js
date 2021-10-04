@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import fs from "fs";
 import blacklist from "../resources/blacklist.js";
 import ashconGrabber from "../utilities/ashconGrabber.js";
-import { successColor, errorColor, errorEmbed } from "../resources/consts.js";
+import { blacklistChannelID, prefix, successColor, errorColor, errorEmbed } from "../resources/consts.js";
 
 export default {
 	name: "blacklist",
@@ -98,7 +98,7 @@ export default {
 				const embed2 = new Discord.MessageEmbed()
 					.setTitle("Error | Too many people on blacklist")
 					.setDescription(
-						`There are too many people on the blacklist to send. Please refer to <#${process.env.BLACKLISTCHANNEL}> for a list of blacklisted users.`
+						`There are too many people on the blacklist to send. Please refer to <#${blacklistChannelID}> for a list of blacklisted users.`
 					);
 				return interaction.followUp({ embeds: [embed2], ephemeral: true });
 			}
@@ -127,7 +127,7 @@ export default {
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							`That user appears to already be on the blacklist. To check who is on the blacklist please run \`${process.env.PREFIX}blacklist\``
+							`That user appears to already be on the blacklist. To check who is on the blacklist please run \`${prefix}blacklist\``
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
@@ -156,7 +156,7 @@ export default {
 					.addField("Reason:", reason, false);
 
 				client.channels.cache
-					.get(process.env.BLACKLISTCHANNEL)
+					.get(blacklistChannelID)
 					.send({ embeds: [embed] })
 					.then((blistmsg) => {
 						const msgID = blistmsg.id;
@@ -179,7 +179,7 @@ export default {
 										`https://crafatar.com/avatars/${ashconAPI.uuid}`
 									)
 									.setDescription(
-										`The user \`${ashconAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+										`The user \`${ashconAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#${blacklistChannelID}>`
 									);
 								return interaction.followUp({ embeds: [embed] });
 							}
@@ -214,7 +214,7 @@ export default {
 							.setTitle("Error")
 							.setColor(errorColor)
 							.setDescription(
-								`That user doesn't appear be on the blacklist. To check who is on the blacklist please run \`${process.env.PREFIX}blacklist\``
+								`That user doesn't appear be on the blacklist. To check who is on the blacklist please run \`${prefix}blacklist\``
 							);
 						return interaction.followUp({
 							embeds: [embed],
@@ -225,7 +225,7 @@ export default {
 						for (const i in blacklist) {
 							if (blacklist[i].uuid == uuid) {
 								client.channels.cache
-									.get(process.env.BLACKLISTCHANNEL)
+									.get(blacklistChannelID)
 									.messages.fetch(blacklist[i].msgID)
 									.then((msg) => {
 										if (!msg) {
@@ -253,7 +253,7 @@ export default {
 												`https://crafatar.com/avatars/${ashconAPI.uuid}`
 											)
 											.setDescription(
-												`\`${ashconAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run \`${process.env.PREFIX}blacklist\` or see <#${process.env.BLACKLISTCHANNEL}>`
+												`\`${ashconAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#${blacklistChannelID}>`
 											);
 										return interaction.followUp({ embeds: [embed] });
 									}

@@ -1,6 +1,6 @@
 import { client, bot } from "../../index.js";
 import fs from "fs";
-import { channelID,  staffChannelID, logChannelID, blacklistChannelID} from "../../resources/consts.js";
+import { channelID,  staffChannelID, logChannelID, blacklistChannelID, serverID } from "../../resources/consts.js";
 import log4js from "log4js";
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");
@@ -37,7 +37,7 @@ export default {
 
 					if (i == slashCommands.length - 1) {
 						client.guilds.cache
-							.get(process.env.SERVERID)
+							.get(serverID)
 							.commands.set(slashCommandsArr);
 					}
 				});

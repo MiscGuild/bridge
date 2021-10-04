@@ -1,5 +1,5 @@
 import { bot } from "../../index.js";
-import { staffChannelID } from "../../resources/consts.js";
+import { prefix, staffChannelID } from "../../resources/consts.js";
 import log4js from "log4js";
 const McChatLogger = log4js.getLogger("McChatLogs");
 
@@ -7,7 +7,7 @@ export default {
 	name: "message",
 	async execute(message) {
 		if (message.channel.id == staffChannelID) {
-			if (message.content.startsWith(process.env.PREFIX)) {
+			if (message.content.startsWith(prefix)) {
 				return;
 			}
 			if (message.author.bot) {
