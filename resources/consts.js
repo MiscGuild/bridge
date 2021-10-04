@@ -23,4 +23,4 @@ const missingPermsEmbed = new Discord.MessageEmbed()
         "It seems you are lacking the permission to run this command."
     );
 
-export { channelID, staffChannelID, logChannelID, blacklistChannelID, serverID, prefix, hypixelAPIKey, serverIP as IP, successColor, errorColor, errorEmbed, missingPermsEmbed };
+export { channelID, staffChannelID, logChannelID, blacklistChannelID, serverID, prefix, hypixelAPIKey, serverIP, successColor, errorColor, errorEmbed, missingPermsEmbed };

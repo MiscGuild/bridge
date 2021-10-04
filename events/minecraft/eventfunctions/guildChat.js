@@ -5,10 +5,10 @@ export default {
 	name: "guildChat",
 	async execute(rank, username, tag, message) {
 		tag = await getTagEmoji(tag);
-		rank = await getRankEmoji(rank);
-		const color = rank[1];
-		rank = rank[0];
-        
+		const rankData = await getRankEmoji(rank);
+		rank = rankData[0];
+		const color = rankData[1];
+
 		sendToDiscord(`${rank} **${username}** ${tag}: ${message}`, color);
 	}
 };
