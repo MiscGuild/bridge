@@ -1,6 +1,5 @@
 import { client } from "../../../index.js";
-const staffChannelID = process.env.STAFFCHANNELID;
-const serverID = process.env.SERVERID;
+import { staffChannelID, serverID } from "../../../resources/consts.js";
 
 export default {
 	name: "guildUnmute",

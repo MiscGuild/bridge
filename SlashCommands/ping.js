@@ -1,5 +1,5 @@
 import { MessageEmbed } from "discord.js";
-const successColor = "0x00A86B";
+import { successColor } from "../resources/consts.js";
 
 export default {
 	name: "ping",

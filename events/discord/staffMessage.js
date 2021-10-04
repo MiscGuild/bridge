@@ -1,7 +1,7 @@
 import { bot } from "../../index.js";
+import { staffChannelID } from "../../resources/consts.js";
 import log4js from "log4js";
 const McChatLogger = log4js.getLogger("McChatLogs");
-const staffChannelID = process.env.STAFFCHANNELID;
 
 export default {
 	name: "message",

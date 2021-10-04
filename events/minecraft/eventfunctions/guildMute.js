@@ -1,6 +1,5 @@
 import { client } from "../../../index.js";
-const staffChannelID = process.env.STAFFCHANNELID;
-const serverID = process.env.SERVERID;
+import { staffChannelID, serverID } from "../../../resources/consts.js";
 const msPerUnit = { "s": 1000, "m": 60000, "h": 3600000, "d": 86400000 };
 
 export default {

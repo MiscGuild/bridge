@@ -1,5 +1,4 @@
 import { bot } from "../../../index.js";
-import fetch from "node-fetch";
 import crypto from "crypto";
 import ashconGrabber from "../../../utilities/ashconGrabber.js";
 import getGuildFromPlayer from "../../../utilities/getGuildFromPlayer.js";

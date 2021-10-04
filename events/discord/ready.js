@@ -1,11 +1,12 @@
 import { client, bot } from "../../index.js";
 import fs from "fs";
+import { channelID,  staffChannelID, logChannelID, blacklistChannelID} from "../../resources/consts.js";
 import log4js from "log4js";
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");
 const warnLogs = log4js.getLogger("Warn");
 const debugLogs = log4js.getLogger("Debug");
-const channels = [process.env.OUTPUTCHANNELID, process.env.STAFFCHANNELID, process.env.LOGCHANNELID, process.env.BLACKLISTCHANNEL];
+const channels = [channelID, staffChannelID, logChannelID, blacklistChannelID];
 
 export default {
 	name: "ready",

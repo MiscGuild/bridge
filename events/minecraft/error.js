@@ -1,7 +1,8 @@
 import { client } from "../../index.js";
+import { channelID } from "../../resources/consts.js";
 import log4js from "log4js";
 const errorLogs = log4js.getLogger("Errors");
-const channel = client.channels.cache.get(process.env.OUTPUTCHANNELID);
+const channel = client.channels.cache.get(channelID);
 
 export default {
 	name: "error",

@@ -1,8 +1,8 @@
 import { client, bot, sendToDiscord } from "../../index.js";
+import { channelID } from "../../resources/consts.js";
 import cron from "node-cron";
 import log4js from "log4js";
 const logger = log4js.getLogger("Logs");
-const channelID = process.env.OUTPUTCHANNELID;
 
 export default {
 	name: "login",

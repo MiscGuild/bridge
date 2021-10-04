@@ -1,8 +1,7 @@
+import { errorColor } from "../resources/consts.js";
 import Discord from "discord.js";
 import log4js from "log4js";
 const logger = log4js.getLogger("logs");
-
-const errorColor = "0xDE3163";
 
 export default {
 	name: "reboot",

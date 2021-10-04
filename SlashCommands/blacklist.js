@@ -2,15 +2,7 @@ import Discord from "discord.js";
 import fs from "fs";
 import blacklist from "../resources/blacklist.js";
 import ashconGrabber from "../utilities/ashconGrabber.js";
-
-const successColor = "0x00A86B";
-const errorColor = "0xDE3163";
-const errorEmbed = new Discord.MessageEmbed()
-	.setTitle("Error")
-	.setColor(errorColor)
-	.setDescription(
-		"An error has occurred while running this command. Please contact ElijahRus#9099"
-	);
+import { successColor, errorColor, errorEmbed } from "../resources/consts.js";
 
 export default {
 	name: "blacklist",

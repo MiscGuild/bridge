@@ -1,5 +1,6 @@
 import { client, bot } from "../../index.js";
-const channel = client.channels.cache.get(process.env.OUTPUTCHANNELID);
+import { channelID } from "../../resources/consts.js";
+const channel = client.channels.cache.get(channelID);
 
 export default {
 	name: "kicked",

@@ -1,15 +1,8 @@
 import { bot } from "../../index.js";
-import log4js from "log4js";
 import Discord from "discord.js";
+import { errorColor, errorEmbed } from "../../resources/consts.js";
+import log4js from "log4js";
 const errorLogs = log4js.getLogger("Errors");
-
-const errorColor = "0xDE3163";
-const errorEmbed = new Discord.MessageEmbed()
-	.setTitle("Error")
-	.setColor(errorColor)
-	.setDescription(
-		"An error has occurred while running this command. Please contact ElijahRus#9099"
-	);
 
 export default {
 	name: "message",

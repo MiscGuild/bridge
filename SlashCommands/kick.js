@@ -1,7 +1,6 @@
 import { bot } from "../index.js";
 import { MessageEmbed } from "discord.js";
-
-const errorColor = "0xDE3163";
+import { errorColor } from "../resources/consts.js";
 
 export default {
 	name: "kick",

@@ -1,6 +1,6 @@
 import { sendToDiscord } from "../../../index.js";
 import { getRankEmoji, getTagEmoji } from "../../../utilities/chatEmojiGrabber.js";
-const staffChannelID = process.env.STAFFCHANNELID;
+import { staffChannelID } from "../../../resources/consts.js";
 
 export default {
 	name: "officerChat",

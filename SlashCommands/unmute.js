@@ -1,8 +1,6 @@
 import { bot } from "../index.js";
 import { MessageEmbed } from "discord.js";
-
-const successColor = "0x00A86B";
-const errorColor = "0xDE3163";
+import { successColor, errorColor } from "../resources/consts.js";
 
 export default {
 	name: "unmute",
