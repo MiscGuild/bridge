@@ -7,24 +7,27 @@ export default {
 	type: "CHAT_INPUT",
  
 	run: async (client, interaction, args) => {
-		const slashCommands = fs.readdirSync("./").filter((file) => file.endsWith(".js"));
+		const slashCommands = fs.readdirSync("./SlashCommands").filter((file) => file.endsWith(".js"));
 		const slashCommandsArr = [];
-		slashCommands.map((file) => {
-			import(file)
+		const embed = new MessageEmbed()
+			.setTitle("Commands");
+
+		slashCommands.map((file, i) => {
+			import("./" + file)
 				.then((file) => {
 					file = file.default;
-					if (!file?.name) {return;}
+					if (!file.name) {return;}
 					client.slashCommands.set(file.name, file);
 		
 					if (["MESSAGE", "USER"].includes(file.type)) {delete file.description;}
 					slashCommandsArr.push(file);
+					console.log(slashCommandsArr);
+
+					if (i == slashCommands.length - 1) {
+						slashCommandsArr.forEach(command => embed.addField(command.name, command.description));
+						interaction.followUp({ embeds: [embed], ephemeral: false });
+					}
 				});
 		});
-    
-
-		const embed = new MessageEmbed()
-			.setTitle("Commands");
-		slashCommandsArr.forEach(i => embed.addField(i.name, i.description));
-		interaction.followUp({ embeds: [embed], ephemeral: false });
 	},
 };
