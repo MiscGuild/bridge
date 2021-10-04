@@ -26,7 +26,11 @@ export default {
 			McChatLogger.info(
 				`DISCORD > [${message.author.tag}/${message.author.id}]: ${message.content}`
 			);
-			message.delete();
+			
+			try {
+				message.delete();
+			}
+			catch {}
 		}
 	},
 };

@@ -1,6 +1,7 @@
 import { bot } from "../../index.js";
 import { prefix, staffChannelID } from "../../resources/consts.js";
 import log4js from "log4js";
+import { PassThrough } from "stream";
 const McChatLogger = log4js.getLogger("McChatLogs");
 
 export default {
@@ -26,7 +27,11 @@ export default {
 			McChatLogger.info(
 				`DISCORD (OFFICER CHAT)> [${message.author.tag}/${message.author.id}]: ${message.content}`
 			);
-			message.delete();
+
+			try {
+				message.delete();
+			}
+			catch {}
 		}
 	},
 };
