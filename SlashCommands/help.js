@@ -21,7 +21,6 @@ export default {
 		
 					if (["MESSAGE", "USER"].includes(file.type)) {delete file.description;}
 					slashCommandsArr.push(file);
-					console.log(slashCommandsArr);
 
 					if (i == slashCommands.length - 1) {
 						slashCommandsArr.forEach(command => embed.addField(command.name, command.description));
