@@ -1,6 +1,6 @@
 import { bot } from "../../index.js";
 import Discord from "discord.js";
-import { prefix, errorColor, errorEmbed } from "../../resources/consts.js";
+import { prefix, errorColor, errorEmbed, missingPermsEmbed } from "../../resources/consts.js";
 import log4js from "log4js";
 const errorLogs = log4js.getLogger("Errors");
 
@@ -29,14 +29,7 @@ export default {
 					return bot.chat(`/${args.join(" ").toString()}`), message.react("✅");
 				}
 				else {
-					const embed = new Discord.MessageEmbed()
-						.setTitle("Error")
-						.setColor(errorColor)
-						.setDescription(
-							"It seems you are lacking the permission to run this command."
-						);
-
-					return message.channel.send({ embeds: [embed] });
+					return message.channel.send({ embeds: [missingPermsEmbed] });
 				}
 			}
 			catch (err) {

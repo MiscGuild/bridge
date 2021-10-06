@@ -1,6 +1,6 @@
 import { bot } from "../index.js";
 import { MessageEmbed } from "discord.js";
-import { errorColor } from "../resources/consts.js";
+import { errorColor, missingPermsEmbed } from "../resources/consts.js";
 
 export default {
 	name: "demote",
@@ -17,13 +17,7 @@ export default {
  
 	run: async (client, interaction, args) => {
 		if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
-			const embed = new MessageEmbed()
-				.setTitle("Error")
-				.setColor(errorColor)
-				.setDescription(
-					"It seems you are lacking the permission to run this command."
-				);
-			return interaction.followUp({ embeds: [embed], ephemeral: false });
+			return interaction.followUp({ embeds: [missingPermsEmbed], ephemeral: false });
 		}
         
 		bot.chat(`/g demote ${args[0]}`);

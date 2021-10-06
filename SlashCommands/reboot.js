@@ -1,4 +1,4 @@
-import { channelID, errorColor } from "../resources/consts.js";
+import { channelID, missingPermsEmbed } from "../resources/consts.js";
 import Discord from "discord.js";
 import log4js from "log4js";
 const logger = log4js.getLogger("logs");
@@ -32,14 +32,7 @@ export default {
 			}, 30000);
 		}
 		else {
-			const embed = new Discord.MessageEmbed()
-				.setTitle("Error")
-				.setColor(errorColor)
-				.setDescription(
-					"It seems you are lacking the permission to run this command."
-				);
-    
-			return interaction.followUp({ embeds: [embed], ephemeral: true });
+			return interaction.followUp({ embeds: [missingPermsEmbed], ephemeral: true });
 		}
 	},
 };

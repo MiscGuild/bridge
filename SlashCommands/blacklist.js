@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import fs from "fs";
 import blacklist from "../resources/blacklist.js";
 import ashconGrabber from "../utilities/ashconGrabber.js";
-import { blacklistChannelID, prefix, successColor, errorColor, errorEmbed } from "../resources/consts.js";
+import { blacklistChannelID, prefix, successColor, errorColor, errorEmbed, missingPermsEmbed } from "../resources/consts.js";
 
 export default {
 	name: "blacklist",
@@ -69,12 +69,7 @@ export default {
 
 	run: async (client, interaction, args) => {
 		if (!interaction.member.roles.cache.some((role) => role.name === "Staff")) {
-			const embed = new Discord.MessageEmbed()
-				.setTitle("Error")
-				.setDescription(
-					"It seems you are lacking the permission to run this command."
-				);
-			return interaction.followUp({ embeds: [embed], ephemeral: true });
+			return interaction.followUp({ embeds: [missingPermsEmbed], ephemeral: true });
 		}
 
 		if (args[0] == "list") {
