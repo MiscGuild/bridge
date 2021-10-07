@@ -23,7 +23,7 @@ export default {
 		}
 		else {
 			const welcomeMessages = [
-				"Welcome to the #19 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/bHFWukp",
+				"Welcome to the #18 guild on Hypixel, Miscellaneous! Join the discord | discord.gg/bHFWukp",
 				"Welcome to the guild! Make sure to join the discord at discord.gg/bHFWukp",
 				`Welcome to the guild, ${username}! Join the discord at discord.gg/bHFWukp`,
 				`Welcome to the guild, ${username}! Interact with the community more at discord.gg/bHFWukp`,
