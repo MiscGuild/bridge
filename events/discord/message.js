@@ -43,10 +43,10 @@ export default {
 			channel = "OC";
 		}
 
-		// bot.chat(`/${channel} [${message.member.displayName.split(" ")[0]}] - ${message.content}`);
-		// McChatLogger.info(
-		// 	`DISCORD (${channel})> [${message.author.tag}/${message.author.id}]: ${message.content}`
-		// );
+		bot.chat(`/${channel} [${message.member.displayName.split(" ")[0]}] - ${message.content}`);
+		McChatLogger.info(
+			`DISCORD (${channel})> [${message.author.tag}/${message.author.id}]: ${message.content}`
+		);
 
 		try {
 			message.delete();
