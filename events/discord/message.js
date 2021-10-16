@@ -24,7 +24,7 @@ export default {
 		}
 		if (unicodeEmojis) {
 			for (const emoji of unicodeEmojis) {
-				const replacement = emojiToWords[`0x${emoji.codePointAt(0).toString(16)}`] ?? "UNKNOWN";
+				const replacement = emojiToWords[`0x${emoji.codePointAt(0).toString(16)}`] ?? "?";
 				message.content = message.content.replace(emoji, ":" + replacement + ":");
 			}
 		}
