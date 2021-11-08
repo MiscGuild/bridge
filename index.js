@@ -69,13 +69,13 @@ function spawnBot() {
 
 
 if (environment === "dev") {
-	console.log("The Mineflayer bot will not spawn, and hence may effect the performance of some discord commands. \nIn order to disable this feature, set the value of ENVIRONMENT in .env to build.")
+	console.log("The Mineflayer bot will not spawn, and hence may effect the performance of some discord commands. \nIn order to disable this feature, set the value of ENVIRONMENT in .env to build.");
 }
 else if (environment === "build") {
 	spawnBot();
 }
 else {
-	throw new Error("The value of ENVIRONMENT in .env is invalid. Please set it to either build or dev.")
+	throw new Error("The value of ENVIRONMENT in .env is invalid. Please set it to either build or dev.");
 }
 
 for (const file of clientEvents) {

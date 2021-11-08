@@ -1,6 +1,6 @@
 import { client, bot } from "../../index.js";
 import fs from "fs";
-import { channelID,  staffChannelID, logChannelID, blacklistChannelID, serverID } from "../../resources/consts.js";
+import { channelID, staffChannelID, logChannelID, blacklistChannelID, serverID } from "../../resources/consts.js";
 import log4js from "log4js";
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");

@@ -24,9 +24,7 @@ export default {
 			logger.info(
 				`UNSCHEDULED BOT REBOOT DUE TO ${interaction.member.displayName} RUNNING THE REBOOT COMMAND`
 			);
-			channel.send(
-				`Bot will reboot in 30s due to ${interaction.member.displayName} running the reboot command`
-			);
+
 			setTimeout(() => {
 				process.exit();
 			}, 30000);

@@ -14,16 +14,16 @@ export default {
 
 		slashCommands.map((file, i) => {
 			import("./" + file)
-				.then((file) => {
-					file = file.default;
-					if (!file.name) {return;}
-					client.slashCommands.set(file.name, file);
+				.then((command) => {
+					command = command.default;
+					if (!command.name) {return;}
+					client.slashCommands.set(command.name, command);
 		
-					if (["MESSAGE", "USER"].includes(file.type)) {delete file.description;}
-					slashCommandsArr.push(file);
+					if (["MESSAGE", "USER"].includes(command.type)) {delete command.description;}
+					slashCommandsArr.push(command);
 
 					if (i == slashCommands.length - 1) {
-						slashCommandsArr.forEach(command => embed.addField(command.name, command.description));
+						slashCommandsArr.forEach(slashCommand => embed.addField(slashCommand.name, slashCommand.description));
 						interaction.followUp({ embeds: [embed], ephemeral: false });
 					}
 				});

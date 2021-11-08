@@ -11,8 +11,8 @@ export default {
 	type: "CHAT_INPUT",
 	permissions: [
 		{
-			id: '538015368782807040',
-			type: 'ROLE',
+			id: "538015368782807040",
+			type: "ROLE",
 			permission: false,
 		},
 	],
@@ -167,7 +167,7 @@ export default {
 								if (err) {
 									reject(err);
 								}
-								const embed = new Discord.MessageEmbed()
+								const confirmationEmbed = new Discord.MessageEmbed()
 									.setTitle("Done ☑️")
 									.setColor(successColor)
 									.setThumbnail(
@@ -176,7 +176,7 @@ export default {
 									.setDescription(
 										`The user \`${ashconAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#${blacklistChannelID}>`
 									);
-								return interaction.followUp({ embeds: [embed] });
+								return interaction.followUp({ embeds: [confirmationEmbed] });
 							}
 						);
 					});
