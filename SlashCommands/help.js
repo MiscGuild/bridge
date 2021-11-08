@@ -6,8 +6,8 @@ export default {
 	description: "Sends all the commands in the bot!",
 	type: "CHAT_INPUT",
  
-	run: async (client, interaction, args) => {
-		const slashCommands = fs.readdirSync("./SlashCommands").filter((file) => file.endsWith(".js"));
+	run: async (client, interaction) => {
+		const slashCommands = fs.readdirSync("./slashCommands").filter((file) => file.endsWith(".js"));
 		const slashCommandsArr = [];
 		const embed = new MessageEmbed()
 			.setTitle("Commands");

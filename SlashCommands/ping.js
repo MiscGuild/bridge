@@ -6,7 +6,7 @@ export default {
 	description: "See the bot's ping (ms) to Discord!",
 	type: "CHAT_INPUT",
  
-	run: async (client, interaction, args) => {
+	run: async (client, interaction) => {
 		const embed = new MessageEmbed()
 			.setTitle("Pinging...")
 			.setColor(successColor);

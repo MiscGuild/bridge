@@ -8,7 +8,7 @@ export default {
 	description: "Reboots the bot",
 	type: "CHAT_INPUT",
  
-	run: async (client, interaction, args) => {
+	run: async (client, interaction) => {
 		const channel = client.channels.cache.get(channelID);
 
 		if (

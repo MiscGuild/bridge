@@ -22,10 +22,10 @@ export default {
 		}
 		
 		// Slash Commands
-		const slashCommands = fs.readdirSync("./SlashCommands").filter((file) => file.endsWith(".js"));
+		const slashCommands = fs.readdirSync("./slashCommands").filter((file) => file.endsWith(".js"));
 		const slashCommandsArr = [];
 		slashCommands.forEach((value, i) => {
-			import(`../../SlashCommands/${value}`)
+			import(`../../slashCommands/${value}`)
 				.then((file) => {
 					file = file.default;
 					client.slashCommands.set(file.name, file);
