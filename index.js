@@ -86,5 +86,7 @@ for (const file of clientEvents) {
 		});
 }
 
+process.on("uncaughtException", (err) => console.error(err)).on("unhandledRejection", (err) => console.error(err));
+
 export { client, bot, sendToDiscord };
 client.login(process.env.TOKEN);
