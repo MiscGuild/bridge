@@ -1,5 +1,5 @@
 import { client } from "../../../index.js";
-import getPlayerCount from "../../../utilities/getPlayercount.js";
+import getPlayerCount from "../../../utilities/getPlayerCount.js";
 
 export default {
 	name: "guildOnline",
