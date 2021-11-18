@@ -40,7 +40,7 @@ function spawnBot() {
 		username: process.env.EMAIL,
 		password: process.env.PASSWORD,
 		version: "1.16.4",
-		auth: "microsoft",
+		auth: process.env.AUTH
 	});
 
 	// File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
