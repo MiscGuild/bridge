@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import fs from "fs";
 import blacklist from "../resources/blacklist.js";
 import ashconGrabber from "../utilities/ashconGrabber.js";
-import { blacklistChannelID, prefix, successColor, errorColor, errorEmbed, missingPermsEmbed } from "../resources/consts.js";
+import { blacklistChannelID, successColor, errorColor, errorEmbed, missingPermsEmbed } from "../resources/consts.js";
 
 export default {
 	name: "blacklist",
@@ -122,7 +122,7 @@ export default {
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							`That user appears to already be on the blacklist. To check who is on the blacklist please run \`${prefix}blacklist\``
+							`That user appears to already be on the blacklist. To check who is on the blacklist please run /blacklist\``
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
@@ -174,7 +174,7 @@ export default {
 										`https://crafatar.com/avatars/${ashconAPI.uuid}`
 									)
 									.setDescription(
-										`The user \`${ashconAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#${blacklistChannelID}>`
+										`The user \`${ashconAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run /blacklist\` or see <#${blacklistChannelID}>`
 									);
 								return interaction.followUp({ embeds: [confirmationEmbed] });
 							}
@@ -209,7 +209,7 @@ export default {
 							.setTitle("Error")
 							.setColor(errorColor)
 							.setDescription(
-								`That user doesn't appear be on the blacklist. To check who is on the blacklist please run \`${prefix}blacklist\``
+								`That user doesn't appear be on the blacklist. To check who is on the blacklist please run /blacklist\``
 							);
 						return interaction.followUp({
 							embeds: [embed],
@@ -248,7 +248,7 @@ export default {
 												`https://crafatar.com/avatars/${ashconAPI.uuid}`
 											)
 											.setDescription(
-												`\`${ashconAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run \`${prefix}blacklist\` or see <#${blacklistChannelID}>`
+												`\`${ashconAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run /blacklist\` or see <#${blacklistChannelID}>`
 											);
 										return interaction.followUp({ embeds: [embed] });
 									}
