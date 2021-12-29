@@ -18,6 +18,9 @@ The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord
       <img src="https://img.shields.io/github/stars/MiscGuild/BridgeBot?color=blue&style=for-the-badge"/>
 </h3>
 
+> 🚨 USE AT YOUR OWN RISK: 
+This application will log onto a given Minecraft server using Mineflayer, a Minecraft bot client. This may be against the rules of some servers, and may result in a ban. All contributers to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/BridgeBot/blob/master/LICENSE)
+
 ## Installation
 
 ### Prerequisites
