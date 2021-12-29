@@ -122,7 +122,7 @@ export default {
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							`That user appears to already be on the blacklist. To check who is on the blacklist please run /blacklist\``
+							"That user appears to already be on the blacklist. To check who is on the blacklist please run /blacklist`"
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
@@ -209,7 +209,7 @@ export default {
 							.setTitle("Error")
 							.setColor(errorColor)
 							.setDescription(
-								`That user doesn't appear be on the blacklist. To check who is on the blacklist please run /blacklist\``
+								"That user doesn't appear be on the blacklist. To check who is on the blacklist please run /blacklist`"
 							);
 						return interaction.followUp({
 							embeds: [embed],

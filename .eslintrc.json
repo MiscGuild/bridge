@@ -13,7 +13,6 @@
        "comma-dangle": ["error", "only-multiline"],
        "comma-spacing": "error",
        "comma-style": "error",
-       "curly": "error",
        "dot-location": ["error", "property"],
        "handle-callback-err": "off",
        "indent": ["error", "tab"],
