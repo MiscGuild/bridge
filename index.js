@@ -83,10 +83,10 @@ for (const file of clientEvents) {
 
 process.on("uncaughtException", (err) => {
 	console.error(err);
-	client.channels.get(process.env.ERRORCHANNELID.toString()).send(err);
+	client.channels.cache.get(process.env.ERRORCHANNELID.toString()).send("```" + err + "```");
 }).on("unhandledRejection", (err) => {
 	console.error(err);
-	client.channels.get(process.env.ERRORCHANNELID.toString()).send(err);
+	client.channels.cache.get(process.env.ERRORCHANNELID.toString()).send("```" + err + "```");
 });
 
 export { client, bot, sendToDiscord };
