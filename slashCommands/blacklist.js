@@ -184,22 +184,12 @@ export default {
 		}
 		else if (args[0] == "remove") {
 			try {
-				const mojangAPI = await mojangPlayerGrabber(args[1]);
-				if (!mojangAPI.id) {
-					const embed = new Discord.MessageEmbed()
-						.setTitle("Error")
-						.setColor(errorColor)
-						.setDescription(
-							`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${mojangAPI.code}, ${mojangAPI.error}\nReason: ${mojangAPI.reason}\`\`\``
-						);
-					return interaction.followUp({ embeds: [embed], ephemeral: true });
-				}
-
-				const uuid = mojangAPI.id;
+				let user = args[1];
 				return new Promise((resolve, reject) => {
 					let found = false;
-					for (let i = 0; i < blacklist.length; i++) {
-						if (blacklist[i].uuid == uuid) {
+					for (const entry of blacklist) {
+						if (entry.user.toLowerCase() == user.toLowerCase()) {
+							user = entry.user;
 							found = true;
 							break;
 						}
@@ -218,7 +208,7 @@ export default {
 					}
 					if (found) {
 						for (const i in blacklist) {
-							if (blacklist[i].uuid == uuid) {
+							if (blacklist[i].user.toLowerCase() == user.toLowerCase()) {
 								client.channels.cache
 									.get(blacklistChannelID)
 									.messages.fetch(blacklist[i].msgID)
@@ -245,10 +235,10 @@ export default {
 											.setTitle("Done ☑️")
 											.setColor(successColor)
 											.setThumbnail(
-												`https://crafatar.com/avatars/${uuid}`
+												`https://crafatar.com/avatars/${blacklist[i].uuid}`
 											)
 											.setDescription(
-												`\`${mojangAPI.name}\` has been removed from the blacklist! To see who is on the blacklist please run \`/blacklist list\` or see <#${blacklistChannelID}>`
+												`\`${user}\` has been removed from the blacklist! To see who is on the blacklist please run \`/blacklist list\` or see <#${blacklistChannelID}>`
 											);
 										return interaction.followUp({ embeds: [embed] });
 									}
@@ -260,10 +250,12 @@ export default {
 
 			}
 			catch (err) {
+				console.log(err);
 				return interaction.followUp({ embeds: [errorEmbed] });
 			}
 		}
 		else {
+			console.log(err);
 			interaction.followUp({ embeds: [errorEmbed] });
 		}
 	},
