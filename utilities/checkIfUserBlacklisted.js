@@ -1,13 +1,11 @@
-import fetch from "node-fetch";
 import blacklist from "../resources/blacklist.js";
+import mojangPlayerGrabber from "./mojangPlayerGrabber.js";
 
-export default async function checkIfUserBlacklisted(user) {
-	const MojangAPI = fetch(`https://api.ashcon.app/mojang/v2/user/${user}`).then(
-		(res) => res.json()
-	);
-  
-	for (const i in blacklist) {
-		if (blacklist[i].uuid === MojangAPI.uuid) {
+export default async function checkIfUserBlacklisted(username) {
+	const mojangAPI = await mojangPlayerGrabber(username)
+	
+	for (const i of blacklist) {
+		if (i.uuid === mojangAPI.id) {
 			return true;
 		}
 	}

@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import fs from "fs";
 import blacklist from "../resources/blacklist.js";
-import ashconGrabber from "../utilities/ashconGrabber.js";
+import mojangPlayerGrabber from "../utilities/mojangPlayerGrabber.js";
 import { blacklistChannelID, successColor, errorColor, errorEmbed, missingPermsEmbed } from "../resources/consts.js";
 
 export default {
@@ -105,31 +105,31 @@ export default {
 			);
 		}
 		else if (args[0] == "add") {
-			const ashconAPI = await ashconGrabber(args[1]);
-			if (!ashconAPI.uuid) {
+			const mojangAPI = await mojangPlayerGrabber(args[1]);
+			if (!mojangAPI.id) {
 				const embed = new Discord.MessageEmbed()
 					.setTitle("Error")
 					.setColor(errorColor)
 					.setDescription(
-						`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${ashconAPI.code}, ${ashconAPI.error}\nReason: ${ashconAPI.reason}\`\`\``
+						`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${mojangAPI.code}, ${mojangAPI.error}\nReason: ${mojangAPI.reason}\`\`\``
 					);
 				return interaction.followUp({ embeds: [embed], ephemeral: true });
 			}
 
 			for (const i in blacklist) {
-				if (blacklist[i].uuid == ashconAPI.uuid) {
+				if (blacklist[i].uuid == mojangAPI.id) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							"That user appears to already be on the blacklist. To check who is on the blacklist please run /blacklist`"
+							"That user appears to already be on the blacklist. To check who is on the blacklist please run `/blacklist`"
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
 			}
 
-			const user = ashconAPI.username;
-			const uuid = ashconAPI.uuid;
+			const user = mojangAPI.name;
+			const uuid = mojangAPI.id;
 			const end = args[2];
 			const reason = args.slice(3).join(" ");
 
@@ -171,10 +171,10 @@ export default {
 									.setTitle("Done ☑️")
 									.setColor(successColor)
 									.setThumbnail(
-										`https://crafatar.com/avatars/${ashconAPI.uuid}`
+										`https://crafatar.com/avatars/${uuid}`
 									)
 									.setDescription(
-										`The user \`${ashconAPI.username}\` has been added to the blacklist! To see who is on the blacklist please run /blacklist\` or see <#${blacklistChannelID}>`
+										`The user \`${mojangAPI.name}\` has been added to the blacklist! To see who is on the blacklist please run \`/blacklist\` or see <#${blacklistChannelID}>`
 									);
 								return interaction.followUp({ embeds: [confirmationEmbed] });
 							}
@@ -184,18 +184,18 @@ export default {
 		}
 		else if (args[0] == "remove") {
 			try {
-				const ashconAPI = await ashconGrabber(args[1]);
-				if (!ashconAPI.uuid) {
+				const mojangAPI = await mojangPlayerGrabber(args[1]);
+				if (!mojangAPI.id) {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${ashconAPI.code}, ${ashconAPI.error}\nReason: ${ashconAPI.reason}\`\`\``
+							`There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${mojangAPI.code}, ${mojangAPI.error}\nReason: ${mojangAPI.reason}\`\`\``
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
 
-				const uuid = ashconAPI.uuid;
+				const uuid = mojangAPI.id;
 				return new Promise((resolve, reject) => {
 					let found = false;
 					for (let i = 0; i < blacklist.length; i++) {
@@ -245,10 +245,10 @@ export default {
 											.setTitle("Done ☑️")
 											.setColor(successColor)
 											.setThumbnail(
-												`https://crafatar.com/avatars/${ashconAPI.uuid}`
+												`https://crafatar.com/avatars/${uuid}`
 											)
 											.setDescription(
-												`\`${ashconAPI.username}\` has been removed from the blacklist! To see who is on the blacklist please run /blacklist\` or see <#${blacklistChannelID}>`
+												`\`${mojangAPI.name}\` has been removed from the blacklist! To see who is on the blacklist please run /blacklist\` or see <#${blacklistChannelID}>`
 											);
 										return interaction.followUp({ embeds: [embed] });
 									}
