@@ -187,9 +187,11 @@ export default {
 				let user = args[1];
 				return new Promise((resolve, reject) => {
 					let found = false;
+					let uuid;
 					for (const entry of blacklist) {
 						if (entry.user.toLowerCase() == user.toLowerCase()) {
 							user = entry.user;
+							uuid = entry.uuid;
 							found = true;
 							break;
 						}
@@ -235,7 +237,7 @@ export default {
 											.setTitle("Done ☑️")
 											.setColor(successColor)
 											.setThumbnail(
-												`https://crafatar.com/avatars/${blacklist[i].uuid}`
+												`https://crafatar.com/avatars/${uuid}`
 											)
 											.setDescription(
 												`\`${user}\` has been removed from the blacklist! To see who is on the blacklist please run \`/blacklist list\` or see <#${blacklistChannelID}>`
