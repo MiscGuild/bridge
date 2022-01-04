@@ -122,7 +122,7 @@ export default {
 						.setTitle("Error")
 						.setColor(errorColor)
 						.setDescription(
-							"That user appears to already be on the blacklist. To check who is on the blacklist please run `/blacklist`"
+							"That user appears to already be on the blacklist. To check who is on the blacklist please run `/blacklist list`"
 						);
 					return interaction.followUp({ embeds: [embed], ephemeral: true });
 				}
@@ -174,7 +174,7 @@ export default {
 										`https://crafatar.com/avatars/${uuid}`
 									)
 									.setDescription(
-										`The user \`${mojangAPI.name}\` has been added to the blacklist! To see who is on the blacklist please run \`/blacklist\` or see <#${blacklistChannelID}>`
+										`The user \`${mojangAPI.name}\` has been added to the blacklist! To see who is on the blacklist please run \`/blacklist list\` or see <#${blacklistChannelID}>`
 									);
 								return interaction.followUp({ embeds: [confirmationEmbed] });
 							}
@@ -209,7 +209,7 @@ export default {
 							.setTitle("Error")
 							.setColor(errorColor)
 							.setDescription(
-								"That user doesn't appear be on the blacklist. To check who is on the blacklist please run /blacklist`"
+								"That user doesn't appear be on the blacklist. To check who is on the blacklist please run `/blacklist list`"
 							);
 						return interaction.followUp({
 							embeds: [embed],
@@ -248,7 +248,7 @@ export default {
 												`https://crafatar.com/avatars/${uuid}`
 											)
 											.setDescription(
-												`\`${mojangAPI.name}\` has been removed from the blacklist! To see who is on the blacklist please run /blacklist\` or see <#${blacklistChannelID}>`
+												`\`${mojangAPI.name}\` has been removed from the blacklist! To see who is on the blacklist please run \`/blacklist list\` or see <#${blacklistChannelID}>`
 											);
 										return interaction.followUp({ embeds: [embed] });
 									}
