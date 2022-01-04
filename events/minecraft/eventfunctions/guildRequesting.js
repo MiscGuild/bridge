@@ -1,7 +1,7 @@
 import { bot } from "../../../index.js";
 import checkIfUserBlacklisted from "../../../utilities/checkIfUserBlacklisted.js";
 import getNetworkLevel from "../../../utilities/getNetworkLevel.js";
-import ashconGrabber from "../../../utilities/ashconGrabber.js";
+import mojangPlayerGrabber from "../../../utilities/mojangPlayerGrabber.js";
 import getHypixelPlayerData from "../../../utilities/getHypixelPlayerData.js";
 
 export default {
@@ -16,8 +16,8 @@ export default {
 			);
 		}
 		else {
-			const ashconAPI = await ashconGrabber(username);
-			const playerData = await getHypixelPlayerData(ashconAPI.uuid, username);
+			const mojangAPI = await mojangPlayerGrabber(username);
+			const playerData = await getHypixelPlayerData(mojangAPI.id);
 			
 			if ((await getNetworkLevel(playerData.player.networkExp)) >= 50) {
 				console.log(`Accepting the player ${username}`);

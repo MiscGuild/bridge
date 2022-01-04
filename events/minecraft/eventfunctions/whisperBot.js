@@ -1,6 +1,6 @@
 import { bot } from "../../../index.js";
 import crypto from "crypto";
-import ashconGrabber from "../../../utilities/ashconGrabber.js";
+import mojangPlayerGrabber from "../../../utilities/mojangPlayerGrabber.js";
 import getGuildFromPlayer from "../../../utilities/getGuildFromPlayer.js";
 
 function gexpFunction(gexpList) {
@@ -17,11 +17,11 @@ export default {
 		const randomID = crypto.randomBytes(7).toString("hex");
 
 		if(message.startsWith("weeklygexp" || "weeklygxp")) {
-			const ashconAPI = await ashconGrabber(username);
-			const playerGuild = await getGuildFromPlayer(ashconAPI.uuid);
+			const mojangAPI = await mojangPlayerGrabber(username);
+			const playerGuild = await getGuildFromPlayer(mojangAPI.id);
 
 			for (const item in playerGuild.guild.members) {
-				if (playerGuild.guild.members[item].uuid == ashconAPI.uuid) {
+				if (playerGuild.guild.members[item].uuid == mojangAPI.id) {
 					const gexpLIST = playerGuild.guild.members[item].expHistory;
 					bot.chat(`/w ${username} Your total weekly gexp: ${gexpFunction(gexpLIST).toLocaleString()} | ${randomID}`);
 				}
@@ -32,22 +32,22 @@ export default {
 		else{
 			const usernameMention = message.split(" ")[0];
 			let validUser = true;
-			const ashconAPI = await ashconGrabber(usernameMention);
+			const mojangAPI = await mojangPlayerGrabber(usernameMention);
 
-			if (!ashconAPI.uuid) {
+			if (!mojangAPI.id) {
 				validUser = false;
 				return bot.chat(`/w ${username} ${usernameMention} was not found (Try giving me a username and/or check spelling) | ${randomID}`);
 			}
 
 			if (validUser) {
-				const playerGuild = await getGuildFromPlayer(ashconAPI.uuid);
+				const playerGuild = await getGuildFromPlayer(mojangAPI.id);
 				if(!playerGuild.guild) {
 					return bot.chat(`/w ${username} ${usernameMention} does not seem to be in a guild | ${randomID}`);
 				}
 				for (const item in playerGuild.guild.members) {
-					if (playerGuild.guild.members[item].uuid == ashconAPI.uuid) {
+					if (playerGuild.guild.members[item].uuid == mojangAPI.id) {
 						const gexpList = playerGuild.guild.members[item].expHistory;
-						return bot.chat(`/w ${username} ${ashconAPI.name}'s total weekly gexp: ${gexpFunction(gexpList).toLocaleString()} | ${randomID}`);
+						return bot.chat(`/w ${username} ${mojangAPI.name}'s total weekly gexp: ${gexpFunction(gexpList).toLocaleString()} | ${randomID}`);
 					}
 				}
 			}
