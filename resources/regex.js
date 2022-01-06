@@ -7,10 +7,10 @@ regexes.guildOnline = /^Online Members: (\d{1,3})/;
 regexes.blacklistCheck = /(^(?:(?:\[.+?\])? ?(?:[A-Za-z0-9_]{3,16}) ● {2})+)/;
 
 // --On guild chat
-regexes.guildChat = /^Guild > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/;
+regexes.guildChat = /^Guild > (\[[A-Z+]{2,15}\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)$/;
 
 // --On officer chat
-regexes.officerChat = /^Officer > (\[.+?\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)/;
+regexes.officerChat = /^Officer > (\[[A-Z+]{2,15}\])? ?([A-Za-z0-9_]{3,16}) (\[.+\]): (.+)$/;
 
 // --On guild kick
 regexes.guildKick = /^(\[.+?\])? ?([A-Za-z0-9_]{3,16}) was kicked from the guild by (\[.+?\])? ?([A-Za-z0-9_]{3,16})!/;
