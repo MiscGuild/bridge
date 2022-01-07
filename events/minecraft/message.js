@@ -4,6 +4,8 @@ import log4js from "log4js";
 const logger = log4js.getLogger("Logs");
 const McChatLogger = log4js.getLogger("McChatLogs");
 
+let logCache = [];
+
 export default {
 	name: "message",
 	runOnce: false,
@@ -18,8 +20,12 @@ export default {
 		else if(msg == "You were spawned in Limbo.") {return;}
 		else if(msg == "/limbo for more information.") {return;}
 
-		client.channels.cache.get(logChannelID).send("```" + `${msg}` + "```");
 		McChatLogger.info(msg);
+		logCache.push(msg);
+		if (logCache.length >= 6) {
+			client.channels.cache.get(logChannelID).send("```" + `${logCache.join("\n")}` + "```");
+			logCache = [];
+		}
 	}
 };
   
