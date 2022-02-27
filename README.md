@@ -21,6 +21,13 @@ The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord
 > 🚨 USE AT YOUR OWN RISK: 
 This application will log onto a given Minecraft server using Mineflayer, a Minecraft bot client. This may be against the rules of some servers, and may result in a ban. All contributers to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/BridgeBot/blob/master/LICENSE)
 
+**Please note that this application will not receive feature updates.** This is in favour of the newer version, [Hychat](https://github.com/hychat-mc/hychat). As it is being re-written in TypeScript, new bugs may be found and will be retroactively applied to this version. If you find any bugs, report them [here](https://github.com/MiscGuild/BridgeBot/issues).
+
+The new version of this application will feature a dashboard, easier customization, and allow bot management through a Discord bot. It will become SaaS (Software as a Service) for those people who do not wish to create their own personal server. **If you have just found this repository, please consider waiting for Hychat to release, as it will be much more stable and feature-complete.** Updates will be provided on the [website](https://hych.at) and via the [Hychat Twitter](https://twitter.com/hychatmc).
+
+> Hychat is currently in early alpha stage and in active development. It currently is non-functional and not recommended for use.
+
+
 ## Installation
 
 ### Prerequisites
