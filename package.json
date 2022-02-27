@@ -19,7 +19,7 @@
     "mineflayer": "3.6.0",
     "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
-    "prismarine-chat": "^1.0.3",
+    "prismarine-chat": "^1.6.0",
     "prismarine-viewer": "^1.19.3",
     "sync-fetch": "^0.3.0",
     "util": "^0.12.4"
