@@ -16,7 +16,7 @@
     "fs": "0.0.1-security",
     "glob": "^7.1.7",
     "log4js": "^6.3.0",
-    "mineflayer": "3.6.0",
+    "mineflayer": "4.0.0",
     "node-cron": "^3.0.0",
     "node-fetch": "^3.2.0",
     "prismarine-chat": "^1.6.0",
