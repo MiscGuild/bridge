@@ -1,11 +1,11 @@
-import { Event } from '../../interfaces/Event';
-import { Message, Util } from 'discord.js';
-import Bot from '../../classes/Bot';
-import BadWords from '../../util/BadWords';
-import Emojis from '../../util/Emojis';
+import { Event } from "../../interfaces/Event";
+import { Message, Util } from "discord.js";
+import Bot from "../../classes/Bot";
+import BadWords from "../../util/BadWords";
+import Emojis from "../../util/Emojis";
 
 export default {
-	name: 'messageCreate',
+	name: "messageCreate",
 	runOnce: false,
 	run: async (bot: Bot, message: Message) => {
 		if (
@@ -30,18 +30,20 @@ export default {
 		}
 
 		if (BadWords.some((word) => message.content.includes(word))) {
-			await message.channel.send(`${Emojis.warning} ${message.author.username}, you may not use profane language!`);
+			await message.channel.send(
+				`${Emojis.warning} ${message.author.username}, you may not use profane language!`,
+			);
 			bot.logger.warn(`Comment blocked by Hychat: ${message.content} (matched bad words list)`);
 			bot.sendToDiscord(
-				'oc',
+				"oc",
 				`${Emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked by Hychat (matched bad words list). This message was not sent to Hypixel.`,
 			);
 			return;
 		}
 
 		message.content = `${message.member.displayName} ${bot.chatSeparator} ${Util.escapeMarkdown(
-			message.content.replace(/\r?\n|\r/g, ' '),
+			message.content.replace(/\r?\n|\r/g, " "),
 		)}`;
-		await bot.sendGuildMessage(message.channel.id === bot.memberChannel?.id ? 'gc' : 'oc', message.content);
+		await bot.sendGuildMessage(message.channel.id === bot.memberChannel?.id ? "gc" : "oc", message.content);
 	},
 } as Event;

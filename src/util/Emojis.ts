@@ -2,52 +2,52 @@ export default {
 	/**
 	 * Join Emoji
 	 */
-	join: '📥',
+	join: "📥",
 
 	/**
 	 * Leave Emoji
 	 */
-	leave: '📤',
+	leave: "📤",
 
 	/**
 	 * Member Chat Message Emoji
 	 */
-	member: '💬',
+	member: "💬",
 
 	/**
 	 * Officer Chat Message Emoji
 	 */
-	officer: '📢',
+	officer: "📢",
 
 	/**
 	 * Success Emoji
 	 */
-	success: '✅',
+	success: "✅",
 
 	/**
 	 * Error Emoji
 	 */
-	error: '❌',
+	error: "❌",
 
 	/**
 	 * Warning Emoji
 	 */
-	warning: '⚠️',
+	warning: "⚠️",
 
 	/**
 	 * Alert Emoji
 	 */
-	alert: '🚨',
+	alert: "🚨",
 
 	/**
 	 * Guild Celebratory Event Emoji
 	 */
-	guildEvent: '🎉',
+	guildEvent: "🎉",
 
 	/**
 	 * Guild Negative Event Emoji
 	 */
-	badGuildEvent: '👋',
+	badGuildEvent: "👋",
 
 	// TODO - 27/03/2022: Add emoji adding/removing command, (tells user if not enough slots)
 };

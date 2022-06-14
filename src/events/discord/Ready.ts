@@ -1,9 +1,9 @@
-import { TextChannel } from 'discord.js';
-import Bot from '../../classes/Bot';
-import { Event } from '../../interfaces/Event';
+import { TextChannel } from "discord.js";
+import Bot from "../../classes/Bot";
+import { Event } from "../../interfaces/Event";
 
 export default {
-	name: 'ready',
+	name: "ready",
 	runOnce: true,
 	run: async (bot: Bot) => {
 		bot.discord.application?.commands.set(

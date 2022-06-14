@@ -1,30 +1,30 @@
-import { Util } from 'discord.js';
-import { Event } from '../../interfaces/Event';
-import Emojis from '../../util/Emojis';
+import { Util } from "discord.js";
+import { Event } from "../../interfaces/Event";
+import Emojis from "../../util/Emojis";
 
 export default {
-	name: 'chat:joinLeave',
+	name: "chat:joinLeave",
 	runOnce: false,
 	run: async (bot, message) => {
-		const messageArray: string[] = message.toString().split(',');
+		const messageArray: string[] = message.toString().split(",");
 
 		const playerName = messageArray[0] as string;
-		const status = messageArray[1] as 'joined' | 'left';
+		const status = messageArray[1] as "joined" | "left";
 
-		if (status === 'joined') {
+		if (status === "joined") {
 			bot.onlineCount++;
 			await bot.sendToDiscord(
-				'gc',
+				"gc",
 				`${Emojis.join} ${Util.escapeMarkdown(playerName)} joined. (\`${bot.onlineCount}\`/\`${
 					bot.totalCount
 				}\`)`,
 			);
 		}
 
-		if (status === 'left') {
+		if (status === "left") {
 			bot.onlineCount--;
 			await bot.sendToDiscord(
-				'gc',
+				"gc",
 				`${Emojis.leave} ${Util.escapeMarkdown(playerName)} left. (\`${bot.onlineCount}\`/\`${
 					bot.totalCount
 				}\`)`,

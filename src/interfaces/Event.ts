@@ -1,7 +1,7 @@
-import Bot from '../classes/Bot';
-import regex from '../util/Regex';
-import { BotEvents } from 'mineflayer';
-import { ClientEvents } from 'discord.js';
+import Bot from "../classes/Bot";
+import regex from "../util/Regex";
+import { BotEvents } from "mineflayer";
+import { ClientEvents } from "discord.js";
 
 export interface Event {
 	name: keyof typeof regex | keyof BotEvents | keyof ClientEvents;

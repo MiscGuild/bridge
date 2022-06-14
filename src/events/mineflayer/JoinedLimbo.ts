@@ -1,9 +1,9 @@
-import { Event } from '../../interfaces/Event';
+import { Event } from "../../interfaces/Event";
 
 export default {
-	name: 'chat:limboJoin',
+	name: "chat:limboJoin",
 	runOnce: false,
 	run: async (bot) => {
-		bot.logger.debug('Bot has joined Limbo!');
+		bot.logger.debug("Bot has joined Limbo!");
 	},
 } as Event;

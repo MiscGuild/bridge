@@ -1,8 +1,8 @@
-import { Event } from '../../interfaces/Event';
-import { ChatMessage } from 'prismarine-chat';
+import { Event } from "../../interfaces/Event";
+import { ChatMessage } from "prismarine-chat";
 
 export default {
-	name: 'message',
+	name: "message",
 	runOnce: false,
 	run: async (bot, message: ChatMessage) => {
 		// Log color chat to console

@@ -1,10 +1,10 @@
-import { Event } from '../../interfaces/Event';
+import { Event } from "../../interfaces/Event";
 
 export default {
-	name: 'error',
+	name: "error",
 	runOnce: false,
 	run: async (bot, error: Error) => {
-		bot.logger.fatal('Encountered an unexpected error. Restarting the bot in 15 seconds...');
+		bot.logger.fatal("Encountered an unexpected error. Restarting the bot in 15 seconds...");
 		bot.logger.fatal(error);
 
 		setTimeout(() => {

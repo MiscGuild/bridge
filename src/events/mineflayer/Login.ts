@@ -1,21 +1,21 @@
-import { Event } from '../../interfaces/Event';
-import Emojis from '../../util/Emojis';
+import { Event } from "../../interfaces/Event";
+import Emojis from "../../util/Emojis";
 
 export default {
-	name: 'login',
+	name: "login",
 	runOnce: true,
 	run: async (bot) => {
 		await bot.sendToDiscord(
-			'gc',
+			"gc",
 			`${Emojis.success} **The bot \`${bot.mineflayer.username}\` has logged in and is now ready!**`,
 		);
 
 		setInterval(() => {
-			bot.executeCommand('/g online');
+			bot.executeCommand("/g online");
 		}, 60_000 * 5);
 
 		setTimeout(async () => {
-			bot.executeCommand('/g online');
+			bot.executeCommand("/g online");
 			await bot.sendToLimbo();
 		}, 3_000);
 	},

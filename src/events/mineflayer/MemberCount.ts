@@ -1,21 +1,21 @@
-import { Event } from '../../interfaces/Event';
+import { Event } from "../../interfaces/Event";
 
 export default {
-	name: 'chat:memberCount',
+	name: "chat:memberCount",
 	runOnce: false,
 	run: async (bot, message) => {
-		const messageArray: string[] = message.toString().split(',');
+		const messageArray: string[] = message.toString().split(",");
 
-		const type = messageArray[0] as 'Online' | 'Total';
+		const type = messageArray[0] as "Online" | "Total";
 		const count = Number(messageArray[1]) as number;
 
 		// Set the online members count
-		if (type === 'Online') {
+		if (type === "Online") {
 			bot.onlineCount = count;
 		}
 
 		// Set the total members count
-		if (type === 'Total') {
+		if (type === "Total") {
 			bot.totalCount = count;
 		}
 
