@@ -2,7 +2,7 @@ import { client, bot } from "../../index.js";
 import fs from "fs";
 import { channelID, staffChannelID, logChannelID, blacklistChannelID, serverID } from "../../resources/consts.js";
 import log4js from "log4js";
-import checkIfUserBlacklisted from "../../utilities/checkIfUserBlacklisted.js";
+
 const logger = log4js.getLogger("logs");
 const errorLogs = log4js.getLogger("Errors");
 const warnLogs = log4js.getLogger("Warn");
@@ -23,10 +23,10 @@ export default {
 		}
 		
 		// Slash Commands
-		const slashCommands = fs.readdirSync("./slashCommands").filter((file) => file.endsWith(".js"));
+		const slashCommands = fs.readdirSync("./commands").filter((file) => file.endsWith(".js"));
 		const slashCommandsArr = [];
 		slashCommands.forEach((value, i) => {
-			import(`../../slashCommands/${value}`)
+			import(`../../commands/${value}`)
 				.then((file) => {
 					file = file.default;
 					client.slashCommands.set(file.name, file);
