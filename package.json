@@ -18,7 +18,7 @@
     "log4js": "^6.5.2",
     "mineflayer": "4.3.0",
     "node-cron": "^3.0.1",
-    "node-fetch": "^3.2.4",
+    "node-fetch": "^3.2.6",
     "prismarine-chat": "^1.6.1",
     "prismarine-registry": "^1.2.0",
     "prismarine-viewer": "^1.23.0",
