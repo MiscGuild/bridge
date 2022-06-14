@@ -1,32 +1,24 @@
 {
-  "name": "MiscChat",
-  "description": "Miscellanous chat bot",
-  "version": "2.0.7",
-  "type": "module",
-  "contributors": [
-    {
-      "name": "ElijahRus",
-      "email": "elijahrus5901@gmail.com",
-      "web": "elijahrus.xyz"
-    }
-  ],
-  "dependencies": {
-    "discord.js": "13.8.0",
-    "dotenv": "^16.0.1",
-    "fs": "0.0.1-security",
-    "glob": "^8.0.3",
-    "log4js": "^6.5.2",
-    "mineflayer": "4.3.0",
-    "node-cron": "^3.0.1",
-    "node-fetch": "^3.2.6",
-    "prismarine-chat": "^1.6.1",
-    "prismarine-registry": "^1.2.0",
-    "prismarine-viewer": "^1.23.0",
-    "sync-fetch": "^0.4.1",
-    "util": "^0.12.4"
-  },
-  "devDependencies": {
-    "eslint": "^8.17.0",
-    "eslint-config-google": "^0.14.0"
-  }
+	"name": "bridge-bot",
+	"version": "1.0.0",
+	"license": "MIT",
+	"private": false,
+	"scripts": {
+		"lint": "eslint \"src/**\"",
+		"lint:fix": "yarn lint --fix",
+		"format": "prettier --write \"src/**\"",
+		"dev": "ts-node-dev --respawn --transpile-only --poll ./src/index.ts",
+		"build": "tsc",
+		"start": "node ."
+	},
+	"dependencies": {
+		"consola": "^2.15.3",
+		"discord.js": "^13.6.0",
+		"dotenv": "^14.3.2",
+		"mineflayer": "^3.15.0"
+	},
+	"devDependencies": {
+		"ts-node-dev": "^1.1.8",
+		"typescript": "^4.5.5"
+	}
 }
