@@ -25,5 +25,9 @@ export default {
 			bot.chat("/chat g");
 			bot.chat("/g online");
 		}, 3000);
+
+		// setInterval(function() {
+		// 	bot.chat("Event message here")
+		// }, timeInMilliseconds)
 	}
 };
