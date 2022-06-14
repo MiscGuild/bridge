@@ -1,4 +1,4 @@
-import { bot } from "../../../../index.js";
+import { bot, sendToDiscord } from "../../../../index.js";
 import crypto from "crypto";
 import mojangPlayerGrabber from "../../../utilities/mojangPlayerGrabber.js";
 import getGuildFromPlayer from "../../../utilities/getGuildFromPlayer.js";
@@ -28,6 +28,11 @@ export default {
 			}
 		}
 		else if(message.startsWith("Boop!")) {bot.chat(`/boop ${username}`);}
+
+		else if (message.startsWith("join" || "tournament" || "register")) {
+			sendToDiscord(`The player ${username} wishes to register for the event!`, channel=process.env.EVENTCHANNELID);
+			bot.chat(`/w ${username} The staff team have been notified that you wish to register for the event!`);
+		}
 
 		else{
 			const usernameMention = message.split(" ")[0];
