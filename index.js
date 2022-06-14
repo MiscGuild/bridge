@@ -1,16 +1,16 @@
 // -------------------------------------------------------Integrations-------------------------------------------------------------------------
 import mineflayer from "mineflayer";
 import { mineflayer as mineflayerViewer } from "prismarine-viewer";
-import regexes from "./resources/regex.js";
-import log4jsConfig from "./resources/log4jsConfigure.js";
+import regexes from "./src/resources/regex.js";
+import log4jsConfig from "./src/resources/log4jsConfigure.js";
 import log4js from "log4js";
 import dotenv from "dotenv";
 import fs from "fs";
 dotenv.config();
 log4js.configure(log4jsConfig);
-const eventFunctions = fs.readdirSync("./events/minecraft/eventfunctions").filter((file) => file.endsWith(".js"));
-const botEvents = fs.readdirSync("./events/minecraft").filter((file) => file.endsWith(".js"));
-const clientEvents = fs.readdirSync("./events/discord").filter((file) => file.endsWith(".js"));
+const eventFunctions = fs.readdirSync("./src/events/minecraft/eventfunctions").filter((file) => file.endsWith(".js"));
+const botEvents = fs.readdirSync("./src/events/minecraft").filter((file) => file.endsWith(".js"));
+const clientEvents = fs.readdirSync("./src/events/discord").filter((file) => file.endsWith(".js"));
 const environment = process.env.ENVIRONMENT;
 
 
@@ -46,7 +46,7 @@ function spawnBot() {
 
 	// File Loops - Source: https://github.com/xMdb/hypixel-guild-chat-bot
 	for (const file of eventFunctions) {
-		import(`./events/minecraft/eventfunctions/${file}`)
+		import(`./src/events/minecraft/eventfunctions/${file}`)
 			.then((event) => {
 				event = event.default;
 				bot.on(event.name, (...args) => event.execute(...args));
@@ -55,7 +55,7 @@ function spawnBot() {
 	}
 
 	for (const file of botEvents) {
-		import(`./events/minecraft/${file}`)
+		import(`./src/events/minecraft/${file}`)
 			.then((event) => {
 				event = event.default;
 				if (event.runOnce) {
@@ -75,7 +75,7 @@ else if (environment === "build") spawnBot();
 else throw new Error("The value of ENVIRONMENT in .env is invalid. Please set it to either build or dev.");
 
 for (const file of clientEvents) {
-	import(`./events/discord/${file}`)
+	import(`./src/events/discord/${file}`)
 		.then((event) => {
 			event = event.default;
 			client.on(event.name, (...args) => event.execute(...args));
