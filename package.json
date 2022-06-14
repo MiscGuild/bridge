@@ -22,7 +22,7 @@
     "prismarine-chat": "^1.6.1",
     "prismarine-registry": "^1.2.0",
     "prismarine-viewer": "^1.23.0",
-    "sync-fetch": "^0.3.1",
+    "sync-fetch": "^0.4.1",
     "util": "^0.12.4"
   },
   "devDependencies": {
