@@ -1,3 +1,4 @@
+import { client } from "../../index.js";
 import emojis from "../resources/emojis.js";
 let firstTime = true;
 
