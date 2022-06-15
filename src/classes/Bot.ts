@@ -184,8 +184,15 @@ class Bot {
 	}
 }
 
-process
-	.on("uncaughtException", (err) => bot.logger.error(err))
-	.on("unhandledRejection", (err) => bot.logger.error(err));
+const errorHandler = async (err: Error) => {
+	bot.logger.error(err);
+	if (bot.discord.isReady()) {
+		((await bot.discord.channels.fetch(process.env.ERROR_CHANNEL_ID as string)) as TextChannel).send(
+			err.name + " " + err.message + "\n" + (err.stack ?? ""),
+		);
+	}
+};
+
+process.on("uncaughtException", errorHandler).on("unhandledRejection", errorHandler);
 
 export default Bot;
