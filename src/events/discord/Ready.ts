@@ -8,7 +8,7 @@ export default {
 	run: async (bot: Bot) => {
 		bot.discord.application?.commands.set(
 			bot.discord.commands.map((v) => v.data),
-			process.env.SERVER_ID as string,
+			process.env.DISCORD_SERVER_ID as string,
 		);
 
 		bot.memberChannel = (await bot.discord.channels.fetch(process.env.MEMBER_CHANNEL_ID as string)) as TextChannel;

@@ -180,7 +180,7 @@ class Bot {
 		await this.loadEvents("../events/discord", this.discord);
 		await this.loadEvents("../events/mineflayer", this.mineflayer);
 
-		await this.discord.login(process.env.BOT_TOKEN);
+		await this.discord.login(process.env.DISCORD_TOKEN);
 	}
 }
 
