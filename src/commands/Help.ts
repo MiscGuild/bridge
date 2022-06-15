@@ -5,18 +5,16 @@ export default {
 	data: {
 		name: "help",
 		description: "View a list of all commands!",
-		type: "CHAT_INPUT",
 	},
 
 	// @ts-ignore Disused args parameter
 	run: async (bot, interaction, args) => {
-		const embed = new MessageEmbed().setTitle("Commands");
+		const embed = new MessageEmbed().setColor("PURPLE").setTitle("Commands");
 
 		bot.discord.commands.forEach((command) => {
-			const description = command.data.type == "CHAT_INPUT" ? command.data.description : "";
-			embed.addField(command.data.name, description);
+			embed.addField(command.data.name, command.data.description);
 		});
 
-		interaction.followUp({ embeds: [embed] });
+		interaction.reply({ embeds: [embed] });
 	},
 } as Command;

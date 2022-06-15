@@ -1,9 +1,9 @@
-import { ApplicationCommandData } from "discord.js";
+import { ChatInputApplicationCommandData } from "discord.js";
 import { CommandInteraction } from "discord.js";
 import Bot from "../classes/Bot";
 
 export interface Command {
-	data: ApplicationCommandData;
+	data: ChatInputApplicationCommandData;
 	run: ExecuteCommand;
 }
 
