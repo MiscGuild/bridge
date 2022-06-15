@@ -7,8 +7,7 @@ export default {
 		description: "View a list of all commands!",
 	},
 
-	// @ts-ignore Disused args parameter
-	run: async (bot, interaction, args) => {
+	run: async (bot, interaction) => {
 		const embed = new MessageEmbed().setColor("PURPLE").setTitle("Commands");
 
 		bot.discord.commands.forEach((command) => {
