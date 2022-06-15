@@ -17,7 +17,7 @@ class Bot {
 	public discord = new Discord({ intents: [Intents.FLAGS.GUILD_MESSAGES] });
 	public memberChannel?: TextChannel;
 	public officerChannel?: TextChannel;
-	public botPrefix = (process.env.DISCORD_PREFIX as string) ?? "h!";
+	public botPrefix = (process.env.DISCORD_PREFIX as string) ?? ")";
 	public chatSeparator = (process.env.MINECRAFT_CHAT_SEPARATOR as string) ?? ">";
 
 	public onlineCount = 0;
@@ -91,7 +91,7 @@ class Bot {
 	public async setStatus() {
 		const plural = this.onlineCount - 1 !== 1;
 		if (this.discord.isReady()) {
-			this.discord.user!.setActivity(`${this.onlineCount} online player${plural ? "s" : ""} | hych.at`, {
+			this.discord.user!.setActivity(`${this.onlineCount} online player${plural ? "s" : ""}`, {
 				type: "WATCHING",
 			});
 		}
