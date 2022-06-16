@@ -6,7 +6,6 @@ export default {
 		name: "reboot",
 		description: "Reboot the bot! (Only works if your host automatically restarts the application)",
 	},
-
 	run: async (bot, interaction) => {
 		const embed = new MessageEmbed()
 			.setColor("GREEN")

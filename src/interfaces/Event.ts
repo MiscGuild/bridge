@@ -9,6 +9,4 @@ export interface Event {
 	run: Execute;
 }
 
-export interface Execute {
-	(bot: Bot, ...params: any[]): Promise<void>; // eslint-disable-line @typescript-eslint/no-explicit-any
-}
+type Execute = (bot: Bot, ...params: any[]) => Promise<void>; // eslint-disable-line @typescript-eslint/no-explicit-any

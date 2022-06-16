@@ -7,22 +7,22 @@ import path from "path";
 import bot from "..";
 import Discord from "./Client";
 import regex from "../util/Regex";
-import isObjKey from "../util/IsObjKey";
+import { isObjKey } from "../util/IsObjKey";
 import EventEmitter from "events";
 import { Command } from "../interfaces/DiscordCommand";
 
 class Bot {
-	public logger = consola;
+	public readonly logger = consola;
 
-	public discord = new Discord({ intents: [Intents.FLAGS.GUILD_MESSAGES] });
+	public readonly discord = new Discord({ intents: [Intents.FLAGS.GUILD_MESSAGES] });
+	public readonly botPrefix = (process.env.DISCORD_PREFIX as string) ?? ")";
+	public readonly chatSeparator = (process.env.MINECRAFT_CHAT_SEPARATOR as string) ?? ">";
 	public memberChannel?: TextChannel;
 	public officerChannel?: TextChannel;
-	public botPrefix = (process.env.DISCORD_PREFIX as string) ?? ")";
-	public chatSeparator = (process.env.MINECRAFT_CHAT_SEPARATOR as string) ?? ">";
 
 	public onlineCount = 0;
 	public totalCount = 125;
-	public mineflayer = createBot({
+	public readonly mineflayer = createBot({
 		username: process.env.MINECRAFT_EMAIL as string,
 		password: process.env.MINECRAFT_PASSWORD as string,
 		host: "mc.hypixel.net",

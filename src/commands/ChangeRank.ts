@@ -1,6 +1,6 @@
 import { Command } from "../interfaces/DiscordCommand";
 import { MessageEmbed } from "discord.js";
-import CapitaliseString from "../util/CapitaliseString";
+import { capitaliseString } from "../util/CapitaliseString";
 
 export default {
 	data: {
@@ -31,7 +31,6 @@ export default {
 			},
 		],
 	},
-
 	run: async (bot, interaction, args) => {
 		const type: string = args[0] as "promote" | "demote";
 		const user: string = args[1];
@@ -40,7 +39,7 @@ export default {
 		try {
 			await bot.executeTask(`/g ${type} ${user}`);
 			embed
-				.setTitle(await CapitaliseString(`${type}d!`))
+				.setTitle(await capitaliseString(`${type}d!`))
 				.setDescription(`${user} has been ${type}d!`)
 				.setColor(type === "promote" ? "GREEN" : "RED");
 		} catch (e) {
