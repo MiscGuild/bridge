@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import { Command } from "../interfaces/DiscordCommand";
-import CapitaliseString from "../util/CapitaliseString";
+import { capitaliseString } from "../util/CapitaliseString";
 
 export default {
 	data: {
@@ -41,7 +41,6 @@ export default {
 			},
 		],
 	},
-
 	run: async (bot, interaction, args) => {
 		const type = interaction.options.getSubcommand() as "mute" | "unmute";
 		const user: string = args[0];
@@ -51,7 +50,7 @@ export default {
 		try {
 			await bot.executeTask(`/g ${type} ${user} ${duration}`);
 			embed
-				.setTitle(await CapitaliseString(`${type}d!`))
+				.setTitle(await capitaliseString(`${type}d!`))
 				.setDescription(`${user} was ${type}d` + (type === "mute" ? ` for ${duration}!` : "!"))
 				.setColor(type === "mute" ? "RED" : "GREEN");
 		} catch (e) {

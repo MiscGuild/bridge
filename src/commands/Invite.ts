@@ -14,7 +14,6 @@ export default {
 			},
 		],
 	},
-
 	run: async (bot, interaction, args) => {
 		const user = args[0];
 

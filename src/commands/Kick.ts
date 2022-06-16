@@ -20,7 +20,6 @@ export default {
 			},
 		],
 	},
-
 	run: async (bot, interaction, args) => {
 		const user: string = args[0];
 		const reason: string = args[1];

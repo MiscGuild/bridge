@@ -1,3 +1,3 @@
-export default async (str: string) => {
+export function capitaliseString(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
-};
+}
