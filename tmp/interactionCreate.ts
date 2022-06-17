@@ -1,6 +1,6 @@
-import { Event } from "../../interfaces/Event";
+import { Event } from "../src/interfaces/Event";
 import { Interaction } from "discord.js";
-import Bot from "../../classes/Bot";
+import Bot from "../src/classes/Bot";
 
 export default {
 	name: "interactionCreate",
