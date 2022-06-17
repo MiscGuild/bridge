@@ -1,6 +1,6 @@
 import { TextChannel } from "discord.js";
-import Bot from "../src/classes/Bot";
-import { Event } from "../src/interfaces/Event";
+import Bot from "../../classes/Bot";
+import { Event } from "../../interfaces/Event";
 
 export default {
 	name: "ready",

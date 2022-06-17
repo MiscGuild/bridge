@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import { Command } from "../interfaces/DiscordCommand";
-import { capitaliseString } from "../util/capitaliseString";
+import capitaliseString from "../util/capitaliseString";
 
 export default {
 	data: {
