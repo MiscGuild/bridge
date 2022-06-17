@@ -3,6 +3,8 @@ import { MessageEmbed, TextChannel } from "discord.js";
 import { fetchMojangProfile } from "../util/FetchMojangProfile";
 import { isFetchError } from "../util/isFetchError";
 import { requestErrorEmbed } from "../util/FetchErrorEmbed";
+import blacklist from "../resources/Blacklist";
+import { BlacklistEntry } from "../interfaces/BlacklistEntry";
 
 export default {
 	data: {
@@ -57,16 +59,22 @@ export default {
 		if (isFetchError(mojangProfile)) {
 			const embed = requestErrorEmbed(mojangProfile);
 
-			await interaction.reply({ embeds: [embed] });
-			return;
+			return await interaction.reply({ embeds: [embed] });
+		}
+
+		const isOnBlacklist = blacklist.some((user) => user.uuid === mojangProfile.id);
+		if ((type === "add" && isOnBlacklist) || (type === "remove" && !isOnBlacklist)) {
+			const embed = new MessageEmbed()
+				.setColor("RED")
+				.setTitle("Error")
+				.setDescription(`That user is ${type === "add" ? "already" : "not"} on the blacklist!`);
+
+			return await interaction.reply({ embeds: [embed] });
 		}
 
 		if (type === "add") {
-			const end = args[1];
+			const endDate = args[1];
 			const reason = args[2];
-
-			// TODO: Adding blacklist logic
-
 			const embed = new MessageEmbed()
 				.setAuthor({
 					name: "Blacklist",
@@ -78,13 +86,33 @@ export default {
 				.setTimestamp()
 				.setTitle(mojangProfile.name)
 				.setURL(`http://plancke.io/hypixel/player/stats/${mojangProfile.id}`)
-				.addField("End:", end)
+				.addField("End:", endDate)
 				.addField("Reason:", reason);
 
-			((await bot.discord.channels.fetch(process.env.BLACKLIST_CHANNEL_ID as string)) as TextChannel).send({
+			const blacklistMessage = await (
+				(await bot.discord.channels.fetch(process.env.BLACKLIST_CHANNEL_ID as string)) as TextChannel
+			).send({
 				embeds: [embed],
 			});
+
+			blacklist.push({
+				name: mojangProfile.name,
+				uuid: mojangProfile.id,
+				endDate: endDate,
+				reason: reason,
+				messageId: blacklistMessage.id,
+			});
+
+			// TOOD: dumping blacklist to JSON
 		} else {
+			const blacklistEntry = blacklist.find((user) => user.uuid === mojangProfile.id) as BlacklistEntry;
+			blacklist.splice(blacklist.indexOf(blacklistEntry));
+
+			const message = await (
+				bot.discord.channels.cache.get(process.env.BLACKLIST_CHANNEL_ID as string) as TextChannel
+			).messages.fetch(blacklistEntry.messageId);
+			await message.delete();
+
 			// TODO: Removing blacklist logic
 		}
 
