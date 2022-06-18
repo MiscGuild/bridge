@@ -1,16 +1,15 @@
-import { Intents, MessageEmbed, TextChannel } from "discord.js";
 import { BotEvents, createBot } from "mineflayer";
+import { Intents, MessageEmbed, TextChannel } from "discord.js";
+import { Command } from "../interfaces/DiscordCommand";
+import Discord from "./Client";
+import { Event } from "../interfaces/Event";
+import EventEmitter from "events";
 import consola from "consola";
 import fs from "fs/promises";
-import path from "path";
-
-import Discord from "./Client";
-import regex from "../util/regex";
 import isObjKey from "../util/isObjKey";
-import EventEmitter from "events";
-import { Command } from "../interfaces/DiscordCommand";
 import logError from "../util/logError";
-import { Event } from "../interfaces/Event";
+import path from "path";
+import regex from "../util/regex";
 
 class Bot {
 	public readonly logger = consola;
@@ -64,6 +63,7 @@ class Bot {
 	public async executeTask(task: string) {
 		let listener: BotEvents["message"];
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore - unused resolve parameter
 		await new Promise((resolve, reject) => {
 			this.mineflayer.chat(task);
@@ -92,7 +92,7 @@ class Bot {
 	public async setStatus() {
 		const plural = this.onlineCount - 1 !== 1;
 		if (this.discord.isReady()) {
-			this.discord.user!.setActivity(`${this.onlineCount} online player${plural ? "s" : ""}`, {
+			this.discord.user.setActivity(`${this.onlineCount} online player${plural ? "s" : ""}`, {
 				type: "WATCHING",
 			});
 		}
@@ -167,6 +167,8 @@ class Bot {
 					}
 
 					this.discord.commands.set(command.data.name, command);
+
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				} catch (e: any) {
 					console.warn(`Error while loading commands: ${e.message}`);
 				}

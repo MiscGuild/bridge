@@ -1,7 +1,7 @@
-import { BlacklistEntry } from "../interfaces/BlacklistEntry";
-import { writeFile } from "fs";
 import { CommandInteraction, MessageEmbed } from "discord.js";
+import { BlacklistEntry } from "../interfaces/BlacklistEntry";
 import logError from "./logError";
+import { writeFile } from "fs";
 
 /**
  * @param blacklist The blacklist value to save.

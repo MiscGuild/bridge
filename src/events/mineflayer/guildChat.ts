@@ -1,7 +1,7 @@
-import { Util } from "discord.js";
 import { ChatMessage } from "prismarine-chat";
-import { Event } from "../../interfaces/Event";
 import Emojis from "../../util/emojis";
+import { Event } from "../../interfaces/Event";
+import { Util } from "discord.js";
 
 export default {
 	name: "chat:guildChat",

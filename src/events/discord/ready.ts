@@ -1,5 +1,5 @@
-import { TextChannel } from "discord.js";
 import { Event } from "../../interfaces/Event";
+import { TextChannel } from "discord.js";
 
 export default {
 	name: "ready",

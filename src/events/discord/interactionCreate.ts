@@ -14,8 +14,7 @@ export default {
 			return;
 		}
 
-		const args: any[] = [];
-
+		const args = [];
 		for (const option of interaction.options.data) {
 			if (option.value) args.push(option.value);
 
@@ -28,6 +27,8 @@ export default {
 
 		try {
 			command.run(bot, interaction, args);
+
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (e: any) {
 			await interaction.reply({
 				content: "There was an error while executing this command!",

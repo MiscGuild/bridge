@@ -1,7 +1,7 @@
 import Bot from "../classes/Bot";
-import regex from "../util/regex";
 import { BotEvents } from "mineflayer";
 import { ClientEvents } from "discord.js";
+import regex from "../util/regex";
 
 export interface Event {
 	name: keyof typeof regex | keyof BotEvents | keyof ClientEvents;
@@ -9,4 +9,5 @@ export interface Event {
 	run: Execute;
 }
 
-type Execute = (bot: Bot, ...params: any[]) => Promise<void>; // eslint-disable-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Execute = (bot: Bot, ...params: any[]) => Promise<void>;

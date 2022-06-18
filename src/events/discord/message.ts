@@ -1,5 +1,5 @@
-import { Event } from "../../interfaces/Event";
 import { Message, Util } from "discord.js";
+import { Event } from "../../interfaces/Event";
 import badWords from "../../util/badWords";
 import emojis from "../../util/emojis";
 

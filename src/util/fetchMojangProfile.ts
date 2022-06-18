@@ -1,6 +1,6 @@
-import fetch from "node-fetch";
 import { FetchError } from "../interfaces/FetchError";
 import { MojangProfileResponse } from "../interfaces/MojangProfileResponse";
+import fetch from "node-fetch";
 
 export default async (username: string) => {
 	const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`);
