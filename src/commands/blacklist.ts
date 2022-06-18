@@ -3,8 +3,9 @@ import { MessageEmbed, TextChannel } from "discord.js";
 import fetchMojangProfile from "../util/fetchMojangProfile";
 import isFetchError from "../util/isFetchError";
 import fetchErrorEmbed from "../util/fetchErrorEmbed";
-import blacklist from "../resources/blacklist";
+import _blacklist from "../util/_blacklist.json";
 import { BlacklistEntry } from "../interfaces/BlacklistEntry";
+import writeToBlacklist from "../util/writeToBlacklist";
 
 export default {
 	data: {
@@ -55,10 +56,10 @@ export default {
 	run: async (bot, interaction, args) => {
 		const type = interaction.options.getSubcommand() as "add" | "remove";
 		const mojangProfile = await fetchMojangProfile(args[0]);
+		const blacklist = _blacklist as BlacklistEntry[];
 
 		if (isFetchError(mojangProfile)) {
 			const embed = fetchErrorEmbed(mojangProfile);
-
 			return await interaction.reply({ embeds: [embed] });
 		}
 
@@ -102,8 +103,6 @@ export default {
 				reason: reason,
 				messageId: blacklistMessage.id,
 			});
-
-			// TOOD: dumping blacklist to JSON
 		} else {
 			const blacklistEntry = blacklist.find((user) => user.uuid === mojangProfile.id) as BlacklistEntry;
 			blacklist.splice(blacklist.indexOf(blacklistEntry));
@@ -112,16 +111,14 @@ export default {
 				bot.discord.channels.cache.get(process.env.BLACKLIST_CHANNEL_ID as string) as TextChannel
 			).messages.fetch(blacklistEntry.messageId);
 			await message.delete();
-
-			// TODO: Removing blacklist logic
 		}
 
-		const embed = new MessageEmbed()
+		const successEmbed = new MessageEmbed()
 			.setColor(type === "add" ? "RED" : "GREEN")
 			.setThumbnail(`https://crafatar.com/avatars/${mojangProfile.id}`)
 			.setTitle("Completed!")
 			.setDescription(`${mojangProfile.name} was ${type === "add" ? "added to" : "removed from"} the blacklist!`);
 
-		await interaction.reply({ embeds: [embed] });
+		writeToBlacklist(blacklist, interaction, successEmbed);
 	},
 } as Command;
