@@ -7,7 +7,7 @@ export default {
 	name: "chat:guildChat",
 	runOnce: false,
 	run: async (bot, message: ChatMessage) => {
-		const messageArray: string[] = message.toString().split(",");
+		const messageArray = message.toString().split(",");
 
 		const channel = messageArray[0] as "Guild" | "Officer";
 		const hypixelRank = messageArray[1] as string | null;

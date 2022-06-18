@@ -1,5 +1,5 @@
 import { MessageEmbed } from "discord.js";
-import { Command } from "../interfaces/DiscordCommand";
+import { Command } from "../interfaces/DiscordCommand.js";
 
 export default {
 	data: {

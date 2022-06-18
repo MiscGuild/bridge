@@ -1,6 +1,7 @@
 {
 	"name": "bridge-bot",
 	"version": "1.0.0",
+	"main": "dist",
 	"license": "MIT",
 	"private": false,
 	"scripts": {

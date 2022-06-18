@@ -1,14 +1,14 @@
 {
 	"compilerOptions": {
-		"lib": ["es2020"],
+		"lib": ["ESNext"],
 		"module": "commonjs",
-		"target": "es2019",
+		"target": "es2020",
 		"noImplicitAny": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"outDir": "./dist",
 
-		"moduleResolution": "node",
+		"moduleResolution": "Node",
 		"resolveJsonModule": true,
 		"removeComments": true,
 		"preserveConstEnums": true,

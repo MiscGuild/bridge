@@ -1,11 +1,12 @@
 import { Event } from "../../interfaces/Event";
 import Emojis from "../../util/emojis";
+import { ChatMessage } from "prismarine-chat";
 
 export default {
 	name: "chat:commentBlocked",
 	runOnce: false,
-	run: async (bot, message) => {
-		const messageArray: string[] = message.toString().split(",");
+	run: async (bot, message: ChatMessage) => {
+		const messageArray = message.toString().split(",");
 
 		const comment = messageArray[0] as string;
 		const reason = messageArray[1] as string;

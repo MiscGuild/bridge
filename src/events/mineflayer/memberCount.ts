@@ -1,10 +1,11 @@
 import { Event } from "../../interfaces/Event";
+import { ChatMessage } from "prismarine-chat";
 
 export default {
 	name: "chat:memberCount",
 	runOnce: false,
-	run: async (bot, message) => {
-		const messageArray: string[] = message.toString().split(",");
+	run: async (bot, message: ChatMessage) => {
+		const messageArray = message.toString().split(",");
 
 		const type = messageArray[0] as "Online" | "Total";
 		const count = Number(messageArray[1]) as number;

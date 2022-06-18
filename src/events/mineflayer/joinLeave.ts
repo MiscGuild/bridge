@@ -1,12 +1,13 @@
 import { Util } from "discord.js";
 import { Event } from "../../interfaces/Event";
 import Emojis from "../../util/emojis";
+import { ChatMessage } from "prismarine-chat";
 
 export default {
 	name: "chat:joinLeave",
 	runOnce: false,
-	run: async (bot, message) => {
-		const messageArray: string[] = message.toString().split(",");
+	run: async (bot, message: ChatMessage) => {
+		const messageArray = message.toString().split(",");
 
 		const playerName = messageArray[0] as string;
 		const status = messageArray[1] as "joined" | "left";

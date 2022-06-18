@@ -10,6 +10,7 @@ import isObjKey from "../util/isObjKey";
 import EventEmitter from "events";
 import { Command } from "../interfaces/DiscordCommand";
 import logError from "../util/logError";
+import { Event } from "../interfaces/Event";
 
 class Bot {
 	public readonly logger = consola;
@@ -106,9 +107,9 @@ class Bot {
 			if (stat.isDirectory()) {
 				await this.loadEvents(path.join(dir, file), emitter);
 			} else {
-				if (!(file.endsWith(".ts") || file.endsWith(".js"))) continue;
+				if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) continue;
 				try {
-					const { name, runOnce, run } = (await import(path.join(__dirname, dir, file))).default;
+					const { name, runOnce, run } = (await import(path.join(__dirname, dir, file))).default as Event;
 
 					if (!name) {
 						console.warn(`The event ${path.join(__dirname, dir, file)} doesn't have a name!`);
@@ -151,7 +152,7 @@ class Bot {
 			if (stat.isDirectory()) {
 				await this.loadCommands(path.join(dir, file));
 			} else {
-				if (!(file.endsWith(".ts") || file.endsWith(".js"))) continue;
+				if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) continue;
 				try {
 					const command = (await import(path.join(__dirname, dir, file))).default as Command;
 

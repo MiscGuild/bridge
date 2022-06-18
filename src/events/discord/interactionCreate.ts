@@ -1,11 +1,10 @@
 import { Event } from "../../interfaces/Event";
 import { Interaction } from "discord.js";
-import Bot from "../../classes/Bot";
 
 export default {
 	name: "interactionCreate",
 	runOnce: false,
-	run: async (bot: Bot, interaction: Interaction) => {
+	run: async (bot, interaction: Interaction) => {
 		if (!interaction.isCommand()) return;
 
 		const command = bot.discord.commands.get(interaction.commandName);

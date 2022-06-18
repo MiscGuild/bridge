@@ -1,11 +1,10 @@
 import { TextChannel } from "discord.js";
-import Bot from "../../classes/Bot";
 import { Event } from "../../interfaces/Event";
 
 export default {
 	name: "ready",
 	runOnce: true,
-	run: async (bot: Bot) => {
+	run: async (bot) => {
 		bot.discord.application?.commands.set(
 			bot.discord.commands.map((v) => v.data),
 			process.env.DISCORD_SERVER_ID as string,

@@ -1,11 +1,12 @@
 import { MessageEmbed } from "discord.js";
 import { Event } from "../../interfaces/Event";
+import { ChatMessage } from "prismarine-chat";
 
 export default {
 	name: "chat:guildLevelUp",
 	runOnce: false,
-	run: async (bot, message) => {
-		const messageArray: string[] = message.toString().split(",");
+	run: async (bot, message: ChatMessage) => {
+		const messageArray = message.toString().split(",");
 
 		const guildLevel = Number(messageArray[0]) as number;
 

@@ -1,13 +1,12 @@
 import { Event } from "../../interfaces/Event";
 import { Message, Util } from "discord.js";
-import Bot from "../../classes/Bot";
 import badWords from "../../util/badWords";
 import emojis from "../../util/emojis";
 
 export default {
 	name: "messageCreate",
 	runOnce: false,
-	run: async (bot: Bot, message: Message) => {
+	run: async (bot, message: Message) => {
 		if (
 			message.content.startsWith(bot.botPrefix) ||
 			message.author.bot ||
