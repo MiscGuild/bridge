@@ -4,12 +4,12 @@ import consola from "consola";
 import fs from "fs/promises";
 import path from "path";
 
-import bot from "..";
 import Discord from "./Client";
-import regex from "../util/Regex";
-import { isObjKey } from "../util/IsObjKey";
+import regex from "../util/regex";
+import isObjKey from "../util/isObjKey";
 import EventEmitter from "events";
 import { Command } from "../interfaces/DiscordCommand";
+import logError from "../util/logError";
 
 class Bot {
 	public readonly logger = consola;
@@ -184,15 +184,6 @@ class Bot {
 	}
 }
 
-const errorHandler = async (err: Error) => {
-	bot.logger.error(err);
-	if (bot.discord.isReady()) {
-		((await bot.discord.channels.fetch(process.env.ERROR_CHANNEL_ID as string)) as TextChannel).send(
-			err.name + " " + err.message + "\n" + (err.stack ?? ""),
-		);
-	}
-};
-
-process.on("uncaughtException", errorHandler).on("unhandledRejection", errorHandler);
+process.on("uncaughtException", logError).on("unhandledRejection", logError);
 
 export default Bot;

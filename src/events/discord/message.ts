@@ -1,8 +1,8 @@
 import { Event } from "../../interfaces/Event";
 import { Message, Util } from "discord.js";
 import Bot from "../../classes/Bot";
-import BadWords from "../../util/BadWords";
-import Emojis from "../../util/Emojis";
+import badWords from "../../util/badWords";
+import emojis from "../../util/emojis";
 
 export default {
 	name: "messageCreate",
@@ -25,18 +25,18 @@ export default {
 		try {
 			await message.delete();
 		} catch (e) {
-			await message.channel.send(`${Emojis.warning} ${message.author.username}, could not delete message.`);
+			await message.channel.send(`${emojis.warning} ${message.author.username}, could not delete message.`);
 			bot.logger.error(e);
 		}
 
-		if (BadWords.some((word) => message.content.includes(word))) {
+		if (badWords.some((word) => message.content.includes(word))) {
 			await message.channel.send(
-				`${Emojis.warning} ${message.author.username}, you may not use profane language!`,
+				`${emojis.warning} ${message.author.username}, you may not use profane language!`,
 			);
-			bot.logger.warn(`Comment blocked by Hychat: ${message.content} (matched bad words list)`);
+			bot.logger.warn(`Comment blocked: ${message.content} (matched bad words list)`);
 			bot.sendToDiscord(
 				"oc",
-				`${Emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked by Hychat (matched bad words list). This message was not sent to Hypixel.`,
+				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked (matched bad words list). This message was not sent to Hypixel.`,
 			);
 			return;
 		}

@@ -1,5 +1,5 @@
 import Bot from "../classes/Bot";
-import regex from "../util/Regex";
+import regex from "../util/regex";
 import { BotEvents } from "mineflayer";
 import { ClientEvents } from "discord.js";
 

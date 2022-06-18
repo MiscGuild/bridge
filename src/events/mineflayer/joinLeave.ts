@@ -1,6 +1,6 @@
 import { Util } from "discord.js";
 import { Event } from "../../interfaces/Event";
-import Emojis from "../../util/Emojis";
+import Emojis from "../../util/emojis";
 
 export default {
 	name: "chat:joinLeave",

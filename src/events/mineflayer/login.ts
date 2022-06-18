@@ -1,5 +1,5 @@
 import { Event } from "../../interfaces/Event";
-import Emojis from "../../util/Emojis";
+import Emojis from "../../util/emojis";
 
 export default {
 	name: "login",
