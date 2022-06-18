@@ -1,10 +1,10 @@
 import { ChatMessage } from "prismarine-chat";
-import Emojis from "../../util/emojis";
-import { Event } from "../../interfaces/Event";
+import Emojis from "../../../util/emojis";
+import { Event } from "../../../interfaces/Event";
 import { Util } from "discord.js";
 
 export default {
-	name: "chat:memberLeave",
+	name: "chat:memberJoin",
 	runOnce: false,
 	run: async (bot, message: ChatMessage) => {
 		const messageArray = message.toString().split(",");
@@ -14,7 +14,7 @@ export default {
 
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.badGuildEvent} ${hypixelRank ?? ""}${Util.escapeMarkdown(playerName)} left the guild!`,
+			`${Emojis.guildEvent} ${hypixelRank ?? ""}${Util.escapeMarkdown(playerName)} joined the guild!`,
 		);
 	},
 } as Event;

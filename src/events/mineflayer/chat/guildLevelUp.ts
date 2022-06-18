@@ -1,5 +1,5 @@
 import { ChatMessage } from "prismarine-chat";
-import { Event } from "../../interfaces/Event";
+import { Event } from "../../../interfaces/Event";
 import { MessageEmbed } from "discord.js";
 
 export default {
