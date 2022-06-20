@@ -1,4 +1,4 @@
-import { Command } from "../interfaces/DiscordCommand.js";
+import { Command } from "../interfaces/DiscordCommand";
 import { MessageEmbed } from "discord.js";
 
 export default {

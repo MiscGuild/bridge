@@ -8,7 +8,7 @@ export default {
 		const messageArray = message.toString().split(",");
 
 		const type = messageArray[0] as "Online" | "Total";
-		const count = Number(messageArray[1]) as number;
+		const count = Number(messageArray[1]);
 
 		// Set the online members count
 		if (type === "Online") {

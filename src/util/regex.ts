@@ -30,6 +30,14 @@ export default {
 	"chat:memberCount": /^(Online|Total) Members: (\d+)$/,
 
 	/**
+	 * When "/g online" is typed, and list of members is shown
+	 *
+	 * Returns:
+	 *  - Online Members
+	 */
+	"chat:blacklistCheck": /(?:\[.*?]\s*)?(\w{2,17}) ● {2}/,
+
+	/**
 	 * When a player joins the guild
 	 *
 	 * Returns:
