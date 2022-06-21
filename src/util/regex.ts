@@ -124,4 +124,14 @@ export default {
 	 * When a message is sent repeatedly
 	 */
 	"chat:sameMessageTwice": /^You cannot say the same message twice!$/,
+
+	/**
+	 * When a player whispers to the bot with "/msg"
+	 *
+	 * Returns:
+	 *  - Hypixel Rank
+	 *  - Player Name
+	 *  - Message
+	 */
+	"chat:whisper": /^From (?:\[.*]\s*)?(\w{2,17}).*?: (.+)$/,
 };
