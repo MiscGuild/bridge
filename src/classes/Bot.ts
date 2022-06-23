@@ -133,7 +133,12 @@ class Bot {
 						continue;
 					}
 
-					emitter.on(name, run.bind(null, this));
+					emitter.on(name, (...args) => {
+						if (isObjKey(name, regex)) {
+							args = args[0][0];
+						}
+						run(this, ...args);
+					});
 
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				} catch (e: any) {

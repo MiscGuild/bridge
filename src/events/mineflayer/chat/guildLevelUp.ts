@@ -1,15 +1,10 @@
-import { ChatMessage } from "prismarine-chat";
 import { Event } from "../../../interfaces/Event";
 import { MessageEmbed } from "discord.js";
 
 export default {
 	name: "chat:guildLevelUp",
 	runOnce: false,
-	run: async (bot, message: ChatMessage) => {
-		const messageArray = message.toString().split(",");
-
-		const guildLevel = Number(messageArray[0]) as number;
-
+	run: async (bot, guildLevel: number) => {
 		const embed = new MessageEmbed()
 			.setDescription(`The guild has leveled up to level **${guildLevel}**!`)
 			.setColor("#00AA00");

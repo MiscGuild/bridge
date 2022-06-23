@@ -1,4 +1,3 @@
-import { ChatMessage } from "prismarine-chat";
 import Emojis from "../../../util/emojis";
 import { Event } from "../../../interfaces/Event";
 import { Util } from "discord.js";
@@ -6,12 +5,7 @@ import { Util } from "discord.js";
 export default {
 	name: "chat:joinLeave",
 	runOnce: false,
-	run: async (bot, message: ChatMessage) => {
-		const messageArray = message.toString().split(",");
-
-		const playerName = messageArray[0] as string;
-		const status = messageArray[1] as "joined" | "left";
-
+	run: async (bot, playerName: string, status: "joined" | "left") => {
 		if (status === "joined") {
 			bot.onlineCount++;
 			await bot.sendToDiscord(
