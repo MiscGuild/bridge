@@ -15,21 +15,21 @@ class Bot {
 	public readonly logger = consola;
 
 	public readonly discord = new Discord({ intents: [Intents.FLAGS.GUILD_MESSAGES] });
-	public readonly botPrefix = (process.env.DISCORD_PREFIX as string) ?? ")";
-	public readonly chatSeparator = (process.env.MINECRAFT_CHAT_SEPARATOR as string) ?? ">";
+	public readonly botPrefix = process.env.DISCORD_PREFIX ?? ")";
+	public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? ">";
 	public memberChannel?: TextChannel;
 	public officerChannel?: TextChannel;
 
 	public onlineCount = 0;
 	public totalCount = 125;
 	public readonly mineflayer = createBot({
-		username: process.env.MINECRAFT_EMAIL as string,
-		password: process.env.MINECRAFT_PASSWORD as string,
+		username: process.env.MINECRAFT_EMAIL,
+		password: process.env.MINECRAFT_PASSWORD,
 		host: "mc.hypixel.net",
 		version: "1.16.4",
 		logErrors: true,
 		hideErrors: true,
-		auth: process.env.MINECRAFT_AUTH_TYPE as "microsoft" | "mojang",
+		auth: process.env.MINECRAFT_AUTH_TYPE,
 		checkTimeoutInterval: 30000,
 		defaultChatPatterns: false,
 	});

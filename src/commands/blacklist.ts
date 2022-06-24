@@ -91,7 +91,7 @@ export default {
 				.addField("Reason:", reason);
 
 			const blacklistMessage = await (
-				(await bot.discord.channels.fetch(process.env.BLACKLIST_CHANNEL_ID as string)) as TextChannel
+				(await bot.discord.channels.fetch(process.env.BLACKLIST_CHANNEL_ID)) as TextChannel
 			).send({
 				embeds: [embed],
 			});
@@ -108,7 +108,7 @@ export default {
 			blacklist.splice(blacklist.indexOf(blacklistEntry));
 
 			const message = await (
-				bot.discord.channels.cache.get(process.env.BLACKLIST_CHANNEL_ID as string) as TextChannel
+				bot.discord.channels.cache.get(process.env.BLACKLIST_CHANNEL_ID) as TextChannel
 			).messages.fetch(blacklistEntry.messageId);
 			await message.delete();
 		}

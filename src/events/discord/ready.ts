@@ -7,13 +7,11 @@ export default {
 	run: async (bot) => {
 		bot.discord.application?.commands.set(
 			bot.discord.commands.map((v) => v.data),
-			process.env.DISCORD_SERVER_ID as string,
+			process.env.DISCORD_SERVER_ID,
 		);
 
-		bot.memberChannel = (await bot.discord.channels.fetch(process.env.MEMBER_CHANNEL_ID as string)) as TextChannel;
-		bot.officerChannel = (await bot.discord.channels.fetch(
-			process.env.OFFICER_CHANNEL_ID as string,
-		)) as TextChannel;
+		bot.memberChannel = (await bot.discord.channels.fetch(process.env.MEMBER_CHANNEL_ID)) as TextChannel;
+		bot.officerChannel = (await bot.discord.channels.fetch(process.env.OFFICER_CHANNEL_ID)) as TextChannel;
 
 		await bot.setStatus();
 	},

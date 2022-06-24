@@ -18,7 +18,7 @@ export default {
 			if (!isFetchError(playerProfile)) {
 				const networkLevel = Math.sqrt(2 * playerProfile.networkExp! + 30625) / 50 - 2.5;
 
-				if (networkLevel < parseFloat(process.env.MINIMUM_NETWORK_LEVEL as string)) {
+				if (networkLevel < process.env.MINIMUM_NETWORK_LEVEL) {
 					await bot.sendGuildMessage(
 						"oc",
 						`The player ${playerName} is not network level ${process.env.MINIMUM_NETWORK_LEVEL}!`,
