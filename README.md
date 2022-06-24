@@ -15,27 +15,45 @@ The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord
 </h3>
 
 > 🚨 USE AT YOUR OWN RISK:
-> This application will log onto a given Minecraft server using Mineflayer, a Minecraft bot client. This may be against the rules of some servers, and therefore may result in punishment. All contributers to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
+> This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
 
 ## Installation
 
 ### Prerequisites
 
--   NodeJS 16.6.0 or later
--   Discord.js 13
--   NPM latest version
+-   [Git](https://git-scm.com/downloads)
+-   [NodeJS](https://nodejs.org/en/) >=16.6.0 and npm
 -   A full access Minecraft Java Edition account
 
 ### Setup
 
--   Install [Node.js](https://nodejs.org/en/) version 16.6 or later.
--   Fill out the `.env.template` file with your credentials and rename it to `.env`
--   Run the following commands in a terminal in the bots directory.
+1. ⭐ Star this repository!
+2. Clone the repository into a directory of your choice.
 
 ```bash
-npm install
-npm run build
-npm start
+$ git clone https://github.com/MiscGuild/bridge.git
+```
+
+3. Enter the new directory and install packages.
+
+```bash
+$ cd bridge
+$ npm install
+```
+
+4. Make a new Discord bot account on the [Discord Developer Portal](https://discord.com/developers/applications) and retrieve the bot token.
+
+5. Grant the bot the `Message Intent`.
+
+6. Generate an invite URL by going to OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot your server.
+
+7. Fill out the `.env.template` file with your credentials and rename it to `.env`.
+
+8. Build and run the bot.
+
+```bash
+$ npm run build
+$ npm start
 ```
 
 ## Contributing
