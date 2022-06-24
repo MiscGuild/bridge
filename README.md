@@ -45,7 +45,7 @@ $ npm install
 
 5. Grant the bot the `Message Intent`.
 
-6. Generate an invite URL by going to OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot your server.
+6. Generate an invite URL by going to OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
 
 7. Fill out the `.env.template` file with your credentials and rename it to `.env`.
 
