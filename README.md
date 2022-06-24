@@ -17,6 +17,14 @@ The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord
 > 🚨 USE AT YOUR OWN RISK:
 > This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
 
+-   [Installation](#installation)
+    -   [Prerequisites](#prerequisites)
+    -   [Setup](#setup)
+-   [Contributing](#contributing)
+    -   [Issues and Bug Reports](#issues-and-bug-reports)
+-   [Acknowledgements](#acknowledgements)
+-   [License](#license)
+
 ## Installation
 
 ### Prerequisites
@@ -45,7 +53,7 @@ $ npm install
 
 5. Grant the bot the `Message Intent`.
 
-6. Generate an invite URL by going to OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
+6. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
 
 7. Fill out the `.env.template` file with your credentials and rename it to `.env`.
 
