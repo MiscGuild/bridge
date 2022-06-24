@@ -52,7 +52,8 @@ To submit an issue or bug, please contact a developer or open an issue [here](ht
 
 Parts of this project use code from the following repositories:
 
-[Hychat Self-Host](https://github.com/hychat-mc/self-host) Under MIT License.
+-   [Hychat Self-Host](https://github.com/hychat-mc/self-host) Under MIT License.
+-   [Hypixel API TypeScript](https://github.com/unaussprechlich/hypixel-api-typescript/) Under MIT License.
 
 ## License
 

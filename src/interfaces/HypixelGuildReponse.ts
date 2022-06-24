@@ -1,5 +1,5 @@
 /**
- * A shortened version of the Hypixel 'Player Response' and 'Guild Response' from https://github.com/unaussprechlich/hypixel-api-typescript/
+ * Source: https://github.com/unaussprechlich/hypixel-api-typescript/
  */
 export interface HypixelGuildResponse {
 	_id: string;
