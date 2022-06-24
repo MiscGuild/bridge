@@ -134,4 +134,12 @@ export default {
 	 *  - Message
 	 */
 	"chat:whisper": /^From (?:\[.*]\s*)?(\w{2,17}).*?: (.+)$/,
+
+	/**
+	 * When a player requests to join the guild
+	 *
+	 * Returns:
+	 *  - Player Name
+	 */
+	"chat:joinRequest": /^(?:\[.*]\s*)?(\w{2,17}) has requested to join the Guild!$/,
 };
