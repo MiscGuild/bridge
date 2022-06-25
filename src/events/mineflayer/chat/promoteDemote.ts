@@ -3,7 +3,7 @@ import { Event } from "../../../interfaces/Event";
 import { Util } from "discord.js";
 
 export default {
-	name: "chat:promotedDemoted",
+	name: "chat:promoteDemote",
 	runOnce: false,
 	run: async (
 		bot,

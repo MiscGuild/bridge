@@ -3,7 +3,7 @@ import { Event } from "../../../interfaces/Event";
 import { Util } from "discord.js";
 
 export default {
-	name: "chat:memberKicked",
+	name: "chat:memberKick",
 	runOnce: false,
 	run: async (
 		bot,
