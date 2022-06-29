@@ -39,9 +39,9 @@ export default {
 		try {
 			await bot.executeTask(`/g ${type} ${user}`);
 			embed
+				.setColor(type === "promote" ? "GREEN" : "RED")
 				.setTitle(capitaliseString(`${type}d!`))
-				.setDescription(`${user} has been ${type}d!`)
-				.setColor(type === "promote" ? "GREEN" : "RED");
+				.setDescription(`${user} has been ${type}d!`);
 		} catch (e) {
 			embed
 				.setColor("RED")
