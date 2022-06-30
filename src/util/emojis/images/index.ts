@@ -5,3 +5,7 @@ export { default as vip3 } from "./vip/vip3.png";
 export { default as vipPlus1 } from "./vip+/vipPlus1.png";
 export { default as vipPlus2 } from "./vip+/vipPlus2.png";
 export { default as vipPlus3 } from "./vip+/vipPlus3.png";
+
+export { default as mvp1 } from "./mvp/mvp1.png";
+export { default as mvp2 } from "./mvp/mvp2.png";
+export { default as mvp3 } from "./mvp/mvp3.png";
