@@ -35,7 +35,8 @@
 
 		"jsx": "preserve",
 		"isolatedModules": true,
-		"incremental": true
+		"incremental": true,
+		"typeRoots": ["node_modules/@types", "src/@types"]
 	},
 	"exclude": ["./node_modules/**/*", "**/*.spec.ts"],
 	"include": ["./src"]
