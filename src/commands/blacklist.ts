@@ -5,7 +5,7 @@ import _blacklist from "../util/_blacklist.json";
 import fetchErrorEmbed from "../util/fetchErrorEmbed";
 import fetchMojangProfile from "../util/fetchMojangProfile";
 import isFetchError from "../util/isFetchError";
-import writeToBlacklist from "../util/writeToBlacklist";
+import writeToFile from "../util/writeToFile";
 
 export default {
 	data: {
@@ -119,6 +119,6 @@ export default {
 			.setTitle("Completed!")
 			.setDescription(`${mojangProfile.name} was ${type === "add" ? "added to" : "removed from"} the blacklist!`);
 
-		writeToBlacklist(blacklist, interaction, successEmbed);
+		writeToFile("./src/util/_blacklist.json", blacklist, interaction, successEmbed);
 	},
 } as Command;
