@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import recursiveWalkDir from "../recursiveWalkDir";
 
 const buffers: { [key: string]: Buffer } = {};
 
@@ -10,23 +11,11 @@ export default async () => {
 };
 
 async function walk(dir = "./images") {
-	const files = await fs.readdir(path.join(__dirname, dir));
+	const callback = async (file: string) => {
+		const name = file.split(".")[0] as string;
+		const buffer = await fs.readFile(path.join(__dirname, dir, file));
+		buffers[name] = buffer;
+	};
 
-	for (const file of files) {
-		const stat = await fs.lstat(path.join(__dirname, dir, file));
-
-		if (stat.isDirectory()) {
-			await walk(path.join(dir, file));
-		} else {
-			try {
-				const name = file.split(".")[0] as string;
-				const buffer = await fs.readFile(path.join(__dirname, dir, file));
-				buffers[name] = buffer;
-
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			} catch (e: any) {
-				console.warn(`Error while loading commands: ${e.message}`);
-			}
-		}
-	}
+	recursiveWalkDir(path.join(__dirname, dir), callback, "Error while fetching image buffers: ");
 }

@@ -5,11 +5,11 @@ import Discord from "./Client";
 import { Event } from "../interfaces/Event";
 import EventEmitter from "events";
 import consola from "consola";
-import fs from "fs/promises";
 import isObjKey from "../util/isObjKey";
 import logError from "../util/logError";
 import path from "path";
 import regex from "../util/regex";
+import recursiveWalkDir from "../util/recursiveWalkDir";
 
 class Bot {
 	public readonly logger = consola;
@@ -99,86 +99,59 @@ class Bot {
 	}
 
 	private async loadEvents(dir: string, emitter: EventEmitter) {
-		const files = await fs.readdir(path.join(__dirname, dir));
+		const callback = async (file: string) => {
+			if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) return;
 
-		for (const file of files) {
-			const stat = await fs.lstat(path.join(__dirname, dir, file));
+			const { name, runOnce, run } = (await import(path.join(__dirname, dir, file))).default as Event;
 
-			if (stat.isDirectory()) {
-				await this.loadEvents(path.join(dir, file), emitter);
-			} else {
-				if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) continue;
-				try {
-					const { name, runOnce, run } = (await import(path.join(__dirname, dir, file))).default as Event;
-
-					if (!name) {
-						console.warn(`The event ${path.join(__dirname, dir, file)} doesn't have a name!`);
-						continue;
-					}
-
-					if (!run) {
-						console.warn(`The event ${name} doesn't have an executable function!`);
-						continue;
-					}
-
-					if (isObjKey(name, regex)) {
-						this.mineflayer.addChatPattern(name.replace("chat:", ""), regex[name], {
-							repeat: true,
-							parse: true,
-						});
-					}
-
-					if (runOnce) {
-						emitter.once(name, run.bind(null, this));
-						continue;
-					}
-
-					emitter.on(name, (...args) => {
-						if (isObjKey(name, regex)) {
-							args = args[0][0];
-						}
-						run(this, ...args);
-					});
-
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				} catch (e: any) {
-					console.warn(`Error while loading events: ${e.message}`);
-				}
+			if (!name) {
+				return console.warn(`The event ${path.join(__dirname, dir, file)} doesn't have a name!`);
 			}
-		}
+
+			if (!run) {
+				return console.warn(`The event ${name} doesn't have an executable function!`);
+			}
+
+			if (isObjKey(name, regex)) {
+				this.mineflayer.addChatPattern(name.replace("chat:", ""), regex[name], {
+					repeat: true,
+					parse: true,
+				});
+			}
+
+			if (runOnce) {
+				return emitter.once(name, run.bind(null, this));
+			}
+
+			emitter.on(name, (...args) => {
+				if (isObjKey(name, regex)) {
+					args = args[0][0];
+				}
+				run(this, ...args);
+			});
+		};
+
+		await recursiveWalkDir(path.join(__dirname, dir), callback, "Error while loading events: ");
 	}
 
 	private async loadCommands(dir: string) {
-		const files = await fs.readdir(path.join(__dirname, dir));
+		const callback = async (file: string) => {
+			if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) return;
 
-		for (const file of files) {
-			const stat = await fs.lstat(path.join(__dirname, dir, file));
+			const command = (await import(path.join(__dirname, dir, file))).default as Command;
 
-			if (stat.isDirectory()) {
-				await this.loadCommands(path.join(dir, file));
-			} else {
-				if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) continue;
-				try {
-					const command = (await import(path.join(__dirname, dir, file))).default as Command;
-
-					if (!command.data) {
-						console.warn(`The command ${path.join(__dirname, dir, file)} doesn't have a name!`);
-						continue;
-					}
-
-					if (!command.run) {
-						console.warn(`The command ${command.data.name} doesn't have an executable function!`);
-						continue;
-					}
-
-					this.discord.commands.set(command.data.name, command);
-
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				} catch (e: any) {
-					console.warn(`Error while loading commands: ${e.message}`);
-				}
+			if (!command.data) {
+				return console.warn(`The command ${path.join(__dirname, dir, file)} doesn't have a name!`);
 			}
-		}
+
+			if (!command.run) {
+				return console.warn(`The command ${command.data.name} doesn't have an executable function!`);
+			}
+
+			this.discord.commands.set(command.data.name, command);
+		};
+
+		await recursiveWalkDir(path.join(__dirname, dir), callback, "Error while loading commands: ");
 	}
 
 	private async start() {
