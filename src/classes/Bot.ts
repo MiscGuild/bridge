@@ -8,8 +8,8 @@ import consola from "consola";
 import isObjKey from "../util/isObjKey";
 import logError from "../util/logError";
 import path from "path";
-import regex from "../util/regex";
 import recursiveWalkDir from "../util/recursiveWalkDir";
+import regex from "../util/regex";
 
 class Bot {
 	public readonly logger = consola;
@@ -98,6 +98,26 @@ class Bot {
 		}
 	}
 
+	private async loadCommands(dir: string) {
+		const callback = async (file: string) => {
+			if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) return;
+
+			const command = (await import(path.join(__dirname, dir, file))).default as Command;
+
+			if (!command.data) {
+				return console.warn(`The command ${path.join(__dirname, dir, file)} doesn't have a name!`);
+			}
+
+			if (!command.run) {
+				return console.warn(`The command ${command.data.name} doesn't have an executable function!`);
+			}
+
+			this.discord.commands.set(command.data.name, command);
+		};
+
+		await recursiveWalkDir(path.join(__dirname, dir), callback, "Error while loading commands: ");
+	}
+
 	private async loadEvents(dir: string, emitter: EventEmitter) {
 		const callback = async (file: string) => {
 			if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) return;
@@ -132,26 +152,6 @@ class Bot {
 		};
 
 		await recursiveWalkDir(path.join(__dirname, dir), callback, "Error while loading events: ");
-	}
-
-	private async loadCommands(dir: string) {
-		const callback = async (file: string) => {
-			if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) return;
-
-			const command = (await import(path.join(__dirname, dir, file))).default as Command;
-
-			if (!command.data) {
-				return console.warn(`The command ${path.join(__dirname, dir, file)} doesn't have a name!`);
-			}
-
-			if (!command.run) {
-				return console.warn(`The command ${command.data.name} doesn't have an executable function!`);
-			}
-
-			this.discord.commands.set(command.data.name, command);
-		};
-
-		await recursiveWalkDir(path.join(__dirname, dir), callback, "Error while loading commands: ");
 	}
 
 	private async start() {
