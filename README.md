@@ -1,17 +1,12 @@
-<h1 align="center">
-Miscellaneous Guild Bridge Bot
-</h1>
+<h1 align="center">Miscellaneous Guild Bridge Bot</h1>
 
+<h3 align="center">The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord.</h3>
 <h3 align="center">
-The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord.
-  </h3>
-  <h3 align="center">
-
-  <a href="https://discord.gg/dEsfnJkQcq" alt="Discord">
-      <img src="https://img.shields.io/discord/522586672148381726?label=discord&style=for-the-badge&color=blue"/>
-  </a>
-      <img src="https://img.shields.io/github/languages/code-size/MiscGuild/bridge?color=blue&style=for-the-badge"/>
-      <img src="https://img.shields.io/github/stars/MiscGuild/bridge?color=blue&style=for-the-badge"/>
+    <a href="https://discord.gg/dEsfnJkQcq" alt="Discord">
+        <img src="https://img.shields.io/discord/522586672148381726?label=discord&style=for-the-badge&color=blue"/>
+    </a>
+    <img src="https://img.shields.io/github/languages/code-size/MiscGuild/bridge?color=blue&style=for-the-badge"/>
+    <img src="https://img.shields.io/github/stars/MiscGuild/bridge?color=blue&style=for-the-badge"/>
 </h3>
 
 > 🚨 USE AT YOUR OWN RISK:
@@ -64,9 +59,14 @@ $ npm run build
 $ npm start
 ```
 
+Optionally, you may activate the use of rank emojis in discord messages by following these steps:
+
+1. Run the `/uploademojis` command in a discord server of your choice. (Note: It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots).
+2. Set the value of `USE_RANK_EMOJIS` in the `.env` file to `true`.
+
 ## Contributing
 
-Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/dEsfnJkQcq) and go to `#programming-talk`.
+Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/bHFWukp) and go to `#programming-talk`.
 
 Please ensure commit messages follow the [Angular Convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines) and all code has been tested before contributing.
 
