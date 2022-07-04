@@ -99,13 +99,13 @@ class Bot {
 	}
 
 	private async loadCommands(dir: string) {
-		const callback = async (file: string) => {
+		const callback = async (currentDir: string, file: string) => {
 			if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) return;
 
-			const command = (await import(path.join(__dirname, dir, file))).default as Command;
+			const command = (await import(path.join(currentDir, file))).default as Command;
 
 			if (!command.data) {
-				return console.warn(`The command ${path.join(__dirname, dir, file)} doesn't have a name!`);
+				return console.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
 			}
 
 			if (!command.run) {
@@ -119,13 +119,13 @@ class Bot {
 	}
 
 	private async loadEvents(dir: string, emitter: EventEmitter) {
-		const callback = async (file: string) => {
+		const callback = async (currentDir: string, file: string) => {
 			if (!(file.endsWith(".ts") || file.endsWith(".js")) || file.endsWith(".d.ts")) return;
 
-			const { name, runOnce, run } = (await import(path.join(__dirname, dir, file))).default as Event;
+			const { name, runOnce, run } = (await import(path.join(currentDir, file))).default as Event;
 
 			if (!name) {
-				return console.warn(`The event ${path.join(__dirname, dir, file)} doesn't have a name!`);
+				return console.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
 			}
 
 			if (!run) {

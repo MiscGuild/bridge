@@ -7,7 +7,11 @@ import path from "path";
  * @param callback The callback to execute for every file found.
  * @param errMessage The error message to display if an error occurs during the process.
  */
-async function recursiveWalkDir(normalisedDirName: string, callback: (file: string) => void, errMessage: string) {
+async function recursiveWalkDir(
+	normalisedDirName: string,
+	callback: (currentDir: string, file: string) => void,
+	errMessage: string,
+) {
 	const files = await fs.readdir(normalisedDirName);
 
 	for (const file of files) {
@@ -17,7 +21,7 @@ async function recursiveWalkDir(normalisedDirName: string, callback: (file: stri
 			await recursiveWalkDir(path.join(normalisedDirName, file), callback, errMessage);
 		} else {
 			try {
-				callback(file);
+				callback(normalisedDirName, file);
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (e: any) {
