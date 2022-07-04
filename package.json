@@ -5,15 +5,17 @@
 	"license": "MIT",
 	"private": false,
 	"scripts": {
-		"lint": "eslint \"src/**\"",
-		"lint:fix": "yarn lint --fix",
-		"format": "prettier --write \"src/**\"",
+		"build": "tsc && npm run copy-files",
+		"copy-files": "copyfiles -u 1 src/**/*.png dist/",
 		"dev": "ts-node-dev --respawn --transpile-only --poll ./src/index.ts",
-		"build": "tsc",
+		"format": "prettier --write \"src/**\"",
+		"lint": "eslint \"src/**\"",
+		"lint:fix": "npm run lint --fix",
 		"start": "node ."
 	},
 	"dependencies": {
 		"consola": "^2.15.3",
+		"copyfiles": "^2.4.1",
 		"discord.js": "^13.6.0",
 		"dotenv": "^14.3.2",
 		"mineflayer": "^3.15.0"
