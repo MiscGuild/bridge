@@ -1,19 +1,19 @@
 /* eslint no-shadow: 0 */
 
 export enum HypixelRanks {
-	"[VIP]",
-	"[VIP+]",
-	"[MVP]",
-	"[MVP+]",
 	"[MVP++]",
+	"[MVP+]",
+	"[MVP]",
+	"[VIP+]",
+	"[VIP]",
 }
 
 export enum VerboseHypixelRanks {
-	vip,
-	vipPlus,
-	mvp,
-	mvpPlus,
 	mvpPlusPlus,
+	mvpPlus,
+	mvp,
+	vipPlus,
+	vip,
 }
 
 export type HypixelRank = keyof typeof HypixelRanks;
