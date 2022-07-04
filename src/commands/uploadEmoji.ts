@@ -6,6 +6,8 @@ import fetchErrorEmbed from "../util/fetchErrorEmbed";
 import fetchFakeChat from "../util/fetchFakeChat";
 import getEmojiBuffers from "../util/emojis/getEmojiBuffers";
 import isFetchError from "../util/isFetchError";
+import { VerboseHypixelRank, VerboseHypixelRanks } from "../interfaces/Ranks";
+import writeToFile from "../util/writeToFile";
 
 enum GuildRankColors {
 	Gray = "&7",
@@ -53,37 +55,37 @@ export default {
 	// @ts-ignore - unused bot parameter
 	run: async (bot, interaction, args) => {
 		const emojiIds = _emojiIds as EmojiIds;
+		let successEmbed: MessageEmbed;
 
 		if (interaction.options.getSubcommand() === "hypixelranks") {
 			await interaction.reply("Uploading emojis...");
 
 			const emojiBuffers = await getEmojiBuffers();
 			for (const [name, buffer] of Object.entries(emojiBuffers)) {
-				const rankName = Object.keys(HypixelRanks).find((rank) => name.includes(rank)) as
-					| keyof typeof HypixelRanks
-					| undefined;
+				const rankName = Object.values(VerboseHypixelRanks).find(
+					(rank) => typeof rank === "string" && name.includes(rank),
+				) as VerboseHypixelRank | undefined;
 
 				if (rankName) {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const emoji = await interaction.guild!.emojis.create(buffer, name);
-					emojiIds.hypixel[rankName]?.push(emoji.id);
+					emojiIds.hypixel[rankName].push({ name: emoji.name as string, id: emoji.id });
+
+					// TODO: actually save the JSON file lol
+					console.log(emoji.id);
 				} else {
 					const embed = new MessageEmbed()
 						.setColor("RED")
 						.setTitle("Error")
 						.setDescription(`An unexpected error occured: Unkown emoji of name ${name}`);
-					return interaction.reply({ embeds: [embed] });
+					return interaction.followUp({ embeds: [embed] });
 				}
 			}
 
-			// TODO: Store server Ids for later use
-
-			const embed = new MessageEmbed()
+			successEmbed = new MessageEmbed()
 				.setColor("GREEN")
 				.setTitle("Completed")
 				.setDescription("All Hypixel rank emojis have been uploaded!");
-
-			await interaction.followUp({ embeds: [embed] });
 		} else {
 			const color = args[0] as typeof GuildRankColors[keyof typeof GuildRankColors];
 			const name = args[1] as string;
@@ -101,12 +103,12 @@ export default {
 
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const emoji = await interaction.guild!.emojis.create(fakeChat, name);
-			const embed = new MessageEmbed()
+			successEmbed = new MessageEmbed()
 				.setColor("GREEN")
 				.setTitle("Emoji set")
 				.setDescription(`The emoji ${name} has been created! ${emoji}`);
-
-			await interaction.reply({ embeds: [embed] });
 		}
+
+		writeToFile("./src/util/emojis/_emojiIds.json", emojiIds, interaction, successEmbed);
 	},
 } as Command;

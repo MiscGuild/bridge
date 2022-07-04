@@ -1,10 +1,10 @@
 {
 	"hypixel": {
-		"vip": {},
-		"vipPlus": {},
-		"mvp": {},
-		"mvpPlus": {},
-		"mvpPlusPlus": {}
+		"vip": [],
+		"vipPlus": [],
+		"mvp": [],
+		"mvpPlus": [],
+		"mvpPlusPlus": []
 	},
 	"guild": {}
 }
