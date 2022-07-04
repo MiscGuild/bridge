@@ -2,7 +2,7 @@ import Emojis from "../../../util/emojis";
 import { Event } from "../../../interfaces/Event";
 import { HypixelRank } from "../../../interfaces/Ranks";
 import { Util } from "discord.js";
-import getHypixelRankEmoji from "../../../util/emojis/getHypixelRankEmojis";
+import getRankEmojis from "../../../util/emojis/getRankEmojis";
 
 export default {
 	name: "chat:guildChat",
@@ -15,7 +15,7 @@ export default {
 		guildRank: string | null,
 		message: string,
 	) => {
-		const formattedMessage = `**${await getHypixelRankEmoji(hypixelRank)}${Util.escapeMarkdown(playerName)}${
+		const formattedMessage = `**${await getRankEmojis(hypixelRank)}${Util.escapeMarkdown(playerName)}${
 			" " + guildRank ?? ""
 		}:** ${Util.escapeMarkdown(message)}`;
 		channel === "Guild"

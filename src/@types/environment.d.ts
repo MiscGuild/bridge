@@ -12,6 +12,7 @@ declare global {
 			DISCORD_TOKEN: string;
 			DISCORD_PREFIX: string;
 			DISCORD_INVITE_LINK: `discord.gg/${string}`;
+			USE_RANK_EMOJIS: "true" | "false";
 
 			DISCORD_SERVER_ID: string;
 			MEMBER_CHANNEL_ID: string;
