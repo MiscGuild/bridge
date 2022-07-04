@@ -63,9 +63,7 @@ class Bot {
 	public async executeTask(task: string) {
 		let listener: BotEvents["message"];
 
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore - unused resolve parameter
-		await new Promise((resolve, reject) => {
+		await new Promise((_, reject) => {
 			this.mineflayer.chat(task);
 			this.mineflayer.on("message", (message) => {
 				const motd = message.toMotd();

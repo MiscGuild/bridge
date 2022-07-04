@@ -12,9 +12,7 @@ export default {
 		description: "Upload all Hypixel rank emojis to the server!",
 		type: "CHAT_INPUT",
 	},
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore - unused bot parameter
-	run: async (bot, interaction) => {
+	run: async (_, interaction) => {
 		await interaction.reply("Uploading emojis...");
 
 		const tier = interaction.guild?.premiumTier;
