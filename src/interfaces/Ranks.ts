@@ -1,3 +1,4 @@
+/* eslint no-shadow: 0 */
 export enum GuildRankColors {
 	Gray = "&7",
 	"Dark Aqua" = "&3",

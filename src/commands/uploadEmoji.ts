@@ -1,3 +1,4 @@
+import { GuildRankColors, VerboseHypixelRank, VerboseHypixelRanks } from "../interfaces/Ranks";
 import { Command } from "../interfaces/DiscordCommand";
 import { EmojiIds } from "../interfaces/EmojiIds";
 import { MessageEmbed } from "discord.js";
@@ -6,7 +7,6 @@ import fetchErrorEmbed from "../util/fetchErrorEmbed";
 import fetchFakeChat from "../util/fetchFakeChat";
 import getEmojiBuffers from "../util/emojis/getEmojiBuffers";
 import isFetchError from "../util/isFetchError";
-import { GuildRankColors, VerboseHypixelRank, VerboseHypixelRanks } from "../interfaces/Ranks";
 import writeToFile from "../util/writeToFile";
 
 export default {
@@ -46,6 +46,8 @@ export default {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore - unused bot parameter
 	run: async (bot, interaction, args) => {
+		const tier = interaction.guild?.premiumTier;
+		const maxEmojis = tier === "TIER_1" ? 100 : tier === "TIER_2" ? 150 : tier === "TIER_3" ? 250 : 50;
 		const emojiIds = _emojiIds as EmojiIds;
 		let successEmbed: MessageEmbed;
 
@@ -53,6 +55,17 @@ export default {
 			await interaction.reply("Uploading emojis...");
 
 			const emojiBuffers = await getEmojiBuffers();
+
+			if (interaction.guild!.emojis.cache.size + Object.keys(emojiBuffers).length > maxEmojis) {
+				const embed = new MessageEmbed()
+					.setColor("RED")
+					.setTitle("Error")
+					.setDescription(
+						`Not enough emoji slots! This command requires ${Object.keys(emojiBuffers).length} open slots.`,
+					);
+				return interaction.reply({ embeds: [embed] });
+			}
+
 			for (const [name, buffer] of Object.entries(emojiBuffers)) {
 				const rankName = Object.values(VerboseHypixelRanks).find(
 					(rank) => typeof rank === "string" && name.includes(rank),
@@ -62,9 +75,6 @@ export default {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const emoji = await interaction.guild!.emojis.create(buffer, name);
 					emojiIds.hypixel[rankName].push({ name: emoji.name as string, id: emoji.id });
-
-					// TODO: actually save the JSON file lol
-					console.log(emoji.id);
 				} else {
 					const embed = new MessageEmbed()
 						.setColor("RED")

@@ -8,6 +8,8 @@ import { writeFile } from "fs";
  * @param interaction The interaction to reply to in case of failure.
  * @param successEmbed The embed to reply with if successful.
  */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default (path: string, data: any, interaction: CommandInteraction, successEmbed: MessageEmbed) => {
 	writeFile(path, JSON.stringify(data), async (err) => {
 		if (!err) {

@@ -1,5 +1,5 @@
-import { EmojiIds } from "../../interfaces/EmojiIds";
 import { HypixelRank, VerboseHypixelRank } from "../../interfaces/Ranks";
+import { EmojiIds } from "../../interfaces/EmojiIds";
 import _emojiIds from "./_emojiIds.json";
 
 export default async (rank: HypixelRank) => {
