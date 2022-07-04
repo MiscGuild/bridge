@@ -1,5 +1,5 @@
-import { FetchError } from "../interfaces/FetchError";
-import { HypixelGuildResponse } from "../interfaces/HypixelGuildReponse";
+import { FetchError } from "../../interfaces/FetchError";
+import { HypixelGuildResponse } from "../../interfaces/HypixelGuildReponse";
 import fetch from "node-fetch";
 
 export default async (uuid: string) => {

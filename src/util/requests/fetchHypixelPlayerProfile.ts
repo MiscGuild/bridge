@@ -1,5 +1,5 @@
-import { FetchError } from "../interfaces/FetchError";
-import { HypixelPlayerResponse } from "../interfaces/HypixelPlayerResponse";
+import { FetchError } from "../../interfaces/FetchError";
+import { HypixelPlayerResponse } from "../../interfaces/HypixelPlayerResponse";
 import fetch from "node-fetch";
 
 export default async (username: string) => {

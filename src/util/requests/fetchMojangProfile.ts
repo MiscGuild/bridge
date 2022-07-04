@@ -1,5 +1,5 @@
-import { FetchError } from "../interfaces/FetchError";
-import { MojangProfileResponse } from "../interfaces/MojangProfileResponse";
+import { FetchError } from "../../interfaces/FetchError";
+import { MojangProfileResponse } from "../../interfaces/MojangProfileResponse";
 import fetch from "node-fetch";
 
 export default async (username: string) => {

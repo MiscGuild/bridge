@@ -1,4 +1,4 @@
-import { FetchError } from "../interfaces/FetchError";
+import { FetchError } from "../../interfaces/FetchError";
 import { MessageEmbed } from "discord.js";
 
 export default (requestError: FetchError) => {

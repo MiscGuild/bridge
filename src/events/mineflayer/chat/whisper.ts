@@ -1,7 +1,7 @@
 import { Event } from "../../../interfaces/Event";
-import fetchHypixelGuild from "../../../util/fetchHypixelGuild";
-import fetchMojangProfile from "../../../util/fetchMojangProfile";
-import isFetchError from "../../../util/isFetchError";
+import fetchHypixelGuild from "../../../util/requests/fetchHypixelGuild";
+import fetchMojangProfile from "../../../util/requests/fetchMojangProfile";
+import isFetchError from "../../../util/requests/isFetchError";
 
 export default {
 	name: "chat:whisper",

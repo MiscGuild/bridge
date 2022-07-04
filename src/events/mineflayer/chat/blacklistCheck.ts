@@ -1,8 +1,8 @@
 import { BlacklistEntry } from "../../../interfaces/BlacklistEntry";
 import { Event } from "../../../interfaces/Event";
 import _blacklist from "../../../util/_blacklist.json";
-import fetchMojangProfile from "../../../util/fetchMojangProfile";
-import isFetchError from "../../../util/isFetchError";
+import fetchMojangProfile from "../../../util/requests/fetchMojangProfile";
+import isFetchError from "../../../util/requests/isFetchError";
 
 export default {
 	name: "chat:blacklistCheck",

@@ -1,4 +1,4 @@
-import { FetchError } from "../interfaces/FetchError";
+import { FetchError } from "../../interfaces/FetchError";
 import fetch from "node-fetch";
 
 export default async (data: string) => {

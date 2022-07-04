@@ -2,9 +2,9 @@ import { MessageEmbed, TextChannel } from "discord.js";
 import { BlacklistEntry } from "../interfaces/BlacklistEntry";
 import { Command } from "../interfaces/DiscordCommand";
 import _blacklist from "../util/_blacklist.json";
-import fetchErrorEmbed from "../util/fetchErrorEmbed";
-import fetchMojangProfile from "../util/fetchMojangProfile";
-import isFetchError from "../util/isFetchError";
+import fetchErrorEmbed from "../util/requests/fetchErrorEmbed";
+import fetchMojangProfile from "../util/requests/fetchMojangProfile";
+import isFetchError from "../util/requests/isFetchError";
 import writeToFile from "../util/writeToFile";
 
 export default {
