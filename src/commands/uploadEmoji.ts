@@ -6,16 +6,8 @@ import fetchErrorEmbed from "../util/fetchErrorEmbed";
 import fetchFakeChat from "../util/fetchFakeChat";
 import getEmojiBuffers from "../util/emojis/getEmojiBuffers";
 import isFetchError from "../util/isFetchError";
-import { VerboseHypixelRank, VerboseHypixelRanks } from "../interfaces/Ranks";
+import { GuildRankColors, VerboseHypixelRank, VerboseHypixelRanks } from "../interfaces/Ranks";
 import writeToFile from "../util/writeToFile";
-
-enum GuildRankColors {
-	Gray = "&7",
-	"Dark Aqua" = "&3",
-	"Dark Green" = "&2",
-	Yellow = "&",
-	Gold = "&6",
-}
 
 export default {
 	data: {
