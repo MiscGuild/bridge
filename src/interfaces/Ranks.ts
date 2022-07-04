@@ -1,11 +1,4 @@
 /* eslint no-shadow: 0 */
-export enum GuildRankColors {
-	Gray = "&7",
-	"Dark Aqua" = "&3",
-	"Dark Green" = "&2",
-	Yellow = "&",
-	Gold = "&6",
-}
 
 export enum HypixelRanks {
 	"[VIP]",

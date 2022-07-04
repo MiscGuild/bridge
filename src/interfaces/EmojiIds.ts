@@ -1,9 +1,6 @@
 import { VerboseHypixelRank } from "./Ranks";
 
-export interface EmojiIds {
-	hypixel: Record<VerboseHypixelRank, Emoji[]>;
-	guild: Record<string, string[] | undefined>;
-}
+export type EmojiIds = Record<VerboseHypixelRank, Emoji[]>;
 
 interface Emoji {
 	name: string;
