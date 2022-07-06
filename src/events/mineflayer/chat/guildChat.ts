@@ -10,14 +10,15 @@ export default {
 	run: async (
 		bot,
 		channel: "Guild" | "Officer",
-		hypixelRank: HypixelRank | null,
+		hypixelRank: HypixelRank | undefined,
 		playerName: string,
-		guildRank: string | null,
+		guildRank: string | undefined,
 		message: string,
 	) => {
-		const formattedMessage = `**${await getRankEmojis(hypixelRank)}${Util.escapeMarkdown(playerName)}${
+		const formattedMessage = ` **${await getRankEmojis(hypixelRank)}${Util.escapeMarkdown(playerName)}${
 			" " + guildRank ?? ""
 		}:** ${Util.escapeMarkdown(message)}`;
+
 		channel === "Guild"
 			? await bot.sendToDiscord("gc", Emojis.member + formattedMessage)
 			: await bot.sendToDiscord("oc", Emojis.officer + formattedMessage);

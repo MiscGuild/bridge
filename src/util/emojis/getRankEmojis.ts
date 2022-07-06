@@ -2,11 +2,15 @@ import { HypixelRank, VerboseHypixelRank } from "../../interfaces/Ranks";
 import { EmojiIds } from "../../interfaces/EmojiIds";
 import _emojiIds from "./_emojiIds.json";
 
-export default async (rank: HypixelRank | null) => {
+export default async (rank: HypixelRank | undefined) => {
 	const emojiIds = _emojiIds as EmojiIds;
 	let rankName: VerboseHypixelRank;
 
-	switch (rank) {
+	if (!rank) {
+		return "";
+	}
+
+	switch (rank.trim()) {
 		case "[VIP]":
 			rankName = "vip";
 			break;
@@ -22,8 +26,6 @@ export default async (rank: HypixelRank | null) => {
 		case "[MVP++]":
 			rankName = "mvpPlusPlus";
 			break;
-		case null:
-			return "";
 		default:
 			return rank;
 	}
