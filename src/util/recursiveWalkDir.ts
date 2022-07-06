@@ -9,7 +9,7 @@ import path from "path";
  */
 async function recursiveWalkDir(
 	normalisedDirName: string,
-	callback: (currentDir: string, file: string) => void,
+	callback: (currentDir: string, file: string) => Promise<void>,
 	errMessage: string,
 ) {
 	const files = await fs.readdir(normalisedDirName);
@@ -21,7 +21,7 @@ async function recursiveWalkDir(
 			await recursiveWalkDir(path.join(normalisedDirName, file), callback, errMessage);
 		} else {
 			try {
-				callback(normalisedDirName, file);
+				await callback(normalisedDirName, file);
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (e: any) {
