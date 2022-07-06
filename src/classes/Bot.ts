@@ -14,7 +14,10 @@ import regex from "../util/regex";
 class Bot {
 	public readonly logger = consola;
 
-	public readonly discord = new Discord({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
+	public readonly discord = new Discord({
+		allowedMentions: { parse: ["users", "roles"], repliedUser: true },
+		intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS],
+	});
 	public readonly botPrefix = process.env.DISCORD_PREFIX ?? ")";
 	public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? ">";
 	public memberChannel?: TextChannel;
