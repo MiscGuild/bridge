@@ -1,4 +1,3 @@
-import Emojis from "../../../util/emojis";
 import { Event } from "../../../interfaces/Event";
 import { HypixelRank } from "../../../interfaces/Ranks";
 import { Util } from "discord.js";
@@ -19,8 +18,6 @@ export default {
 			" " + guildRank ?? ""
 		}:** ${Util.escapeMarkdown(message)}`;
 
-		channel === "Guild"
-			? await bot.sendToDiscord("gc", Emojis.member + formattedMessage)
-			: await bot.sendToDiscord("oc", Emojis.officer + formattedMessage);
+		await bot.sendToDiscord(channel === "Guild" ? "gc" : "oc", formattedMessage)
 	},
 } as Event;

@@ -7,9 +7,9 @@ export default {
 	runOnce: false,
 	run: async (
 		bot,
-		hypixelRank: string | null,
+		hypixelRank: string | undefined,
 		playerName: string,
-		kickedByHypixelRank: string | null,
+		kickedByHypixelRank: string | undefined,
 		kickedByPlayerName: string,
 	) => {
 		await bot.sendToDiscord(

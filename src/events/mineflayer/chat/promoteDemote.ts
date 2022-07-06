@@ -7,7 +7,7 @@ export default {
 	runOnce: false,
 	run: async (
 		bot,
-		hypixelRank: string | null,
+		hypixelRank: string | undefined,
 		playerName: string,
 		type: "promoted" | "demoted",
 		guildRankFrom: string,

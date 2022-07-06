@@ -141,7 +141,8 @@ class Bot {
 			}
 
 			if (runOnce) {
-				return emitter.once(name, run.bind(null, this));
+				emitter.once(name, run.bind(null, this));
+				return;
 			}
 
 			emitter.on(name, (...args) => {
