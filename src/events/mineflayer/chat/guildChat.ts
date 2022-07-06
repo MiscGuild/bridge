@@ -1,6 +1,6 @@
 import { Event } from "../../../interfaces/Event";
 import { HypixelRank } from "../../../interfaces/Ranks";
-import { Util } from "discord.js";
+import { MessageEmbed, Util } from "discord.js";
 import getRankEmojis from "../../../util/emojis/getRankEmojis";
 
 export default {
@@ -14,10 +14,12 @@ export default {
 		guildRank: string | undefined,
 		message: string,
 	) => {
-		const formattedMessage = ` **${await getRankEmojis(hypixelRank)}${Util.escapeMarkdown(playerName)}${
-			" " + guildRank ?? ""
-		}:** ${Util.escapeMarkdown(message)}`;
+		const embed = new MessageEmbed().setDescription(
+			` **${await getRankEmojis(hypixelRank)}${Util.escapeMarkdown(playerName)}${
+				" " + guildRank ?? ""
+			}:** ${Util.escapeMarkdown(message)}`,
+		);
 
-		await bot.sendToDiscord(channel === "Guild" ? "gc" : "oc", formattedMessage)
+		bot.sendEmbed(channel === "Guild" ? "gc" : "oc", [embed]);
 	},
 } as Event;

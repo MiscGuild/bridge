@@ -10,16 +10,6 @@ export default {
 	leave: "📤",
 
 	/**
-	 * Member Chat Message Emoji
-	 */
-	member: "💬",
-
-	/**
-	 * Officer Chat Message Emoji
-	 */
-	officer: "📢",
-
-	/**
 	 * Success Emoji
 	 */
 	success: "✅",
@@ -48,6 +38,4 @@ export default {
 	 * Guild Negative Event Emoji
 	 */
 	badGuildEvent: "👋",
-
-	// TODO - 27/03/2022: Add emoji adding/removing command, (tells user if not enough slots)
 };
