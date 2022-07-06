@@ -60,7 +60,8 @@ export default {
 
 		if (isFetchError(mojangProfile)) {
 			const embed = fetchErrorEmbed(mojangProfile);
-			return await interaction.reply({ embeds: [embed] });
+			await interaction.reply({ embeds: [embed] });
+			return;
 		}
 
 		const isOnBlacklist = blacklist.some((user) => user.uuid === mojangProfile.id);
@@ -70,7 +71,8 @@ export default {
 				.setTitle("Error")
 				.setDescription(`That user is ${type === "add" ? "already" : "not"} on the blacklist!`);
 
-			return await interaction.reply({ embeds: [embed] });
+			await interaction.reply({ embeds: [embed] });
+			return;
 		}
 
 		if (type === "add") {

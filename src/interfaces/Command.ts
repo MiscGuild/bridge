@@ -8,4 +8,4 @@ export interface Command {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ExecuteCommand = (bot: Bot, interaction: CommandInteraction, args: any[]) => Promise<unknown>;
+type ExecuteCommand = (bot: Bot, interaction: CommandInteraction, args: any[]) => void;

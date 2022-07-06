@@ -14,7 +14,7 @@ export default {
 	},
 	staffOnly: true,
 	run: async (_bot, interaction) => {
-		await interaction.reply("Uploading emojis...");
+		await interaction.deferReply();
 
 		const tier = interaction.guild?.premiumTier;
 		const maxEmojis = tier === "TIER_1" ? 100 : tier === "TIER_2" ? 150 : tier === "TIER_3" ? 250 : 50;
@@ -29,7 +29,8 @@ export default {
 				.setDescription(
 					`Not enough emoji slots! This command requires ${Object.keys(emojiBuffers).length} open slots.`,
 				);
-			return interaction.reply({ embeds: [embed] });
+			interaction.editReply({ embeds: [embed] });
+			return;
 		}
 
 		for (const [name, buffer] of Object.entries(emojiBuffers)) {
@@ -46,7 +47,8 @@ export default {
 					.setColor("RED")
 					.setTitle("Error")
 					.setDescription(`An unexpected error occured: Unkown emoji of name ${name}`);
-				return interaction.followUp({ embeds: [embed] });
+				interaction.editReply({ embeds: [embed] });
+				return;
 			}
 		}
 

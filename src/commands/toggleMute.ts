@@ -51,7 +51,7 @@ export default {
 		try {
 			await bot.executeTask(`/g ${type} ${user} ${duration}`);
 			embed
-				.setTitle(await capitaliseString(`${type}d!`))
+				.setTitle(capitaliseString(`${type}d!`))
 				.setDescription(`${user} was ${type}d` + (type === "mute" ? ` for ${duration}!` : "!"))
 				.setColor(type === "mute" ? "RED" : "GREEN");
 		} catch (e) {
