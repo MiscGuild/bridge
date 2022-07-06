@@ -1,5 +1,5 @@
+import { GuildMember, Interaction, MessageEmbed } from "discord.js";
 import { Event } from "../../interfaces/Event";
-import { Interaction } from "discord.js";
 
 export default {
 	name: "interactionCreate",
@@ -11,6 +11,17 @@ export default {
 
 		if (!command) {
 			bot.logger.error(`Unknown slash command: ${interaction.commandName}`);
+			return;
+		}
+
+		const member = interaction.member as GuildMember;
+		if (command.staffOnly && !member.roles.cache.has(process.env.STAFF_ROLE_ID)) {
+			const embed = new MessageEmbed()
+				.setColor("RED")
+				.setTitle("Error")
+				.setDescription("You do not have permission to run that command!");
+
+			await interaction.reply({ embeds: [embed] });
 			return;
 		}
 

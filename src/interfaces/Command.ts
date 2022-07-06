@@ -3,6 +3,7 @@ import Bot from "../classes/Bot";
 
 export interface Command {
 	data: ChatInputApplicationCommandData;
+	staffOnly?: boolean;
 	run: ExecuteCommand;
 }
 

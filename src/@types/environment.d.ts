@@ -20,6 +20,8 @@ declare global {
 			BLACKLIST_CHANNEL_ID: string;
 			LOG_CHANNEL_ID: string;
 			ERROR_CHANNEL_ID: string;
+
+			STAFF_ROLE_ID: string;
 		}
 	}
 }

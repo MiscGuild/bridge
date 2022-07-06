@@ -1,4 +1,4 @@
-import { Command } from "../interfaces/DiscordCommand";
+import { Command } from "../interfaces/Command";
 import { MessageEmbed } from "discord.js";
 
 export default {
@@ -20,6 +20,7 @@ export default {
 			},
 		],
 	},
+	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const user: string = args[0];
 		const reason: string = args[1];

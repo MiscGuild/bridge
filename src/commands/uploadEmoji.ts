@@ -1,5 +1,5 @@
 import { VerboseHypixelRank, VerboseHypixelRanks } from "../interfaces/Ranks";
-import { Command } from "../interfaces/DiscordCommand";
+import { Command } from "../interfaces/Command";
 import { EmojiIds } from "../interfaces/EmojiIds";
 import { MessageEmbed } from "discord.js";
 import _emojiIds from "../util/emojis/_emojiIds.json";
@@ -12,7 +12,8 @@ export default {
 		description: "Upload all Hypixel rank emojis to the server!",
 		type: "CHAT_INPUT",
 	},
-	run: async (_, interaction) => {
+	staffOnly: true,
+	run: async (_bot, interaction) => {
 		await interaction.reply("Uploading emojis...");
 
 		const tier = interaction.guild?.premiumTier;

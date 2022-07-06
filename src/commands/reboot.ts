@@ -1,4 +1,4 @@
-import { Command } from "../interfaces/DiscordCommand";
+import { Command } from "../interfaces/Command";
 import { MessageEmbed } from "discord.js";
 
 export default {
@@ -6,6 +6,7 @@ export default {
 		name: "reboot",
 		description: "Reboot the bot! (Only works if your host automatically restarts the application)",
 	},
+	staffOnly: true,
 	run: async (bot, interaction) => {
 		const embed = new MessageEmbed()
 			.setColor("GREEN")

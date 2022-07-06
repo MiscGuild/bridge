@@ -1,6 +1,6 @@
 import { MessageEmbed, TextChannel } from "discord.js";
 import { BlacklistEntry } from "../interfaces/BlacklistEntry";
-import { Command } from "../interfaces/DiscordCommand";
+import { Command } from "../interfaces/Command";
 import _blacklist from "../util/_blacklist.json";
 import fetchErrorEmbed from "../util/requests/fetchErrorEmbed";
 import fetchMojangProfile from "../util/requests/fetchMojangProfile";
@@ -52,7 +52,7 @@ export default {
 			},
 		],
 	},
-
+	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const type = interaction.options.getSubcommand() as "add" | "remove";
 		const mojangProfile = await fetchMojangProfile(args[0]);

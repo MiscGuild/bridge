@@ -1,6 +1,6 @@
 import { BotEvents, createBot } from "mineflayer";
 import { Intents, MessageEmbed, TextChannel } from "discord.js";
-import { Command } from "../interfaces/DiscordCommand";
+import { Command } from "../interfaces/Command";
 import Discord from "./Client";
 import { Event } from "../interfaces/Event";
 import EventEmitter from "events";
@@ -14,7 +14,7 @@ import regex from "../util/regex";
 class Bot {
 	public readonly logger = consola;
 
-	public readonly discord = new Discord({ intents: [Intents.FLAGS.GUILD_MESSAGES] });
+	public readonly discord = new Discord({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
 	public readonly botPrefix = process.env.DISCORD_PREFIX ?? ")";
 	public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? ">";
 	public memberChannel?: TextChannel;
@@ -63,7 +63,7 @@ class Bot {
 	public async executeTask(task: string) {
 		let listener: BotEvents["message"];
 
-		await new Promise((_, reject) => {
+		await new Promise((_resolve, reject) => {
 			this.mineflayer.chat(task);
 			this.mineflayer.on("message", (message) => {
 				const motd = message.toMotd();

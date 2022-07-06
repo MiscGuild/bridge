@@ -1,4 +1,4 @@
-import { Command } from "../interfaces/DiscordCommand";
+import { Command } from "../interfaces/Command";
 import { MessageEmbed } from "discord.js";
 import capitaliseString from "../util/capitaliseString";
 
@@ -41,6 +41,7 @@ export default {
 			},
 		],
 	},
+	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const type = interaction.options.getSubcommand() as "mute" | "unmute";
 		const user: string = args[0];
