@@ -4,7 +4,7 @@ import { EmojiIds } from "../interfaces/EmojiIds";
 import { MessageEmbed } from "discord.js";
 import _emojiIds from "../util/emojis/_emojiIds.json";
 import getEmojiBuffers from "../util/emojis/getEmojiBuffers";
-import writeToFile from "../util/writeToFile";
+import writeToJsonFile from "../util/writeToJsonFile";
 
 export default {
 	data: {
@@ -57,6 +57,6 @@ export default {
 			.setTitle("Completed")
 			.setDescription("All Hypixel rank emojis have been uploaded!");
 
-		writeToFile("./src/util/emojis/_emojiIds.json", emojiIds, interaction, successEmbed);
+		writeToJsonFile("./src/util/emojis/_emojiIds.json", emojiIds, interaction, successEmbed);
 	},
 } as Command;

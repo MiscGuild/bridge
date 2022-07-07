@@ -1,7 +1,7 @@
 import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
-import { Util } from "discord.js";
 import { HypixelRank } from "../../../interfaces/Ranks";
+import { Util } from "discord.js";
 import getRankData from "../../../util/emojis/getRankData";
 
 export default {
@@ -14,8 +14,8 @@ export default {
 		kickedByHypixelRank: HypixelRank | undefined,
 		kickedByPlayerName: string,
 	) => {
-		const [rank, _color] = await getRankData(hypixelRank);
-		const [kickedByRank, _kickedByColor] = await getRankData(kickedByHypixelRank);
+		const rank = (await getRankData(hypixelRank))[0];
+		const kickedByRank = (await getRankData(kickedByHypixelRank))[0];
 
 		await bot.sendToDiscord(
 			"gc",
