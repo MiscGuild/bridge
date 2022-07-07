@@ -22,7 +22,7 @@ export default {
 		try {
 			await bot.executeTask(command);
 
-			embed.setColor("GREEN").setTitle("Completed!").setDescription(`The command ${command} has been executed.`);
+			embed.setColor("GREEN").setTitle("Completed!").setDescription(`The command \`${command}\` has been executed.`);
 		} catch (e: any) {
 			embed
 				.setColor("RED")

@@ -71,7 +71,7 @@ class Bot {
 	public async executeTask(task: string) {
 		let listener: BotEvents["message"];
 
-		await new Promise((_resolve, reject) => {
+		await new Promise((resolve, reject) => {
 			this.mineflayer.chat(task);
 			this.mineflayer.on("message", (message) => {
 				const motd = message.toMotd();
@@ -83,6 +83,10 @@ class Bot {
 					reject(line);
 				});
 			});
+
+			setTimeout(() => {
+				resolve(undefined);
+			}, 200);
 
 			const messageListeners = this.mineflayer.listeners("message");
 			listener = messageListeners[messageListeners.length - 1] as BotEvents["message"];
