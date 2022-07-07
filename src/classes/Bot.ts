@@ -48,7 +48,7 @@ class Bot {
 	public async sendToDiscord(
 		channel: "gc" | "oc",
 		content: string,
-		color: ColorResolvable = "#2f3136",
+		color: ColorResolvable = 0x2f3136,
 		padMessage: boolean = false,
 	) {
 		const embed = new MessageEmbed()

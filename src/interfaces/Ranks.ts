@@ -9,11 +9,11 @@ export enum HypixelRanks {
 }
 
 export enum VerboseHypixelRanks {
-	mvpPlusPlus,
-	mvpPlus,
-	mvp,
-	vipPlus,
-	vip,
+	mvpPlusPlus = 0xffaa00,
+	mvpPlus = 0x55ffff,
+	mvp = 0x55ffff,
+	vipPlus = 0x55ff55,
+	vip = 0x55ff55,
 }
 
 export type HypixelRank = keyof typeof HypixelRanks;

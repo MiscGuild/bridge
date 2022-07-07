@@ -8,7 +8,7 @@ export default {
 		return await bot.sendToDiscord(
 			"gc",
 			`${Emojis.guildEvent} The guild has completed Tier ${completedTier} of this week's Guild Quest!`,
-			"#36393F",
+			0x36393F,
 		);
 	},
 } as Event;
