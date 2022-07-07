@@ -12,7 +12,7 @@ export default {
 
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} **${emojis}${Util.escapeMarkdown(playerName)}** ${type} the guild!`,
+			`${Emojis.guildEvent} **${emojis} ${Util.escapeMarkdown(playerName)}** ${type} the guild!`,
 			color,
 			true,
 		);

@@ -11,7 +11,7 @@ export default async (rank: HypixelRank | undefined): Promise<[rank: string, col
 		return ["", 0xaaaaaa];
 	}
 
-	switch (rank.trim()) {
+	switch (rank) {
 		case "[VIP]":
 			rankName = "vip";
 			break;

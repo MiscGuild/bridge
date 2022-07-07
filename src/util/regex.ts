@@ -5,7 +5,7 @@ export default {
 	 * Returns:
 	 *  - Online Members
 	 */
-	"chat:blacklistCheck": /(?:\[.*?]\s*)?(\w{2,17}) ● {2}/,
+	"chat:blacklistCheck": /(?:\[.*?])\s*?(\w{2,17}) ● {2}/,
 
 	/**
 	 * When a message is blocked for containing suspicious content
@@ -27,7 +27,7 @@ export default {
 	 *  - Guild Rank
 	 *  - Message
 	 */
-	"chat:guildChat": /^(Guild|Officer) > (\[.*]\s*)?(\w{2,17}).*?(\[.{1,15}])?: (.*)$/,
+	"chat:guildChat": /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)$/,
 
 	/**
 	 * When the guild levels up
@@ -55,7 +55,7 @@ export default {
 	 * When the bot detects its not in Limbo
 	 */
 	"chat:lobbyJoin":
-		/^(?:\s>>>\s)?\[.*]\s[\w]{2,17} (?:joined the lobby!|spooked into the lobby!|slid into the lobby!)(?:\s<<<)?$/,
+		/^(?:\s>>>\s)?\[.*]\s[\w]{2,17} (?:joined|spooked into|slid into) the lobby!(?:\s<<<)?$/,
 
 	/**
 	 * When a player requests to join the guild
@@ -63,7 +63,7 @@ export default {
 	 * Returns:
 	 *  - Player Name
 	 */
-	"chat:joinRequest": /^(?:\[.*]\s*)?(\w{2,17}) has requested to join the Guild!$/,
+	"chat:joinRequest": /^(?:\[.*])?\s*(\w{2,17}) has requested to join the Guild!$/,
 
 	/**
 	 * When "/g online" is typed, and the online and total member count is shown
@@ -82,7 +82,7 @@ export default {
 	 *  - Player Name
 	 *  - Joined / left
 	 */
-	"chat:memberJoinLeave": /^(\[.*]\s*)?(\w{2,17}).*? (joined|left) the guild!$/,
+	"chat:memberJoinLeave": /^(\[.*])?\s*(\w{2,17}).*? (joined|left) the guild!$/,
 
 	/**
 	 * When a player is kicked from the guild
@@ -93,7 +93,7 @@ export default {
 	 *  - Kicker Hypixel Rank
 	 *  - Kicker Player Name
 	 */
-	"chat:memberKick": /^(\[.*]\s*)?(\w{2,17}).*? was kicked from the guild by (\[.*]\s*)?(\w{2,17}).*?!$/,
+	"chat:memberKick": /^(\[.*])?\s*(\w{2,17}).*? was kicked from the guild by (\[.*])?\s*(\w{2,17}).*?!$/,
 
 	/**
 	 * When a member is promoted or demoted
@@ -105,7 +105,7 @@ export default {
 	 *  - From Rank
 	 *  - To Rank
 	 */
-	"chat:promoteDemote": /^(\[.*]\s*)?(\w{2,17}).*? was (promoted|demoted) from (.*) to (.*)$/,
+	"chat:promoteDemote": /^(\[.*])?\s*(\w{2,17}).*? was (promoted|demoted) from (.*) to (.*)$/,
 
 	/**
 	 * When all guild quest tiers are complete
@@ -133,5 +133,5 @@ export default {
 	 *  - Player Name
 	 *  - Message
 	 */
-	"chat:whisper": /^From (?:\[.*]\s*)?(\w{2,17}).*?: (.+)$/,
+	"chat:whisper": /^From (?:\[.*])?\s*(\w{2,17}).*?: (.+)$/,
 };

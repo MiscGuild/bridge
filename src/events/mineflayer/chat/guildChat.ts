@@ -15,7 +15,7 @@ export default {
 		message: string,
 	) => {
 		const [emojis, color] = await getRankData(hypixelRank);
-		const content = ` **${emojis}${Util.escapeMarkdown(playerName)}${
+		const content = ` **${emojis} ${Util.escapeMarkdown(playerName)}${
 			" " + guildRank ?? ""
 		}:** ${Util.escapeMarkdown(message)}`;
 
