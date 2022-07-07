@@ -1,5 +1,5 @@
 import { BotEvents, createBot } from "mineflayer";
-import { Intents, MessageEmbed, TextChannel } from "discord.js";
+import { ColorResolvable, Intents, MessageEmbed, TextChannel } from "discord.js";
 import { Command } from "../interfaces/Command";
 import Discord from "./Client";
 import { Event } from "../interfaces/Event";
@@ -45,14 +45,19 @@ class Bot {
 		}
 	}
 
-	public async sendToDiscord(channel: "gc" | "oc", content: string) {
-		channel === "gc" ? await this.memberChannel?.send(content) : await this.officerChannel?.send(content);
-	}
+	public async sendToDiscord(
+		channel: "gc" | "oc",
+		content: string,
+		color: ColorResolvable = "#2f3136",
+		padMessage: boolean = false,
+	) {
+		const embed = new MessageEmbed()
+			.setDescription(padMessage ? `${"-".repeat(54)}\n${content}\n${"-".repeat(54)}` : content)
+			.setColor(color);
 
-	public async sendEmbed(channel: "gc" | "oc", embeds: MessageEmbed[]) {
 		channel === "gc"
-			? await this.memberChannel?.send({ embeds: embeds })
-			: await this.officerChannel?.send({ embeds: embeds });
+			? await this.memberChannel?.send({ embeds: [embed] })
+			: await this.officerChannel?.send({ embeds: [embed] });
 	}
 
 	public async sendGuildMessage(channel: "gc" | "oc", message: string) {

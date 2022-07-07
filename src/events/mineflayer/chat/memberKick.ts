@@ -17,6 +17,8 @@ export default {
 			`${Emojis.badGuildEvent} ${hypixelRank ?? ""}${Util.escapeMarkdown(playerName)} was kicked by ${
 				kickedByHypixelRank + " " ?? ""
 			}${Util.escapeMarkdown(kickedByPlayerName)}`,
+			undefined,
+			true,
 		);
 	},
 } as Event;

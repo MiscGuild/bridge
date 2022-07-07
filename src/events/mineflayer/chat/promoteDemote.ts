@@ -18,6 +18,8 @@ export default {
 			`${Emojis.guildEvent} ${hypixelRank ?? ""}${Util.escapeMarkdown(
 				playerName,
 			)} was ${type} to ${guildRankTo} from ${guildRankFrom}!`,
+			undefined,
+			true,
 		);
 	},
 } as Event;

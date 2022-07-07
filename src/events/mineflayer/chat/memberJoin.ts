@@ -9,6 +9,8 @@ export default {
 		await bot.sendToDiscord(
 			"gc",
 			`${Emojis.guildEvent} ${hypixelRank ?? ""}${Util.escapeMarkdown(playerName)} joined the guild!`,
+			undefined,
+			true,
 		);
 	},
 } as Event;

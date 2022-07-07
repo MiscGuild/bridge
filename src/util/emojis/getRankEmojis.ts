@@ -32,7 +32,7 @@ export default async (rank: HypixelRank | undefined) => {
 
 	const emojis = emojiIds[rankName];
 	if (process.env.USE_RANK_EMOJIS === "true" && emojis !== undefined) {
-		return `${emojis.reduce((previous, current) => (previous += `<:${current.name}:${current.id}>`), "")}`;
+		return `${emojis.reduce((acc, emoji) => (acc += `<:${emoji.name}:${emoji.id}>`), "")} `;
 	}
 
 	return rank;
