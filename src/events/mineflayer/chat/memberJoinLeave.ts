@@ -8,11 +8,11 @@ export default {
 	name: "chat:memberJoinLeave",
 	runOnce: false,
 	run: async (bot, hypixelRank: HypixelRank | undefined, playerName: string, type: "joined" | "left") => {
-		const [emojis, color] = await getRankData(hypixelRank);
+		const [rank, color] = await getRankData(hypixelRank);
 
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} **${emojis} ${Util.escapeMarkdown(playerName)}** ${type} the guild!`,
+			`${Emojis.guildEvent} **${rank ? rank + " " : ""}${Util.escapeMarkdown(playerName)}** ${type} the guild!`,
 			color,
 			true,
 		);

@@ -2,6 +2,7 @@ import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
 import { Util } from "discord.js";
 import { HypixelRank } from "../../../interfaces/Ranks";
+import getRankData from "../../../util/emojis/getRankData";
 
 export default {
 	name: "chat:promoteDemote",
@@ -14,12 +15,14 @@ export default {
 		guildRankFrom: string,
 		guildRankTo: string,
 	) => {
+		const [rank, color] = await getRankData(hypixelRank);
+
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} ${hypixelRank ?? ""} ${Util.escapeMarkdown(
+			`${Emojis.guildEvent} ${rank ? rank + " " : ""}${Util.escapeMarkdown(
 				playerName,
 			)} was ${type} to ${guildRankTo} from ${guildRankFrom}!`,
-			undefined,
+			color,
 			true,
 		);
 	},

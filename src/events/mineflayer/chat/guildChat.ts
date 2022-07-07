@@ -14,9 +14,9 @@ export default {
 		guildRank: string | undefined,
 		message: string,
 	) => {
-		const [emojis, color] = await getRankData(hypixelRank);
-		const content = ` **${emojis} ${Util.escapeMarkdown(playerName)}${
-			" " + guildRank ?? ""
+		const [rank, color] = await getRankData(hypixelRank);
+		const content = ` **${rank ? rank + " " : ""}${Util.escapeMarkdown(playerName)}${
+			guildRank ? " " + guildRank : ""
 		}:** ${Util.escapeMarkdown(message)}`;
 
 		bot.sendToDiscord(channel === "Guild" ? "gc" : "oc", content, color);
