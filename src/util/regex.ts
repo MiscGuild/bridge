@@ -75,13 +75,14 @@ export default {
 	"chat:memberCount": /^(Online|Total) Members: (\d+)$/,
 
 	/**
-	 * When a player joins the guild
+	 * When a player joins or leaves the guild
 	 *
 	 * Returns:
 	 *  - Hypixel Rank
 	 *  - Player Name
+	 *  - Joined / left
 	 */
-	"chat:memberJoin": /^(\[.*]\s*)?(\w{2,17}).*? joined the guild!$/,
+	"chat:memberJoinLeave": /^(\[.*]\s*)?(\w{2,17}).*? (joined|left) the guild!$/,
 
 	/**
 	 * When a player is kicked from the guild
@@ -93,15 +94,6 @@ export default {
 	 *  - Kicker Player Name
 	 */
 	"chat:memberKick": /^(\[.*]\s*)?(\w{2,17}).*? was kicked from the guild by (\[.*]\s*)?(\w{2,17}).*?!$/,
-
-	/**
-	 * When a player leaves the guild
-	 *
-	 * Returns:
-	 *  - Hypixel Rank
-	 *  - Player Name
-	 */
-	"chat:memberLeave": /^(\[.*]\s*)?(\w{2,17}).*? left the guild!$/,
 
 	/**
 	 * When a member is promoted or demoted
