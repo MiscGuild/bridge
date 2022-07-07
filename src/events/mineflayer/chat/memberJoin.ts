@@ -8,7 +8,7 @@ export default {
 	run: async (bot, hypixelRank: string | undefined, playerName: string) => {
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} ${hypixelRank ?? ""}${Util.escapeMarkdown(playerName)} joined the guild!`,
+			`${Emojis.guildEvent} **${hypixelRank ?? ""}${Util.escapeMarkdown(playerName)}** joined the guild!`,
 			undefined,
 			true,
 		);

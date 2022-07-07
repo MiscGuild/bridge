@@ -9,6 +9,7 @@ export default {
 			"gc",
 			`${Emojis.guildEvent} The guild has completed this week's Guild Quest!`,
 			0xFFAA00,
+			true,
 		);
 	},
 } as Event;
