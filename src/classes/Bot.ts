@@ -49,7 +49,7 @@ class Bot {
 		channel: "gc" | "oc",
 		content: string,
 		color: ColorResolvable = 0x2f3136,
-		padMessage: boolean = false,
+		padMessage = false,
 	) {
 		const embed = new MessageEmbed()
 			.setDescription(padMessage ? `${"-".repeat(54)}\n${content}\n${"-".repeat(54)}` : content)

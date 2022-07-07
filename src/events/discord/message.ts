@@ -1,7 +1,7 @@
 import { Message, Util } from "discord.js";
 import { Event } from "../../interfaces/Event";
 import badWords from "../../util/badWords";
-import emojis from "../../util/emojis";
+import emojis from "../../util/emojis/chatEmojis";
 
 export default {
 	name: "messageCreate",

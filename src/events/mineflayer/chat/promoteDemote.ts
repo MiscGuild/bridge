@@ -1,4 +1,4 @@
-import Emojis from "../../../util/emojis";
+import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
 import { Util } from "discord.js";
 

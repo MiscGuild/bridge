@@ -1,7 +1,7 @@
 import { HypixelRank, VerboseHypixelRank, VerboseHypixelRanks } from "../../interfaces/Ranks";
+import { ColorResolvable } from "discord.js";
 import { EmojiIds } from "../../interfaces/EmojiIds";
 import _emojiIds from "./_emojiIds.json";
-import { ColorResolvable } from "discord.js";
 
 export default async (rank: HypixelRank | undefined): Promise<[rank: string, color: ColorResolvable | undefined]> => {
 	const emojiIds = _emojiIds as EmojiIds;
