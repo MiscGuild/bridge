@@ -7,7 +7,7 @@ export default {
 	run: async (bot, completedTier: number) => {
 		return await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} The guild has completed Tier ${completedTier} of this week's Guild Quest!`,
+			`${Emojis.guildEvent} **The guild has completed Tier ${completedTier} of this week's Guild Quest!**`,
 			0x36393f,
 			true,
 		);

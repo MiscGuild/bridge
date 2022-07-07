@@ -84,12 +84,12 @@ class Bot {
 				});
 			});
 
+			const messageListeners = this.mineflayer.listeners("message");
+			listener = messageListeners[messageListeners.length - 1] as BotEvents["message"];
+
 			setTimeout(() => {
 				resolve(undefined);
 			}, 200);
-
-			const messageListeners = this.mineflayer.listeners("message");
-			listener = messageListeners[messageListeners.length - 1] as BotEvents["message"];
 		}).finally(() => {
 			this.mineflayer.removeListener("message", listener);
 		});
