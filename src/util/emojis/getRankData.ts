@@ -39,5 +39,5 @@ export default async (rank: HypixelRank | undefined): Promise<[rank: string, col
 		];
 	}
 
-	return [rank, undefined];
+	return [rank, VerboseHypixelRanks[rankName]];
 };
