@@ -6,7 +6,7 @@ export default async (err: Error, message?: string) => {
 
 	if (bot.discord.isReady()) {
 		((await bot.discord.channels.fetch(process.env.ERROR_CHANNEL_ID)) as TextChannel).send(
-			err.name + " " + err.message + "\n" + (err.stack ?? ""),
+			err.stack ?? `${err.name}: ${err.message}`,
 		);
 	}
 };
