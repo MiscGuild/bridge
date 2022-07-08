@@ -1,0 +1,15 @@
+import Emojis from "../../../util/emojis/chatEmojis";
+import { Event } from "../../../interfaces/Event";
+
+export default {
+	name: "chat:questComplete",
+	runOnce: false,
+	run: async (bot) => {
+		return await bot.sendToDiscord(
+			"gc",
+			`${Emojis.guildEvent} **The guild has completed this week's Guild Quest!**`,
+			0xFFAA00,
+			true,
+		);
+	},
+} as Event;
