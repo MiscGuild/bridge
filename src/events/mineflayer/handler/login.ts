@@ -18,5 +18,12 @@ export default {
 			bot.executeCommand("/g online");
 			await bot.sendToLimbo();
 		}, 3_000);
+
+		setInterval(() => {
+			bot.sendGuildMessage(
+				"gc",
+				"Register for the Guild Experience Tournament by doing '/w MiscBot register' or by creating a ticket in our discord for your chance to win awesome prizes!",
+			);
+		}, 60_000 * 30);
 	},
 } as Event;
