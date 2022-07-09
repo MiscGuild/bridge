@@ -7,7 +7,7 @@ import isFetchError from "../../../util/requests/isFetchError";
 export default {
 	name: "chat:blacklistCheck",
 	runOnce: false,
-	run: async (bot, members: string[]) => {
+	run: async (bot, ...members: string[]) => {
 		const blacklist = _blacklist as BlacklistEntry[];
 
 		for (const member of members) {
