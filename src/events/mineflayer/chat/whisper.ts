@@ -8,7 +8,7 @@ export default {
 	name: "chat:whisper",
 	runOnce: false,
 	run: async (bot, playerName: string, message: string) => {
-		if (message.toLowerCase().startsWith("join" || "tournament" || "register" || "tourney")) {
+		if (message.toLowerCase().startsWith("register")) {
 			await (bot.discord.channels.cache.get("995070669991723109") as TextChannel).send(playerName);
 			bot.executeCommand(`/w ${playerName} You have been signed up for the event!`);
 			return;
