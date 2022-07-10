@@ -19,9 +19,9 @@ export default {
 
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} **${rank ? rank + " " : ""}${Util.escapeMarkdown(
-				playerName,
-			)}** was ${type} to ${guildRankTo} from ${guildRankFrom}!`,
+			`${type === "promoted" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
+				rank ? rank + " " : ""
+			}${Util.escapeMarkdown(playerName)}** was ${type} to ${guildRankTo} from ${guildRankFrom}!`,
 			color,
 			true,
 		);

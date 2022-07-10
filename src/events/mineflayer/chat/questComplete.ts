@@ -5,10 +5,10 @@ export default {
 	name: "chat:questComplete",
 	runOnce: false,
 	run: async (bot) => {
-		return await bot.sendToDiscord(
+		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} **The guild has completed this week's Guild Quest!**`,
-			0xFFAA00,
+			`${Emojis.guildEvent} The guild has completed this week's Guild Quest!`,
+			0xffaa00,
 			true,
 		);
 	},
