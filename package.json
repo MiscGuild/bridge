@@ -6,8 +6,9 @@
 	"private": false,
 	"scripts": {
 		"build": "tsc && npm run copy-files",
+		"clean": "rm -r dist/",
 		"copy-files": "copyfiles -u 1 src/**/*.png dist/",
-		"dev": "ts-node-dev --respawn --transpile-only --poll ./src/index.ts",
+		"dev": "ts-node-dev --respawn --transpile-only --poll src/index.ts",
 		"format": "prettier --write \"src/**\"",
 		"lint": "eslint \"src/**\"",
 		"lint:fix": "npm run lint --fix",
