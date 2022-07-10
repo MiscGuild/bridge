@@ -18,7 +18,6 @@ declare global {
 			MEMBER_CHANNEL_ID: string;
 			OFFICER_CHANNEL_ID: string;
 			BLACKLIST_CHANNEL_ID: string;
-			LOG_CHANNEL_ID: string;
 			ERROR_CHANNEL_ID: string;
 
 			BOT_OWNER_ID: string;
