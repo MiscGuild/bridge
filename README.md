@@ -52,7 +52,9 @@ $ npm install
 
 7. Fill out the `.env.template` file with your credentials and rename it to `.env`.
 
-8. Build and run the bot.
+8. Remove the `.template` file endings from `src/util/_blacklist.json.template` and `src/util/emojis/emojiIds.json.template`.
+
+9. Build and run the bot.
 
 ```bash
 $ npm run build
