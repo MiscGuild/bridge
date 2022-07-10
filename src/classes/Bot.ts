@@ -10,7 +10,6 @@ import logError from "../util/logError";
 import path from "path";
 import recursiveWalkDir from "../util/recursiveWalkDir";
 import regex from "../util/regex";
-import consolaGlobalInstance from "consola";
 
 class Bot {
 	public readonly logger = consola;
@@ -156,7 +155,6 @@ class Bot {
 			}
 
 			emitter.on(name, (...args) => {
-				console.log(...args.flat(2))
 				run(this, ...args.flat(2));
 			});
 		};

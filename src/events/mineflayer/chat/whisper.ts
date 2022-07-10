@@ -1,5 +1,5 @@
-import { TextChannel } from "discord.js";
 import { Event } from "../../../interfaces/Event";
+import { TextChannel } from "discord.js";
 import fetchHypixelGuild from "../../../util/requests/fetchHypixelGuild";
 import fetchMojangProfile from "../../../util/requests/fetchMojangProfile";
 import isFetchError from "../../../util/requests/isFetchError";

@@ -5,7 +5,7 @@ export default {
 	 * Returns:
 	 *  - Online Members
 	 */
-	"chat:blacklistCheck": /(?:\[.*?])\s*?(\w{2,17}) ● {2}/,
+	"chat:blacklistCheck": /(?:\[.*?])?\s*(\w{2,17}) ● {1,2}/g,
 
 	/**
 	 * When a message is blocked for containing suspicious content

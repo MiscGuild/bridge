@@ -1,5 +1,5 @@
-import { MessageEmbed } from "discord.js";
 import { Command } from "../interfaces/Command";
+import { MessageEmbed } from "discord.js";
 
 export default {
 	data: {
@@ -9,7 +9,7 @@ export default {
 			{
 				name: "command",
 				description: "What command would you like to execute?",
-                type: "STRING",
+				type: "STRING",
 				required: true,
 			},
 		],
@@ -22,7 +22,11 @@ export default {
 		try {
 			await bot.executeTask(command);
 
-			embed.setColor("GREEN").setTitle("Completed!").setDescription(`The command \`${command}\` has been executed.`);
+			embed
+				.setColor("GREEN")
+				.setTitle("Completed!")
+				.setDescription(`The command \`${command}\` has been executed.`);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (e: any) {
 			embed
 				.setColor("RED")

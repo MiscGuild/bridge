@@ -3,14 +3,17 @@ import { Event } from "../../../interfaces/Event";
 import _blacklist from "../../../util/_blacklist.json";
 import fetchMojangProfile from "../../../util/requests/fetchMojangProfile";
 import isFetchError from "../../../util/requests/isFetchError";
+import regex from "../../../util/regex";
 
 export default {
 	name: "chat:blacklistCheck",
 	runOnce: false,
-	run: async (bot, ...members: string[]) => {
+	run: async (bot, ...globalMatches: string[]) => {
+		const singleMatchRegex = new RegExp(regex["chat:blacklistCheck"], "");
 		const blacklist = _blacklist as BlacklistEntry[];
 
-		for (const member of members) {
+		for (const globalMatch of globalMatches) {
+			const member = (globalMatch.match(singleMatchRegex) as RegExpMatchArray)[1] as string;
 			const mojangProfile = await fetchMojangProfile(member);
 
 			if (!isFetchError(mojangProfile)) {
