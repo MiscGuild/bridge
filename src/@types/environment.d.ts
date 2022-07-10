@@ -21,6 +21,7 @@ declare global {
 			LOG_CHANNEL_ID: string;
 			ERROR_CHANNEL_ID: string;
 
+			BOT_OWNER_ID: string;
 			STAFF_ROLE_ID: string;
 		}
 	}
