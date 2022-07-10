@@ -7,7 +7,7 @@ declare global {
 
 			MINECRAFT_CHAT_SEPARATOR: string;
 			HYPIXEL_API_KEY: string;
-			MINIMUM_NETWORK_LEVEL: number;
+			MINIMUM_NETWORK_LEVEL: string;
 
 			DISCORD_TOKEN: string;
 			DISCORD_PREFIX: string;

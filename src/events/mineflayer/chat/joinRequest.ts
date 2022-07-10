@@ -19,7 +19,7 @@ export default {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const networkLevel = Math.sqrt(2 * playerProfile.networkExp! + 30625) / 50 - 2.5;
 
-				if (networkLevel < process.env.MINIMUM_NETWORK_LEVEL) {
+				if (networkLevel < parseFloat(process.env.MINIMUM_NETWORK_LEVEL)) {
 					await bot.sendGuildMessage(
 						"oc",
 						`The player ${playerName} is not network level ${process.env.MINIMUM_NETWORK_LEVEL}!`,
