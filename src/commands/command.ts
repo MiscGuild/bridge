@@ -26,8 +26,7 @@ export default {
 				.setColor("GREEN")
 				.setTitle("Completed!")
 				.setDescription(`The command \`${command}\` has been executed.`);
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (e: any) {
+		} catch (e) {
 			embed
 				.setColor("RED")
 				.setTitle("Error")

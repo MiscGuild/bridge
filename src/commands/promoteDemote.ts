@@ -4,7 +4,7 @@ import capitaliseString from "../util/capitaliseString";
 
 export default {
 	data: {
-		name: "changerank",
+		name: "promoteDemote",
 		description: "Promote or demote a user in the guild!",
 		options: [
 			{
