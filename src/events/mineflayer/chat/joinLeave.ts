@@ -6,24 +6,12 @@ export default {
 	name: "chat:joinLeave",
 	runOnce: false,
 	run: async (bot, playerName: string, status: "joined" | "left") => {
-		if (status === "joined") {
-			bot.onlineCount++;
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.join} ${Util.escapeMarkdown(playerName)} joined. (\`${bot.onlineCount}\`/\`${
-					bot.totalCount
-				}\`)`,
-			);
-		}
+		const emoji = status === "joined" ? Emojis.join : Emojis.leave;
+		status === "joined" ? bot.onlineCount++ : bot.onlineCount--;
 
-		if (status === "left") {
-			bot.onlineCount--;
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.leave} ${Util.escapeMarkdown(playerName)} left. (\`${bot.onlineCount}\`/\`${
-					bot.totalCount
-				}\`)`,
-			);
-		}
+		await bot.sendToDiscord(
+			"gc",
+			`${emoji} ${Util.escapeMarkdown(playerName)} ${status}. \`(${bot.onlineCount}/${bot.totalCount})\``,
+		);
 	},
 } as Event;
