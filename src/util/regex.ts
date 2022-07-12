@@ -30,11 +30,6 @@ export default {
 	"chat:guildLevelUp": /^\s{19}The Guild has reached Level (\d*)!$/,
 
 	/**
-	 *
-	 */
-	"chat:joinGuild": /^$/,
-
-	/**
 	 * When a member connects to or disconnects from Hypixel
 	 *
 	 * Returns:
