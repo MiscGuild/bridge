@@ -1,13 +1,5 @@
 export default {
 	/**
-	 * When "/g online" is typed, and list of members is shown
-	 *
-	 * Returns:
-	 *  - Online Members
-	 */
-	"chat:blacklistCheck": /(?:\[.*?])?\s*(\w{2,17}) ● {1,2}/g,
-
-	/**
 	 * When a message is blocked for containing suspicious content
 	 *
 	 * Returns:
@@ -38,6 +30,11 @@ export default {
 	"chat:guildLevelUp": /^\s{19}The Guild has reached Level (\d*)!$/,
 
 	/**
+	 *
+	 */
+	"chat:joinGuild": /^$/,
+
+	/**
 	 * When a member connects to or disconnects from Hypixel
 	 *
 	 * Returns:
@@ -54,8 +51,7 @@ export default {
 	/**
 	 * When the bot detects its not in Limbo
 	 */
-	"chat:lobbyJoin":
-		/^(?:\s>>>\s)?\[.*]\s[\w]{2,17} (?:joined|spooked into|slid into) the lobby!(?:\s<<<)?$/,
+	"chat:lobbyJoin": /^(?:\s>>>\s)?\[.*]\s[\w]{2,17} (?:joined|spooked into|slid into) the lobby!(?:\s<<<)?$/,
 
 	/**
 	 * When a player requests to join the guild

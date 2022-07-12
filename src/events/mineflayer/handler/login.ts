@@ -12,7 +12,7 @@ export default {
 
 		setInterval(() => {
 			bot.executeCommand("/g online");
-		}, 60_000 * 10);
+		}, 60_000 * 5);
 
 		setTimeout(async () => {
 			bot.executeCommand("/g online");
