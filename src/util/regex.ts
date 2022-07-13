@@ -30,6 +30,20 @@ export default {
 	"chat:guildLevelUp": /^\s{19}The Guild has reached Level (\d*)!$/,
 
 	/**
+	 * When a member is muted/unmuted
+	 *
+	 * Returns:
+	 *  - Hypixel Rank
+	 *  - Player Name
+	 *  - muted / unmuted
+	 *  - Muter Hypixel Rank
+	 *  - Muter Player Name
+	 *  - Muter Player Name
+	 *  - Duration
+	 */
+	"chat:guildMuteUnmute": /^(?:\[.*])?\s*(\w{2,17}) has (muted|unmuted) (?:\[.*])?\s*(\w{2,17})(?: for (\d*[a-z]))?$/,
+
+	/**
 	 * When a member connects to or disconnects from Hypixel
 	 *
 	 * Returns:
