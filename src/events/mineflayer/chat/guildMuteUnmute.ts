@@ -1,8 +1,8 @@
 import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
-import getRankData from "../../../util/emojis/getRankData";
 import { HypixelRank } from "../../../interfaces/Ranks";
 import { Util } from "discord.js";
+import getRankData from "../../../util/emojis/getRankData";
 
 export default {
 	name: "chat:guildMuteUnmute",

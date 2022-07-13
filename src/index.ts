@@ -1,10 +1,6 @@
-// Load environment variables from the .env file
 import { config } from "dotenv";
 config();
 
-// Initialize the bot class
+// eslint-disable-next-line sort-imports
 import Bot from "./classes/Bot";
-const bot = new Bot();
-
-// Export the bot to use elsewhere
-export default bot;
+export default new Bot();
