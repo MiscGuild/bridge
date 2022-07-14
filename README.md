@@ -54,14 +54,14 @@ $ npm install
 
 8. Remove the `.template` file endings from `src/util/_blacklist.json.template` and `src/util/emojis/emojiIds.json.template`.
 
-9. Build and run the bot.
+9. Promote the Minecraft account the bot uses to Officer in-game in order for it to view the Officer chat and run privileged commands.
+
+10. Build and run the bot.
 
 ```bash
 $ npm run build
 $ npm start
 ```
-
-10. In order for the bot to view the Officer chat and run privileged commands, promote the bot to Officer in-game.
 
 Optionally, you may activate the use of rank emojis in discord messages by following these steps:
 
