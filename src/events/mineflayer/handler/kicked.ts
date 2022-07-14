@@ -5,50 +5,43 @@ export default {
 	name: "kicked",
 	runOnce: false,
 	run: async (bot, reason: string, loggedIn: boolean) => {
-		// Proxy Reboot
-		if (reason.includes("This proxy is being rebooted.")) {
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.error} The bot was kicked from the server due to a proxy reboot. Restarting the bot in 15 seconds...`,
-			);
+		let message: string;
+		switch (true) {
+			// Proxy reboot
+			case reason.includes("This proxy is being rebooted."):
+				message = "a proxy reboot";
+				break;
+
 			// Duplicate Login
-		} else if (reason.includes("You logged in from another location!")) {
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.error} The bot was kicked from the server due to a duplicate login. Restarting the bot in 15 seconds...`,
-			);
-			// Authentication Error
-		} else if (reason.includes("Failed to authenticate your connection!")) {
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.error} The bot was kicked from the server because of an authentication error. Restarting the bot in 15 seconds...`,
-			);
+			case reason.includes("You logged in from another location!"):
+				message = "a duplicate login";
+				break;
 
-			// Rare Errors
+			// Authentication error
+			case reason.includes("Failed to authenticate your connection!"):
+				message = "an authentication error";
+				break;
 
-			// Invalid Packets
-		} else if (reason.includes("Why do you send us invalid packets?")) {
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.error} The bot was kicked from the server because it was sending invalid packets. The developers have been alerted of this problem. Restarting the bot in 15 seconds...`,
-			);
+			// Invalid packets
+			case reason.includes("Why do you send us invalid packets?"):
+				message = "it sending invalid packets";
+				break;
+
 			// Maintenance
-		} else if (
-			reason.includes(
-				"This server is currently in maintenance mode" || reason.includes("is currently down for maintenance"),
-			)
-		) {
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.error} Hypixel is currently in maintenance mode. The bot will restart in 15 seconds. To stop duplicate error messages, turn this feature off via the dashboard or shut the bot down.`,
-			);
-			// Other Errors
-		} else {
-			await bot.sendToDiscord(
-				"gc",
-				`${Emojis.error} The bot was kicked from the server for an unknown reason. Restarting the bot in 15 seconds...`,
-			);
+			case reason.includes("This server is currently in maintenance mode") ||
+				reason.includes("is currently down for maintenance"):
+				message = "hypixel currently being in maintenance mode";
+				break;
+
+			default:
+				message = "an unkown reason";
+				break;
 		}
+
+		await bot.sendToDiscord(
+			"gc",
+			`${Emojis.error} The bot was kicked from the server due to ${message}. Restarting the bot in 15 seconds...`,
+		);
 
 		bot.logger.error(
 			`The bot was kicked from the server. Restarting the bot in 15 seconds...\nReason: ${reason}\nLogged in: ${loggedIn}`,
