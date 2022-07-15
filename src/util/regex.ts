@@ -85,7 +85,7 @@ export default {
 	 * Returns:
 	 *  - Hypixel Rank
 	 *  - Player Name
-	 *  - Joined / left
+	 *  - joined / left
 	 */
 	"chat:memberJoinLeave": /^(\[.*])?\s*(\w{2,17}).*? (joined|left) the guild!$/,
 
@@ -106,7 +106,7 @@ export default {
 	 * Returns:
 	 *  - Hypixel Rank
 	 *  - Player Name
-	 *  - Promoted / demoted
+	 *  - promoted / demoted
 	 *  - From Rank
 	 *  - To Rank
 	 */
