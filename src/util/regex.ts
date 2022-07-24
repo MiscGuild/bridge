@@ -41,7 +41,7 @@ export default {
 	 *  - Muter Player Name
 	 *  - Duration
 	 */
-	"chat:guildMuteUnmute": /^(?:\[.*])?\s*(\w{2,17}) has (muted|unmuted) (?:\[.*])?\s*(\w{2,17})(?: for (\d*[a-z]))?$/,
+	"chat:guildMuteUnmute": /^(\[.*])?\s*(\w{2,17}) has (muted|unmuted) (\[.*])?\s*(\w{2,17})(?: for (\d*[a-z]))?$/,
 
 	/**
 	 * When a member connects to or disconnects from Hypixel

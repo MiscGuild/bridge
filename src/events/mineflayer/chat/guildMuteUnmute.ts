@@ -9,21 +9,21 @@ export default {
 	runOnce: false,
 	run: async (
 		bot,
-		hypixelRank: HypixelRank | undefined,
-		playerName: string,
-		type: "muted" | "unmuted",
 		byHypixelRank: HypixelRank | undefined,
 		byPlayerName: string,
+		type: "muted" | "unmuted",
+		hypixelRank: HypixelRank | undefined,
+		playerName: string,
 		duration: string | undefined,
 	) => {
-		const [rank] = await getRankData(hypixelRank);
-		const [byRank] = await getRankData(byHypixelRank);
+		const [rank] = await getRankData(byHypixelRank);
+		const [byRank] = await getRankData(hypixelRank);
 
-		const content = `${Emojis.badGuildEvent} **${rank ? rank + " " : ""}${Util.escapeMarkdown(
+		const content = `${type === "unmuted" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
+			rank ? rank + " " : ""
+		}${Util.escapeMarkdown(byPlayerName)}** was ${type} by **${byRank ? byRank + " " : ""}${Util.escapeMarkdown(
 			playerName,
-		)}** was ${type} by **${byRank ? byRank + " " : ""}${Util.escapeMarkdown(byPlayerName)}**${
-			duration ? ` for ${duration}` : ""
-		}`;
+		)}**${duration ? ` for ${duration}` : ""}`;
 
 		await bot.sendToDiscord("gc", content, undefined, true);
 	},
