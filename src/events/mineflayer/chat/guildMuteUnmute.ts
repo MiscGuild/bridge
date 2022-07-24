@@ -16,12 +16,12 @@ export default {
 		playerName: string,
 		duration: string | undefined,
 	) => {
-		const [rank] = await getRankData(byHypixelRank);
-		const [byRank] = await getRankData(hypixelRank);
+		const [byRank] = await getRankData(byHypixelRank);
+		const [rank] = await getRankData(hypixelRank);
 
 		const content = `${type === "unmuted" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
-			rank ? rank + " " : ""
-		}${Util.escapeMarkdown(byPlayerName)}** was ${type} by **${byRank ? byRank + " " : ""}${Util.escapeMarkdown(
+			byRank ? byRank + " " : ""
+		}${Util.escapeMarkdown(byPlayerName)}** has ${type} **${rank ? rank + " " : ""}${Util.escapeMarkdown(
 			playerName,
 		)}**${duration ? ` for ${duration}` : ""}`;
 
