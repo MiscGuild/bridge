@@ -13,6 +13,6 @@ export default {
 			embed.addField(command.data.name, command.data.description);
 		});
 
-		interaction.reply({ embeds: [embed] });
+		await interaction.reply({ embeds: [embed] });
 	},
 } as Command;

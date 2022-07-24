@@ -13,7 +13,7 @@ export default {
 			.setTitle("Rebooting")
 			.setDescription("Rebooting in 15 seconds...");
 
-		await bot.sendGuildMessage("gc", "Rebooting in 15 seconds...");
+		bot.sendGuildMessage("gc", "Rebooting in 15 seconds...");
 		bot.logger.info(`Rebooting due to ${interaction.member?.user.username} running the reboot command.`);
 
 		setTimeout(() => {

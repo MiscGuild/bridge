@@ -47,7 +47,8 @@ export default {
 					.setColor("RED")
 					.setTitle("Error")
 					.setDescription(`An unexpected error occured: Unkown emoji of name ${name}`);
-				interaction.editReply({ embeds: [embed] });
+
+				await interaction.editReply({ embeds: [embed] });
 				return;
 			}
 		}

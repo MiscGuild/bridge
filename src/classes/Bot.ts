@@ -60,11 +60,11 @@ class Bot {
 			: await this.officerChannel?.send({ embeds: [embed] });
 	}
 
-	public async sendGuildMessage(channel: "gc" | "oc", message: string) {
-		await this.executeCommand(`/${channel} ${message}`);
+	public sendGuildMessage(channel: "gc" | "oc", message: string) {
+		this.executeCommand(`/${channel} ${message}`);
 	}
 
-	public async executeCommand(message: string) {
+	public executeCommand(message: string) {
 		this.mineflayer.chat(message);
 	}
 
@@ -95,12 +95,15 @@ class Bot {
 		});
 	}
 
-	public async sendToLimbo() {
-		for (let i = 0; i < 12; i++) await this.executeCommand("/");
+	public sendToLimbo() {
+		for (let i = 0; i < 12; i++) {
+			this.executeCommand("/");
+		}
 	}
 
-	public async setStatus() {
+	public setStatus() {
 		const plural = this.onlineCount - 1 !== 1;
+
 		if (this.discord.isReady()) {
 			this.discord.user.setActivity(`${this.onlineCount} online player${plural ? "s" : ""}`, {
 				type: "WATCHING",

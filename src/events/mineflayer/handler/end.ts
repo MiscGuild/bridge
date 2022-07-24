@@ -3,7 +3,7 @@ import { Event } from "../../../interfaces/Event";
 export default {
 	name: "end",
 	runOnce: false,
-	run: async (bot) => {
+	run: (bot) => {
 		bot.logger.fatal("The bot session has abruptly ended. Restarting the bot in 15 seconds...");
 
 		setTimeout(() => {
