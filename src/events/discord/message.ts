@@ -37,12 +37,12 @@ export default {
 				"oc",
 				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked (matched bad words list). This message was not sent to Hypixel.`,
 			);
-			return;
-		}
+		} else {
+			message.content = `${message.member.displayName} ${bot.chatSeparator} ${Util.escapeMarkdown(
+				message.content.replace(/\r?\n|\r/g, " "),
+			)}`;
 
-		message.content = `${message.member.displayName} ${bot.chatSeparator} ${Util.escapeMarkdown(
-			message.content.replace(/\r?\n|\r/g, " "),
-		)}`;
-		await bot.sendGuildMessage(message.channel.id === bot.memberChannel?.id ? "gc" : "oc", message.content);
+			bot.sendGuildMessage(message.channel.id === bot.memberChannel?.id ? "gc" : "oc", message.content);
+		}
 	},
 } as Event;

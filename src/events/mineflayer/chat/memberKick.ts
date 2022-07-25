@@ -14,8 +14,10 @@ export default {
 		kickedByHypixelRank: HypixelRank | undefined,
 		kickedByPlayerName: string,
 	) => {
-		const [rank] = await getRankData(hypixelRank);
-		const [kickedByRank] = await getRankData(kickedByHypixelRank);
+		const [[rank], [kickedByRank]] = await Promise.all([
+			getRankData(hypixelRank),
+			getRankData(kickedByHypixelRank),
+		]);
 
 		await bot.sendToDiscord(
 			"gc",

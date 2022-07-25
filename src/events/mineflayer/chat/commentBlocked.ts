@@ -6,7 +6,7 @@ export default {
 	runOnce: false,
 	run: async (bot, comment: string, reason: string) => {
 		bot.logger.warn(`Comment blocked by Hypixel: ${comment} (${reason})`);
-		bot.sendToDiscord(
+		await bot.sendToDiscord(
 			"oc",
 			`${Emojis.alert} "${comment}" was blocked by Hypixel because **${reason}**. Developers will not take responsibility for banned accounts.`,
 		);

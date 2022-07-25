@@ -17,18 +17,15 @@ export default {
 			const networkLevel = Math.sqrt(2 * playerProfile.networkExp! + 30625) / 50 - 2.5;
 
 			if (networkLevel < parseFloat(process.env.MINIMUM_NETWORK_LEVEL)) {
-				await bot.sendGuildMessage(
+				bot.sendGuildMessage(
 					"oc",
 					`The player ${playerName} is not network level ${process.env.MINIMUM_NETWORK_LEVEL}!`,
 				);
 			}
 		}
 
-		if (await isUserBlacklisted(mojangProfile.id)) {
-			await bot.sendGuildMessage(
-				"oc",
-				`The player ${playerName} is blacklisted. Do NOT accept their join request.`,
-			);
+		if (isUserBlacklisted(mojangProfile.id)) {
+			bot.sendGuildMessage("oc", `The player ${playerName} is blacklisted. Do NOT accept their join request.`);
 		}
 	},
 } as Event;

@@ -19,6 +19,6 @@ export default {
 			guildRank ? " " + guildRank : ""
 		}:** ${Util.escapeMarkdown(message)}`;
 
-		bot.sendToDiscord(channel === "Guild" ? "gc" : "oc", content, color);
+		await bot.sendToDiscord(channel === "Guild" ? "gc" : "oc", content, color);
 	},
 } as Event;

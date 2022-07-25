@@ -49,6 +49,7 @@ export default {
 				content: "There was an error while executing this command!",
 				ephemeral: true,
 			});
+
 			bot.logger.error(`An error occured in ${interaction.commandName}: ${e.message}`);
 		}
 	},

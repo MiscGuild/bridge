@@ -4,7 +4,7 @@ import { Event } from "../../../interfaces/Event";
 export default {
 	name: "message",
 	runOnce: false,
-	run: async (bot, message: ChatMessage) => {
+	run: (bot, message: ChatMessage) => {
 		// Log color chat to console
 		bot.logger.log(message.toAnsi());
 	},

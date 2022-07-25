@@ -16,7 +16,7 @@ export default {
 		if (type === "joined") {
 			const mojangProfile = await fetchMojangProfile(playerName);
 
-			if (!isFetchError(mojangProfile) && (await isUserBlacklisted(mojangProfile.id))) {
+			if (!isFetchError(mojangProfile) && isUserBlacklisted(mojangProfile.id)) {
 				bot.executeCommand(
 					`/g kick ${playerName} You have been blacklisted from the guild. Mistake? --> ${process.env.DISCORD_INVITE_LINK}`,
 				);

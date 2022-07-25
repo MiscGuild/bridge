@@ -3,7 +3,7 @@ import { Event } from "../../../interfaces/Event";
 export default {
 	name: "error",
 	runOnce: false,
-	run: async (bot, error: Error) => {
+	run: (bot, error: Error) => {
 		bot.logger.fatal("Encountered an unexpected error. Restarting the bot in 15 seconds...");
 		bot.logger.fatal(error);
 

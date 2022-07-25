@@ -16,8 +16,7 @@ export default {
 		playerName: string,
 		duration: string | undefined,
 	) => {
-		const [byRank] = await getRankData(byHypixelRank);
-		const [rank] = await getRankData(hypixelRank);
+		const [[byRank], [rank]] = await Promise.all([getRankData(byHypixelRank), getRankData(hypixelRank)]);
 
 		const content = `${type === "unmuted" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
 			byRank ? byRank + " " : ""

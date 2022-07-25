@@ -16,7 +16,7 @@ export default {
 
 		setTimeout(async () => {
 			bot.executeCommand("/g online");
-			await bot.sendToLimbo();
+			bot.sendToLimbo();
 		}, 3_000);
 	},
 } as Event;
