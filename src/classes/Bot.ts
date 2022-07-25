@@ -115,11 +115,13 @@ class Bot {
 			const command = (await import(path.join(currentDir, file))).default as Command;
 
 			if (!command.data) {
-				return console.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
+				console.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
+				return;
 			}
 
 			if (!command.run) {
-				return console.warn(`The command ${command.data.name} doesn't have an executable function!`);
+				console.warn(`The command ${command.data.name} doesn't have an executable function!`);
+				return;
 			}
 
 			this.discord.commands.set(command.data.name, command);
@@ -135,11 +137,13 @@ class Bot {
 			const { name, runOnce, run } = (await import(path.join(currentDir, file))).default as Event;
 
 			if (!name) {
-				return console.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
+				console.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
+				return;
 			}
 
 			if (!run) {
-				return console.warn(`The event ${name} doesn't have an executable function!`);
+				console.warn(`The event ${name} doesn't have an executable function!`);
+				return;
 			}
 
 			if (isObjKey(name, regex)) {
