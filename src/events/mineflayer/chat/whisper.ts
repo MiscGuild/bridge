@@ -12,12 +12,14 @@ export default {
 
 		const mojangProfile = await fetchMojangProfile(target);
 		if (isFetchError(mojangProfile)) {
-			return bot.executeCommand(errorMessage);
+			bot.executeCommand(errorMessage);
+			return;
 		}
 
 		const playerGuild = await fetchHypixelGuild(mojangProfile.id);
 		if (isFetchError(playerGuild)) {
-			return bot.executeCommand(errorMessage);
+			bot.executeCommand(errorMessage);
+			return;
 		}
 
 		const member = playerGuild.members.find((guildMember) => guildMember.uuid === mojangProfile.id);

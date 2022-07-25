@@ -22,9 +22,9 @@
 		"mineflayer": "^4.3.0"
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^5.30.6",
+		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
-		"eslint": "^8.18.0",
+		"eslint": "^8.20.0",
 		"ts-node-dev": "^2.0.0",
 		"typescript": "^4.5.5"
 	}
