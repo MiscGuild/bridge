@@ -1,17 +1,21 @@
-<h1 align="center">Miscellaneous Guild Bridge Bot</h1>
+<h1 align="center">Miscellaneous Guild Bridge</h1>
 
-<h3 align="center">The bot used by the Miscellaneous Hypixel guild to bridge guild chat and discord.</h3>
+<p align="center">
+    A bot used to Bridge between Discord and Hypixel guild chats.
+</p>
+
 <h3 align="center">
-    <a href="https://discord.gg/dEsfnJkQcq" alt="Discord">
+    <a href="https://discord.gg/dEsfnJkQcq" alt="Guild Discord">
         <img src="https://img.shields.io/discord/522586672148381726?label=discord&style=for-the-badge&color=blue"/>
     </a>
-    <img src="https://img.shields.io/github/languages/code-size/MiscGuild/bridge?color=blue&style=for-the-badge"/>
-    <img src="https://img.shields.io/github/stars/MiscGuild/bridge?color=blue&style=for-the-badge"/>
+    <img alt="Lines of Code" src="https://img.shields.io/tokei/lines/github/MiscGuild/bridge?color=blue&style=for-the-badge"/>
+    <img alt="Stars" src="https://img.shields.io/github/stars/MiscGuild/bridge?color=blue&style=for-the-badge"/>
 </h3>
 
 > 🚨 USE AT YOUR OWN RISK:
 > This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
 
+-   [Features](#features)
 -   [Installation](#installation)
     -   [Prerequisites](#prerequisites)
     -   [Setup](#setup)
@@ -19,6 +23,14 @@
     -   [Issues and Bug Reports](#issues-and-bug-reports)
 -   [Acknowledgements](#acknowledgements)
 -   [License](#license)
+
+## Features
+
+-   Bridges between Discord and Hypixel guild chats.
+-   Sends all guild related messages, including chat, guild announcements and more to Discord.
+-   Automatic restarts and reconnections.
+-   Toggleable use of Discord emojis for Hypixel ranks in chat messages.
+-   Privileged slash commands to control bot behaviour in-game.
 
 ## Installation
 
