@@ -167,10 +167,11 @@ class Bot {
 
 	private async start() {
 		this.mineflayer.setMaxListeners(20);
-		await this.loadCommands("../commands");
-
-		await this.loadEvents("../events/discord", this.discord);
-		await this.loadEvents("../events/mineflayer", this.mineflayer);
+		await Promise.all([
+			this.loadCommands("../commands"),
+			this.loadEvents("../events/discord", this.discord),
+			this.loadEvents("../events/mineflayer", this.mineflayer),
+		]);
 
 		await this.discord.login(process.env.DISCORD_TOKEN);
 	}
