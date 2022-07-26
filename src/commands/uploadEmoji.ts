@@ -12,7 +12,6 @@ export default {
 		description: "Upload all Hypixel rank emojis to the server!",
 		type: "CHAT_INPUT",
 	},
-	staffOnly: true,
 	run: async (_bot, interaction) => {
 		await interaction.deferReply();
 
@@ -60,4 +59,5 @@ export default {
 
 		writeToJsonFile("./src/util/emojis/_emojiIds.json", emojiIds, interaction, successEmbed);
 	},
+	staffOnly: true,
 } as Command;
