@@ -1,7 +1,7 @@
 import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
 import { HypixelRank } from "../../../interfaces/Ranks";
-import { Util } from "discord.js";
+import { escapeMarkdown } from "discord.js";
 import fetchMojangProfile from "../../../util/requests/fetchMojangProfile";
 import getRankData from "../../../util/emojis/getRankData";
 import isFetchError from "../../../util/requests/isFetchError";
@@ -27,7 +27,7 @@ export default {
 			"gc",
 			`${type === "joined" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
 				rank ? rank + " " : ""
-			}${Util.escapeMarkdown(playerName)}** ${type} the guild!`,
+			}${escapeMarkdown(playerName)}** ${type} the guild!`,
 			color,
 			true,
 		);

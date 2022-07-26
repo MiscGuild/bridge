@@ -1,11 +1,11 @@
-import { GuildMember, Interaction, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Interaction } from "discord.js";
 import { Event } from "../../interfaces/Event";
 
 export default {
 	name: "interactionCreate",
 	runOnce: false,
 	run: async (bot, interaction: Interaction) => {
-		if (!interaction.isCommand()) return;
+		if (!interaction.isChatInputCommand()) return;
 
 		const command = bot.discord.commands.get(interaction.commandName);
 
@@ -33,7 +33,7 @@ export default {
 		for (const option of interaction.options.data) {
 			if (option.value) args.push(option.value);
 
-			if (option.type === "SUB_COMMAND" && option.options) {
+			if (option.type === ApplicationCommandOptionType.Subcommand && option.options) {
 				for (const v of option.options) {
 					if (v.value) args.push(v.value);
 				}
