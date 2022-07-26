@@ -41,7 +41,6 @@ export default {
 			},
 		],
 	},
-	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const type = interaction.options.getSubcommand() as "mute" | "unmute";
 		const user: string = args[0];
@@ -65,4 +64,5 @@ export default {
 			embeds: [embed],
 		});
 	},
+	staffOnly: true,
 } as Command;

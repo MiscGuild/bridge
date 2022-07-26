@@ -52,7 +52,6 @@ export default {
 			},
 		],
 	},
-	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const type = interaction.options.getSubcommand() as "add" | "remove";
 		const mojangProfile = await fetchMojangProfile(args[0]);
@@ -123,4 +122,5 @@ export default {
 
 		writeToJsonFile("./src/util/_blacklist.json", blacklist, interaction, successEmbed);
 	},
+	staffOnly: true,
 } as Command;

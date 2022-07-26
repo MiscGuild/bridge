@@ -14,7 +14,6 @@ export default {
 			},
 		],
 	},
-	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const command = (args[0] as string).startsWith("/") ? (args[0] as string) : `/${args[0]}`;
 		const embed = new MessageEmbed();
@@ -35,4 +34,5 @@ export default {
 
 		await interaction.reply({ embeds: [embed] });
 	},
+	staffOnly: true,
 } as Command;

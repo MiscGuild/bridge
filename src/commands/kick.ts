@@ -20,7 +20,6 @@ export default {
 			},
 		],
 	},
-	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const user: string = args[0];
 		const reason: string = args[1];
@@ -38,4 +37,5 @@ export default {
 
 		await interaction.reply({ embeds: [embed] });
 	},
+	staffOnly: true,
 } as Command;

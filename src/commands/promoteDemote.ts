@@ -31,7 +31,6 @@ export default {
 			},
 		],
 	},
-	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const type: string = args[0] as "promote" | "demote";
 		const user: string = args[1];
@@ -54,4 +53,5 @@ export default {
 			embeds: [embed],
 		});
 	},
+	staffOnly: true,
 } as Command;

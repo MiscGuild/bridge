@@ -6,7 +6,6 @@ export default {
 		name: "reboot",
 		description: "Reboot the bot! (Only works if your host automatically restarts the application)",
 	},
-	staffOnly: true,
 	run: async (bot, interaction) => {
 		const embed = new MessageEmbed()
 			.setColor("GREEN")
@@ -22,4 +21,5 @@ export default {
 
 		await interaction.reply({ embeds: [embed] });
 	},
+	staffOnly: true,
 } as Command;
