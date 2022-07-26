@@ -21,7 +21,7 @@ export default {
 			member.id !== process.env.BOT_OWNER_ID
 		) {
 			const embed = new EmbedBuilder()
-				.setColor("RED")
+				.setColor("Red")
 				.setTitle("Error")
 				.setDescription("You do not have permission to run that command!");
 

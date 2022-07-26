@@ -22,7 +22,7 @@ export default (path: string, data: any, interaction: CommandInteraction, succes
 		}
 
 		logError(err, "Failed to write to file: ");
-		const embed = new EmbedBuilder().setColor("RED").setTitle("Error").setDescription("Failed to write to file!");
+		const embed = new EmbedBuilder().setColor("Red").setTitle("Error").setDescription("Failed to write to file!");
 
 		if (interaction.replied || interaction.deferred) {
 			await interaction.editReply({ embeds: [successEmbed] });

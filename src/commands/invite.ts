@@ -1,5 +1,5 @@
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { EmbedBuilder } from "discord.js";
 
 export default {
 	data: {
@@ -9,7 +9,7 @@ export default {
 			{
 				name: "user",
 				description: "What is the name of the user you want to invite?",
-				type: "STRING",
+				type: ApplicationCommandOptionType.String,
 				required: true,
 			},
 		],
@@ -21,10 +21,10 @@ export default {
 		const embed = new EmbedBuilder();
 		try {
 			await bot.executeTask(`/g invite ${user}`);
-			embed.setTitle("Invited!").setDescription(`\`${user}\` has been invited to the guild!`).setColor("GREEN");
+			embed.setTitle("Invited!").setDescription(`\`${user}\` has been invited to the guild!`).setColor("Green");
 		} catch (e) {
 			embed
-				.setColor("RED")
+				.setColor("Red")
 				.setTitle("Error")
 				.setDescription(e as string);
 		}

@@ -9,7 +9,7 @@ export default {
 	staffOnly: true,
 	run: async (bot, interaction) => {
 		const embed = new EmbedBuilder()
-			.setColor("GREEN")
+			.setColor("Green")
 			.setTitle("Rebooting")
 			.setDescription("Rebooting in 15 seconds...");
 
