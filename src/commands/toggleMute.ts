@@ -1,5 +1,5 @@
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import capitaliseString from "../util/capitaliseString";
 
 export default {
@@ -47,7 +47,7 @@ export default {
 		const user: string = args[0];
 		const duration: string = args[1];
 
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 		try {
 			await bot.executeTask(`/g ${type} ${user} ${duration}`);
 			embed

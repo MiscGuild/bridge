@@ -1,8 +1,8 @@
 import { FetchError } from "../../interfaces/FetchError";
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export default (requestError: FetchError) => {
-	return new MessageEmbed()
+	return new EmbedBuilder()
 		.setColor("RED")
 		.setTitle("Error")
 		.setDescription(

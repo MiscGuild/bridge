@@ -1,5 +1,5 @@
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export default {
 	data: {
@@ -17,7 +17,7 @@ export default {
 	staffOnly: true,
 	run: async (bot, interaction, args) => {
 		const command = (args[0] as string).startsWith("/") ? (args[0] as string) : `/${args[0]}`;
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 
 		try {
 			await bot.executeTask(command);

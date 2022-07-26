@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, TextChannel } from "discord.js";
 import { BlacklistEntry } from "../interfaces/BlacklistEntry";
 import { Command } from "../interfaces/Command";
 import _blacklist from "../util/_blacklist.json";
@@ -15,7 +15,7 @@ export default {
 			{
 				name: "add",
 				description: "Add a user to the blacklist",
-				type: "SUB_COMMAND",
+				type: ApplicationCommandOptionType.Subcommand,
 				options: [
 					{
 						name: "user",
@@ -40,7 +40,7 @@ export default {
 			{
 				name: "remove",
 				description: "Removes a user from the blacklist",
-				type: "SUB_COMMAND",
+				type: ApplicationCommandOptionType.String,
 				options: [
 					{
 						name: "user",
@@ -66,7 +66,7 @@ export default {
 
 		const isOnBlacklist = blacklist.some((user) => user.uuid === mojangProfile.id);
 		if ((type === "add" && isOnBlacklist) || (type === "remove" && !isOnBlacklist)) {
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 				.setColor("RED")
 				.setTitle("Error")
 				.setDescription(`That user is ${type === "add" ? "already" : "not"} on the blacklist!`);
@@ -78,7 +78,7 @@ export default {
 		if (type === "add") {
 			const endDate = args[1];
 			const reason = args[2];
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 				.setAuthor({
 					name: "Blacklist",
 					iconURL: "https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png",
@@ -115,7 +115,7 @@ export default {
 			await message.delete();
 		}
 
-		const successEmbed = new MessageEmbed()
+		const successEmbed = new EmbedBuilder()
 			.setColor(type === "add" ? "RED" : "GREEN")
 			.setThumbnail(`https://crafatar.com/avatars/${mojangProfile.id}`)
 			.setTitle("Completed!")

@@ -1,4 +1,4 @@
-import { GuildMember, Interaction, MessageEmbed } from "discord.js";
+import { GuildMember, Interaction, EmbedBuilder } from "discord.js";
 import { Event } from "../../interfaces/Event";
 
 export default {
@@ -20,7 +20,7 @@ export default {
 			!member.roles.cache.has(process.env.STAFF_ROLE_ID) &&
 			member.id !== process.env.BOT_OWNER_ID
 		) {
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 				.setColor("RED")
 				.setTitle("Error")
 				.setDescription("You do not have permission to run that command!");

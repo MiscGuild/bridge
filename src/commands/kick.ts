@@ -1,5 +1,5 @@
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export default {
 	data: {
@@ -25,7 +25,7 @@ export default {
 		const user: string = args[0];
 		const reason: string = args[1];
 
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 		try {
 			await bot.executeTask(`/g kick ${user} ${reason}`);
 			embed.setTitle("Kicked!").setDescription(`\`${user}\` has been kicked for \`${reason}\``).setColor("RED");

@@ -1,5 +1,5 @@
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export default {
 	data: {
@@ -8,7 +8,7 @@ export default {
 	},
 	staffOnly: true,
 	run: async (bot, interaction) => {
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setColor("GREEN")
 			.setTitle("Rebooting")
 			.setDescription("Rebooting in 15 seconds...");
