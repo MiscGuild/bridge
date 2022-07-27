@@ -20,19 +20,19 @@ export default {
 					{
 						name: "user",
 						description: "The user to add to the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 					{
 						name: "end",
 						description: "The end date of the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 					{
 						name: "reason",
 						description: "The reason for the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 				],
@@ -40,12 +40,12 @@ export default {
 			{
 				name: "remove",
 				description: "Removes a user from the blacklist",
-				type: ApplicationCommandOptionType.String,
+				type: ApplicationCommandOptionType.Subcommand,
 				options: [
 					{
 						name: "user",
 						description: "The user to remove from the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 				],
