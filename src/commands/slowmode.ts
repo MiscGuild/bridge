@@ -1,5 +1,5 @@
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
 
 const choices = [0, 5, 10];
 
@@ -11,7 +11,7 @@ export default {
 			{
 				name: "time",
 				description: "What should the interval be between sending messages?",
-				type: "INTEGER",
+				type: ApplicationCommandOptionType.Integer,
 				choices: choices.map((value) => {
 					return { name: value.toString(), value: value };
 				}),
@@ -24,8 +24,8 @@ export default {
 
 		bot.memberChannel?.setRateLimitPerUser(time);
 
-		const embed = new MessageEmbed()
-			.setColor("GREEN")
+		const embed = new EmbedBuilder()
+			.setColor("Green")
 			.setTitle("Slowmode set!")
 			.setDescription(`Slowmode has been set to ${time}s`);
 
