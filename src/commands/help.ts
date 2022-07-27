@@ -1,5 +1,5 @@
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export default {
 	data: {
@@ -7,10 +7,10 @@ export default {
 		description: "View a list of all commands!",
 	},
 	run: async (bot, interaction) => {
-		const embed = new MessageEmbed().setColor("PURPLE").setTitle("Commands");
+		const embed = new EmbedBuilder().setColor("Purple").setTitle("Commands");
 
 		bot.discord.commands.forEach((command) => {
-			embed.addField(command.data.name, command.data.description);
+			embed.addFields({ name: command.data.name, value: command.data.description });
 		});
 
 		await interaction.reply({ embeds: [embed] });

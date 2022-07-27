@@ -1,5 +1,5 @@
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
 
 export default {
 	data: {
@@ -9,13 +9,13 @@ export default {
 			{
 				name: "user",
 				description: "What is the name of the user you want to kick?",
-				type: "STRING",
+				type: ApplicationCommandOptionType.String,
 				required: true,
 			},
 			{
 				name: "reason",
 				description: "Why are you kicking this user?",
-				type: "STRING",
+				type: ApplicationCommandOptionType.String,
 				required: true,
 			},
 		],
@@ -24,13 +24,13 @@ export default {
 		const user: string = args[0];
 		const reason: string = args[1];
 
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 		try {
 			await bot.executeTask(`/g kick ${user} ${reason}`);
-			embed.setTitle("Kicked!").setDescription(`\`${user}\` has been kicked for \`${reason}\``).setColor("RED");
+			embed.setTitle("Kicked!").setDescription(`\`${user}\` has been kicked for \`${reason}\``).setColor("Red");
 		} catch (e) {
 			embed
-				.setColor("RED")
+				.setColor("Red")
 				.setTitle("Error")
 				.setDescription(e as string);
 		}

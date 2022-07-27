@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, EmbedBuilder } from "discord.js";
 import logError from "./logError";
 import { writeFile } from "fs";
 
@@ -10,7 +10,7 @@ import { writeFile } from "fs";
  */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default (path: string, data: any, interaction: CommandInteraction, successEmbed: MessageEmbed) => {
+export default (path: string, data: any, interaction: CommandInteraction, successEmbed: EmbedBuilder) => {
 	writeFile(path, JSON.stringify(data), async (err) => {
 		if (!err) {
 			if (interaction.replied || interaction.deferred) {
@@ -22,7 +22,7 @@ export default (path: string, data: any, interaction: CommandInteraction, succes
 		}
 
 		logError(err, "Failed to write to file: ");
-		const embed = new MessageEmbed().setColor("RED").setTitle("Error").setDescription("Failed to write to file!");
+		const embed = new EmbedBuilder().setColor("Red").setTitle("Error").setDescription("Failed to write to file!");
 
 		if (interaction.replied || interaction.deferred) {
 			await interaction.editReply({ embeds: [successEmbed] });

@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from "discord.js";
 import { BlacklistEntry } from "../interfaces/BlacklistEntry";
 import { Command } from "../interfaces/Command";
 import _blacklist from "../util/_blacklist.json";
@@ -15,24 +15,24 @@ export default {
 			{
 				name: "add",
 				description: "Add a user to the blacklist",
-				type: "SUB_COMMAND",
+				type: ApplicationCommandOptionType.Subcommand,
 				options: [
 					{
 						name: "user",
 						description: "The user to add to the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 					{
 						name: "end",
 						description: "The end date of the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 					{
 						name: "reason",
 						description: "The reason for the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 				],
@@ -40,12 +40,12 @@ export default {
 			{
 				name: "remove",
 				description: "Removes a user from the blacklist",
-				type: "SUB_COMMAND",
+				type: ApplicationCommandOptionType.Subcommand,
 				options: [
 					{
 						name: "user",
 						description: "The user to remove from the blacklist",
-						type: 3,
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 				],
@@ -65,8 +65,8 @@ export default {
 
 		const isOnBlacklist = blacklist.some((user) => user.uuid === mojangProfile.id);
 		if ((type === "add" && isOnBlacklist) || (type === "remove" && !isOnBlacklist)) {
-			const embed = new MessageEmbed()
-				.setColor("RED")
+			const embed = new EmbedBuilder()
+				.setColor("Red")
 				.setTitle("Error")
 				.setDescription(`That user is ${type === "add" ? "already" : "not"} on the blacklist!`);
 
@@ -77,19 +77,21 @@ export default {
 		if (type === "add") {
 			const endDate = args[1];
 			const reason = args[2];
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 				.setAuthor({
 					name: "Blacklist",
 					iconURL: "https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png",
 				})
-				.setColor("RED")
+				.setColor("Red")
 				.setFooter({ text: `UUID: ${mojangProfile.id}` })
 				.setThumbnail(`https://visage.surgeplay.com/full/${mojangProfile.id}.png`)
 				.setTimestamp()
 				.setTitle(mojangProfile.name)
 				.setURL(`http://plancke.io/hypixel/player/stats/${mojangProfile.id}`)
-				.addField("End:", endDate)
-				.addField("Reason:", reason);
+				.addFields([
+					{ name: "End:", value: endDate },
+					{ name: "Reason:", value: reason },
+				]);
 
 			const blacklistMessage = await (
 				(await bot.discord.channels.fetch(process.env.BLACKLIST_CHANNEL_ID)) as TextChannel
@@ -114,8 +116,8 @@ export default {
 			await message.delete();
 		}
 
-		const successEmbed = new MessageEmbed()
-			.setColor(type === "add" ? "RED" : "GREEN")
+		const successEmbed = new EmbedBuilder()
+			.setColor(type === "add" ? "Red" : "Green")
 			.setThumbnail(`https://crafatar.com/avatars/${mojangProfile.id}`)
 			.setTitle("Completed!")
 			.setDescription(`${mojangProfile.name} was ${type === "add" ? "added to" : "removed from"} the blacklist!`);

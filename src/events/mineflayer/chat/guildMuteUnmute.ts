@@ -1,7 +1,7 @@
 import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
 import { HypixelRank } from "../../../interfaces/Ranks";
-import { Util } from "discord.js";
+import { escapeMarkdown } from "discord.js";
 import getRankData from "../../../util/emojis/getRankData";
 
 export default {
@@ -20,9 +20,9 @@ export default {
 
 		const content = `${type === "unmuted" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
 			byRank ? byRank + " " : ""
-		}${Util.escapeMarkdown(byPlayerName)}** has ${type} **${rank ? rank + " " : ""}${Util.escapeMarkdown(
-			playerName,
-		)}**${duration ? ` for ${duration}` : ""}`;
+		}${escapeMarkdown(byPlayerName)}** has ${type} **${rank ? rank + " " : ""}${escapeMarkdown(playerName)}**${
+			duration ? ` for ${duration}` : ""
+		}`;
 
 		await bot.sendToDiscord("gc", content, undefined, true);
 	},

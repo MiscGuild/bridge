@@ -1,5 +1,5 @@
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
 
 export default {
 	data: {
@@ -9,25 +9,25 @@ export default {
 			{
 				name: "command",
 				description: "What command would you like to execute?",
-				type: "STRING",
+				type: ApplicationCommandOptionType.String,
 				required: true,
 			},
 		],
 	},
 	run: async (bot, interaction, args) => {
 		const command = (args[0] as string).startsWith("/") ? (args[0] as string) : `/${args[0]}`;
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 
 		try {
 			await bot.executeTask(command);
 
 			embed
-				.setColor("GREEN")
+				.setColor("Green")
 				.setTitle("Completed!")
 				.setDescription(`The command \`${command}\` has been executed.`);
 		} catch (e) {
 			embed
-				.setColor("RED")
+				.setColor("Red")
 				.setTitle("Error")
 				.setDescription(e as string);
 		}

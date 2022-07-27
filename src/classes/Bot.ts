@@ -1,5 +1,5 @@
+import { ActivityType, ColorResolvable, EmbedBuilder, IntentsBitField, TextChannel } from "discord.js";
 import { BotEvents, createBot } from "mineflayer";
-import { ColorResolvable, Intents, MessageEmbed, TextChannel } from "discord.js";
 import { Command } from "../interfaces/Command";
 import Discord from "./Client";
 import { Event } from "../interfaces/Event";
@@ -16,7 +16,7 @@ class Bot {
 
 	public readonly discord = new Discord({
 		allowedMentions: { parse: ["users", "roles"], repliedUser: true },
-		intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS],
+		intents: [IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.Guilds],
 	});
 	public readonly botPrefix = process.env.DISCORD_PREFIX ?? ")";
 	public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? ">";
@@ -51,7 +51,7 @@ class Bot {
 		color: ColorResolvable = 0x2f3136,
 		padMessage = false,
 	) {
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setDescription(padMessage ? `${"-".repeat(54)}\n${content}\n${"-".repeat(54)}` : content)
 			.setColor(color);
 
@@ -106,7 +106,7 @@ class Bot {
 
 		if (this.discord.isReady()) {
 			this.discord.user.setActivity(`${this.onlineCount} online player${plural ? "s" : ""}`, {
-				type: "WATCHING",
+				type: ActivityType.Watching,
 			});
 		}
 	}

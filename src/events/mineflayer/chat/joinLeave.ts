@@ -1,6 +1,6 @@
 import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
-import { Util } from "discord.js";
+import { escapeMarkdown } from "discord.js";
 
 export default {
 	name: "chat:joinLeave",
@@ -11,7 +11,7 @@ export default {
 
 		await bot.sendToDiscord(
 			"gc",
-			`${emoji} ${Util.escapeMarkdown(playerName)} ${status}. \`(${bot.onlineCount}/${bot.totalCount})\``,
+			`${emoji} ${escapeMarkdown(playerName)} ${status}. \`(${bot.onlineCount}/${bot.totalCount})\``,
 		);
 	},
 } as Event;

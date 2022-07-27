@@ -1,5 +1,5 @@
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
 import capitaliseString from "../util/capitaliseString";
 
 export default {
@@ -10,7 +10,7 @@ export default {
 			{
 				name: "type",
 				description: "Would you like to promote or demote the user?",
-				type: "STRING",
+				type: ApplicationCommandOptionType.String,
 				choices: [
 					{
 						name: "promote",
@@ -26,7 +26,7 @@ export default {
 			{
 				name: "user",
 				description: "What is the name of the user you want to promote/demote?",
-				type: "STRING",
+				type: ApplicationCommandOptionType.String,
 				required: true,
 			},
 		],
@@ -35,16 +35,16 @@ export default {
 		const type: string = args[0] as "promote" | "demote";
 		const user: string = args[1];
 
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 		try {
 			await bot.executeTask(`/g ${type} ${user}`);
 			embed
-				.setColor(type === "promote" ? "GREEN" : "RED")
+				.setColor(type === "promote" ? "Green" : "Red")
 				.setTitle(capitaliseString(`${type}d!`))
 				.setDescription(`${user} has been ${type}d!`);
 		} catch (e) {
 			embed
-				.setColor("RED")
+				.setColor("Red")
 				.setTitle("Error")
 				.setDescription(e as string);
 		}

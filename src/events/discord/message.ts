@@ -1,4 +1,4 @@
-import { Message, Util } from "discord.js";
+import { Message, escapeMarkdown } from "discord.js";
 import { Event } from "../../interfaces/Event";
 import badWords from "../../util/badWords";
 import emojis from "../../util/emojis/chatEmojis";
@@ -38,7 +38,7 @@ export default {
 				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked (matched bad words list). This message was not sent to Hypixel.`,
 			);
 		} else {
-			message.content = `${message.member.displayName} ${bot.chatSeparator} ${Util.escapeMarkdown(
+			message.content = `${message.member.displayName} ${bot.chatSeparator} ${escapeMarkdown(
 				message.content.replace(/\r?\n|\r/g, " "),
 			)}`;
 

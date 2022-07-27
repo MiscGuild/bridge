@@ -1,5 +1,5 @@
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { MessageEmbed } from "discord.js";
 import capitaliseString from "../util/capitaliseString";
 
 export default {
@@ -10,18 +10,18 @@ export default {
 			{
 				name: "mute",
 				description: "Mute a user in the guild!",
-				type: "SUB_COMMAND",
+				type: ApplicationCommandOptionType.Subcommand,
 				options: [
 					{
 						name: "user",
 						description: "What is the name of the user you want to mute?",
-						type: "STRING",
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 					{
 						name: "duration",
 						description: "How long do you want to mute this user for?",
-						type: "STRING",
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 				],
@@ -29,12 +29,12 @@ export default {
 			{
 				name: "unmute",
 				description: "Unmute a user in the guild!",
-				type: "SUB_COMMAND",
+				type: ApplicationCommandOptionType.Subcommand,
 				options: [
 					{
 						name: "user",
 						description: "What is the name of the user you want to unmute?",
-						type: "STRING",
+						type: ApplicationCommandOptionType.String,
 						required: true,
 					},
 				],
@@ -46,16 +46,16 @@ export default {
 		const user: string = args[0];
 		const duration: string = args[1];
 
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 		try {
 			await bot.executeTask(`/g ${type} ${user} ${duration}`);
 			embed
 				.setTitle(capitaliseString(`${type}d!`))
 				.setDescription(`${user} was ${type}d` + (type === "mute" ? ` for ${duration}!` : "!"))
-				.setColor(type === "mute" ? "RED" : "GREEN");
+				.setColor(type === "mute" ? "Red" : "Green");
 		} catch (e) {
 			embed
-				.setColor("RED")
+				.setColor("Red")
 				.setTitle("Error")
 				.setDescription(e as string);
 		}

@@ -1,7 +1,7 @@
 import Emojis from "../../../util/emojis/chatEmojis";
 import { Event } from "../../../interfaces/Event";
 import { HypixelRank } from "../../../interfaces/Ranks";
-import { Util } from "discord.js";
+import { escapeMarkdown } from "discord.js";
 import getRankData from "../../../util/emojis/getRankData";
 
 export default {
@@ -21,7 +21,7 @@ export default {
 			"gc",
 			`${type === "promoted" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
 				rank ? rank + " " : ""
-			}${Util.escapeMarkdown(playerName)}** was ${type} to ${guildRankTo} from ${guildRankFrom}!`,
+			}${escapeMarkdown(playerName)}** was ${type} to ${guildRankTo} from ${guildRankFrom}!`,
 			color,
 			true,
 		);
