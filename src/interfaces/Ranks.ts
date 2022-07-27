@@ -1,6 +1,7 @@
 /* eslint no-shadow: 0 */
 
 export enum HypixelRanks {
+	"[YOUTUBE]",
 	"[MVP++]",
 	"[MVP+]",
 	"[MVP]",
@@ -9,6 +10,7 @@ export enum HypixelRanks {
 }
 
 export enum VerboseHypixelRanks {
+	youtube = 0xff5555,
 	mvpPlusPlus = 0xffaa00,
 	mvpPlus = 0x55ffff,
 	mvp = 0x55ffff,

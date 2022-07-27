@@ -27,6 +27,9 @@ export default async (rank: HypixelRank | undefined): Promise<[rank: string, col
 		case "[MVP++]":
 			rankName = "mvpPlusPlus";
 			break;
+		case "[YOUTUBE]":
+			rankName = "youtube";
+			break;
 		default:
 			return [rank, undefined];
 	}
