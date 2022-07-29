@@ -66,6 +66,11 @@ export default {
 				) as VerboseHypixelRank | undefined;
 
 				if (rankName) {
+					// Check if the rank has no value
+					if (!emojiIds[rankName]) {
+						emojiIds[rankName] = [];
+					}
+
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const emoji = await interaction.guild!.emojis.create({ attachment: buffer, name: name });
 					emojiIds[rankName].push({ name: emoji.name as string, id: emoji.id });
@@ -73,7 +78,7 @@ export default {
 					const embed = new EmbedBuilder()
 						.setColor("Red")
 						.setTitle("Error")
-						.setDescription(`An unexpected error occured: Unkown emoji of name ${name}`);
+						.setDescription(`An unexpected error occured: Unkown emoji ${name}`);
 
 					await interaction.editReply({ embeds: [embed] });
 					return;
