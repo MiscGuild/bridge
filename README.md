@@ -78,9 +78,11 @@ $ npm start
 
 Optionally, you may activate the use of rank emojis in discord messages by following these steps:
 
-1. Run the `/uploademojis` command in a discord server of your choice. (Note: It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots. In this case, only the user of id `BOT_OWNER_ID` is the only person with permission to run this command).
+1. Run the `/emojis upload` command in a discord server of your choice. (Note: It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots. In this case, only the user of id `BOT_OWNER_ID` is the only person with permission to run this command).
 
-2. Set the value of `USE_RANK_EMOJIS` in the `.env` file to `true`.
+2. Set the value of `USE_RANK_EMOJIS` in the `.env` file to `true` (Use `false` to disable this feature).
+
+If at any time you wish to delete the emojis created by the bot, run the `/emojis remove` command.
 
 ## Contributing
 
