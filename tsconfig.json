@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"lib": ["ESNext"],
 		"module": "commonjs",
-		"target": "es2020",
+		"target": "ESNext",
 		"noImplicitAny": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
