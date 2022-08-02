@@ -1,8 +1,8 @@
 import { VerboseHypixelRank } from "./Ranks";
 
-export type EmojiIds = Record<VerboseHypixelRank, Emoji[]>;
+export type EmojiIds = { [key in VerboseHypixelRank]?: Emoji[] };
 
-interface Emoji {
+export interface Emoji {
 	name: string;
 	id: string;
 }

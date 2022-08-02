@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType, EmbedBuilder, GuildPremiumTier } from "discord.js";
+import { Emoji, EmojiIds } from "../interfaces/EmojiIds";
 import { VerboseHypixelRank, VerboseHypixelRanks } from "../interfaces/Ranks";
 import { Command } from "../interfaces/Command";
-import { EmojiIds } from "../interfaces/EmojiIds";
 import _emojiIds from "../util/emojis/_emojiIds.json";
 import getEmojiBuffers from "../util/emojis/getEmojiBuffers";
 import writeToJsonFile from "../util/writeToJsonFile";
@@ -82,7 +82,7 @@ export default {
 
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const emoji = await interaction.guild!.emojis.create({ attachment: buffer, name: name });
-				emojiIds[rankName].push({ name: emoji.name as string, id: emoji.id });
+				(emojiIds[rankName] as Emoji[]).push({ name: emoji.name as string, id: emoji.id });
 			}
 		} else if (type === "remove") {
 			for (const emojis of Object.values(emojiIds)) {
