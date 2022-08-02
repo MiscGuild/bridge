@@ -65,7 +65,7 @@ $ npm install
 
 7. Fill out the `.env.template` file with your credentials and rename it to `.env`.
 
-8. Remove the `.template` file endings from `src/util/_blacklist.json.template` and `src/util/emojis/emojiIds.json.template`.
+8. Remove the `.template` file endings from `src/util/_blacklist.json.template` and `src/util/emojis/_emojiIds.json.template`.
 
 9. Promote the Minecraft account the bot uses to Officer in-game in order for it to view the Officer chat and run privileged commands.
 
