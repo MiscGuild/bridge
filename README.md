@@ -59,7 +59,7 @@ $ npm install
 
 4. Make a new Discord bot account on the [Discord Developer Portal](https://discord.com/developers/applications) and retrieve the bot token.
 
-5. Grant the bot the `Message Content` Intent.
+5. Under the `Bot` tab, grant the bot the `Message Content` Intent.
 
 6. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
 
