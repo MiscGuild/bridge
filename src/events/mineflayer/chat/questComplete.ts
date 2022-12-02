@@ -7,7 +7,7 @@ export default {
 	run: async (bot) => {
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.guildEvent} The guild has completed this week's Guild Quest!`,
+			`${Emojis.positiveGuildEvent} The guild has completed this week's Guild Quest!`,
 			0xffaa00,
 			true,
 		);

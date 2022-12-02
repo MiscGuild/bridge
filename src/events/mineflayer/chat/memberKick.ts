@@ -21,7 +21,7 @@ export default {
 
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.badGuildEvent} **${rank ? rank + " " : ""}${escapeMarkdown(playerName)}** was kicked by **${
+			`${Emojis.negativeGuildEvent} **${rank ? rank + " " : ""}${escapeMarkdown(playerName)}** was kicked by **${
 				kickedByRank ? kickedByRank + " " : ""
 			}${escapeMarkdown(kickedByPlayerName)}**`,
 			undefined,

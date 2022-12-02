@@ -30,12 +30,12 @@ export default {
 	alert: "🚨",
 
 	/**
-	 * Guild Celebratory Event Emoji
+	 * Positive Guild Event Emoji
 	 */
-	guildEvent: "🎉",
+	positiveGuildEvent: "🎉",
 
 	/**
-	 * Guild Negative Event Emoji
+	 * Negative Guild Event Emoji
 	 */
-	badGuildEvent: "👋",
+	negativeGuildEvent: "👋",
 };

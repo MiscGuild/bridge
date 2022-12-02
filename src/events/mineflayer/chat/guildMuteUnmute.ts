@@ -18,7 +18,7 @@ export default {
 	) => {
 		const [[byRank], [rank]] = await Promise.all([getRankData(byHypixelRank), getRankData(hypixelRank)]);
 
-		const content = `${type === "unmuted" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
+		const content = `${type === "unmuted" ? Emojis.positiveGuildEvent : Emojis.negativeGuildEvent} **${
 			byRank ? byRank + " " : ""
 		}${escapeMarkdown(byPlayerName)}** has ${type} **${rank ? rank + " " : ""}${escapeMarkdown(playerName)}**${
 			duration ? ` for ${duration}` : ""

@@ -25,7 +25,7 @@ export default {
 
 		await bot.sendToDiscord(
 			"gc",
-			`${type === "joined" ? Emojis.guildEvent : Emojis.badGuildEvent} **${
+			`${type === "joined" ? Emojis.positiveGuildEvent : Emojis.negativeGuildEvent} **${
 				rank ? rank + " " : ""
 			}${escapeMarkdown(playerName)}** ${type} the guild!`,
 			color,
