@@ -35,7 +35,7 @@ export default {
 			bot.logger.warn(`Comment blocked: ${message.content} (matched bad words list)`);
 			bot.sendToDiscord(
 				"oc",
-				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked (matched bad words list). This message was not sent to Hypixel.`,
+				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked as it matched bad words list. This message was not sent to Hypixel.`,
 			);
 		} else {
 			message.content = `${message.member.displayName} ${bot.chatSeparator} ${escapeMarkdown(
