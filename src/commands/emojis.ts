@@ -61,8 +61,8 @@ export default {
 			}
 
 			for (const [name, buffer] of Object.entries(emojiBuffers)) {
-				const rankName = Object.values(VerboseHypixelRanks).find(
-					(rank) => isNaN(parseInt(rank as string)) && name.includes(rank as string),
+				const rankName = Object.keys(VerboseHypixelRanks).find(
+					(rank) => name.toString().replace(/[0-9]/g, "") === rank,
 				) as VerboseHypixelRank | undefined;
 
 				if (!rankName) {
