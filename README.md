@@ -15,6 +15,9 @@
 > 🚨 USE AT YOUR OWN RISK:
 > This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
 
+> ⚠️ MAINTENANCE NOTICE:
+> This application will no longer receive updates that contain new features or QOL improvements. Updates, where necessary, will only contain patches for security vulnerabilities and bugs.
+
 -   [Features](#features)
 -   [Installation](#installation)
     -   [Prerequisites](#prerequisites)
