@@ -7,7 +7,7 @@ export default {
 	run: async (bot) => {
 		await bot.sendToDiscord(
 			"gc",
-			`${Emojis.success} **The bot \`${bot.mineflayer.username}\` has logged in and is now ready!**`,
+			`${Emojis.success} **\`${bot.mineflayer.username}\` has logged in and is now ready!**`,
 		);
 
 		setInterval(() => {
