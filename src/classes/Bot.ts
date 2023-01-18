@@ -104,7 +104,7 @@ class Bot {
 	}
 
 	public setStatus() {
-		const plural = this.onlineCount - 1 !== 1;
+		const plural = this.onlineCount !== 1;
 
 		if (this.discord.isReady()) {
 			this.discord.user.setActivity(`${this.onlineCount} online player${plural ? "s" : ""}`, {
