@@ -9,7 +9,9 @@
         <img src="https://img.shields.io/discord/522586672148381726?label=discord&style=for-the-badge&color=blue"/>
     </a>
     <img alt="Lines of Code" src="https://img.shields.io/tokei/lines/github/MiscGuild/bridge?color=blue&style=for-the-badge"/>
+    <a href="https://github.com/MiscGuild/bridge/stargazers" target="_blank">
     <img alt="Stars" src="https://img.shields.io/github/stars/MiscGuild/bridge?color=blue&style=for-the-badge"/>
+    </a>
 </h3>
 
 > 🚨 USE AT YOUR OWN RISK:

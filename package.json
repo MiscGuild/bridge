@@ -9,10 +9,12 @@
 		"clean": "rm -r dist/",
 		"copy-files": "copyfiles -u 1 src/**/*.png dist/",
 		"dev": "ts-node-dev --respawn --transpile-only --poll src/index.ts",
-		"format": "prettier --write \"src/**\"",
-		"lint": "eslint \"src/**\"",
 		"lint:fix": "npm run lint --fix",
-		"start": "node ."
+		"lint": "eslint . --ext .ts,.tsx",
+		"prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
+		"prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
+		"start": "node .",
+		"test": " npm run prettier:check && npm run lint && npm run build"
 	},
 	"dependencies": {
 		"consola": "^2.15.3",
@@ -26,6 +28,8 @@
 		"@typescript-eslint/eslint-plugin": "^5.40.1",
 		"@typescript-eslint/parser": "^5.36.1",
 		"eslint": "^8.26.0",
+		"eslint-config-prettier": "^8.6.0",
+		"prettier": "^2.8.4",
 		"ts-node-dev": "^2.0.0",
 		"typescript": "^4.8.4"
 	}

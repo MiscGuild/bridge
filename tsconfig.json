@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"lib": ["ESNext"],
-		"module": "commonjs",
+		"module": "CommonJS",
 		"target": "ESNext",
 		"noImplicitAny": true,
 		"emitDecoratorMetadata": true,
