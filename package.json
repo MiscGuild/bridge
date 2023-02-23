@@ -13,8 +13,10 @@
 		"lint": "eslint . --ext .ts,.tsx",
 		"prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
 		"prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
+		"setup-files": "node setupFiles.js",
 		"start": "node .",
-		"test": " npm run prettier:check && npm run lint && npm run build"
+		"test": "npm run prettier:check && npm run lint && npm run typecheck && npm run build",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"consola": "^2.15.3",

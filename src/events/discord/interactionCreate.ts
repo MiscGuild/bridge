@@ -42,15 +42,13 @@ export default {
 
 		try {
 			command.run(bot, interaction, args);
-
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (e: any) {
+		} catch (e: unknown) {
 			await interaction.reply({
 				content: "There was an error while executing this command!",
 				ephemeral: true,
 			});
 
-			bot.logger.error(`An error occured in ${interaction.commandName}: ${e.message}`);
+			bot.logger.error(`An error occured in ${interaction.commandName}: ${(e as Error).message}`);
 		}
 	},
 } as Event;

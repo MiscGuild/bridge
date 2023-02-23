@@ -68,9 +68,13 @@ $ npm install
 
 6. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
 
-7. Fill out the `.env.template` file with your credentials and rename it to `.env`.
+7. Setup the project config files.
 
-8. Remove the `.template` file endings from `src/util/_blacklist.json.template` and `src/util/emojis/_emojiIds.json.template`.
+```bash
+$ npm run setup-files
+```
+
+8. Fill out the `.env` file with your credentials.
 
 9. Promote the Minecraft account the bot uses to Officer in-game in order for it to view the Officer chat and run privileged commands.
 
@@ -93,7 +97,13 @@ If at any time you wish to delete the emojis created by the bot, run the `/emoji
 
 Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/bHFWukp) and go to `#programming-talk`.
 
-Please ensure commit messages follow the [Angular Convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines) and all code has been tested before contributing.
+Please ensure the following before committing your changes:
+
+-   Your code has been thoroughly tested
+
+-   Your commit message follows the [Angular Convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
+
+-   You are using [yarn](https://yarnpkg.com/getting-started/install) to install and manage this projects' packages. This was not included above for ease of installation
 
 ### Issues and Bug Reports
 

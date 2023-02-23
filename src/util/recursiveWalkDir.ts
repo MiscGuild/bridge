@@ -22,10 +22,8 @@ async function recursiveWalkDir(
 		} else {
 			try {
 				await callback(normalisedDirName, file);
-
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			} catch (e: any) {
-				console.warn(`${errMessage} ${e.message}`);
+			} catch (e: unknown) {
+				console.warn(`${errMessage} ${(e as Error).message}`);
 			}
 		}
 	}
