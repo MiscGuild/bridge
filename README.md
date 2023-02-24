@@ -94,15 +94,15 @@ Optionally, you may activate the use of rank emojis in discord messages by follo
 1. Run the `/emojis upload` command in a discord server of your choice.
 
     > **Note**
-    > It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots. In this case, only the user of id `BOT_OWNER_ID` is the only person with permission to run this command).
+    > It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots. In this case, the user of id `BOT_OWNER_ID` is the only person with permission to run this command.
 
-2. Set the value of `USE_RANK_EMOJIS` in the `.env` file to `true` (Use `false` to disable this feature).
+2. Set the value of `USE_RANK_EMOJIS` in the `.env` file to `true`, or `false` to disable this feature.
 
 If at any time you wish to delete the emojis created by the bot, run the `/emojis remove` command.
 
 ### Process Management
 
-If you are self-hosting, or your process manager does not automatically restart the bot in the event of a crash, you may use [PM2](https://pm2.keymetrics.io/), a process manager for Node.js applications, and the following steps to set up the bot.
+If you are self-hosting or your process manager does not automatically restart the bot in the event of a crash, you may use [PM2](https://pm2.keymetrics.io/), a process manager for Node.js applications.
 
 1. Install PM2.
 

@@ -11,7 +11,7 @@
 		"dev": "ts-node-dev --respawn --transpile-only --poll src/index.ts",
 		"lint:fix": "npm run lint --fix",
 		"lint": "eslint . --ext .ts,.tsx",
-		"pm2": "pm2 start npm -- start",
+		"pm2": "pm2 logs && pm2 start npm --name \"bridge\" -- start",
 		"prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
 		"prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
 		"setup-files": "node setupFiles.js",
