@@ -14,16 +14,18 @@
     </a>
 </h3>
 
-> 🚨 USE AT YOUR OWN RISK:
+> **Warning**
 > This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
 
-> ⚠️ MAINTENANCE NOTICE:
+> **Note**
 > This application will no longer receive updates that contain new features or QOL improvements. Updates, where necessary, will only contain patches for security vulnerabilities and bugs.
 
 -   [Features](#features)
 -   [Installation](#installation)
     -   [Prerequisites](#prerequisites)
     -   [Setup](#setup)
+    -   [Rank Emojis](#rank-emojis)
+    -   [Process Management](#process-management)
 -   [Contributing](#contributing)
     -   [Issues and Bug Reports](#issues-and-bug-reports)
 -   [Acknowledgements](#acknowledgements)
@@ -85,13 +87,36 @@ $ npm run build
 $ npm start
 ```
 
+### Rank Emojis
+
 Optionally, you may activate the use of rank emojis in discord messages by following these steps:
 
-1. Run the `/emojis upload` command in a discord server of your choice. (Note: It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots. In this case, only the user of id `BOT_OWNER_ID` is the only person with permission to run this command).
+1. Run the `/emojis upload` command in a discord server of your choice.
+
+    > **Note**
+    > It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots. In this case, only the user of id `BOT_OWNER_ID` is the only person with permission to run this command).
 
 2. Set the value of `USE_RANK_EMOJIS` in the `.env` file to `true` (Use `false` to disable this feature).
 
 If at any time you wish to delete the emojis created by the bot, run the `/emojis remove` command.
+
+### Process Management
+
+If you are self-hosting, or your process manager does not automatically restart the bot in the event of a crash, you may use [PM2](https://pm2.keymetrics.io/), a process manager for Node.js applications, and the following steps to set up the bot.
+
+1. Install PM2.
+
+```bash
+$ npm install pm2
+```
+
+2. Use the `pm2` script instead of the `start` script to launch the bot.
+
+```bash
+$ npm run pm2
+```
+
+Please refer to the [PM2 Documentation](https://pm2.keymetrics.io/docs/usage/quick-start/) for more configuration options and information about PM2.
 
 ## Contributing
 
@@ -100,9 +125,7 @@ Pull requests are welcome. If you would like to chat with other developers pleas
 Please ensure the following before committing your changes:
 
 -   Your code has been thoroughly tested
-
 -   Your commit message follows the [Angular Convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
-
 -   You are using [yarn](https://yarnpkg.com/getting-started/install) to install and manage this projects' packages. This was not included above for ease of installation
 
 ### Issues and Bug Reports
@@ -114,7 +137,7 @@ To submit an issue or bug, please contact a developer or open an issue [here](ht
 Parts of this project use code from the following repositories:
 
 -   [Hychat Self-Host](https://github.com/hychat-mc/self-host) Under MIT License.
--   [Hypixel API TypeScript](https://github.com/unaussprechlich/hypixel-api-typescript/) Under MIT License.
+-   [Hypixel API TypeScript](https://github.com/unaussprechlich/hypixel-api-typescript) Under MIT License.
 
 ## License
 
