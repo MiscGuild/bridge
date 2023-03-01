@@ -1241,10 +1241,10 @@ minecraft-protocol@^1.40.3:
     uuid-1345 "^1.0.1"
     yggdrasil "^1.4.0"
 
-mineflayer@^4.4.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/mineflayer/-/mineflayer-4.8.0.tgz#e9c8f0372fb3e5bb3d857fbd7e0c2f4c5d86391b"
-  integrity sha512-0LHYXAwGgRbMWUnQ2R7dDEN5u6ktgfZFsQ6C584wZArvmK/5YhGnDRV330zkOtL8KJAsnR2nwX8RvtFOD3Y1Qw==
+mineflayer@^4.8.1:
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/mineflayer/-/mineflayer-4.8.1.tgz#65535e0a6e41a08a075ce85279be6cedc2cdf108"
+  integrity sha512-xqt5gdBvYHO1UV2slBm1QFFI2dHyfoMAxwSgxIGOuobIrZ05pY56XV6GW+NWQK0gqS4+MA5n0VakXPWZ5trzBQ==
   dependencies:
     minecraft-data "^3.26.0"
     minecraft-protocol "^1.40.3"
