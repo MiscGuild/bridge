@@ -5,17 +5,19 @@
 </p>
 
 <h3 align="center">
-    <a href="https://discord.gg/dEsfnJkQcq" alt="Guild Discord">
-        <img src="https://img.shields.io/discord/522586672148381726?label=discord&style=for-the-badge&color=blue"/>
+    <a href="https://github.com/MiscGuild/bridge/stargazers">
+        <img alt="Stars" src="https://img.shields.io/github/stars/MiscGuild/bridge?color=blue"/>
     </a>
-    <img alt="Lines of Code" src="https://img.shields.io/tokei/lines/github/MiscGuild/bridge?color=blue&style=for-the-badge"/>
-    <a href="https://github.com/MiscGuild/bridge/stargazers" target="_blank">
-    <img alt="Stars" src="https://img.shields.io/github/stars/MiscGuild/bridge?color=blue&style=for-the-badge"/>
+    <a href="https://github.com/MiscGuild/bridge/forks">
+        <img alt="Forks" src="https://img.shields.io/github/forks/MiscGuild/bridge">
+    </a>
+    <a href="https://discord.gg/dEsfnJkQcq">
+        <img alt="Guild Discord" src="https://img.shields.io/discord/522586672148381726?label=discord&color=blue&logo=discord&logoColor=blue"/>
     </a>
 </h3>
 
 > **Warning**
-> This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
+> This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License](https://github.com/MiscGuild/bridge/blob/master/LICENSE).
 
 > **Note**
 > This application will no longer receive updates that contain new features or QOL improvements. Updates, where necessary, will only contain patches for security vulnerabilities and bugs.
@@ -141,4 +143,4 @@ Parts of this project use code from the following repositories:
 
 ## License
 
-This is an open-source project licensed under the [MIT License.](https://github.com/MiscGuild/bridge/blob/master/LICENSE)
+This is an open-source project licensed under the [MIT License](https://github.com/MiscGuild/bridge/blob/master/LICENSE).
