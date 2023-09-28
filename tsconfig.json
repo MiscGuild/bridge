@@ -7,7 +7,6 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"outDir": "./dist",
-
 		"moduleResolution": "Node",
 		"resolveJsonModule": true,
 		"removeComments": true,
@@ -16,24 +15,19 @@
 		"alwaysStrict": true,
 		"strictNullChecks": true,
 		"noUncheckedIndexedAccess": true,
-
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"allowUnreachableCode": false,
 		"noFallthroughCasesInSwitch": true,
-
 		"declaration": true,
 		"sourceMap": true,
-
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"allowJs": false,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-
-		"jsx": "preserve",
 		"isolatedModules": true,
 		"incremental": true,
 		"typeRoots": ["node_modules/@types", "src/@types"]

@@ -33,10 +33,10 @@ class Bot {
 		username: process.env.MINECRAFT_EMAIL,
 		password: process.env.MINECRAFT_PASSWORD,
 		host: "mc.hypixel.net",
+		auth: "microsoft",
 		version: "1.16.4",
 		logErrors: true,
 		hideErrors: true,
-		auth: process.env.MINECRAFT_AUTH_TYPE,
 		checkTimeoutInterval: 30000,
 		defaultChatPatterns: false,
 	});
