@@ -35,3 +35,6 @@ jobs:
 
             - name: Install dependencies
               run: pnpm install
+
+            - name: Setup files & test
+              run: pnpm setup-files && pnpm test
