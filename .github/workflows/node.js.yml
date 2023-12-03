@@ -3,7 +3,7 @@ on:
     - pull_request
 
 jobs:
-    cache-and-install:
+    test:
         runs-on: ubuntu-latest
 
         steps:
@@ -35,3 +35,6 @@ jobs:
 
             - name: Install dependencies
               run: pnpm install
+
+            - name: Setup files & test
+              run: pnpm setup-files && pnpm test
