@@ -25,8 +25,7 @@
 		"copyfiles": "^2.4.1",
 		"discord.js": "^14.6.0",
 		"dotenv": "^16.0.3",
-		"mineflayer": "^4.4.0",
-		"obscenity": "^0.1.4"
+		"mineflayer": "^4.4.0"
 	},
 	"devDependencies": {
 		"@types/node-fetch": "^2.6.2",

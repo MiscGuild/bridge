@@ -41,7 +41,6 @@
 -   Toggleable use of Discord emojis for Hypixel ranks in chat messages.
 -   Privileged slash commands to control bot behaviour in-game.
 -   Toggleable slowmode to slow and control member usage.
--   Basic filtering of extreme profanity to protect bot accounts from abuse.
 
 ## Installation
 
@@ -54,46 +53,40 @@
 ### Setup
 
 1. ⭐ Star this repository!
-2. Install [pnpm](https://pnpm.io/) via one of their [installation methods](https://pnpm.io/installation), or the following command:
-
-```bash
-$ npm install -g pnpm
-```
-
-3. Clone the repository into a directory of your choice.
+2. Clone the repository into a directory of your choice.
 
 ```bash
 $ git clone https://github.com/MiscGuild/bridge.git
 ```
 
-4. Enter the new directory and install packages.
+3. Enter the new directory and install packages.
 
 ```bash
 $ cd bridge
-$ pnpm install
+$ npm install
 ```
 
-5. Make a new Discord bot account on the [Discord Developer Portal](https://discord.com/developers/applications) and retrieve the bot token.
+4. Make a new Discord bot account on the [Discord Developer Portal](https://discord.com/developers/applications) and retrieve the bot token.
 
-6. Under the `Bot` tab, grant the bot the `Message Content` Intent.
+5. Under the `Bot` tab, grant the bot the `Message Content` Intent.
 
-7. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
+6. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
 
-8. Setup the project config files.
+7. Setup the project config files.
 
 ```bash
-$ pnpm run setup-files
+$ npm run setup-files
 ```
 
-9. Fill out the `.env` file with your credentials.
+8. Fill out the `.env` file with your credentials.
 
-10. Promote the Minecraft account the bot uses to Officer in-game in order for it to view the Officer chat and run privileged commands.
+9. Promote the Minecraft account the bot uses to Officer in-game in order for it to view the Officer chat and run privileged commands.
 
-11. Build and run the bot.
+10. Build and run the bot.
 
 ```bash
-$ pnpm run build
-$ pnpm start
+$ npm run build
+$ npm start
 ```
 
 ### Rank Emojis
@@ -116,13 +109,13 @@ If you are self-hosting or your process manager does not automatically restart t
 1. Install PM2.
 
 ```bash
-$ pnpm add pm2
+$ npm install pm2
 ```
 
 2. Use the `pm2` script instead of the `start` script to launch the bot.
 
 ```bash
-$ pnpm run pm2
+$ npm run pm2
 ```
 
 Please refer to the [PM2 Documentation](https://pm2.keymetrics.io/docs/usage/quick-start/) for more configuration options and information about PM2.
@@ -135,6 +128,7 @@ Please ensure the following before committing your changes:
 
 -   Your code has been thoroughly tested
 -   Your commit message follows the [Angular Convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
+-   You are using [yarn](https://yarnpkg.com/getting-started/install) to install and manage this projects' packages. This was not included above for ease of installation
 
 ### Issues and Bug Reports
 
