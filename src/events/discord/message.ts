@@ -1,7 +1,15 @@
-import { Message, escapeMarkdown } from "discord.js";
+import { Message } from "discord.js";
+import { DataSet, RegExpMatcher, englishDataset, englishRecommendedTransformers } from "obscenity";
 import { Event } from "../../interfaces/Event";
-import badWords from "../../util/badWords";
 import emojis from "../../util/emojis/chatEmojis";
+
+const whitelist = ["ass", "bitch", "cock", "dick", "fuck"];
+const dataset = new DataSet<{ originalWord: string }>()
+	.addAll(englishDataset)
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	.removePhrasesIf((phrase) => whitelist.includes(phrase.metadata!.originalWord));
+
+const profanityMatcher = new RegExpMatcher({ ...dataset.build(), ...englishRecommendedTransformers });
 
 export default {
 	name: "messageCreate",
@@ -28,20 +36,21 @@ export default {
 			bot.logger.error(e);
 		}
 
-		if (badWords.some((word) => message.content.includes(word))) {
+		if (profanityMatcher.hasMatch(message.content)) {
 			await message.channel.send(
 				`${emojis.warning} ${message.author.username}, you may not use profane language!`,
 			);
-			bot.logger.warn(`Comment blocked: ${message.content} (matched bad words list)`);
+			bot.logger.warn(`Comment blocked: ${message.content}`);
 			bot.sendToDiscord(
 				"oc",
-				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked as it matched bad words list. This message was not sent to Hypixel.`,
+				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked. This message was not sent to Hypixel.`,
 			);
 		} else {
-			message.content = `${message.member.displayName} ${bot.chatSeparator} ${escapeMarkdown(
-				message.content.replace(/\r?\n|\r/g, " "),
-			)}`;
+			const name = process.env.USE_FIRST_WORD_OF_AUTHOR_NAME
+				? message.member.displayName.split(" ")[0]
+				: message.member.displayName;
 
+			message.content = `${name} ${bot.chatSeparator} ${message.content.replace(/\r?\n|\r/g, " ")}`;
 			bot.sendGuildMessage(message.channel.id === bot.memberChannel?.id ? "gc" : "oc", message.content);
 		}
 	},

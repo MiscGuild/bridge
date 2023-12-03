@@ -3,9 +3,9 @@ declare global {
 		interface ProcessEnv {
 			MINECRAFT_EMAIL: string;
 			MINECRAFT_PASSWORD: string;
-			MINECRAFT_AUTH_TYPE: "microsoft" | "mojang";
 
 			MINECRAFT_CHAT_SEPARATOR: string;
+			USE_FIRST_WORD_OF_AUTHOR_NAME: boolean;
 			HYPIXEL_API_KEY: string;
 			MINIMUM_NETWORK_LEVEL: string;
 
