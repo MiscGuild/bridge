@@ -14,6 +14,13 @@ export default {
 			bot.executeCommand("/g online");
 		}, 60_000 * 5);
 
+		setInterval(() => {
+			bot.sendGuildMessage(
+				"gc",
+				"Enter the new Bedwars Tournament via our Discord! 19+ rank upgrades to be won! Weekly prizes!",
+			);
+		}, 60_000 * 30);
+		
 		setTimeout(async () => {
 			bot.executeCommand("/g online");
 			bot.sendToLimbo();
