@@ -208,5 +208,6 @@ export default {
                 bot.logger.error(err);
             }
         }
-    },
+    }, 
+    staffOnly: true,
 } as Command;
