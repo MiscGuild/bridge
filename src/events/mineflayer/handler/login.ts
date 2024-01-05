@@ -10,17 +10,16 @@ export default {
 			`${Emojis.success} **\`${bot.mineflayer.username}\` has logged in and is now ready!**`,
 		);
 
+		if (process.env.REMINDER_ENABLED) {
+			setInterval(() => {
+				bot.sendGuildMessage("gc", process.env.REMINDER_MESSAGE);
+			}, 60_000 * parseInt(process.env.REMINDER_FREQUENCY, 10));
+		}
+
 		setInterval(() => {
 			bot.executeCommand("/g online");
 		}, 60_000 * 5);
 
-		setInterval(() => {
-			bot.sendGuildMessage(
-				"gc",
-				"Enter the new Bedwars Tournament via our Discord! 19+ rank upgrades to be won! Weekly prizes!",
-			);
-		}, 60_000 * 15);
-		
 		setTimeout(async () => {
 			bot.executeCommand("/g online");
 			bot.sendToLimbo();

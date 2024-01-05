@@ -4,10 +4,17 @@ declare global {
 			MINECRAFT_EMAIL: string;
 			MINECRAFT_PASSWORD: string;
 
-			MINECRAFT_CHAT_SEPARATOR: string;
-			USE_FIRST_WORD_OF_AUTHOR_NAME: boolean;
 			HYPIXEL_API_KEY: string;
+
+			MINECRAFT_CHAT_SEPARATOR: string;
+
+			USE_FIRST_WORD_OF_AUTHOR_NAME: "true" | "false";
+
 			MINIMUM_NETWORK_LEVEL: string;
+
+			REMINDER_ENABLED: "true" | "false";
+			REMINDER_MESSAGE: string;
+			REMINDER_FREQUENCY: string;
 
 			DISCORD_TOKEN: string;
 			DISCORD_PREFIX: string;
