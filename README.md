@@ -40,8 +40,9 @@
 -   Automatic restarts and reconnections.
 -   Toggleable use of Discord emojis for Hypixel ranks in chat messages.
 -   Privileged slash commands to control bot behaviour in-game.
--   Toggleable slowmode to slow and control member usage.
+-   Toggleable slowmode to control member usage.
 -   Basic filtering of extreme profanity to protect bot accounts from abuse.
+-   Configurable in-game reminders to spread the word about upcoming news and events.
 
 ## Installation
 

@@ -46,7 +46,7 @@ export default {
 				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked. This message was not sent to Hypixel.`,
 			);
 		} else {
-			const name = process.env.USE_FIRST_WORD_OF_AUTHOR_NAME
+			const name = process.env.USE_FIRST_WORD_OF_AUTHOR_NAME === "true"
 				? message.member.displayName.split(" ")[0]
 				: message.member.displayName;
 
