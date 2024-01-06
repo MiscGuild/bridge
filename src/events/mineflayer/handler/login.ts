@@ -20,7 +20,7 @@ export default {
 				"Enter the new Bedwars Tournament via our Discord! 19+ rank upgrades to be won! Weekly prizes!",
 			);
 		}, 60_000 * 15);
-		
+
 		setTimeout(async () => {
 			bot.executeCommand("/g online");
 			bot.sendToLimbo();
