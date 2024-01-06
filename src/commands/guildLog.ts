@@ -34,7 +34,6 @@ export default {
 				bot.mineflayer.on(
 					"message",
 					(chatListener = async (message) => {
-						bot.logger.error("Trying to match regex...");
 						const messageContent = message.toString();
 						const match = regex.exec(messageContent);
 
@@ -49,24 +48,15 @@ export default {
 								counter++;
 							}
 							if (counter == 10) {
-								bot.logger.log("Counter is 10!");
-								bot.logger.log("Matches found!\n" + logEntry);
 								bot.mineflayer.removeListener("message", chatListener);
 
 								const embed = new EmbedBuilder()
 									.setAuthor({
 										name: "Guild Log",
-										iconURL:
-											"https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png",
 									})
 									.setColor("Red")
-									.setFooter({ text: `Made with <3 from Vliegenier04` })
-									.setThumbnail(
-										`https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png`,
-									)
+									.setFooter({ text: `Guild Log Output` })
 									.setTimestamp()
-									.setTitle(`Guild Logger`)
-									.setURL(`https://vliegenier04.dev`)
 									.setDescription(`This is Guild Log\n\n ${logEntry}`);
 
 								await interaction.reply({ embeds: [embed] });
@@ -87,7 +77,6 @@ export default {
 				bot.mineflayer.on(
 					"message",
 					(chatListener = async (message) => {
-						bot.logger.error("Trying to match regex...");
 						const messageContent = message.toString();
 						const match = regex.exec(messageContent);
 
@@ -102,24 +91,15 @@ export default {
 								counter++;
 							}
 							if (counter == 10) {
-								bot.logger.log("Counter is 10!");
-								bot.logger.log("Matches found!\n" + logEntry);
 								bot.mineflayer.removeListener("message", chatListener);
 
 								const embed = new EmbedBuilder()
 									.setAuthor({
 										name: "Guild Log",
-										iconURL:
-											"https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png",
 									})
 									.setColor("Red")
-									.setFooter({ text: `Made with <3 from Vliegenier04` })
-									.setThumbnail(
-										`https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png`,
-									)
+									.setFooter({ text: `Guild Log Output` })
 									.setTimestamp()
-									.setTitle(`Guild Logger`)
-									.setURL(`https://vliegenier04.dev`)
 									.setDescription(`This is Guild Log ${page}\n\n ${logEntry}`);
 
 								await interaction.reply({ embeds: [embed] });
@@ -140,7 +120,6 @@ export default {
 				bot.mineflayer.on(
 					"message",
 					(chatListener = async (message) => {
-						bot.logger.error("Trying to match regex...");
 						const messageContent = message.toString();
 						const match = regex.exec(messageContent);
 
@@ -155,24 +134,15 @@ export default {
 								counter++;
 							}
 							if (counter == 10) {
-								bot.logger.log("Counter is 10!");
-								bot.logger.log("Matches found!\n" + logEntry);
 								bot.mineflayer.removeListener("message", chatListener);
 
 								const embed = new EmbedBuilder()
 									.setAuthor({
 										name: "Guild Log",
-										iconURL:
-											"https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png",
 									})
 									.setColor("Red")
-									.setFooter({ text: `Made with <3 from Vliegenier04` })
-									.setThumbnail(
-										`https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png`,
-									)
+									.setFooter({ text: `Guild Log Output` })
 									.setTimestamp()
-									.setTitle(`Guild Logger`)
-									.setURL(`https://vliegenier04.dev`)
 									.setDescription(`This is Guild Log ${member} ${page}\n\n ${logEntry}`);
 
 								await interaction.reply({ embeds: [embed] });
