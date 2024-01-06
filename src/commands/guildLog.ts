@@ -29,7 +29,7 @@ export default {
 				const gLogArray: string[] = [];
 				let chatListener: BotEvents["message"];
 				const regex =
-					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\/\.!-_-\s]+)?/;
+					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\\!-_-\s]+)?/;
 
 				bot.mineflayer.on(
 					"message",
@@ -83,7 +83,7 @@ export default {
 				const gLogArray: string[] = [];
 				let chatListener: BotEvents["message"];
 				const regex =
-					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\/\.!-_-\s]+)?/;
+					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\\!-_-\s]+)?/;
 				bot.mineflayer.on(
 					"message",
 					(chatListener = async (message) => {
@@ -136,7 +136,7 @@ export default {
 				const gLogArray: string[] = [];
 				let chatListener: BotEvents["message"];
 				const regex =
-					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\/\.!-_-\s]+)?/;
+					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\\!-_-\s]+)?/;
 				bot.mineflayer.on(
 					"message",
 					(chatListener = async (message) => {
