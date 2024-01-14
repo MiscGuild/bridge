@@ -76,24 +76,22 @@ class Bot {
 		let listener: BotEvents["message"];
 
 		await new Promise((resolve, reject) => {
-			this.mineflayer.chat(task);
-			this.mineflayer.on("message", (message) => {
+			listener = (message) => {
+				const str = message.toString();
 				const motd = message.toMotd();
-				const match = motd.match(/^(.+)§c(.+)§r$/) ?? motd.match(/^§c(.+)§r$/);
+				const matches = motd.match(/^(.+)§c(.+)§r$/) ?? motd.match(/^§c(.+)$/);
 
-				match?.forEach((line) => {
-					if (line.includes("§") || line.includes("limbo")) return;
-					if (line.includes("is not in your guild!")) return reject(`That player ${line}`);
-					reject(line);
-				});
-			});
+				if (matches?.length && !str.toLowerCase().includes("limbo")) {
+					reject(str);
+				}
+			};
 
-			const messageListeners = this.mineflayer.listeners("message");
-			listener = messageListeners[messageListeners.length - 1] as BotEvents["message"];
+			this.mineflayer.chat(task);
+			this.mineflayer.on("message", listener);
 
 			setTimeout(() => {
 				resolve(undefined);
-			}, 200);
+			}, 300);
 		}).finally(() => {
 			this.mineflayer.removeListener("message", listener);
 		});
