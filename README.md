@@ -42,7 +42,7 @@
 -   Privileged slash commands to control bot behaviour in-game.
 -   Toggleable slowmode to control member usage.
 -   Basic filtering of extreme profanity to protect bot accounts from abuse.
--   Configurable in-game reminders to spread the word about upcoming news and events.
+-   Configurable in-game reminders to spread the word about news and upcoming events.
 
 ## Installation
 
