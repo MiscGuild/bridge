@@ -77,7 +77,7 @@ class Bot {
 
 		await new Promise((resolve, reject) => {
 			listener = (message) => {
-				const str = message.toString()
+				const str = message.toString();
 				const motd = message.toMotd();
 				const matches = motd.match(/^(.+)§c(.+)§r$/) ?? motd.match(/^§c(.+)$/);
 
