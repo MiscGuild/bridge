@@ -18,8 +18,8 @@ dependencies:
     specifier: ^16.0.3
     version: 16.3.1
   mineflayer:
-    specifier: ^4.4.0
-    version: 4.14.0
+    specifier: ^4.18.0
+    version: 4.18.0
   obscenity:
     specifier: ^0.1.4
     version: 0.1.4
@@ -1345,8 +1345,8 @@ packages:
       mime-db: 1.52.0
     dev: true
 
-  /minecraft-data@3.49.0:
-    resolution: {integrity: sha512-88rfaYyuxkpCTWcOxA0JS2jA48GtZ6DGBD0FgUFNyvHn06Yz59/MjxvoXKHAj+umA/kwMX/8Nq8LCpc7RvuDcw==}
+  /minecraft-data@3.60.0:
+    resolution: {integrity: sha512-zTS2DsFZBvHsYCUaKL+E0mSbrgAAX5DJzYmlskh/6WnVV7lxftW7jDjR8SMgGoBBS1V0TZ79BWp3+aD3r8wKIg==}
     dev: false
 
   /minecraft-folder-path@1.2.0:
@@ -1364,7 +1364,7 @@ packages:
       endian-toggle: 0.0.0
       lodash.get: 4.4.2
       lodash.merge: 4.6.2
-      minecraft-data: 3.49.0
+      minecraft-data: 3.60.0
       minecraft-folder-path: 1.2.0
       node-fetch: 2.7.0
       node-rsa: 0.4.2
@@ -1380,16 +1380,16 @@ packages:
       - supports-color
     dev: false
 
-  /mineflayer@4.14.0:
-    resolution: {integrity: sha512-4EYzUmZNxH3Gpz3GkgO2eaR90ANb50nVhMCU2y6Rl1Ru8M6HqxID1Eg7tRgsodfAOD+AKh5SPwmPnISLcxvnOA==}
-    engines: {node: '>=14'}
+  /mineflayer@4.18.0:
+    resolution: {integrity: sha512-Vj+qjqaAejZSOIp/J/67RnkXj4XsWjO6iWb2+8CrZDeUjxHWOnPbR5uJIN8VxiHSFycNpoXRCeTEo2qKu5tKKQ==}
+    engines: {node: '>=18'}
     dependencies:
-      minecraft-data: 3.49.0
+      minecraft-data: 3.60.0
       minecraft-protocol: 1.44.0
-      prismarine-biome: 1.3.0(minecraft-data@3.49.0)(prismarine-registry@1.7.0)
+      prismarine-biome: 1.3.0(minecraft-data@3.60.0)(prismarine-registry@1.7.0)
       prismarine-block: 1.17.1
       prismarine-chat: 1.9.1
-      prismarine-chunk: 1.35.0(minecraft-data@3.49.0)
+      prismarine-chunk: 1.35.0(minecraft-data@3.60.0)
       prismarine-entity: 2.3.1
       prismarine-item: 1.14.0
       prismarine-nbt: 2.2.1
@@ -1587,21 +1587,21 @@ packages:
       - supports-color
     dev: false
 
-  /prismarine-biome@1.3.0(minecraft-data@3.49.0)(prismarine-registry@1.7.0):
+  /prismarine-biome@1.3.0(minecraft-data@3.60.0)(prismarine-registry@1.7.0):
     resolution: {integrity: sha512-GY6nZxq93mTErT7jD7jt8YS1aPrOakbJHh39seYsJFXvueIOdHAmW16kYQVrTVMW5MlWLQVxV/EquRwOgr4MnQ==}
     peerDependencies:
       minecraft-data: ^3.0.0
       prismarine-registry: ^1.1.0
     dependencies:
-      minecraft-data: 3.49.0
+      minecraft-data: 3.60.0
       prismarine-registry: 1.7.0
     dev: false
 
   /prismarine-block@1.17.1:
     resolution: {integrity: sha512-r1TIn/b5v77BX4a+qd+Yv+4/vZpsC/Jp5ElYxd6++2wpCnqiuxVG7BlS2Eo14vez1M2gt3qoNEl54Hr8qox/rQ==}
     dependencies:
-      minecraft-data: 3.49.0
-      prismarine-biome: 1.3.0(minecraft-data@3.49.0)(prismarine-registry@1.7.0)
+      minecraft-data: 3.60.0
+      prismarine-biome: 1.3.0(minecraft-data@3.60.0)(prismarine-registry@1.7.0)
       prismarine-chat: 1.9.1
       prismarine-item: 1.14.0
       prismarine-nbt: 2.2.1
@@ -1617,11 +1617,11 @@ packages:
       prismarine-registry: 1.7.0
     dev: false
 
-  /prismarine-chunk@1.35.0(minecraft-data@3.49.0):
+  /prismarine-chunk@1.35.0(minecraft-data@3.60.0):
     resolution: {integrity: sha512-Q1lElMUle7wWxWdQjbZo3j2/dLNG325j90IcbbMmBTnHdQSWIjWFe792XOz3RVBlvrhRJEiZk38S6/eQTQ9esw==}
     engines: {node: '>=14'}
     dependencies:
-      prismarine-biome: 1.3.0(minecraft-data@3.49.0)(prismarine-registry@1.7.0)
+      prismarine-biome: 1.3.0(minecraft-data@3.60.0)(prismarine-registry@1.7.0)
       prismarine-block: 1.17.1
       prismarine-nbt: 2.2.1
       prismarine-registry: 1.7.0
@@ -1658,7 +1658,7 @@ packages:
   /prismarine-physics@1.8.0:
     resolution: {integrity: sha512-gbM+S+bmVtOKVv+Z0WGaHMeEeBHISIDsRDRlv8sr0dex3ZJRhuq8djA02CBreguXtI18ZKh6q3TSj2qDr45NHA==}
     dependencies:
-      minecraft-data: 3.49.0
+      minecraft-data: 3.60.0
       prismarine-nbt: 2.2.1
       vec3: 0.1.8
     dev: false
@@ -1684,7 +1684,7 @@ packages:
   /prismarine-registry@1.7.0:
     resolution: {integrity: sha512-yyva0FpWI078nNeMhx8ekVza5uUTYhEv+C+ADu3wUQXiG8qhXkvrf0uzsnhTgZL8BLdsi2axgCEiKw9qSKIuxQ==}
     dependencies:
-      minecraft-data: 3.49.0
+      minecraft-data: 3.60.0
       prismarine-nbt: 2.2.1
     dev: false
 
