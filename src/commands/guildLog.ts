@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Command } from "../interfaces/Command";
 import { BotEvents } from "mineflayer";
 
@@ -20,139 +20,91 @@ export default {
 		],
 	},
 	run: async (bot, interaction, args) => {
-		const member: string = args[0];
-		const page: number = args[1];
+		const member = args[0];
+		const page = args[1];
 
-		if ((member && page) == undefined) {
-			try {
-				await bot.executeTask(`/g log`);
-				const gLogArray: string[] = [];
-				let chatListener: BotEvents["message"];
-				const regex =
-					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\\!-_-\s]+)?/;
+		const logCommand = `/g log${member ? ` ${member}` : ""}${page ? ` ${page}` : ""}`;
 
-				bot.mineflayer.on(
-					"message",
-					(chatListener = async (message) => {
-						const messageContent = message.toString();
-						const match = regex.exec(messageContent);
+		try {
+			await bot.executeTask(logCommand);
 
-						let counter = 1;
+			let chatListener: BotEvents["message"];
 
-						while (match && counter < 10) {
-							const logEntry = match[0];
-							if (logEntry) {
-								const logEntryLines = logEntry.split("\n");
-								const filteredLines = logEntryLines.filter((line) => regex.test(line));
-								gLogArray.push(filteredLines.join("\n"));
-								counter++;
-							}
-							if (counter == 10) {
-								bot.mineflayer.removeListener("message", chatListener);
+			const monthDayYearRegex = "([A-Za-z]{3}\\s[0-9]{1,2}\\s[0-9]{4})";
+			const hourMinuteRegex = "(([0-9]{2}):([0-9]{2}))";
+			const timezoneRegex = "((EDT|EST): )";
+			const usernameRegex = "([A-Za-z-0-9-_]{2,27})";
+			const actionRegex = "(joined|left|invited|kicked|muted|unmuted|set rank of)";
+			const optionalSpaceRegex = "(?:\\s)?";
+			const optionalToRegex = "(stos)?";
+			const optionalSecondUsernameRegex = `(${usernameRegex})?`;
+			const optionalAdditionalInfoRegex = `([A-Za-z-0-9-!-_\\s]+)?`;
+			const logEntriesArray = [] as string[];
 
-								const embed = new EmbedBuilder()
-									.setAuthor({
-										name: "Guild Log",
-									})
-									.setColor("Red")
-									.setFooter({ text: `Guild Log Output` })
-									.setTimestamp()
-									.setDescription(`This is Guild Log\n\n ${logEntry}`);
+			/*const regex =
+				/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked|muted|unmuted|set rank of)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\\!-_-\s]+)?/;*/
 
-								await interaction.reply({ embeds: [embed] });
-							}
+			bot.mineflayer.on(
+				"message",
+				(chatListener = async (message) => {
+					const messageContent = message.toString();
+					let counter = 0;
+					const logEntries = messageContent.split("\n");
+
+					for (const logEntry of logEntries) {
+						const regex = new RegExp(
+							`${monthDayYearRegex}\\s${hourMinuteRegex}\\s${timezoneRegex}${usernameRegex}\\s${actionRegex}${optionalSpaceRegex}${optionalSecondUsernameRegex}${optionalToRegex}${optionalSpaceRegex}${optionalAdditionalInfoRegex}`,
+							"g",
+						);
+
+						let match;
+						const logEntryMatches = [];
+						while ((match = regex.exec(logEntry)) !== null && counter < 10) {
+							const [
+								fullMatch,
+								date,
+								time,
+								hour,
+								minute,
+								timezone,
+								year,
+								primaryUsername,
+								action,
+								day,
+								secondUsername,
+								additionalInfo,
+							] = match;
+
+							let description = "";
+							description += `**Date:** \`${date}\`\n**Time: \`${hour}:${minute}\`**\n**Timezone:** \`${timezone}\`\n`;
+							description += `**Username:** \`${primaryUsername}\`\n`;
+							description += `**Action:** \`${action}\`\n`;
+							if (secondUsername) description += `**Second Username:** \`${secondUsername}\`\n`;
+							description += `**Additional Info:** \`${additionalInfo}\`\n`;
+							description += `||**Full Match:** \`${fullMatch}\`||\n`;				
+							description += `\n`;
+							description += `\n**-----------------------------------------------------**`;
+							counter++;
+							logEntryMatches.push(description);
+							//
+							//Todo: time is okay, but year is timezone & day is secondaryUsername. Fix later.
+							//
+							bot.logger.error("Error, couln't find a home for: ", time, year, day);
 						}
-					}),
-				);
-			} catch (err) {
-				bot.logger.error(err);
-			}
-		} else if (member == undefined) {
-			try {
-				await bot.executeTask(`/g log ${page}`);
-				const gLogArray: string[] = [];
-				let chatListener: BotEvents["message"];
-				const regex =
-					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\\!-_-\s]+)?/;
-				bot.mineflayer.on(
-					"message",
-					(chatListener = async (message) => {
-						const messageContent = message.toString();
-						const match = regex.exec(messageContent);
+						const concatenatedArray = logEntryMatches.flat().join("\n");
+						logEntriesArray.push(concatenatedArray);
 
-						let counter = 1;
-
-						while (match && counter < 10) {
-							const logEntry = match[0];
-							if (logEntry) {
-								const logEntryLines = logEntry.split("\n");
-								const filteredLines = logEntryLines.filter((line) => regex.test(line));
-								gLogArray.push(filteredLines.join("\n"));
-								counter++;
-							}
-							if (counter == 10) {
-								bot.mineflayer.removeListener("message", chatListener);
-
-								const embed = new EmbedBuilder()
-									.setAuthor({
-										name: "Guild Log",
-									})
-									.setColor("Red")
-									.setFooter({ text: `Guild Log Output` })
-									.setTimestamp()
-									.setDescription(`This is Guild Log ${page}\n\n ${logEntry}`);
-
-								await interaction.reply({ embeds: [embed] });
-							}
+						if (counter >= 10) {
+							bot.mineflayer.removeListener("message", chatListener);
 						}
-					}),
-				);
-			} catch (err) {
-				bot.logger.error(err);
-			}
-		} else {
-			try {
-				await bot.executeTask(`/g log ${member} ${page}`);
-				const gLogArray: string[] = [];
-				let chatListener: BotEvents["message"];
-				const regex =
-					/(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s((EDT|EST): ))([A-Za-z-0-9-_]{2,27})\s(joined|left|invited|kicked)(?:\s)?([A-Za-z-0-9-_]{2,27})?(?:\s)?([A-Za-z-0-9-\\!-_-\s]+)?/;
-				bot.mineflayer.on(
-					"message",
-					(chatListener = async (message) => {
-						const messageContent = message.toString();
-						const match = regex.exec(messageContent);
-
-						let counter = 1;
-
-						while (match && counter < 10) {
-							const logEntry = match[0];
-							if (logEntry) {
-								const logEntryLines = logEntry.split("\n");
-								const filteredLines = logEntryLines.filter((line) => regex.test(line));
-								gLogArray.push(filteredLines.join("\n"));
-								counter++;
-							}
-							if (counter == 10) {
-								bot.mineflayer.removeListener("message", chatListener);
-
-								const embed = new EmbedBuilder()
-									.setAuthor({
-										name: "Guild Log",
-									})
-									.setColor("Red")
-									.setFooter({ text: `Guild Log Output` })
-									.setTimestamp()
-									.setDescription(`This is Guild Log ${member} ${page}\n\n ${logEntry}`);
-
-								await interaction.reply({ embeds: [embed] });
-							}
-						}
-					}),
-				);
-			} catch (err) {
-				bot.logger.error(err);
-			}
+					}
+					const concatenatedLogs = logEntriesArray.flat().join("\n");
+					bot.sendToDiscord("lc", concatenatedLogs, "Aqua");
+				}),
+			);
+			interaction.reply({ content: "Here's your Guild Log!" });
+		} catch (err) {
+			bot.logger.error(err);
 		}
 	},
 	staffOnly: true,
