@@ -24,8 +24,6 @@ export default {
 			}
 		}
 
-		// Pull up the guild log and check if someone invited someone.
-		// Use the code from guildLog.ts to parse the guild log to check if someone invited someone.
 		if (type === "joined") {
 			try {
 				bot.executeTask(`/g log ${playerName} 1`);
@@ -75,7 +73,6 @@ export default {
 									additionalInfo,
 								] = match;
 
-								//Check if the second entry is an invite
 								if (counter === 2 && action === "invited") {
 									const invitedPlayer = secondUsername as string;
 									const userName = primaryUsername as string;
@@ -103,7 +100,6 @@ export default {
 										)}** ${type} the guild! **They weren't invited by anyone.**`,
 									);
 									bot.mineflayer.removeListener("message", chatListener);
-									//I need an escape for all the other consts
 									bot.logger.log(
 										fullMatch,
 										date,
