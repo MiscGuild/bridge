@@ -10,13 +10,17 @@ export default {
 			`${Emojis.success} **\`${bot.mineflayer.username}\` has logged in and is now ready!**`,
 		);
 
-		setInterval(() => {
-			bot.executeCommand("/g online");
-		}, 60_000 * 5);
+		if (process.env.REMINDER_ENABLED === "true") {
+			const frequency = parseInt(process.env.REMINDER_FREQUENCY, 10);
+
+			setInterval(() => {
+				bot.sendGuildMessage("gc", process.env.REMINDER_MESSAGE);
+			}, 1000 * 60 * (isNaN(frequency) ? 60 : frequency));
+		}
 
 		setTimeout(async () => {
 			bot.executeCommand("/g online");
 			bot.sendToLimbo();
-		}, 3_000);
+		}, 1000 * 3);
 	},
 } as Event;
