@@ -54,12 +54,12 @@ class Bot {
 		channel: "gc" | "oc" | "lc",
 		content: string,
 		color: ColorResolvable = 0x2f3136,
-		padMessage = false
+		padMessage = false,
 	) {
 		const embed = new EmbedBuilder()
 			.setDescription(padMessage ? `${"-".repeat(54)}\n${content}\n${"-".repeat(54)}` : content)
 			.setColor(color);
-	
+
 		if (channel === "lc") {
 			await this.logChannel?.send({ embeds: [embed] });
 		} else if (channel === "gc") {
