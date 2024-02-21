@@ -26,6 +26,7 @@ class Bot {
 	public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? ">";
 	public memberChannel?: TextChannel;
 	public officerChannel?: TextChannel;
+	public logChannel?: TextChannel;
 
 	public onlineCount = 0;
 	public totalCount = 125;
@@ -50,7 +51,7 @@ class Bot {
 	}
 
 	public async sendToDiscord(
-		channel: "gc" | "oc",
+		channel: "gc" | "oc" | "lc",
 		content: string,
 		color: ColorResolvable = 0x2f3136,
 		padMessage = false,
@@ -59,9 +60,13 @@ class Bot {
 			.setDescription(padMessage ? `${"-".repeat(54)}\n${content}\n${"-".repeat(54)}` : content)
 			.setColor(color);
 
-		channel === "gc"
-			? await this.memberChannel?.send({ embeds: [embed] })
-			: await this.officerChannel?.send({ embeds: [embed] });
+		if (channel === "lc") {
+			await this.logChannel?.send({ embeds: [embed] });
+		} else if (channel === "gc") {
+			await this.memberChannel?.send({ embeds: [embed] });
+		} else if (channel === "oc") {
+			await this.officerChannel?.send({ embeds: [embed] });
+		}
 	}
 
 	public sendGuildMessage(channel: "gc" | "oc", message: string) {
