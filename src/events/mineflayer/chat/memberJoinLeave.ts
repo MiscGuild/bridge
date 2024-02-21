@@ -114,6 +114,7 @@ export default {
 										secondUsername,
 										additionalInfo,
 									);
+									// The above is only to catch all the data and TypeScript wants me to use it.
 								}
 							}
 						}

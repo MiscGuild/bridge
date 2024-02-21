@@ -81,14 +81,12 @@ export default {
 							description += `**Action:** \`${action}\`\n`;
 							if (secondUsername) description += `**Second Username:** \`${secondUsername}\`\n`;
 							description += `**Additional Info:** \`${additionalInfo}\`\n`;
-							description += `||**Full Match:** \`${fullMatch}\`||\n`;				
+							description += `||**Full Match:** \`${fullMatch}\`||\n`;
 							description += `\n`;
 							description += `\n**-----------------------------------------------------**`;
 							counter++;
 							logEntryMatches.push(description);
-							//
-							//Todo: time is okay, but year is timezone & day is secondaryUsername. Fix later.
-							//
+
 							bot.logger.error("Error, couln't find a home for: ", time, year, day);
 						}
 						const concatenatedArray = logEntryMatches.flat().join("\n");
@@ -102,7 +100,7 @@ export default {
 					bot.sendToDiscord("lc", concatenatedLogs, "Aqua");
 				}),
 			);
-			interaction.reply({ content: "Here's your Guild Log!" });
+			interaction.reply({ content: "You can find your guild log in the Log Channel." });
 		} catch (err) {
 			bot.logger.error(err);
 		}

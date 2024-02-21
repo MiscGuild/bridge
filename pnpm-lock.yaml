@@ -23,6 +23,9 @@ dependencies:
   obscenity:
     specifier: ^0.1.4
     version: 0.1.4
+  pnpm:
+    specifier: ^8.15.3
+    version: 8.15.3
   prismarine-chat:
     specifier: ^1.9.1
     version: 1.9.1
@@ -1560,6 +1563,12 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
     dev: true
+
+  /pnpm@8.15.3:
+    resolution: {integrity: sha512-3YXNbspkF8b3PbMroetHZ/+0y6T1vwcnhGciyStrnlaizCGLEThbvCsh8YoWpn2nes6um2Gg9WoWQ7JeH7amBQ==}
+    engines: {node: '>=16.14'}
+    hasBin: true
+    dev: false
 
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
