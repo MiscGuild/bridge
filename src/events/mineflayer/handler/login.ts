@@ -18,7 +18,11 @@ export default {
 			}, 1000 * 60 * (isNaN(frequency) ? 60 : frequency));
 		}
 
-		setTimeout(async () => {
+		setInterval(() => {
+			bot.executeCommand("/g online");
+		}, 1000 * 60 * 5);
+
+		setTimeout(() => {
 			bot.executeCommand("/g online");
 			bot.sendToLimbo();
 		}, 1000 * 3);
