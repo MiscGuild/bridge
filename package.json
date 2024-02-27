@@ -26,7 +26,7 @@
 		"discord.js": "14.10.2",
 		"dotenv": "^16.0.3",
 		"mineflayer": "^4.4.0",
-		"obscenity": "^0.1.4",
+		"obscenity": "^0.2.0",
 		"prismarine-chat": "^1.9.1"
 	},
 	"devDependencies": {

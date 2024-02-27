@@ -21,8 +21,8 @@ dependencies:
     specifier: ^4.4.0
     version: 4.14.0
   obscenity:
-    specifier: ^0.1.4
-    version: 0.1.4
+    specifier: ^0.2.0
+    version: 0.2.0
   prismarine-chat:
     specifier: ^1.9.1
     version: 1.9.1
@@ -1485,9 +1485,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /obscenity@0.1.4:
-    resolution: {integrity: sha512-Uw0uCWcwF038YLIiYjdjXZ7fn5WKDEqMVZ2xIs9/dSm1Ho0+EpZANOzO/6rmu/ziRRXaopbPCeh5hid/O8zdZw==}
-    engines: {node: '>=12.0.0'}
+  /obscenity@0.2.0:
+    resolution: {integrity: sha512-eYe8r9hqJk5dEMZkLtWlGlwGxKYO6xA/yEOzd8MGSG3vzn8hAgo6MUZ9dirA3kPAfy/1d1jEOkCUpIU1nGI1EQ==}
+    engines: {node: '>=14.0.0'}
     dev: false
 
   /once@1.4.0:
