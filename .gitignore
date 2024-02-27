@@ -125,4 +125,3 @@ dist
 
 #MacOSX SHIT
 .DS_Store
-src/commands/bridge.code-workspace
