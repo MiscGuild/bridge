@@ -23,11 +23,9 @@ export default {
 		}
 
 		const member = playerGuild.members.find((guildMember) => guildMember.uuid === mojangProfile.id);
-		bot.executeCommand(
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			`/w ${playerName} ${target}'s total weekly gexp: ${Object.values(member!.expHistory).reduce(
-				(previous, current) => previous + current,
-			)}`,
-		);
+
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const gexp = Object.values(member!.expHistory).reduce((previous, current) => previous + current);
+		bot.executeCommand(`/w ${playerName} ${target}'s total weekly gexp: ${gexp.toLocaleString()}`);
 	},
 } as Event;
