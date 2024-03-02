@@ -20,7 +20,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"consola": "^2.15.3",
+		"consola": "^3.2.3",
 		"discord.js": "14.10.2",
 		"dotenv": "^16.0.3",
 		"mineflayer": "^4.4.0",
