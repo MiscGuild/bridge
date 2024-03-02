@@ -1,4 +1,4 @@
-import Emojis from "../../../util/emojis/chatEmojis";
+import Emojis from "../../../util/emojis";
 import { Event } from "../../../interfaces/Event";
 
 export default {

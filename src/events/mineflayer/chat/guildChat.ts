@@ -1,7 +1,6 @@
 import { Event } from "../../../interfaces/Event";
-import { HypixelRank } from "../../../interfaces/Ranks";
 import { escapeMarkdown } from "discord.js";
-import getRankData from "../../../util/emojis/getRankData";
+import getRankColor from "../../../util/getRankColor";
 
 export default {
 	name: "chat:guildChat",
@@ -9,16 +8,15 @@ export default {
 	run: async (
 		bot,
 		channel: "Guild" | "Officer",
-		hypixelRank: HypixelRank | undefined,
+		rank: string | undefined,
 		playerName: string,
 		guildRank: string | undefined,
 		message: string,
 	) => {
-		const [rank, color] = await getRankData(hypixelRank);
 		const content = ` **${rank ? rank + " " : ""}${escapeMarkdown(playerName)}${
 			guildRank ? " " + guildRank : ""
 		}:** ${escapeMarkdown(message)}`;
 
-		await bot.sendToDiscord(channel === "Guild" ? "gc" : "oc", content, color);
+		await bot.sendToDiscord(channel === "Guild" ? "gc" : "oc", content, getRankColor(rank));
 	},
 } as Event;

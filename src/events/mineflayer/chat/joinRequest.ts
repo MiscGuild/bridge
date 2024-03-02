@@ -2,7 +2,7 @@ import { Event } from "../../../interfaces/Event";
 import fetchHypixelPlayerProfile from "../../../util/requests/fetchHypixelPlayerProfile";
 import fetchMojangProfile from "../../../util/requests/fetchMojangProfile";
 import isFetchError from "../../../util/requests/isFetchError";
-import isUserBlacklisted from "../../../util/isUserBlacklisted";
+import isUserBlacklisted from "../../../util/blacklist/isUserBlacklisted";
 
 export default {
 	name: "chat:joinRequest",

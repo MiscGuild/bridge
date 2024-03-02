@@ -75,9 +75,8 @@ history/
 .env
 .env.test
 
-# Blacklist and emojis file
-src/util/_blacklist.json
-src/util/emojis/_emojiIds.json
+# Blacklist file
+src/util/blacklist/_blacklist.json
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -121,7 +120,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
 
 #MacOSX SHIT
 .DS_Store

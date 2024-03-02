@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require("fs");
 
-const files = [".env", "src/util/_blacklist.json", "src/util/emojis/_emojiIds.json"];
+const files = [".env", "src/util/blacklist/_blacklist.json"];
 for (const newPath of files) {
 	const oldPath = `${newPath}.template`;
 
