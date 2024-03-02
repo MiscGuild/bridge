@@ -26,7 +26,6 @@
 -   [Installation](#installation)
     -   [Prerequisites](#prerequisites)
     -   [Setup](#setup)
-    -   [Rank Emojis](#rank-emojis)
     -   [Process Management](#process-management)
 -   [Contributing](#contributing)
     -   [Issues and Bug Reports](#issues-and-bug-reports)
@@ -38,7 +37,6 @@
 -   Bridges between Discord and Hypixel guild chats.
 -   Sends all guild related messages, including chat, guild announcements and more to Discord.
 -   Automatic restarts and reconnections.
--   Toggleable use of Discord emojis for Hypixel ranks in chat messages.
 -   Privileged slash commands to control bot behaviour in-game.
 -   Toggleable slowmode to control member usage.
 -   Basic filtering of extreme profanity to protect bot accounts from abuse.
@@ -96,19 +94,6 @@ $ pnpm run setup-files
 $ pnpm run build
 $ pnpm start
 ```
-
-### Rank Emojis
-
-Optionally, you may activate the use of rank emojis in discord messages by following these steps:
-
-1. Run the `/emojis upload` command in a discord server of your choice.
-
-    > **Note**
-    > It is recommended to run this command in an alternate server, as it uses a significant number of emoji slots. In this case, the user of id `BOT_OWNER_ID` is the only person with permission to run this command.
-
-2. Set the value of `USE_RANK_EMOJIS` in the `.env` file to `true`, or `false` to disable this feature.
-
-If at any time you wish to delete the emojis created by the bot, run the `/emojis remove` command.
 
 ### Process Management
 

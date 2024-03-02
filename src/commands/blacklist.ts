@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from "discord.js";
 import { BlacklistEntry } from "../interfaces/BlacklistEntry";
 import { Command } from "../interfaces/Command";
-import _blacklist from "../util/_blacklist.json";
+import _blacklist from "../util/blacklist/_blacklist.json";
 import fetchErrorEmbed from "../util/requests/fetchErrorEmbed";
 import fetchMojangProfile from "../util/requests/fetchMojangProfile";
 import isFetchError from "../util/requests/isFetchError";

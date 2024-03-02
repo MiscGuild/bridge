@@ -1,18 +1,15 @@
-import Emojis from "../../../util/emojis/chatEmojis";
+import Emojis from "../../../util/emojis";
 import { Event } from "../../../interfaces/Event";
-import { HypixelRank } from "../../../interfaces/Ranks";
 import { escapeMarkdown } from "discord.js";
 import fetchMojangProfile from "../../../util/requests/fetchMojangProfile";
-import getRankData from "../../../util/emojis/getRankData";
 import isFetchError from "../../../util/requests/isFetchError";
-import isUserBlacklisted from "../../../util/isUserBlacklisted";
+import isUserBlacklisted from "../../../util/blacklist/isUserBlacklisted";
+import getRankColor from "../../../util/getRankColor";
 
 export default {
 	name: "chat:memberJoinLeave",
 	runOnce: false,
-	run: async (bot, hypixelRank: HypixelRank | undefined, playerName: string, type: "joined" | "left") => {
-		const [rank, color] = await getRankData(hypixelRank);
-
+	run: async (bot, rank: string | undefined, playerName: string, type: "joined" | "left") => {
 		if (type === "joined") {
 			const mojangProfile = await fetchMojangProfile(playerName);
 
@@ -28,7 +25,7 @@ export default {
 			`${type === "joined" ? Emojis.positiveGuildEvent : Emojis.negativeGuildEvent} **${
 				rank ? rank + " " : ""
 			}${escapeMarkdown(playerName)}** ${type} the guild!`,
-			color,
+			getRankColor(rank),
 			true,
 		);
 	},
