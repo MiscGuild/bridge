@@ -75,7 +75,7 @@ history/
 .env
 .env.test
 
-# Blacklist and emojis file
+# Blacklist file
 src/util/blacklist/_blacklist.json
 
 # parcel-bundler cache (https://parceljs.org/)
