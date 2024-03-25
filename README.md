@@ -16,10 +16,10 @@
     </a>
 </h3>
 
-> **Warning**
-> This application will log into Minecraft using Mineflayer, a Minecraft bot client. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License](https://github.com/MiscGuild/bridge/blob/master/LICENSE).
+> [!Warning]
+> This application will log into Minecraft using Mineflayer, a JavaScript API for Minecraft. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License](https://github.com/MiscGuild/bridge/blob/master/LICENSE).
 
-> **Note**
+> [!Note]
 > This application will no longer receive updates that contain new features or QOL improvements. Updates, where necessary, will only contain patches for security vulnerabilities and bugs.
 
 -   [Features](#features)
@@ -86,7 +86,7 @@ $ pnpm run setup-files
 
 9. Fill out the `.env` file with your credentials.
 
-10. Promote the Minecraft account the bot uses to Officer in-game in order for it to view the Officer chat and run privileged commands.
+10. Promote the Minecraft account used by the bot to Officer in-game in order for it to view the Officer chat and run privileged commands.
 
 11. Build and run the bot.
 
@@ -117,14 +117,14 @@ Please refer to the [PM2 Documentation](https://pm2.keymetrics.io/docs/usage/qui
 
 Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/bHFWukp) and go to `#programming-talk`.
 
-Please ensure the following before committing your changes:
+Before submitting your changes for review, please ensure:
 
--   Your code has been thoroughly tested
--   Your commit message follows the [Angular Convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
+-   all code has been thoroughly tested
+-   you have followed the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ### Issues and Bug Reports
 
-To submit an issue or bug, please contact a developer or open an issue [here](https://github.com/MiscGuild/bridge/issues).
+To raise an issue or bug report, please contact a developer or [open an issue](https://github.com/MiscGuild/bridge/issues).
 
 ## Acknowledgements
 
