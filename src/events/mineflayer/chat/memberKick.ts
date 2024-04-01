@@ -13,7 +13,6 @@ export default {
 		kickedByRank: string | undefined,
 		kickedByPlayerName: string,
 	) => {
-
 		async function updateLeaveData(playerName: string) {
 			try {
 				// Get the UUID of the new member from the Hypixel API
@@ -66,7 +65,9 @@ export default {
 						"oc",
 						`${Emojis.negativeGuildEvent} **${escapeMarkdown(
 							playerName,
-						)}** left the guild after **${years} years, ${days} days and ${minutes} minutes**.`,
+						)}** left the guild after **${years} years, ${days} days and ${minutes} minutes**. They were kicked by  **${
+							kickedByRank ? kickedByRank + " " : ""
+						}${escapeMarkdown(kickedByPlayerName)}**`,
 						"#ff0000",
 						true,
 					);
