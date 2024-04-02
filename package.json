@@ -8,16 +8,12 @@
 		"build": "tsc",
 		"clean": "rm -r dist/",
 		"dev": "ts-node-dev --respawn --transpile-only --poll src/index.ts",
-		"lint:fix": "pnpm lint --fix",
-		"lint": "eslint . --ext .ts,.tsx",
+		"format": "prettier --write .",
+		"lint": "prettier --check . && eslint .",
 		"pm2": "pm2 logs && pm2 start dist/index.js --name bridge",
 		"pm2:kill": "pm2 kill",
-		"prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
-		"prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
 		"setup-files": "node setupFiles.js",
-		"start": "node .",
-		"test": "pnpm prettier:check && pnpm lint && pnpm typecheck && pnpm build",
-		"typecheck": "tsc --noEmit"
+		"start": "node ."
 	},
 	"dependencies": {
 		"consola": "^2.15.3",
