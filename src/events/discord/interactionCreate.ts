@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Interaction } from "discord.js";
-import { Event } from "../../interfaces/Event";
 
 export default {
 	name: "interactionCreate",

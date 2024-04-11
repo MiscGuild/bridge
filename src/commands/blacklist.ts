@@ -1,11 +1,9 @@
 import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from "discord.js";
-import { BlacklistEntry } from "../interfaces/BlacklistEntry";
-import { Command } from "../interfaces/Command";
-import _blacklist from "../util/blacklist/_blacklist.json";
-import fetchErrorEmbed from "../util/requests/fetchErrorEmbed";
-import fetchMojangProfile from "../util/requests/fetchMojangProfile";
-import isFetchError from "../util/requests/isFetchError";
-import writeToJsonFile from "../util/writeToJsonFile";
+import _blacklist from "@util/blacklist/_blacklist.json";
+import fetchErrorEmbed from "@util/requests/fetchErrorEmbed";
+import fetchMojangProfile from "@util/requests/fetchMojangProfile";
+import isFetchError from "@util/requests/isFetchError";
+import writeToJsonFile from "@util/writeToJsonFile";
 
 export default {
 	data: {
@@ -107,7 +105,8 @@ export default {
 				messageId: blacklistMessage.id,
 			});
 		} else {
-			const blacklistEntry = blacklist.find((user) => user.uuid === mojangProfile.id) as BlacklistEntry;
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const blacklistEntry = blacklist.find((user) => user.uuid === mojangProfile.id)!;
 			blacklist.splice(blacklist.indexOf(blacklistEntry));
 
 			const message = await (
@@ -122,7 +121,7 @@ export default {
 			.setTitle("Completed!")
 			.setDescription(`${mojangProfile.name} was ${type === "add" ? "added to" : "removed from"} the blacklist!`);
 
-		writeToJsonFile("./src/util/_blacklist.json", blacklist, interaction, successEmbed);
+		writeToJsonFile("./s@util/_blacklist.json", blacklist, interaction, successEmbed);
 	},
 	staffOnly: true,
 } as Command;

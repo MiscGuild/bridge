@@ -1,5 +1,4 @@
 import { ChatMessage } from "prismarine-chat";
-import { Event } from "../../../interfaces/Event";
 
 export default {
 	name: "message",

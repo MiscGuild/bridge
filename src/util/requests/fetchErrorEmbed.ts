@@ -1,4 +1,3 @@
-import { FetchError } from "../../interfaces/FetchError";
 import { EmbedBuilder } from "discord.js";
 
 export default (requestError: FetchError) => {

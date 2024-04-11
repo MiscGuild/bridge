@@ -1,5 +1,3 @@
-import { Event } from "../../../interfaces/Event";
-
 export default {
 	name: "chat:guildLevelUp",
 	runOnce: false,

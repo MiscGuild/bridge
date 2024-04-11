@@ -1,7 +1,6 @@
-import Emojis from "../../../util/emojis";
-import { Event } from "../../../interfaces/Event";
 import { escapeMarkdown } from "discord.js";
-import getRankColor from "../../../util/getRankColor";
+import Emojis from "@util/emojis";
+import getRankColor from "@util/getRankColor";
 
 export default {
 	name: "chat:promoteDemote",

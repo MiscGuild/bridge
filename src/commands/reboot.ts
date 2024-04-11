@@ -1,4 +1,3 @@
-import { Command } from "../interfaces/Command";
 import { EmbedBuilder } from "discord.js";
 
 export default {

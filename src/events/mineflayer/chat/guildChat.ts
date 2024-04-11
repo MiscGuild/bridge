@@ -1,6 +1,5 @@
-import { Event } from "../../../interfaces/Event";
 import { escapeMarkdown } from "discord.js";
-import getRankColor from "../../../util/getRankColor";
+import getRankColor from "@util/getRankColor";
 
 export default {
 	name: "chat:guildChat",

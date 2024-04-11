@@ -1,7 +1,6 @@
 import { Message } from "discord.js";
 import { DataSet, RegExpMatcher, englishDataset, englishRecommendedTransformers } from "obscenity";
-import { Event } from "../../interfaces/Event";
-import emojis from "../../util/emojis";
+import emojis from "@util/emojis";
 
 const whitelist = ["ass", "bitch", "cock", "dick", "fuck"];
 const dataset = new DataSet<{ originalWord: string }>()

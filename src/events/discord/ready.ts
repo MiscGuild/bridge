@@ -1,4 +1,3 @@
-import { Event } from "../../interfaces/Event";
 import { TextChannel } from "discord.js";
 
 export default {

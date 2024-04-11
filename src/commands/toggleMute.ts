@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
-import { Command } from "../interfaces/Command";
-import capitaliseString from "../util/capitaliseString";
+import capitaliseString from "@util/capitaliseString";
 
 export default {
 	data: {

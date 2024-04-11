@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
-import { Command } from "../interfaces/Command";
 
 const choices = [0, 5, 10];
 

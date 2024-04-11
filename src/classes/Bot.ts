@@ -1,15 +1,13 @@
 import { ActivityType, ColorResolvable, EmbedBuilder, IntentsBitField, TextChannel } from "discord.js";
 import { BotEvents, createBot } from "mineflayer";
-import { Command } from "../interfaces/Command";
 import Discord from "./Client";
-import { Event } from "../interfaces/Event";
 import EventEmitter from "events";
 import consola from "consola";
-import isObjKey from "../util/isObjKey";
-import logError from "../util/logError";
+import isObjKey from "@util/isObjKey";
+import logError from "@util/logError";
 import path from "path";
-import recursiveWalkDir from "../util/recursiveWalkDir";
-import regex from "../util/regex";
+import recursiveWalkDir from "@util/recursiveWalkDir";
+import regex from "@util/regex";
 
 class Bot {
 	public readonly logger = consola;
