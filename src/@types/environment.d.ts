@@ -17,7 +17,7 @@ declare global {
 			REMINDER_FREQUENCY: string;
 
 			DISCORD_TOKEN: string;
-			DISCORD_PREFIX: string;
+			DISCORD_IGNORE_PREFIX: string;
 			DISCORD_INVITE_LINK: `discord.gg/${string}`;
 			USE_RANK_EMOJIS: "true" | "false";
 

@@ -14,6 +14,10 @@ import regex from "../util/regex";
 class Bot {
 	public readonly logger = consola;
 
+	public memberChannel?: TextChannel;
+	public officerChannel?: TextChannel;
+	public readonly ignorePrefix = process.env.DISCORD_IGNORE_PREFIX ?? ")";
+	public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? ">";
 	public readonly discord = new Discord({
 		allowedMentions: { parse: ["users", "roles"], repliedUser: true },
 		intents: [
@@ -22,10 +26,6 @@ class Bot {
 			IntentsBitField.Flags.MessageContent,
 		],
 	});
-	public readonly botPrefix = process.env.DISCORD_PREFIX ?? ")";
-	public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? ">";
-	public memberChannel?: TextChannel;
-	public officerChannel?: TextChannel;
 
 	public onlineCount = 0;
 	public totalCount = 125;

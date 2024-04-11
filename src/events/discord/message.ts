@@ -16,7 +16,7 @@ export default {
 	runOnce: false,
 	run: async (bot, message: Message) => {
 		if (
-			message.content.startsWith(bot.botPrefix) ||
+			message.content.startsWith(bot.ignorePrefix) ||
 			message.author.bot ||
 			message.attachments.size > 0 ||
 			message.member === null ||
@@ -24,8 +24,13 @@ export default {
 		)
 			return;
 
-		if (message.content.length > 217) {
-			await message.channel.send(`Your message is too long! \`${message.content.length}/217\``);
+		const name =
+			process.env.USE_FIRST_WORD_OF_AUTHOR_NAME === "true"
+				? (message.member.displayName.split(" ")[0] as string)
+				: message.member.displayName;
+
+		if (message.content.length > 250 - name.length) {
+			await message.channel.send(`Your message is too long! \`${message.content.length}/${250 - name.length}\``);
 			return;
 		}
 
@@ -46,11 +51,6 @@ export default {
 				`${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked. This message was not sent to Hypixel.`,
 			);
 		} else {
-			const name =
-				process.env.USE_FIRST_WORD_OF_AUTHOR_NAME === "true"
-					? message.member.displayName.split(" ")[0]
-					: message.member.displayName;
-
 			message.content = `${name} ${bot.chatSeparator} ${message.content.replace(/\r?\n|\r/g, " ")}`;
 			bot.sendGuildMessage(message.channel.id === bot.memberChannel?.id ? "gc" : "oc", message.content);
 		}
