@@ -31,8 +31,8 @@ export default {
         ],
     },
     run: async (bot, interaction, args) => {
-        const type: string = args[0] as 'promote' | 'demote';
-        const user: string = args[1];
+        const type = args[0] as 'promote' | 'demote';
+        const user = args[1] as string;
 
         const embed = new EmbedBuilder();
         try {

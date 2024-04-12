@@ -52,7 +52,7 @@ export default {
     },
     run: async (bot, interaction, args) => {
         const type = interaction.options.getSubcommand() as 'add' | 'remove';
-        const mojangProfile = await fetchMojangProfile(args[0]);
+        const mojangProfile = await fetchMojangProfile(args[0] as string);
         const blacklist = _blacklist as BlacklistEntry[];
 
         if (isFetchError(mojangProfile)) {
@@ -75,8 +75,8 @@ export default {
         }
 
         if (type === 'add') {
-            const endDate = args[1];
-            const reason = args[2];
+            const endDate = args[1] as string;
+            const reason = args[2] as string;
             const embed = new EmbedBuilder()
                 .setAuthor({
                     name: 'Blacklist',
@@ -108,7 +108,6 @@ export default {
                 messageId: blacklistMessage.id,
             });
         } else {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const blacklistEntry = blacklist.find((user) => user.uuid === mojangProfile.id)!;
             blacklist.splice(blacklist.indexOf(blacklistEntry));
 

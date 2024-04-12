@@ -27,10 +27,10 @@ export default {
             (guildMember) => guildMember.uuid === mojangProfile.id
         );
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const gexp = Object.values(member!.expHistory).reduce(
             (previous, current) => previous + current
         );
+
         bot.executeCommand(
             `/w ${playerName} ${target}'s total weekly gexp: ${gexp.toLocaleString()}`
         );

@@ -20,8 +20,8 @@ export default {
         ],
     },
     run: async (bot, interaction, args) => {
-        const user: string = args[0];
-        const reason: string = args[1];
+        const user = args[0] as string;
+        const reason = args[1] as string;
 
         const embed = new EmbedBuilder();
         try {

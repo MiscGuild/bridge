@@ -14,7 +14,7 @@ export default {
         ],
     },
     run: async (bot, interaction, args) => {
-        const user = args[0];
+        const user = args[0] as string;
 
         const embed = new EmbedBuilder();
         try {

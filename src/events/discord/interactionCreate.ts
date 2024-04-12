@@ -28,7 +28,7 @@ export default {
             return;
         }
 
-        const args: any[] = [];
+        const args: unknown[] = [];
         interaction.options.data.forEach((option) => {
             if (option.value) args.push(option.value);
 

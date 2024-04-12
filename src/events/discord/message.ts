@@ -5,7 +5,6 @@ import emojis from '@util/emojis';
 const whitelist = ['ass', 'bitch', 'cock', 'dick', 'fuck'];
 const dataset = new DataSet<{ originalWord: string }>()
     .addAll(englishDataset)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     .removePhrasesIf((phrase) => whitelist.includes(phrase.metadata!.originalWord));
 
 const profanityMatcher = new RegExpMatcher({

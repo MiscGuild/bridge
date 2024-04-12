@@ -42,8 +42,8 @@ export default {
     },
     run: async (bot, interaction, args) => {
         const type = interaction.options.getSubcommand() as 'mute' | 'unmute';
-        const user: string = args[0];
-        const duration: string = args[1];
+        const user = args[0] as string;
+        const duration = args[1] as string;
 
         const embed = new EmbedBuilder();
         try {
