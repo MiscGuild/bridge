@@ -1,41 +1,41 @@
 export default {
-	/**
-	 * Join Emoji
-	 */
-	join: "📥",
+    /**
+     * Join Emoji
+     */
+    join: '📥',
 
-	/**
-	 * Leave Emoji
-	 */
-	leave: "📤",
+    /**
+     * Leave Emoji
+     */
+    leave: '📤',
 
-	/**
-	 * Success Emoji
-	 */
-	success: "✅",
+    /**
+     * Success Emoji
+     */
+    success: '✅',
 
-	/**
-	 * Error Emoji
-	 */
-	error: "❌",
+    /**
+     * Error Emoji
+     */
+    error: '❌',
 
-	/**
-	 * Warning Emoji
-	 */
-	warning: "⚠️",
+    /**
+     * Warning Emoji
+     */
+    warning: '⚠️',
 
-	/**
-	 * Alert Emoji
-	 */
-	alert: "🚨",
+    /**
+     * Alert Emoji
+     */
+    alert: '🚨',
 
-	/**
-	 * Positive Guild Event Emoji
-	 */
-	positiveGuildEvent: "🎉",
+    /**
+     * Positive Guild Event Emoji
+     */
+    positiveGuildEvent: '🎉',
 
-	/**
-	 * Negative Guild Event Emoji
-	 */
-	negativeGuildEvent: "👋",
+    /**
+     * Negative Guild Event Emoji
+     */
+    negativeGuildEvent: '👋',
 };

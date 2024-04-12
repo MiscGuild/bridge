@@ -1,5 +1,6 @@
-import { config } from "dotenv";
+import { config } from 'dotenv';
+import Bot from '@classes/Bot';
+
 config();
 
-import Bot from "./classes/Bot";
 export default new Bot();

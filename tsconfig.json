@@ -1,37 +1,23 @@
 {
-	"compilerOptions": {
-		"lib": ["ESNext"],
-		"module": "CommonJS",
-		"target": "ESNext",
-		"noImplicitAny": true,
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"outDir": "./dist",
-		"moduleResolution": "Node",
-		"resolveJsonModule": true,
-		"removeComments": true,
-		"preserveConstEnums": true,
-		"strict": true,
-		"alwaysStrict": true,
-		"strictNullChecks": true,
-		"noUncheckedIndexedAccess": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"allowUnreachableCode": false,
-		"noFallthroughCasesInSwitch": true,
-		"declaration": true,
-		"sourceMap": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"allowJs": false,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"isolatedModules": true,
-		"incremental": true,
-		"typeRoots": ["node_modules/@types", "src/@types"]
-	},
-	"exclude": ["./node_modules/**/*", "**/*.spec.ts"],
-	"include": ["./src", "./setupFiles.js"]
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "outDir": "./dist",
+        "resolveJsonModule": true,
+        "preserveConstEnums": true,
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitReturns": true,
+        "allowUnreachableCode": false,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "allowJs": false,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "paths": {
+            "@classes/*": ["./src/classes/*"],
+            "@util/*": ["./src/util/*"]
+        }
+    }
 }

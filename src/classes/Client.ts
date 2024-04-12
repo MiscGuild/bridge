@@ -1,10 +1,5 @@
-import { Client, ClientOptions, Collection } from "discord.js";
-import { Command } from "../interfaces/Command";
+import { Client, Collection } from 'discord.js';
 
 export default class Discord extends Client {
-	commands: Collection<string, Command> = new Collection();
-
-	constructor(options: ClientOptions) {
-		super(options);
-	}
+    public readonly commands: Collection<string, Command> = new Collection();
 }

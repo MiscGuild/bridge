@@ -1,36 +1,36 @@
 {
-	"name": "bridge-bot",
-	"version": "1.0.0",
-	"main": "dist",
-	"license": "MIT",
-	"private": false,
-	"scripts": {
-		"build": "tsc",
-		"clean": "rm -r dist/",
-		"dev": "ts-node-dev --respawn --transpile-only --poll src/index.ts",
-		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint .",
-		"pm2": "pm2 logs && pm2 start dist/index.js --name bridge",
-		"pm2:kill": "pm2 kill",
-		"setup-files": "node setupFiles.js",
-		"start": "node ."
-	},
-	"dependencies": {
-		"consola": "^2.15.3",
-		"discord.js": "14.10.2",
-		"dotenv": "^16.0.3",
-		"mineflayer": "^4.4.0",
-		"obscenity": "^0.1.4",
-		"prismarine-chat": "^1.9.1"
-	},
-	"devDependencies": {
-		"@types/node-fetch": "^2.6.2",
-		"@typescript-eslint/eslint-plugin": "^5.40.1",
-		"@typescript-eslint/parser": "^5.36.1",
-		"eslint": "^8.26.0",
-		"eslint-config-prettier": "^8.6.0",
-		"prettier": "^2.8.4",
-		"ts-node-dev": "^2.0.0",
-		"typescript": "^4.8.4"
-	}
+    "name": "bridge-bot",
+    "version": "1.0.0",
+    "main": "dist",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "build": "tsc && tsc-alias",
+        "clean": "rm -r dist/",
+        "dev": "ts-node-dev --respawn --transpile-only --poll -r tsconfig-paths/register src/index.ts",
+        "format": "prettier --write .",
+        "lint": "prettier --check . && eslint .",
+        "pm2": "pm2 logs && pm2 start dist/index.js --name bridge",
+        "pm2:kill": "pm2 kill",
+        "setup-files": "node scripts/setup-files.js",
+        "start": "node ."
+    },
+    "dependencies": {
+        "consola": "^2.15.3",
+        "discord.js": "14.10.2",
+        "dotenv": "^16.0.3",
+        "mineflayer": "^4.4.0",
+        "obscenity": "^0.1.4",
+        "prismarine-chat": "^1.9.1"
+    },
+    "devDependencies": {
+        "@jejebecarte/eslint-config": "^1.0.6",
+        "@types/node-fetch": "^2.6.2",
+        "eslint": "^8.26.0",
+        "prettier": "^2.8.4",
+        "ts-node-dev": "^2.0.0",
+        "tsc-alias": "^1.8.8",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^4.8.4"
+    }
 }

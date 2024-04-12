@@ -1,22 +1,26 @@
 export default (rank?: string) => {
-	let color = undefined;
+    let color;
 
-	switch (rank) {
-		case "[ADMIN]":
-		case "[YOUTUBE]":
-			color = 0xff5555;
-			break;
-		case "[MVP++]":
-			color = 0xffaa00;
-			break;
-		case "[MVP+]":
-		case "[MVP]":
-			color = 0x55ffff;
-			break;
-		case "[VIP+]":
-		case "[VIP]":
-			color = 0x55ff55;
-	}
+    switch (rank) {
+        case '[ADMIN]':
+        case '[YOUTUBE]':
+            color = 0xf55;
+            break;
+        case '[MVP++]':
+            color = 0xfa0;
+            break;
+        case '[MVP+]':
+        case '[MVP]':
+            color = 0x5ff;
+            break;
+        case '[VIP+]':
+        case '[VIP]':
+            color = 0x5f5;
+            break;
 
-	return color;
+        default:
+            color = 0xaaa;
+    }
+
+    return color;
 };
