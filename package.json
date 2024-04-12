@@ -19,7 +19,7 @@
         "consola": "^2.15.3",
         "discord.js": "14.10.2",
         "dotenv": "^16.0.3",
-        "mineflayer": "^4.4.0",
+        "mineflayer": "^4.20.0",
         "obscenity": "^0.1.4",
         "prismarine-chat": "^1.9.1"
     },
