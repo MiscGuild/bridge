@@ -1,5 +1,6 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from 'fs/promises';
+import path from 'path';
+import bot from '..';
 
 /**
  *
@@ -8,25 +9,26 @@ import path from "path";
  * @param errMessage The error message to display if an error occurs during the process.
  */
 async function recursiveWalkDir(
-	normalisedDirName: string,
-	callback: (currentDir: string, file: string) => Promise<void>,
-	errMessage: string,
+    normalisedDirName: string,
+    callback: (currentDir: string, file: string) => Promise<void>,
+    errMessage: string
 ) {
-	const files = await fs.readdir(normalisedDirName);
+    const files = await fs.readdir(normalisedDirName);
+    const stats = await Promise.all(
+        files.map((file) => fs.lstat(path.join(normalisedDirName, file)))
+    );
 
-	for (const file of files) {
-		const stat = await fs.lstat(path.join(normalisedDirName, file));
+    const promises = stats.map((stat, i) =>
+        stat.isDirectory()
+            ? recursiveWalkDir(path.join(normalisedDirName, files[i]!), callback, errMessage)
+            : callback(normalisedDirName, files[i]!)
+    );
 
-		if (stat.isDirectory()) {
-			await recursiveWalkDir(path.join(normalisedDirName, file), callback, errMessage);
-		} else {
-			try {
-				await callback(normalisedDirName, file);
-			} catch (e: unknown) {
-				console.warn(`${errMessage} ${(e as Error).message}`);
-			}
-		}
-	}
+    try {
+        await Promise.all(promises);
+    } catch (e: unknown) {
+        bot.logger.error(`${errMessage} ${(e as Error).message}`);
+    }
 }
 
 export default recursiveWalkDir;

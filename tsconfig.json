@@ -1,23 +1,23 @@
 {
-	"compilerOptions": {
-		"target": "ESNext",
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
-		"outDir": "./dist",
-		"resolveJsonModule": true,
-		"preserveConstEnums": true,
-		"strict": true,
-		"noUncheckedIndexedAccess": true,
-		"noImplicitReturns": true,
-		"allowUnreachableCode": false,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"allowJs": false,
-		"skipLibCheck": true,
-		"isolatedModules": true,
-		"paths": {
-			"@classes/*": ["./src/classes/*"],
-			"@util/*": ["./src/util/*"]
-		}
-	}
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "outDir": "./dist",
+        "resolveJsonModule": true,
+        "preserveConstEnums": true,
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitReturns": true,
+        "allowUnreachableCode": false,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "allowJs": false,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "paths": {
+            "@classes/*": ["./src/classes/*"],
+            "@util/*": ["./src/util/*"]
+        }
+    }
 }

@@ -1,4 +1,4 @@
 declare interface FetchError {
-	readonly status: number;
-	readonly statusText: string;
+    readonly status: number;
+    readonly statusText: string;
 }
