@@ -1,5 +1,5 @@
 import { escapeMarkdown } from 'discord.js';
-import getRankColor from '@util/getRankColor';
+import getRankColor from '@util/get-rank-color';
 
 export default {
     name: 'chat:guildChat',

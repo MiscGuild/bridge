@@ -8,12 +8,12 @@ import {
 import { BotEvents, createBot } from 'mineflayer';
 import EventEmitter from 'events';
 import consola from 'consola';
-import isObjKey from '@util/isObjKey';
-import logError from '@util/logError';
+import isObjKey from '@util/is-obj-key';
+import logError from '@util/log-error';
 import path from 'path';
-import recursiveWalkDir from '@util/recursiveWalkDir';
+import recursiveWalkDir from '@util/recursive-walk-dir';
 import regex from '@util/regex';
-import Discord from './Client';
+import Discord from './client';
 
 class Bot {
     public readonly logger = consola;

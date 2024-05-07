@@ -1,7 +1,7 @@
-import fetchHypixelPlayerProfile from '@util/requests/fetchHypixelPlayerProfile';
-import fetchMojangProfile from '@util/requests/fetchMojangProfile';
-import isFetchError from '@util/requests/isFetchError';
-import isUserBlacklisted from '@util/blacklist/isUserBlacklisted';
+import fetchHypixelPlayerProfile from '@util/requests/fetch-hypixel-player-profile';
+import fetchMojangProfile from '@util/requests/fetch-mojang-profile';
+import isFetchError from '@util/requests/is-fetch-error';
+import isUserBlacklisted from '@util/blacklist/is-user-blacklisted';
 
 export default {
     name: 'chat:joinRequest',

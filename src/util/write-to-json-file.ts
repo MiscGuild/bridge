@@ -1,6 +1,6 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import { writeFile } from 'fs';
-import logError from './logError';
+import logError from './log-error';
 
 /**
  * @param path The path to the target file. Path must begin from the path root.

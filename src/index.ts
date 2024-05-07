@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import Bot from '@classes/Bot';
+import Bot from '@classes/bot';
 
 config();
 

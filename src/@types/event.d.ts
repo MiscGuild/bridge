@@ -7,4 +7,4 @@ declare interface Event {
     run: Execute;
 }
 
-type Execute = (bot: import('@classes/Bot').default, ...params: any[]) => Promise<void>;
+type Execute = (bot: import('@classes/bot').default, ...params: any[]) => Promise<void>;
