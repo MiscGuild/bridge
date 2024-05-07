@@ -78,13 +78,9 @@ export default {
             const endDate = args[1] as string;
             const reason = args[2] as string;
             const embed = new EmbedBuilder()
-                .setAuthor({
-                    name: 'Blacklist',
-                    iconURL:
-                        'https://media.discordapp.net/attachments/522930879413092388/849317688517853294/misc.png',
-                })
+                .setAuthor({ name: 'Blacklist' })
                 .setColor('Red')
-                .setFooter({ text: `UUID: ${mojangProfile.id}` })
+                .setFooter({ text: mojangProfile.id })
                 .setThumbnail(`https://visage.surgeplay.com/full/${mojangProfile.id}.png`)
                 .setTimestamp()
                 .setTitle(mojangProfile.name)
@@ -127,7 +123,12 @@ export default {
                 } the blacklist!`
             );
 
-        writeToJsonFile('./s@util/_blacklist.json', blacklist, interaction, successEmbed);
+        writeToJsonFile(
+            './src/util/blacklist/_blacklist.json',
+            blacklist,
+            interaction,
+            successEmbed
+        );
     },
     staffOnly: true,
 } as Command;
