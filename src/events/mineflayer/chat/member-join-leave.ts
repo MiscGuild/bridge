@@ -1,6 +1,6 @@
 import Emojis from '@util/emojis';
 import { escapeMarkdown } from 'discord.js';
-import fetchMojangProfile from '@util/requests/fetch-mojan-profile';
+import fetchMojangProfile from '@util/requests/fetch-mojang-profile';
 import isFetchError from '@util/requests/is-fetch-error';
 import isUserBlacklisted from '@util/blacklist/is-user-blacklisted';
 import getRankColor from '@util/get-rank-color';

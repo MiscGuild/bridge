@@ -1,5 +1,5 @@
 import fetchHypixelPlayerProfile from '@util/requests/fetch-hypixel-player-profile';
-import fetchMojangProfile from '@util/requests/fetch-mojan-profile';
+import fetchMojangProfile from '@util/requests/fetch-mojang-profile';
 import isFetchError from '@util/requests/is-fetch-error';
 import isUserBlacklisted from '@util/blacklist/is-user-blacklisted';
 
