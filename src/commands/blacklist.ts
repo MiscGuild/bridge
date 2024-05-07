@@ -1,9 +1,9 @@
 import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from 'discord.js';
 import _blacklist from '@util/blacklist/_blacklist.json';
-import fetchErrorEmbed from '@util/requests/fetchErrorEmbed';
-import fetchMojangProfile from '@util/requests/fetchMojangProfile';
-import isFetchError from '@util/requests/isFetchError';
-import writeToJsonFile from '@util/writeToJsonFile';
+import fetchErrorEmbed from '@util/requests/fetch-error-embed';
+import fetchMojangProfile from '@util/requests/fetch-mojan-profile';
+import isFetchError from '@util/requests/is-fetch-error';
+import writeToJsonFile from '@util/write-to-json-file';
 
 export default {
     data: {

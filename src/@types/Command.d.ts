@@ -5,7 +5,7 @@ declare interface Command {
 }
 
 type ExecuteCommand = (
-    bot: import('@classes/Bot').default,
+    bot: import('@classes/bot').default,
     interaction: import('discord.js').ChatInputCommandInteraction,
     args: unknown[]
 ) => Promise<void>;
