@@ -12,6 +12,10 @@ export default {
         guildRank: string | undefined,
         message: string
     ) => {
+        if (playerName === '0CoinsBot') {
+            return;
+        }
+        
         const content = ` **${rank ? `${rank} ` : ''}${escapeMarkdown(playerName)}${
             guildRank ? ` ${guildRank}` : ''
         }:** ${escapeMarkdown(message)}`;
