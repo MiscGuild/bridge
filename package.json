@@ -21,7 +21,7 @@
         "dotenv": "^16.0.3",
         "mineflayer": "^4.4.0",
         "obscenity": "^0.1.4",
-        "prismarine-chat": "^1.9.1"
+        "prismarine-chat": "^1.10.1"
     },
     "devDependencies": {
         "@jejebecarte/eslint-config": "^1.0.6",
