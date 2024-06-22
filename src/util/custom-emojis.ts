@@ -15,7 +15,7 @@ export default function replaceEmojis(content: string): string {
         newContent = newContent.replace(key, value);
     }
 
-    const emojiRegex = /<:([^:]+):\d+>/g;
+    const emojiRegex = /<a?(:[^:]+:)\d+>/g;
 
-    return newContent.replaceAll(emojiRegex, ':$1:');
+    return newContent.replaceAll(emojiRegex, '$1');
 }
