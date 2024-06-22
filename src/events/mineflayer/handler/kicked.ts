@@ -3,7 +3,15 @@ import Emojis from '@util/emojis';
 export default {
     name: 'kicked',
     runOnce: false,
-    run: async (bot, reason: string, loggedIn: boolean) => {
+    run: async (bot, reasonData: string | any, loggedIn: boolean) => {
+        // If the play is disconnect by a communication/protocol error, the reason will be an object
+        // The structure of the object might be dynamic, should be checked later
+        let reason: string;
+        if (typeof reasonData === 'object') {
+            [reason] = reasonData.value.extra.value.value;
+        } else {
+            reason = reasonData;
+        }
         let message: string;
         switch (true) {
             // Proxy reboot
