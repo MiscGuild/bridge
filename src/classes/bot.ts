@@ -35,10 +35,10 @@ class Bot {
     public totalCount = 125;
     public readonly mineflayer = createBot({
         username: process.env.MINECRAFT_EMAIL,
-        password: process.env.MINECRAFT_PASSWORD,
-        host: 'mc.hypixel.net',
+        password: process.env.MINECRAFT_PASSWORD ?? undefined,
+        host: process.env.SERVER_ADDRESS,
         auth: 'microsoft',
-        version: '1.16.4',
+        version: process.env.MINECRAFT_VERSION,
         logErrors: true,
         hideErrors: true,
         checkTimeoutInterval: 30000,

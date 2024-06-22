@@ -2,8 +2,10 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             MINECRAFT_EMAIL: string;
-            MINECRAFT_PASSWORD: string;
+            MINECRAFT_PASSWORD: ?string;
+            MINECRAFT_VERSION: string;
 
+            SERVER_ADDRESS: string;
             HYPIXEL_API_KEY: string;
 
             MINECRAFT_CHAT_SEPARATOR: string;
