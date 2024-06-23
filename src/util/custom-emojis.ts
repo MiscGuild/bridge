@@ -10,10 +10,9 @@ export default function replaceEmojis(content: string): string {
         '🤝': ':handshake:',
     };
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [key, value] of Object.entries(emojis)) {
+    Object.entries(emojis).forEach(([key, value]) => {
         newContent = newContent.replace(key, value);
-    }
+    });
 
     const emojiRegex = /<a?(:[^:]+:)\d+>/g;
 

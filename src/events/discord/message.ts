@@ -2,6 +2,7 @@ import { Message } from 'discord.js';
 // import { DataSet, RegExpMatcher, englishDataset, englishRecommendedTransformers } from 'obscenity';
 import emojis from '@util/emojis';
 import replaceEmojis from '@util/custom-emojis';
+import replaceUserPings from '@util/replace-user-ping';
 
 const badwords = ['cock', 'dick', 'coon', 'czarnuch', 'Czarnuch', 'K Y S', 'K YS', 'kill yourself', 'KY S', 'kys', 'n i g g a', 'n i g g a s', 'n i g g e r', 'n i g g e r s', 'N igga', 'n igger', 'negerzoen', 'negr', 'Negr', 'ngga', 'NGGA', 'ni gga', 'ni gger', 'Nig', 'nig ga', 'nig ger', 'niga', 'nigA', 'niGa', 'nIga', 'Niga', 'NIGA', 'nigg', 'nigg a', 'NIGG A', 'nigg er', 'nigg3r', 'Nigga', 'niggas', 'nigge r', 'Nigger', 'niggerlecton', 'niggerman', 'niggermancer', 'niggers', 'niglet', 'niguh', 'nlgg3r', 'nlgga', 'nlgger', 'nlggers', 'nyagah', 'ниггер'];
 // const dataset = new DataSet<{ originalWord: string }>()
@@ -67,6 +68,7 @@ export default {
             )}`;
 
             content = replaceEmojis(content);
+            content = replaceUserPings(bot.discord.users.cache, content);
 
             bot.sendGuildMessage(
                 message.channel.id === bot.memberChannel?.id ? 'gc' : 'oc',
