@@ -2,11 +2,10 @@ import { Collection, User } from 'discord.js';
 
 const pingRegex = /<@(\d+)>/g;
 
-//
 /**
  * Replaces Discord user pings by their username.
  *
- * Additional checks should probably be added to, for example bad words
+ * Additional checks for bad/banned words should probably be added
  * @param userCache Cache of user data indexed by their ID, removes the need to do API calls
  * @param content Message to replace the pings in
  * @returns Updated message

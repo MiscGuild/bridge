@@ -4,7 +4,7 @@ export default {
     name: 'kicked',
     runOnce: false,
     run: async (bot, reasonData: string | any, loggedIn: boolean) => {
-        // If the play is disconnect by a communication/protocol error, the reason will be an object
+        // If the client is disconnected by a communication/protocol error, the reason will be an object
         // The structure of the object might be dynamic, should be checked later
         let reason: string;
         if (typeof reasonData === 'object') {
