@@ -10,9 +10,8 @@ export default {
 
         await bot.sendToDiscord(
             'gc',
-            `${emoji} **${escapeMarkdown(playerName)}** ${status}. \`(${bot.onlineCount}/${
-                bot.totalCount
-            })\``
+            `${emoji} **${escapeMarkdown(playerName)}** ${status}.`
+            // \`(${bot.onlineCount}/${bot.totalCount})\`
         );
     },
 } as Event;

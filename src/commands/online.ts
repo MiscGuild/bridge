@@ -4,6 +4,7 @@ const regex = {
     bound: /-----------------------------------------------------/,
     guildRank: /-- (.+) --/,
     playerOnlineStatus: /([^ ]+) ●/g,
+    onlineMembers: /Online Members: (\d+)/,
 };
 
 export default {
@@ -40,8 +41,10 @@ export default {
                 }
             }
             if (boundReceived >= 2) {
+                const playerCount = regex.onlineMembers.exec(message)?.at(1);
+
                 bot.mineflayer.removeListener('messagestr', listener);
-                const embed = new EmbedBuilder().setColor('Green').setTitle('Online players');
+                const embed = new EmbedBuilder().setColor('Green').setTitle(`Online Players [${playerCount}/${bot.totalCount}]`);
 
                 Object.entries(players).forEach(([guildRank, usernames]) => {
                     embed.addFields({ name: guildRank, value: `\`${usernames.join(' ')}\`` });
@@ -57,14 +60,14 @@ export default {
         // If the command takes longer than 2 seconds to finish, something probably went wrong
         setTimeout(() => {
             bot.mineflayer.removeListener('messagestr', listener);
-            if (repliedToInteraction === true) {
+            if (repliedToInteraction) {
                 return;
             }
 
             // Send an error reply if the listener failed for any reason
             const embed = new EmbedBuilder().setColor('Red').setTitle('Online players');
-            embed.addFields({name: 'Error', value: 'Failed to get online players, please retry later'});
-            interaction.reply({embeds: [embed]});
+            embed.addFields({ name: 'Error', value: 'Failed to get online players, please retry later' });
+            interaction.reply({ embeds: [embed] });
         }, 2000);
     },
 } as Command;
