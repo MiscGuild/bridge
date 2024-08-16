@@ -59,7 +59,7 @@ export default {
     'chat:joinLimbo': /^You were spawned in Limbo.$/,
 
     /**
-     * When the bot detects its not in Limbo
+     * When the bot detects it's not in Limbo
      */
     'chat:lobbyJoin':
         /^(?:\s>>>\s)?\[.*]\s[\w]{2,17} (?:joined|spooked into|slid into) the lobby!(?:\s<<<)?$/,

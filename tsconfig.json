@@ -17,6 +17,7 @@
         "isolatedModules": true,
         "paths": {
             "@classes/*": ["./src/classes/*"],
+            "@events/*": ["./src/events/*"],
             "@util/*": ["./src/util/*"]
         }
     }

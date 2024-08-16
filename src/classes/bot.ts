@@ -12,7 +12,7 @@ import isObjKey from '@util/is-obj-key';
 import logError from '@util/log-error';
 import path from 'path';
 import recursiveWalkDir from '@util/recursive-walk-dir';
-import regex from '@util/regex';
+import regex from '@events/regex';
 import Discord from './client';
 
 class Bot {
@@ -33,6 +33,7 @@ class Bot {
 
     public onlineCount = 0;
     public totalCount = 125;
+    public limboTries = 0;
     public readonly mineflayer = createBot({
         username: process.env.MINECRAFT_EMAIL,
         password: process.env.MINECRAFT_PASSWORD,
@@ -106,7 +107,30 @@ class Bot {
     }
 
     public sendToLimbo() {
-        this.executeCommand('§');
+        const SPAM_THRESHOLD = 3;
+
+        if (this.limboTries < SPAM_THRESHOLD) {
+            const triesBeforeSpam = SPAM_THRESHOLD - this.limboTries;
+            this.logger.info(
+                `Sending to Limbo. Attempting disconnect.spam in ${triesBeforeSpam} ${
+                    SPAM_THRESHOLD - this.limboTries === 1 ? 'try' : 'tries'
+                }`
+            );
+
+            this.executeCommand('§');
+            this.limboTries++;
+        } else if (this.limboTries === SPAM_THRESHOLD) {
+            this.logger.info('Attempting disconnect.spam');
+
+            for (let i = 0; i < 11; i++) {
+                this.executeCommand('/');
+            }
+
+            this.limboTries++;
+        } else if (this.limboTries === SPAM_THRESHOLD + 1) {
+            this.logger.warn('Limbo warp failed. Waiting for AFK kick');
+            this.limboTries++;
+        }
     }
 
     public setStatus() {

@@ -1,6 +1,6 @@
 declare interface Event {
     name:
-        | keyof typeof import('@util/regex').default
+        | keyof typeof import('@events/regex').default
         | keyof import('mineflayer').BotEvents
         | keyof import('discord.js').ClientEvents;
     runOnce: boolean;
