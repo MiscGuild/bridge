@@ -16,8 +16,8 @@
         "skipLibCheck": true,
         "isolatedModules": true,
         "paths": {
-            "@classes/*": ["./src/classes/*"], 
-            "@events/*": ["./src/events/*"], 
+            "@classes/*": ["./src/classes/*"],
+            "@events/*": ["./src/events/*"],
             "@util/*": ["./src/util/*"]
         }
     }
