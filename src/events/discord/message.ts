@@ -7,10 +7,13 @@ const dataset = new DataSet<{ originalWord: string }>()
     .addAll(englishDataset)
     .removePhrasesIf((phrase) => whitelist.includes(phrase.metadata!.originalWord));
 
-const profanityMatcher = new RegExpMatcher({
-    ...dataset.build(),
-    ...englishRecommendedTransformers,
-});
+const profanityMatcher =
+    process.env.USE_PROFANITY_FILTER === 'true'
+        ? new RegExpMatcher({
+              ...dataset.build(),
+              ...englishRecommendedTransformers,
+          })
+        : null;
 
 export default {
     name: 'messageCreate',
@@ -46,7 +49,7 @@ export default {
             bot.logger.error(e);
         }
 
-        if (profanityMatcher.hasMatch(message.content)) {
+        if (profanityMatcher?.hasMatch(message.content)) {
             await message.channel.send(
                 `${emojis.warning} ${message.author.username}, you may not use profane language!`
             );
