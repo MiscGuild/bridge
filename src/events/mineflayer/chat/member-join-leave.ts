@@ -1,9 +1,10 @@
 import Emojis from '@util/emojis';
 import { escapeMarkdown } from 'discord.js';
-import fetchMojangProfile from '@util/requests/fetch-mojang-profile';
-import isFetchError from '@util/requests/is-fetch-error';
-import isUserBlacklisted from '@util/blacklist/is-user-blacklisted';
+import fetchMojangProfile from '@requests/fetch-mojang-profile';
+import isFetchError from '@requests/is-fetch-error';
+import isUserBlacklisted from '@blacklist/is-user-blacklisted';
 import getRankColor from '@util/get-rank-color';
+import env from '@util/env';
 
 export default {
     name: 'chat:memberJoinLeave',
@@ -14,7 +15,7 @@ export default {
 
             if (!isFetchError(mojangProfile) && isUserBlacklisted(mojangProfile.id)) {
                 bot.executeCommand(
-                    `/g kick ${playerName} You have been blacklisted from the guild. Mistake? --> ${process.env.DISCORD_INVITE_LINK}`
+                    `/g kick ${playerName} You have been blacklisted from the guild. Mistake? --> ${env.DISCORD_INVITE_LINK}`
                 );
             }
         }

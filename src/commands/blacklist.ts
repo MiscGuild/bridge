@@ -1,9 +1,10 @@
 import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from 'discord.js';
-import _blacklist from '@util/blacklist/_blacklist.json';
-import fetchErrorEmbed from '@util/requests/fetch-error-embed';
-import fetchMojangProfile from '@util/requests/fetch-mojang-profile';
-import isFetchError from '@util/requests/is-fetch-error';
+import env from '@util/env';
+import _blacklist from '@blacklist/_blacklist.json';
 import writeToJsonFile from '@util/write-to-json-file';
+import fetchErrorEmbed from '@requests/fetch-error-embed';
+import fetchMojangProfile from '@requests/fetch-mojang-profile';
+import isFetchError from '@requests/is-fetch-error';
 
 export default {
     data: {
@@ -91,7 +92,7 @@ export default {
                 ]);
 
             const blacklistMessage = await (
-                (await bot.discord.channels.fetch(process.env.BLACKLIST_CHANNEL_ID)) as TextChannel
+                (await bot.discord.channels.fetch(env.BLACKLIST_CHANNEL_ID)) as TextChannel
             ).send({
                 embeds: [embed],
             });
@@ -108,7 +109,7 @@ export default {
             blacklist.splice(blacklist.indexOf(blacklistEntry));
 
             const message = await (
-                bot.discord.channels.cache.get(process.env.BLACKLIST_CHANNEL_ID) as TextChannel
+                bot.discord.channels.cache.get(env.BLACKLIST_CHANNEL_ID) as TextChannel
             ).messages.fetch(blacklistEntry.messageId);
             await message.delete();
         }
@@ -123,12 +124,7 @@ export default {
                 } the blacklist!`
             );
 
-        writeToJsonFile(
-            './src/util/blacklist/_blacklist.json',
-            blacklist,
-            interaction,
-            successEmbed
-        );
+        writeToJsonFile('./src/blacklist/_blacklist.json', blacklist, interaction, successEmbed);
     },
     staffOnly: true,
 } as Command;

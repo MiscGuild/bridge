@@ -1,3 +1,4 @@
+import logger from 'consola';
 import { EmbedBuilder } from 'discord.js';
 
 export default {
@@ -13,7 +14,7 @@ export default {
             .setDescription('Rebooting in 15 seconds...');
 
         bot.sendGuildMessage('gc', 'Rebooting in 15 seconds...');
-        bot.logger.info(
+        logger.info(
             `Rebooting due to ${interaction.member?.user.username} running the reboot command.`
         );
 

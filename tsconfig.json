@@ -16,8 +16,10 @@
         "skipLibCheck": true,
         "isolatedModules": true,
         "paths": {
+            "@blacklist/*": ["./src/blacklist/*"],
             "@classes/*": ["./src/classes/*"],
             "@events/*": ["./src/events/*"],
+            "@requests/*": ["./src/requests/*"],
             "@util/*": ["./src/util/*"]
         }
     }

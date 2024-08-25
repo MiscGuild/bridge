@@ -1,6 +1,6 @@
+import logger from 'consola';
 import fs from 'fs/promises';
 import path from 'path';
-import bot from '..';
 
 /**
  *
@@ -27,7 +27,8 @@ async function recursiveWalkDir(
     try {
         await Promise.all(promises);
     } catch (e: unknown) {
-        bot.logger.error(`${errMessage} ${(e as Error).message}`);
+        // Change to just err as param?
+        logger.error(`${errMessage} ${(e as Error).message}`);
     }
 }
 

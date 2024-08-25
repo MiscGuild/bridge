@@ -1,4 +1,6 @@
+import logger from 'consola';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Interaction } from 'discord.js';
+import env from '@util/env';
 
 export default {
     name: 'interactionCreate',
@@ -9,15 +11,15 @@ export default {
         const command = bot.discord.commands.get(interaction.commandName);
 
         if (!command) {
-            bot.logger.error(`Unknown slash command: ${interaction.commandName}`);
+            logger.error(`Unknown slash command: ${interaction.commandName}`);
             return;
         }
 
         const member = interaction.member as GuildMember;
         if (
             command.staffOnly &&
-            !member.roles.cache.has(process.env.STAFF_ROLE_ID) &&
-            member.id !== process.env.BOT_OWNER_ID
+            !member.roles.cache.has(env.STAFF_ROLE_ID) &&
+            member.id !== env.BOT_OWNER_ID
         ) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
@@ -47,9 +49,7 @@ export default {
                 ephemeral: true,
             });
 
-            bot.logger.error(
-                `An error occured in ${interaction.commandName}: ${(e as Error).message}`
-            );
+            logger.error(`An error occured in ${interaction.commandName}: ${(e as Error).message}`);
         }
     },
 } as Event;
