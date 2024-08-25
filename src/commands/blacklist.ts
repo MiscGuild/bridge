@@ -124,12 +124,7 @@ export default {
                 } the blacklist!`
             );
 
-        writeToJsonFile(
-            './src/blacklist/_blacklist.json',
-            blacklist,
-            interaction,
-            successEmbed
-        );
+        writeToJsonFile('./src/blacklist/_blacklist.json', blacklist, interaction, successEmbed);
     },
     staffOnly: true,
 } as Command;

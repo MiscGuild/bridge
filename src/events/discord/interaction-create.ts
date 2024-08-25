@@ -49,9 +49,7 @@ export default {
                 ephemeral: true,
             });
 
-            logger.error(
-                `An error occured in ${interaction.commandName}: ${(e as Error).message}`
-            );
+            logger.error(`An error occured in ${interaction.commandName}: ${(e as Error).message}`);
         }
     },
 } as Event;
