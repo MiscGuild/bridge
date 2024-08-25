@@ -1,3 +1,4 @@
+import logger from 'consola';
 import Emojis from '@util/emojis';
 
 export default {
@@ -42,7 +43,7 @@ export default {
             `${Emojis.error} The bot was kicked from the server due to ${message}. Restarting the bot in 15 seconds...`
         );
 
-        bot.logger.error(
+        logger.error(
             `The bot was kicked from the server. Restarting the bot in 15 seconds...\nReason: ${reason}\nLogged in: ${loggedIn}`
         );
 

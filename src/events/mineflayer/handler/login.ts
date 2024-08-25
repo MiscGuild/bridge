@@ -1,4 +1,5 @@
 import Emojis from '@util/emojis';
+import env from '@util/env';
 
 export default {
     name: 'login',
@@ -9,12 +10,10 @@ export default {
             `${Emojis.success} **\`${bot.mineflayer.username}\` has logged in and is now ready!**`
         );
 
-        if (process.env.REMINDER_ENABLED === 'true') {
-            const frequency = parseInt(process.env.REMINDER_FREQUENCY, 10);
-
+        if (env.REMINDER_ENABLED) {
             setInterval(() => {
-                bot.sendGuildMessage('gc', process.env.REMINDER_MESSAGE);
-            }, 1000 * 60 * (Number.isNaN(frequency) ? 60 : frequency));
+                bot.sendGuildMessage('gc', env.REMINDER_MESSAGE);
+            }, 1000 * 60 * env.REMINDER_FREQUENCY);
         }
 
         setInterval(() => {

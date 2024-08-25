@@ -1,9 +1,11 @@
+import logger from 'consola';
+
 export default {
     name: 'error',
     runOnce: false,
     run: (bot, error: Error) => {
-        bot.logger.fatal('Encountered an unexpected error. Restarting the bot in 15 seconds...');
-        bot.logger.fatal(error);
+        logger.fatal('Encountered an unexpected error. Restarting the bot in 15 seconds...');
+        logger.fatal(error);
 
         setTimeout(() => {
             process.exit(1);

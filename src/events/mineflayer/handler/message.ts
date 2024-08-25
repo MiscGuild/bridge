@@ -1,3 +1,4 @@
+import logger from 'consola';
 import { ChatMessage } from 'prismarine-chat';
 
 export default {
@@ -5,6 +6,6 @@ export default {
     runOnce: false,
     run: (bot, message: ChatMessage) => {
         // Log color chat to console
-        bot.logger.log(message.toAnsi());
+        logger.log(message.toAnsi());
     },
 } as Event;

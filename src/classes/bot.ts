@@ -6,22 +6,21 @@ import {
     TextChannel,
 } from 'discord.js';
 import { BotEvents, createBot } from 'mineflayer';
+import logger from 'consola';
 import EventEmitter from 'events';
-import consola from 'consola';
+import path from 'path';
 import isObjKey from '@util/is-obj-key';
 import logError from '@util/log-error';
-import path from 'path';
 import recursiveWalkDir from '@util/recursive-walk-dir';
 import regex from '@events/regex';
+import env from '@util/env';
 import Discord from './client';
 
 class Bot {
-    public readonly logger = consola;
-
     public memberChannel?: TextChannel;
     public officerChannel?: TextChannel;
-    public readonly ignorePrefix = process.env.DISCORD_IGNORE_PREFIX ?? ')';
-    public readonly chatSeparator = process.env.MINECRAFT_CHAT_SEPARATOR ?? '>';
+    public readonly ignorePrefix = env.DISCORD_IGNORE_PREFIX;
+    public readonly chatSeparator = env.MINECRAFT_CHAT_SEPARATOR;
     public readonly discord = new Discord({
         allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
         intents: [
@@ -35,8 +34,8 @@ class Bot {
     public totalCount = 125;
     public limboTries = 0;
     public readonly mineflayer = createBot({
-        username: process.env.MINECRAFT_EMAIL,
-        password: process.env.MINECRAFT_PASSWORD,
+        username: env.MINECRAFT_EMAIL,
+        password: env.MINECRAFT_PASSWORD,
         host: 'mc.hypixel.net',
         auth: 'microsoft',
         version: '1.16.4',
@@ -50,7 +49,7 @@ class Bot {
         try {
             this.start();
         } catch (error) {
-            this.logger.error(error);
+            logger.error(error);
         }
     }
 
@@ -111,7 +110,7 @@ class Bot {
 
         if (this.limboTries < SPAM_THRESHOLD) {
             const triesBeforeSpam = SPAM_THRESHOLD - this.limboTries;
-            this.logger.info(
+            logger.info(
                 `Sending to Limbo. Attempting disconnect.spam in ${triesBeforeSpam} ${
                     SPAM_THRESHOLD - this.limboTries === 1 ? 'try' : 'tries'
                 }`
@@ -120,7 +119,7 @@ class Bot {
             this.executeCommand('§');
             this.limboTries++;
         } else if (this.limboTries === SPAM_THRESHOLD) {
-            this.logger.info('Attempting disconnect.spam');
+            logger.info('Attempting disconnect.spam');
 
             for (let i = 0; i < 11; i++) {
                 this.executeCommand('/');
@@ -128,7 +127,7 @@ class Bot {
 
             this.limboTries++;
         } else if (this.limboTries === SPAM_THRESHOLD + 1) {
-            this.logger.warn('Limbo warp failed. Waiting for AFK kick');
+            logger.warn('Limbo warp failed. Waiting for AFK kick');
             this.limboTries++;
         }
     }
@@ -153,12 +152,12 @@ class Bot {
             const command = (await import(path.join(currentDir, file))).default as Command;
 
             if (!command.data) {
-                this.logger.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
+                logger.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
                 return;
             }
 
             if (!command.run) {
-                this.logger.warn(
+                logger.warn(
                     `The command ${command.data.name} doesn't have an executable function!`
                 );
                 return;
@@ -182,12 +181,12 @@ class Bot {
                 .default as Event;
 
             if (!name) {
-                this.logger.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
+                logger.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
                 return;
             }
 
             if (!run) {
-                this.logger.warn(`The event ${name} doesn't have an executable function!`);
+                logger.warn(`The event ${name} doesn't have an executable function!`);
                 return;
             }
 
@@ -219,7 +218,7 @@ class Bot {
             this.loadEvents('../events/mineflayer', this.mineflayer),
         ]);
 
-        await this.discord.login(process.env.DISCORD_TOKEN);
+        await this.discord.login(env.DISCORD_TOKEN);
     }
 }
 
