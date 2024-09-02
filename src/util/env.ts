@@ -4,8 +4,6 @@ import { z } from 'zod';
 
 config();
 
-logger.error(new Error());
-
 const BOOLEAN_SCHEMA = z
     .string()
     .toLowerCase()
