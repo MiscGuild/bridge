@@ -4,7 +4,7 @@ import path from 'path';
 
 /**
  *
- * @param normalisedDirName The directory to begin walking through. Normalised with path.join().
+ * @param normalisedDirName The directory to begin walking through, normalised with path.join().
  * @param callback The callback to execute for every file found.
  * @param errMessage The error message to display if an error occurs during the process.
  */
@@ -27,8 +27,11 @@ async function recursiveWalkDir(
     try {
         await Promise.all(promises);
     } catch (e: unknown) {
-        // Change to just err as param?
-        logger.error(`${errMessage} ${(e as Error).message}`);
+        logger.error(errMessage);
+
+        if (e instanceof Error) {
+            logger.error(e);
+        }
     }
 }
 
