@@ -4,17 +4,15 @@ import { z } from 'zod';
 
 config();
 
+logger.error(new Error());
+
 const BOOLEAN_SCHEMA = z
     .string()
     .toLowerCase()
     .transform((x) => x === 'true')
     .pipe(z.boolean());
 
-const SNOWFLAKE_SCHEMA = z.coerce
-    .number()
-    .int()
-    .positive()
-    .transform((val) => val.toString());
+const SNOWFLAKE_SCHEMA = z.coerce.string().regex(/^\d*$/gm);
 
 const envSchema = z
     .object({
