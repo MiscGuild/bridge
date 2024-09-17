@@ -30,11 +30,11 @@ export default {
             // Maintenance
             case reason.includes('This server is currently in maintenance mode') ||
                 reason.includes('is currently down for maintenance'):
-                message = 'hypixel currently being in maintenance mode';
+                message = 'Hypixel currently being in maintenance mode';
                 break;
 
             default:
-                message = 'an unkown reason';
+                message = 'an unknown reason';
                 break;
         }
 
