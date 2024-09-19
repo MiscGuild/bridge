@@ -4,22 +4,22 @@ export default (rank?: string) => {
     switch (rank) {
         case '[ADMIN]':
         case '[YOUTUBE]':
-            color = 0xf55;
+            color = 0xff5555;
             break;
         case '[MVP++]':
-            color = 0xfa0;
+            color = 0xffaa00;
             break;
         case '[MVP+]':
         case '[MVP]':
-            color = 0x5ff;
+            color = 0x55ffff;
             break;
         case '[VIP+]':
         case '[VIP]':
-            color = 0x5f5;
+            color = 0x55ff55;
             break;
 
         default:
-            color = 0xaaa;
+            color = 0xaaaaaa;
     }
 
     return color;
