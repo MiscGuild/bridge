@@ -47,7 +47,7 @@
 ### Prerequisites
 
 -   [Git](https://git-scm.com/downloads)
--   [NodeJS](https://nodejs.org/en/) >=16.6.0 and npm
+-   [NodeJS](https://nodejs.org/en/) >=18.20.4 and npm
 -   A full access Minecraft Java Edition account
 
 ### Setup
@@ -120,7 +120,7 @@ Pull requests are welcome. If you would like to chat with other developers pleas
 Before submitting your changes for review, please ensure:
 
 -   all code has been thoroughly tested
--   you have followed the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/)
+-   your commit meessages follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ### Issues and Bug Reports
 
@@ -130,8 +130,8 @@ To raise an issue or bug report, please contact a developer or [open an issue](h
 
 Parts of this project use code from the following repositories:
 
--   [Hychat Self-Host](https://github.com/hychat-mc/self-host) Under MIT License.
--   [Hypixel API TypeScript](https://github.com/unaussprechlich/hypixel-api-typescript) Under MIT License.
+-   [Hychat Self-Host](https://github.com/hychat-mc/self-host) under the MIT License.
+-   [Hypixel API TypeScript](https://github.com/unaussprechlich/hypixel-api-typescript) under the MIT License.
 
 ## License
 
