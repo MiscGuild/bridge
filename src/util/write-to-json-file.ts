@@ -25,7 +25,7 @@ export default (
             return;
         }
 
-        logError(err, 'Failed to write to file: ');
+        logError(err, 'Failed to write to file');
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setTitle('Error')
