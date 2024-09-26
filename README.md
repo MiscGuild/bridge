@@ -114,8 +114,8 @@ Pull requests are welcome. If you would like to chat with other developers pleas
 
 Before submitting your changes for review, please ensure:
 
--   all code has been thoroughly tested
--   your commit meessages follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/)
+-   The application is fully functional, and all your code has been thoroughly tested to avoid potential bugs or security vulnerabilities.
+-   Your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ### Issues and Bug Reports
 
