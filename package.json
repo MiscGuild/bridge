@@ -5,13 +5,13 @@
     "license": "MIT",
     "private": false,
     "scripts": {
-        "build": "tsc && tsc-alias",
+        "build": "tsc --build --clean && tsc-alias",
         "clean": "rm -r dist/",
         "dev": "ts-node-dev --respawn --transpile-only --poll -r tsconfig-paths/register src/index.ts",
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint .",
-        "pm2": "pm2 logs && pm2 start dist/index.js --name bridge",
         "pm2:kill": "pm2 kill",
+        "pm2:start": "pm2 start dist/index.js --attach --name bridge",
         "setup-files": "node scripts/setup-files.js",
         "start": "node ."
     },
@@ -21,6 +21,7 @@
         "dotenv": "^16.4.5",
         "mineflayer": "^4.20.1",
         "obscenity": "^0.1.4",
+        "pm2": "^5.4.2",
         "prismarine-chat": "^1.10.1",
         "zod": "^3.23.8"
     },

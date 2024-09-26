@@ -99,16 +99,11 @@ $ pnpm start
 
 If you are self-hosting or your process manager does not automatically restart the bot in the event of a crash, you may use [PM2](https://pm2.keymetrics.io/), a process manager for Node.js applications.
 
-1. Install PM2.
+Use the `pm2:start` script instead of the `start` script to launch the bot. To stop the process, use the `pm2:kill` script.
 
 ```bash
-$ pnpm add pm2
-```
-
-2. Use the `pm2` script instead of the `start` script to launch the bot.
-
-```bash
-$ pnpm run pm2
+$ pnpm run pm2:start
+$ pnpm run pm2:kill
 ```
 
 Please refer to the [PM2 Documentation](https://pm2.keymetrics.io/docs/usage/quick-start/) for more configuration options and information about PM2.
