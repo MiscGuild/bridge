@@ -23,9 +23,6 @@ importers:
       obscenity:
         specifier: ^0.1.4
         version: 0.1.4
-      pm2:
-        specifier: ^5.4.2
-        version: 5.4.2
       prismarine-chat:
         specifier: ^1.10.1
         version: 1.10.1
@@ -42,6 +39,9 @@ importers:
       eslint:
         specifier: ^8.57.1
         version: 8.57.1
+      pm2:
+        specifier: ^5.4.2
+        version: 5.4.2
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
