@@ -106,7 +106,7 @@ $ pnpm run pm2:start
 $ pnpm run pm2:kill
 ```
 
-Please refer to the [PM2 Documentation](https://pm2.keymetrics.io/docs/usage/quick-start/) for more configuration options and information about PM2.
+Please refer to the [PM2 documentation](https://pm2.keymetrics.io/docs/usage/quick-start/) for more configuration options and information about PM2.
 
 ## Contributing
 

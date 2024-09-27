@@ -12,10 +12,10 @@ const BOOLEAN_SCHEMA = z
 
 const SNOWFLAKE_SCHEMA = z.coerce.string().regex(/^\d*$/gm);
 
+// MINECRAFT_PASSWORD field omitted to allow for manual authorization
 const envSchema = z
     .object({
         MINECRAFT_EMAIL: z.string().email(),
-        MINECRAFT_PASSWORD: z.string().min(1),
         HYPIXEL_API_KEY: z.string().min(1),
         MINECRAFT_CHAT_SEPARATOR: z.string().trim().min(1),
         USE_PROFANITY_FILTER: BOOLEAN_SCHEMA,
