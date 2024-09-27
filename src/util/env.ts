@@ -2,8 +2,6 @@ import logger from 'consola';
 import { config } from 'dotenv';
 import { z } from 'zod';
 
-config();
-
 const BOOLEAN_SCHEMA = z
     .string()
     .toLowerCase()
@@ -15,7 +13,7 @@ const SNOWFLAKE_SCHEMA = z.coerce.string().regex(/^\d*$/gm);
 const envSchema = z
     .object({
         MINECRAFT_EMAIL: z.string().email(),
-        MINECRAFT_PASSWORD: z.string().min(1),
+        MINECRAFT_PASSWORD: z.string(), // no minimum length allows for manual authorization - dotenv populates an empty string by default
         HYPIXEL_API_KEY: z.string().min(1),
         MINECRAFT_CHAT_SEPARATOR: z.string().trim().min(1),
         USE_PROFANITY_FILTER: BOOLEAN_SCHEMA,
@@ -40,6 +38,7 @@ const envSchema = z
         path: ['REMINDER_MESSAGE'],
     });
 
+config();
 const env = envSchema.safeParse(process.env);
 
 if (!env.success) {
