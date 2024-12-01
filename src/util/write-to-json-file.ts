@@ -1,6 +1,6 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import { writeFile } from 'fs';
-import logError from './log-error';
+import winston from 'winston';
 
 /**
  * @param path The path to the target file. Path must begin from the path root.
@@ -8,7 +8,6 @@ import logError from './log-error';
  * @param interaction The interaction to reply to in case of failure.
  * @param successEmbed The embed to reply with if successful.
  */
-
 export default (
     path: string,
     data: any,
@@ -25,7 +24,7 @@ export default (
             return;
         }
 
-        logError(err, 'Failed to write to file');
+        winston.error('Failed to write to file:', err);
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setTitle('Error')

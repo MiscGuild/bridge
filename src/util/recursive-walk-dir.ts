@@ -1,6 +1,6 @@
-import logger from 'consola';
 import fs from 'fs/promises';
 import path from 'path';
+import winston from 'winston';
 
 /**
  *
@@ -27,11 +27,7 @@ async function recursiveWalkDir(
     try {
         await Promise.all(promises);
     } catch (e: unknown) {
-        logger.error(errMessage);
-
-        if (e instanceof Error) {
-            logger.error(e);
-        }
+        winston.error(errMessage, e);
     }
 }
 
