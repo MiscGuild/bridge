@@ -25,7 +25,7 @@
         "zod": "^3.23.8"
     },
     "devDependencies": {
-        "@jejebecarte/eslint-config": "^1.0.6",
+        "@jejebecarte/eslint-config": "^1.0.7",
         "@types/node-fetch": "^2.6.11",
         "eslint": "^8.57.1",
         "pm2": "^5.4.2",

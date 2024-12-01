@@ -40,11 +40,11 @@ export default {
 
         await bot.sendToDiscord(
             'gc',
-            `${Emojis.error} The bot was kicked from the server due to ${message}. Restarting the bot in 15 seconds...`
+            `${Emojis.error} The bot was kicked from the server due to ${message}. Exiting in 15 seconds...`
         );
 
         winston.error(
-            `The bot was kicked from the server. Restarting the bot in 15 seconds...\nReason: ${reason}\nLogged in: ${loggedIn}`
+            `The bot was kicked from the server. Exiting in 15 seconds...\nReason: ${reason}\nLogged in: ${loggedIn}`
         );
 
         setTimeout(() => {

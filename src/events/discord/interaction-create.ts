@@ -49,7 +49,7 @@ export default {
                 ephemeral: true,
             });
 
-            winston.error(`An error occured in ${interaction.commandName}: ${(e as Error).message}`);
+            winston.error(`An error occured in ${interaction.commandName}:`, e);
         }
     },
 } as Event;

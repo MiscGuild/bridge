@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const fs = require('fs');
 
 const oldPaths = ['.env.template', 'src/blacklist/_blacklist.json.template'];

@@ -31,8 +31,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@jejebecarte/eslint-config':
-        specifier: ^1.0.6
-        version: 1.0.6(eslint@8.57.1)(prettier@2.8.8)(typescript@4.9.5)
+        specifier: ^1.0.7
+        version: 1.0.7(eslint@8.57.1)(prettier@2.8.8)(typescript@4.9.5)
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -146,8 +146,8 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
 
-  '@jejebecarte/eslint-config@1.0.6':
-    resolution: {integrity: sha512-GhPWxJBu6D6KuzXVu68hS5dAkjep9uG88ckhCMBXQLjIWAkEZH4dUfkPvEyzedWdjH7s7eLuxcZEpF3dEfKrfQ==}
+  '@jejebecarte/eslint-config@1.0.7':
+    resolution: {integrity: sha512-NhdK52lAFYn1nfAi55MlM8THZf6ZggeAqjJGoLuQTPHklPUFYhgg2PxxODPYl3xCONs8wpSBzkEgut7O8Uq0LQ==}
     peerDependencies:
       eslint: ^8.38.0
       prettier: ^2.8.7
@@ -2307,7 +2307,7 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
-  '@jejebecarte/eslint-config@1.0.6(eslint@8.57.1)(prettier@2.8.8)(typescript@4.9.5)':
+  '@jejebecarte/eslint-config@1.0.7(eslint@8.57.1)(prettier@2.8.8)(typescript@4.9.5)':
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(typescript@4.9.5)
       '@typescript-eslint/parser': 5.62.0(eslint@8.57.1)(typescript@4.9.5)
