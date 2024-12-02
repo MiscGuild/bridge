@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
-import capitaliseString from '@util/capitalise-string';
 
 export default {
     data: {
@@ -49,7 +48,7 @@ export default {
         try {
             await bot.executeTask(`/g ${type} ${user} ${duration}`);
             embed
-                .setTitle(capitaliseString(`${type}d!`))
+                .setTitle(type === 'mute' ? 'Muted!' : 'Unmuted!')
                 .setDescription(
                     `${user} was ${type}d${type === 'mute' ? ` for ${duration}!` : '!'}`
                 )

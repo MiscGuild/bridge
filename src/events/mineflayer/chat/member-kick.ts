@@ -8,15 +8,15 @@ export default {
         bot,
         rank: string | undefined,
         playerName: string,
-        kickedByRank: string | undefined,
-        kickedByPlayerName: string
+        kickerRank: string | undefined,
+        kickerName: string
     ) => {
         await bot.sendToDiscord(
             'gc',
             `${Emojis.negativeGuildEvent} **${rank ? `${rank} ` : ''}${escapeMarkdown(
                 playerName
-            )}** was kicked by **${kickedByRank ? `${kickedByRank} ` : ''}${escapeMarkdown(
-                kickedByPlayerName
+            )}** was kicked by **${kickerRank ? `${kickerRank} ` : ''}${escapeMarkdown(
+                kickerName
             )}**`,
             undefined,
             true

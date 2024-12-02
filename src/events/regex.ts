@@ -35,7 +35,7 @@ export default {
      * Returns:
      *  - Hypixel Rank
      *  - Player Name
-     *  - muted / unmuted
+     *  - Type (muted / unmuted)
      *  - Muter Hypixel Rank
      *  - Muter Player Name
      *  - Muter Player Name
@@ -49,7 +49,7 @@ export default {
      *
      * Returns:
      *  - Player Name
-     *  - joined / left
+     *  - Type (joined / left)
      */
     'chat:joinLeave': /^Guild > (\w{2,17}).*? (joined|left)\.$/,
 
@@ -76,7 +76,7 @@ export default {
      * When "/g online" is typed, and the online and total member count is shown
      *
      * Returns:
-     *  - Online / Total
+     *  - Type (Online / Total)
      *  - Member Count
      */
     'chat:memberCount': /^(Online|Total) Members: (\d+)$/,
@@ -87,7 +87,7 @@ export default {
      * Returns:
      *  - Hypixel Rank
      *  - Player Name
-     *  - joined / left
+     *  - Type (joined / left)
      */
     'chat:memberJoinLeave': /^(\[.*])?\s*(\w{2,17}).*? (joined|left) the guild!$/,
 
@@ -109,7 +109,7 @@ export default {
      * Returns:
      *  - Hypixel Rank
      *  - Player Name
-     *  - promoted / demoted
+     *  - Type (promoted / demoted)
      *  - From Rank
      *  - To Rank
      */

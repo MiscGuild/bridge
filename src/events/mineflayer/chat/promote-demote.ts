@@ -10,14 +10,14 @@ export default {
         rank: string | undefined,
         playerName: string,
         type: 'promoted' | 'demoted',
-        guildRankFrom: string,
-        guildRankTo: string
+        originalRank: string,
+        newRank: string
     ) => {
         await bot.sendToDiscord(
             'gc',
             `${type === 'promoted' ? Emojis.positiveGuildEvent : Emojis.negativeGuildEvent} **${
                 rank ? `${rank} ` : ''
-            }${escapeMarkdown(playerName)}** was ${type} to ${guildRankTo} from ${guildRankFrom}!`,
+            }${escapeMarkdown(playerName)}** was ${type} to ${newRank} from ${originalRank}!`,
             getRankColor(rank),
             true
         );

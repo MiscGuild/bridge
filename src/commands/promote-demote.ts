@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
-import capitaliseString from '@util/capitalise-string';
 
 export default {
     data: {
@@ -39,7 +38,7 @@ export default {
             await bot.executeTask(`/g ${type} ${user}`);
             embed
                 .setColor(type === 'promote' ? 'Green' : 'Red')
-                .setTitle(capitaliseString(`${type}d!`))
+                .setTitle(type === 'promote' ? 'Promoted!' : 'Demoted!')
                 .setDescription(`${user} has been ${type}d!`);
         } catch (e) {
             embed
