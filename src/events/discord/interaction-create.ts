@@ -1,5 +1,5 @@
-import logger from 'consola';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Interaction } from 'discord.js';
+import winston from 'winston';
 import env from '@util/env';
 
 export default {
@@ -11,7 +11,7 @@ export default {
         const command = bot.discord.commands.get(interaction.commandName);
 
         if (!command) {
-            logger.error(`Unknown slash command: ${interaction.commandName}`);
+            winston.error(`Unknown slash command: ${interaction.commandName}`);
             return;
         }
 
@@ -49,7 +49,7 @@ export default {
                 ephemeral: true,
             });
 
-            logger.error(`An error occured in ${interaction.commandName}: ${(e as Error).message}`);
+            winston.error(`An error occured in ${interaction.commandName}:`, e);
         }
     },
 } as Event;

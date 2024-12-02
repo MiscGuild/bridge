@@ -6,11 +6,10 @@ import {
     TextChannel,
 } from 'discord.js';
 import { BotEvents, createBot } from 'mineflayer';
-import logger from 'consola';
+import winston from 'winston';
 import EventEmitter from 'events';
 import path from 'path';
 import isObjKey from '@util/is-obj-key';
-import logError from '@util/log-error';
 import recursiveWalkDir from '@util/recursive-walk-dir';
 import regex from '@events/regex';
 import env from '@util/env';
@@ -46,7 +45,7 @@ class Bot {
         try {
             this.start();
         } catch (error) {
-            logger.error(error);
+            winston.error(error);
         }
     }
 
@@ -107,7 +106,7 @@ class Bot {
 
         if (this.limboTries < SPAM_THRESHOLD) {
             const triesBeforeSpam = SPAM_THRESHOLD - this.limboTries;
-            logger.info(
+            winston.info(
                 `Sending to Limbo. Attempting disconnect.spam in ${triesBeforeSpam} ${
                     SPAM_THRESHOLD - this.limboTries === 1 ? 'try' : 'tries'
                 }`
@@ -116,7 +115,7 @@ class Bot {
             this.executeCommand('§');
             this.limboTries++;
         } else if (this.limboTries === SPAM_THRESHOLD) {
-            logger.info('Attempting disconnect.spam');
+            winston.info('Attempting disconnect.spam');
 
             for (let i = 0; i < 11; i++) {
                 this.executeCommand('/');
@@ -124,7 +123,7 @@ class Bot {
 
             this.limboTries++;
         } else if (this.limboTries === SPAM_THRESHOLD + 1) {
-            logger.warn('Limbo warp failed. Waiting for AFK kick');
+            winston.warn('Limbo warp failed. Waiting for AFK kick');
             this.limboTries++;
         }
     }
@@ -149,12 +148,12 @@ class Bot {
             const command = (await import(path.join(currentDir, file))).default as Command;
 
             if (!command.data) {
-                logger.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
+                winston.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
                 return;
             }
 
             if (!command.run) {
-                logger.warn(
+                winston.warn(
                     `The command ${command.data.name} doesn't have an executable function!`
                 );
                 return;
@@ -178,12 +177,12 @@ class Bot {
                 .default as Event;
 
             if (!name) {
-                logger.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
+                winston.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
                 return;
             }
 
             if (!run) {
-                logger.warn(`The event ${name} doesn't have an executable function!`);
+                winston.warn(`The event ${name} doesn't have an executable function!`);
                 return;
             }
 
@@ -219,6 +218,7 @@ class Bot {
     }
 }
 
-process.on('uncaughtException', logError).on('unhandledRejection', logError);
+const handleError = (e: Error) => winston.error(e);
+process.on('uncaughtException', handleError).on('unhandledRejection', handleError);
 
 export default Bot;

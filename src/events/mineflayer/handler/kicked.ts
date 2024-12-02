@@ -1,4 +1,4 @@
-import logger from 'consola';
+import winston from 'winston';
 import Emojis from '@util/emojis';
 
 export default {
@@ -40,11 +40,11 @@ export default {
 
         await bot.sendToDiscord(
             'gc',
-            `${Emojis.error} The bot was kicked from the server due to ${message}. Restarting the bot in 15 seconds...`
+            `${Emojis.error} The bot was kicked from the server due to ${message}. Exiting in 15 seconds...`
         );
 
-        logger.error(
-            `The bot was kicked from the server. Restarting the bot in 15 seconds...\nReason: ${reason}\nLogged in: ${loggedIn}`
+        winston.error(
+            `The bot was kicked from the server. Exiting in 15 seconds...\nReason: ${reason}\nLogged in: ${loggedIn}`
         );
 
         setTimeout(() => {

@@ -1,11 +1,10 @@
-import logger from 'consola';
+import winston from 'winston';
 
 export default {
     name: 'end',
     runOnce: false,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    run: (bot) => {
-        logger.fatal('The bot session has abruptly ended. Restarting the bot in 15 seconds...');
+    run: (_bot) => {
+        winston.error('The bot session has abruptly ended. Exiting in 15 seconds...');
 
         setTimeout(() => {
             process.exit(1);

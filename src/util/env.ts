@@ -1,4 +1,4 @@
-import logger from 'consola';
+import winston from 'winston';
 import { config } from 'dotenv';
 import { z } from 'zod';
 
@@ -29,7 +29,6 @@ const envSchema = z
         MEMBER_CHANNEL_ID: SNOWFLAKE_SCHEMA,
         OFFICER_CHANNEL_ID: SNOWFLAKE_SCHEMA,
         BLACKLIST_CHANNEL_ID: SNOWFLAKE_SCHEMA,
-        ERROR_CHANNEL_ID: SNOWFLAKE_SCHEMA,
         BOT_OWNER_ID: SNOWFLAKE_SCHEMA,
         STAFF_ROLE_ID: SNOWFLAKE_SCHEMA,
     })
@@ -42,7 +41,7 @@ config();
 const env = envSchema.safeParse(process.env);
 
 if (!env.success) {
-    logger.fatal('Invalid configuration:', env.error.formErrors.fieldErrors);
+    winston.error('Invalid configuration:', env.error.formErrors.fieldErrors);
     process.exit(1);
 }
 

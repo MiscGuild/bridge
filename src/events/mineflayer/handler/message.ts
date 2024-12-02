@@ -1,11 +1,11 @@
-import logger from 'consola';
+import winston from 'winston';
 import { ChatMessage } from 'prismarine-chat';
 
 export default {
     name: 'message',
     runOnce: false,
-    run: (bot, message: ChatMessage) => {
+    run: (_bot, message: ChatMessage) => {
         // Log color chat to console
-        logger.log(message.toAnsi());
+        winston.info(message.toAnsi());
     },
 } as Event;

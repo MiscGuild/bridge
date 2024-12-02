@@ -1,11 +1,10 @@
-import logger from 'consola';
+import winston from 'winston';
 
 export default {
     name: 'error',
     runOnce: false,
-    run: (bot, error: Error) => {
-        logger.fatal('Encountered an unexpected error. Restarting the bot in 15 seconds...');
-        logger.fatal(error);
+    run: (_bot, error: Error) => {
+        winston.error('Encountered an unexpected error. Exiting in 15 seconds...', error);
 
         setTimeout(() => {
             process.exit(1);

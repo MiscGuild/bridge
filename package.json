@@ -1,5 +1,5 @@
 {
-    "name": "bridge-bot",
+    "name": "bridge",
     "version": "1.0.0",
     "main": "dist",
     "license": "MIT",
@@ -16,16 +16,16 @@
         "start": "node ."
     },
     "dependencies": {
-        "consola": "^2.15.3",
         "discord.js": "14.10.2",
         "dotenv": "^16.4.5",
         "mineflayer": "^4.20.1",
         "obscenity": "^0.1.4",
         "prismarine-chat": "^1.10.1",
+        "winston": "^3.17.0",
         "zod": "^3.23.8"
     },
     "devDependencies": {
-        "@jejebecarte/eslint-config": "^1.0.6",
+        "@jejebecarte/eslint-config": "^1.0.7",
         "@types/node-fetch": "^2.6.11",
         "eslint": "^8.57.1",
         "pm2": "^5.4.2",
