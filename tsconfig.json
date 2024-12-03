@@ -17,8 +17,8 @@
         "isolatedModules": true,
         "paths": {
             "@blacklist/*": ["./src/blacklist/*"],
-            "@classes/*": ["./src/classes/*"],
-            "@events/*": ["./src/events/*"],
+            "@discord/*": ["./src/discord/*"],
+            "@mineflayer/*": ["./src/mineflayer/*"],
             "@requests/*": ["./src/requests/*"],
             "@util/*": ["./src/util/*"]
         }
