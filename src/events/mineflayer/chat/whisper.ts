@@ -7,7 +7,7 @@ export default {
     runOnce: false,
     run: async (bot, playerName: string, message: string) => {
         const errorMessage = `/w ${playerName} There was an error attempting your request! (Check spelling and/or try again later)`;
-        const target = message.startsWith('weeklygexp' || 'weeklygxp')
+        const target = message.startsWith('weeklygexp')
             ? playerName
             : (message.split(' ')[0] as string);
 

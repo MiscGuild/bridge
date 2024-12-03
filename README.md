@@ -26,9 +26,10 @@
 -   [Installation](#installation)
     -   [Prerequisites](#prerequisites)
     -   [Setup](#setup)
-    -   [Process Management](#process-management)
+    -   [Hypixel API keys](#hypixel-api-keys)
+    -   [Process management](#process-management)
 -   [Contributing](#contributing)
-    -   [Issues and Bug Reports](#issues-and-bug-reports)
+    -   [Issues and bug reports](#issues-and-bug-reports)
 -   [Acknowledgements](#acknowledgements)
 -   [License](#license)
 
@@ -52,50 +53,57 @@
 
 ### Setup
 
-1. ⭐ Star this repository!
-2. Install [pnpm](https://pnpm.io/) via one of their [installation methods](https://pnpm.io/installation), or the following command:
+1. Install [pnpm](https://pnpm.io/) via one of their [installation methods](https://pnpm.io/installation), or the following command:
 
 ```bash
 $ npm install -g pnpm
 ```
 
-3. Clone the repository into a directory of your choice.
+2. Clone the repository into a directory of your choice.
 
 ```bash
 $ git clone https://github.com/MiscGuild/bridge.git
 ```
 
-4. Enter the new directory and install packages.
+3. Enter the new directory and install packages.
 
 ```bash
 $ cd bridge
 $ pnpm install
 ```
 
-5. Make a new Discord bot account on the [Discord Developer Portal](https://discord.com/developers/applications) and retrieve the bot token.
+4. Make a new Discord bot account on the [Discord Developer Portal](https://discord.com/developers/applications) and retrieve the bot token.
 
-6. Under the `Bot` tab, grant the bot the `Message Content` Intent.
+5. Under the `Bot` tab, grant the bot the `Message Content` Intent.
 
-7. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
+6. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
 
-8. Setup the project config files.
+7. Setup the project config files.
 
 ```bash
 $ pnpm run setup-files
 ```
 
-9. Fill out the `.env` file with your credentials.
+8. Fill out the `.env` file with your credentials.
 
-10. Promote the Minecraft account used by the bot to Officer in-game in order for it to view the Officer chat and run privileged commands.
+9. Promote the Minecraft account used by the bot to Officer in-game in order for it to view the Officer chat and run privileged commands.
 
-11. Build and run the bot.
+10. Build and run the bot.
 
 ```bash
 $ pnpm run build
 $ pnpm start
 ```
 
-### Process Management
+### Hypixel API keys
+
+After the June 2023 [Hypixel Public API update](https://hypixel.net/threads/hypixel-developer-dashboard-public-api-changes-june-2023.5364455/), Development API Keys now expire after three days but can be easily renewed.
+
+To acquire a permanent key, first generate a Development Key [here](https://developer.hypixel.net/dashboard). Then, fill out the form under `Apps > Create app > Personal API Key`. Please note that applications concerning bridge bots may be denied.
+
+Alternatively, you may omit the `HYPIXEL_API_KEY` field of the `.env` file, but some features such as minimum network level enforcement will be disabled.
+
+### Process management
 
 If you are self-hosting or your process manager does not automatically restart the bot in the event of a crash, you may use [PM2](https://pm2.keymetrics.io/), a process manager for Node.js applications.
 
@@ -110,14 +118,17 @@ Please refer to the [PM2 documentation](https://pm2.keymetrics.io/docs/usage/qui
 
 ## Contributing
 
-Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/bHFWukp) and go to `#programming-talk`.
+Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/bHFWukp).
 
 Before submitting your changes for review, please ensure:
 
--   The application is fully functional, and all your code has been thoroughly tested to avoid potential bugs or security vulnerabilities.
--   Your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+-   the application is fully functional
+-   your code has been thoroughly tested
+-   your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
-### Issues and Bug Reports
+Give this repository a ⭐ if it helped you!
+
+### Issues and bug reports
 
 To raise an issue or bug report, please contact a developer or [open an issue](https://github.com/MiscGuild/bridge/issues).
 
