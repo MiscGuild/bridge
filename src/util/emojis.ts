@@ -5,6 +5,6 @@ export default {
     error: '❌',
     warning: '⚠️',
     alert: '🚨',
-    positiveGuildEvent: '🎉',
-    negativeGuildEvent: '👋',
-};
+    positiveEvent: '🎉',
+    negativeEvent: '👋',
+} as const;

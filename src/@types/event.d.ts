@@ -1,10 +1,8 @@
-declare interface Event {
+declare interface BotEvent {
     name:
-        | keyof typeof import('@events/regex').default
+        | keyof typeof import('../mineflayer/events/regex').default
         | keyof import('mineflayer').BotEvents
         | keyof import('discord.js').ClientEvents;
     runOnce: boolean;
-    run: Execute;
+    run: (bridge: import('../bridge').default, ...params: any[]) => Promise<void>;
 }
-
-type Execute = (bot: import('@classes/bot').default, ...params: any[]) => Promise<void>;

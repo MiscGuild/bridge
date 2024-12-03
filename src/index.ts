@@ -1,4 +1,4 @@
 import '@util/logger';
-import Bot from '@classes/bot';
+import Bridge from './bridge';
 
-export default new Bot();
+export default new Bridge();
