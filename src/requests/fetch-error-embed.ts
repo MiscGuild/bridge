@@ -5,5 +5,5 @@ export default (requestError: FetchError) =>
         .setColor('Red')
         .setTitle('Error')
         .setDescription(
-            `There was an error while attempting your request, a detailed log is below.\n\`\`\`Error: ${requestError.status}\nReason: ${requestError.statusText}\`\`\``
+            `There was an error while attempting your request.\n\`\`\`Error: ${requestError.status}\nReason: ${requestError.statusText}\`\`\``
         );

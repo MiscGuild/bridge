@@ -1,6 +1,9 @@
 import env from '@util/env';
 
 export default async (uuid: string) => {
+    if (!env.HYPIXEL_API_KEY)
+        return { status: 400, statusText: 'Missing Hypixel API key' } as FetchError;
+
     const response = await fetch(
         `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&player=${uuid}`
     );
