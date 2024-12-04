@@ -88,7 +88,9 @@ $ pnpm run setup-files
 
 9. Promote the Minecraft account used by the bot to Officer in-game in order for it to view the Officer chat and run privileged commands.
 
-10. Build and run the bot.
+10. On Hypixel, set the account's `Private Message Privacy` setting under `My Profile > Social Settings` to `Low` or `High`, allowing guild members to privately message the bot to see their weekly guild experience total.
+
+11. Build and run the bot.
 
 ```bash
 $ pnpm run build

@@ -23,13 +23,8 @@ export default {
             return;
         }
 
-        const member = playerGuild.members.find(
-            (guildMember) => guildMember.uuid === mojangProfile.id
-        );
-
-        const gexp = Object.values(member!.expHistory).reduce(
-            (previous, current) => previous + current
-        );
+        const data = playerGuild.members.find((member) => member.uuid === mojangProfile.id);
+        const gexp = Object.values(data!.expHistory).reduce((total, day) => total + day);
 
         bridge.mineflayer.execute(
             `/w ${playerName} ${target}'s total weekly gexp: ${gexp.toLocaleString()}`
