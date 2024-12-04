@@ -5,6 +5,8 @@ export default {
     name: 'login',
     runOnce: true,
     run: async (bridge) => {
+        bridge.mineflayer.reconnecting = false;
+
         await bridge.discord.send(
             'gc',
             `${emojis.success} **The bot has logged in and is now ready!**`
