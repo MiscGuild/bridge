@@ -3,9 +3,8 @@ import winston from 'winston';
 export default {
     name: 'error',
     runOnce: false,
-    run: (_bridge, error: Error) => {
+    run: (bridge, error: Error) => {
         winston.error('Encountered an unexpected error:', error);
-
-        process.exit(1);
+        bridge.mineflayer.reconnectOrExit(bridge);
     },
 } as BotEvent;

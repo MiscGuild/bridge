@@ -44,9 +44,9 @@ export default {
         );
 
         winston.error(
-            `The bot was kicked from the server\nReason: ${reason}\nLogged in: ${loggedIn}`
+            `The bot was kicked from the server.\nReason: ${reason}\nLogged in: ${loggedIn}`
         );
 
-        process.exit(1);
+        bridge.mineflayer.reconnectOrExit(bridge);
     },
 } as BotEvent;
