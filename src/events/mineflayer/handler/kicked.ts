@@ -1,5 +1,5 @@
 import logger from 'consola';
-import Emojis from '@util/emojis';
+import Emojis from '../../../util/emojis';
 
 export default {
     name: 'kicked',

@@ -1,6 +1,6 @@
-import fetchHypixelGuild from '@requests/fetch-hypixel-guild';
-import fetchMojangProfile from '@requests/fetch-mojang-profile';
-import isFetchError from '@requests/is-fetch-error';
+import fetchHypixelGuild from '../../../requests/fetch-hypixel-guild';
+import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
+import isFetchError from '../../../requests/is-fetch-error';
 
 export default {
     name: 'chat:whisper',

@@ -1,5 +1,5 @@
-import Emojis from '@util/emojis';
-import env from '@util/env';
+import Emojis from '../../../util/emojis';
+import env from '../../../util/env';
 
 export default {
     name: 'login',

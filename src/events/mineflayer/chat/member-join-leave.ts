@@ -1,8 +1,8 @@
-import Emojis from '@util/emojis';
+import Emojis from '../../../util/emojis';
 import { escapeMarkdown } from 'discord.js';
-import fetchMojangProfile from '@requests/fetch-mojang-profile';
-import isFetchError from '@requests/is-fetch-error';
-import isUserBlacklisted from '@blacklist/is-user-blacklisted';
+import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
+import isFetchError from '../../../requests/is-fetch-error';
+import isUserBlacklisted from '../../../blacklist/is-user-blacklisted';
 import { BotEvents } from 'mineflayer';
 
 import getRankColor from '@util/get-rank-color';

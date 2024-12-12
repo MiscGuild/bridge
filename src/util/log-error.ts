@@ -1,6 +1,6 @@
 import { TextChannel } from 'discord.js';
 import logger from 'consola';
-import env from '@util/env';
+import env from '../util/env';
 import bot from '..';
 
 export default async (err: Error, message?: string) => {
