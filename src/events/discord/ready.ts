@@ -1,5 +1,5 @@
 import { TextChannel } from 'discord.js';
-import env from '@util/env';
+import env from '../../util/env';
 
 export default {
     name: 'ready',

@@ -9,11 +9,11 @@ import { BotEvents, createBot } from 'mineflayer';
 import logger from 'consola';
 import EventEmitter from 'events';
 import path from 'path';
-import isObjKey from '@util/is-obj-key';
-import logError from '@util/log-error';
-import recursiveWalkDir from '@util/recursive-walk-dir';
-import regex from '@events/regex';
-import env from '@util/env';
+import isObjKey from '../util/is-obj-key';
+import logError from '../util/log-error';
+import recursiveWalkDir from '../util/recursive-walk-dir';
+import regex from '../events/regex';
+import env from '../util/env';
 import Discord from './client';
 
 class Bot {

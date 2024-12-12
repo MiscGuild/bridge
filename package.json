@@ -13,7 +13,7 @@
         "pm2:kill": "pm2 kill",
         "pm2:start": "pm2 start dist/index.js --attach --name bridge",
         "setup-files": "node scripts/setup-files.js",
-        "start": "node ."
+        "start": "node -r tsconfig-paths/register dist/index.js"
     },
     "dependencies": {
         "consola": "^2.15.3",
@@ -25,7 +25,8 @@
         "obscenity": "^0.1.4",
         "pnpm": "^9.14.2",
         "prismarine-chat": "^1.10.1",
-        "zod": "^3.23.8"
+        "zod": "^3.23.8",
+        "tsconfig-paths": "^4.2.0"
     },
     "devDependencies": {
         "@jejebecarte/eslint-config": "^1.0.6",

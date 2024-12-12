@@ -1,4 +1,4 @@
-import env from '@util/env';
+import env from '../util/env';
 
 export default async (username: string) => {
     const response = await fetch(

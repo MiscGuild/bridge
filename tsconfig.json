@@ -15,6 +15,7 @@
         "allowJs": false,
         "skipLibCheck": true,
         "isolatedModules": true,
+        "baseUrl": "",
         "paths": {
             "@blacklist/*": ["./src/blacklist/*"],
             "@classes/*": ["./src/classes/*"],
