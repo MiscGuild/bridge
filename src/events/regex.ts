@@ -142,4 +142,59 @@ export default {
      *  - Message
      */
     'chat:whisper': /^From (?:\[.*])?\s*(\w{2,17}).*?: (.+)$/,
+
+    /**
+     * 
+     * For logging guild logs
+     * 
+     * Returns:
+     * - Date
+     * - Time
+     * - Timezone
+     * - Username
+     * - Action
+     * - Optional Space
+     * - Optional "to"
+     * - Optional Second Username
+     * - Optional Additional Info
+     * 
+     */
+    'chat:guildLogHeader': /Guild Log \(Page \d+ of \d+\) >>$/,
+    'chat:guildLog': /(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4}) (([0-9]{2}):([0-9]{2})) ((EDT|EST))): ([A-Za-z-0-9-_]{2,27}) (joined|left|invited|kicked|muted|unmuted|set rank of|set MOTD|set guild tag|set guild tagcolor|set Discord|turned the chat throttle on|turned the chat throttle off)( ([A-Za-z-0-9-_]{2,27})?)?( for | to |: )?([ A-Za-z-0-9-!-_\\s]+)?/g,
+
+    /**
+     * 
+     * For check if a player has said !bw [ign] (ign is optional) in chat
+     * 
+     * 
+     */
+    'chat:bw-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!bw\s?(\w{2,17})?$/,
+
+    /**
+     * 
+     * For check if a player has said !sw [ign] (ign is optional) in chat
+     * 
+     * 
+     */
+
+    'chat:sw-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!sw\s?(\w{2,17})?$/,
+
+    /**
+     * 
+     * For check if a player has said !cvc [ign] (ign is optional) in chat
+     * 
+     * 
+     */
+    'chat:cvc-stats-overall': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!cvc\soverall\s?(\w{2,17})?$/,
+    'chat:cvc-stats-defusal': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!cvc\sdefusal\s?(\w{2,17})?$/,
+    'chat:cvc-stats-tdm': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!cvc\stdm\s?(\w{2,17})?$/,
+
+    /**
+     * 
+     * For check if a player has said !mm [ign] (ign is optional) in chat
+     * 
+     * 
+     */
+
+    'chat:mm-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!mm\s?(\w{2,17})?$/,
 };

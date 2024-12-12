@@ -32,6 +32,7 @@ const envSchema = z
         ERROR_CHANNEL_ID: SNOWFLAKE_SCHEMA,
         BOT_OWNER_ID: SNOWFLAKE_SCHEMA,
         STAFF_ROLE_ID: SNOWFLAKE_SCHEMA,
+        HYPIXEL_GUILD_NAME: z.string().min(1),
     })
     .refine((data) => !data.REMINDER_ENABLED || data.REMINDER_MESSAGE.trim() !== '', {
         message: 'Reminders are enabled but a message has not been set',
