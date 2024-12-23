@@ -10,11 +10,12 @@ const BOOLEAN_SCHEMA = z
 
 const SNOWFLAKE_SCHEMA = z.coerce.string().regex(/^\d*$/gm);
 
+// * By default, dotenv populates missing values with empty strings - minimum length should not be used for optional fields
 const envSchema = z
     .object({
         MINECRAFT_EMAIL: z.string().email(),
-        MINECRAFT_PASSWORD: z.string(), // no minimum length allows for manual authorization - dotenv populates an empty string by default
-        HYPIXEL_API_KEY: z.string().min(1).optional(),
+        MINECRAFT_PASSWORD: z.string(), // no minimum length allows for manual authorization
+        HYPIXEL_API_KEY: z.string(),
         MINECRAFT_CHAT_SEPARATOR: z.string().trim().min(1),
         USE_PROFANITY_FILTER: BOOLEAN_SCHEMA,
         USE_FIRST_WORD_OF_AUTHOR_NAME: BOOLEAN_SCHEMA,
