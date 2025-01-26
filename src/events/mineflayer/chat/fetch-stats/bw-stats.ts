@@ -13,24 +13,31 @@ export default {
         playerRank: string,
         playerName: string,
         guildRank: string,
-        unknownGroup: string,
         target: string
     ) => {
-
         const _channel = channel;
         const _playerRank = playerRank;
         const _playerName = playerName;
         const _guildRank = guildRank;
-        const _unknownGroup = unknownGroup;
         const _target = target;
 
         const now = Date.now();
-        const cooldownTime = 4 * 60 * 1000; 
+        const cooldownTimeMember = 4 * 60 * 1000;
+        const cooldownTimeActive = 2 * 60 * 1000;
 
-        if (commandCooldowns.has(playerName) && _guildRank.includes('Active')) {
+        if (commandCooldowns.has(playerName) && _guildRank.includes('Member')) {
             const lastRun = commandCooldowns.get(playerName);
-            if (lastRun && now - lastRun < cooldownTime) {
-                const remainingTime = Math.ceil((cooldownTime - (now - lastRun)) / 1000);
+            if (lastRun && now - lastRun < cooldownTimeMember) {
+                const remainingTime = Math.ceil((cooldownTimeMember - (now - lastRun)) / 1000);
+                bot.executeCommand(
+                    `/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait.`
+                );
+                return;
+            }
+        } else if (commandCooldowns.has(playerName) && _guildRank.includes('Active')) {
+            const lastRun = commandCooldowns.get(playerName);
+            if (lastRun && now - lastRun < cooldownTimeActive) {
+                const remainingTime = Math.ceil((cooldownTimeActive - (now - lastRun)) / 1000);
                 bot.executeCommand(
                     `/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait.`
                 );
@@ -39,13 +46,10 @@ export default {
         }
 
         commandCooldowns.set(playerName, now);
-        
+
         if (_target === undefined || _target === null || _target === '') {
-            if (_guildRank.includes('Member')) {
-                bot.executeCommand(
-                    `/gc ${_playerName}, you must have Guild Rank "Active" or higher to check the stats of ${_playerName}! Aborting...`
-                );
-            } else if (
+            if (
+                _guildRank.includes('Member') ||
                 _guildRank.includes('Active') ||
                 _guildRank.includes('Res') ||
                 _guildRank.includes('Mod') ||
@@ -58,7 +62,10 @@ export default {
                     )
                         .then((response) => response.json())
                         .then((data) => {
-                            if (data.success === false && data.cause === "You have already looked up this name recently") {
+                            if (
+                                data.success === false &&
+                                data.cause === 'You have already looked up this name recently'
+                            ) {
                                 console.log(
                                     `[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`
                                 );
@@ -74,19 +81,22 @@ export default {
                                     `/gc ${_playerName}, the player ${_playerName} was not found.`
                                 );
                                 return reject('Player not found!');
-    
                             }
-            
-                            if (!data.player.stats || !data.player.stats.Bedwars || !data.player.achievements) {
+
+                            if (
+                                !data.player.stats ||
+                                !data.player.stats.Bedwars ||
+                                !data.player.achievements
+                            ) {
                                 console.log(
                                     `[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but incomplete data was received.`
                                 );
                                 return reject('Incomplete player data received!');
                             }
-            
+
                             const playerStats = data.player.stats.Bedwars;
                             const playerAchievements = data.player.achievements;
-            
+
                             const playerLevel = playerAchievements.bedwars_level;
                             const playerWins = playerAchievements.bedwars_wins;
                             const playerFinalKills = playerStats.final_kills_bedwars;
@@ -97,17 +107,17 @@ export default {
                             const playerLosses = playerStats.losses_bedwars;
                             const playerWLR = playerWins / playerLosses;
                             const playerBBLR = playerBedsBroken / playerBedsLost;
-            
+
                             console.log(
                                 `[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`
                             );
-            
+
                             bot.executeCommand(
                                 `/gc [BW-STATS] IGN: ${_playerName} | LVL: ${playerLevel} | WINS: ${playerWins} | FKDR: ${playerFKDR.toFixed(
                                     2
                                 )} | BBLR: ${playerBBLR.toFixed(2)} | WLR: ${playerWLR.toFixed(2)}`
                             );
-            
+
                             resolve(data.player); // Ensure promise resolves
                         })
                         .catch((err) => {
@@ -117,11 +127,8 @@ export default {
                 });
             }
         } else {
-            if (_guildRank.includes('Member')) {
-                bot.executeCommand(
-                    `/gc ${_playerName}, you must have Guild Rank "Active" or higher to check the stats of ${_target}! Aborting...`
-                );
-            } else if (
+            if (
+                _guildRank.includes('Member') ||
                 _guildRank.includes('Active') ||
                 _guildRank.includes('Res') ||
                 _guildRank.includes('Mod') ||
@@ -134,7 +141,10 @@ export default {
                     )
                         .then((response) => response.json())
                         .then((data) => {
-                            if (data.success === false && data.cause === "You have already looked up this name recently") {
+                            if (
+                                data.success === false &&
+                                data.cause === 'You have already looked up this name recently'
+                            ) {
                                 console.log(
                                     `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
                                 );
@@ -150,19 +160,22 @@ export default {
                                     `/gc ${_playerName}, the player ${_target} was not found.`
                                 );
                                 return reject('Player not found!');
-    
                             }
-            
-                            if (!data.player.stats || !data.player.stats.Bedwars || !data.player.achievements) {
+
+                            if (
+                                !data.player.stats ||
+                                !data.player.stats.Bedwars ||
+                                !data.player.achievements
+                            ) {
                                 console.log(
                                     `[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`
                                 );
                                 return reject('Incomplete player data received!');
                             }
-            
+
                             const playerStats = data.player.stats.Bedwars;
                             const playerAchievements = data.player.achievements;
-            
+
                             const playerLevel = playerAchievements.bedwars_level;
                             const playerWins = playerAchievements.bedwars_wins;
                             const playerFinalKills = playerStats.final_kills_bedwars;
@@ -173,17 +186,17 @@ export default {
                             const playerLosses = playerStats.losses_bedwars;
                             const playerWLR = playerWins / playerLosses;
                             const playerBBLR = playerBedsBroken / playerBedsLost;
-            
+
                             console.log(
                                 `[DEBUG] ${_playerName} is checking the stats of ${_target} and succeeded`
                             );
-            
+
                             bot.executeCommand(
                                 `/gc [BW-STATS] IGN: ${_target} | LVL: ${playerLevel} | WINS: ${playerWins} | FKDR: ${playerFKDR.toFixed(
                                     2
                                 )} | BBLR: ${playerBBLR.toFixed(2)} | WLR: ${playerWLR.toFixed(2)}`
                             );
-            
+
                             resolve(data.player); // Ensure promise resolves
                         })
                         .catch((err) => {

@@ -144,9 +144,9 @@ export default {
     'chat:whisper': /^From (?:\[.*])?\s*(\w{2,17}).*?: (.+)$/,
 
     /**
-     * 
+     *
      * For logging guild logs
-     * 
+     *
      * Returns:
      * - Date
      * - Time
@@ -157,45 +157,85 @@ export default {
      * - Optional "to"
      * - Optional Second Username
      * - Optional Additional Info
-     * 
+     *
      */
     'chat:guildLogHeader': /Guild Log \(Page \d+ of \d+\) >>$/,
-    'chat:guildLog1': /(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4}) (([0-9]{2}):([0-9]{2})) ((EDT|EST))): ([A-Za-z-0-9-_]{2,27}) (joined|left|invited|kicked|muted|unmuted|set rank of|set MOTD|set guild tag|set guild tagcolor|set Discord|turned the chat throttle on|turned the chat throttle off)( ([A-Za-z-0-9-_]{2,27})?)?( for | to |: )?([ A-Za-z-0-9-!-_\\s]+)?/g,
-    'chat:guildLog': /([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s(EDT|EST):\s([A-Za-z0-9-_]{2,27})\s(joined|left|invited|kicked|muted|unmuted|set rank of|set MOTD|set guild tag|set guild tagcolor|set Discord|turned the chat throttle on|turned the chat throttle off)(\s([A-Za-z0-9-_]{2,27}))?( for | to |: )?([ A-Za-z0-9-!_\\s]+)?/gm,
+    'chat:guildLog1':
+        /(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4}) (([0-9]{2}):([0-9]{2})) ((EDT|EST))): ([A-Za-z-0-9-_]{2,27}) (joined|left|invited|kicked|muted|unmuted|set rank of|set MOTD|set guild tag|set guild tagcolor|set Discord|turned the chat throttle on|turned the chat throttle off)( ([A-Za-z-0-9-_]{2,27})?)?( for | to |: )?([ A-Za-z-0-9-!-_\\s]+)?/g,
+    'chat:guildLog':
+        /([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4})\s(([0-9]{2}):([0-9]{2}))\s(EDT|EST):\s([A-Za-z0-9-_]{2,27})\s(joined|left|invited|kicked|muted|unmuted|set rank of|set MOTD|set guild tag|set guild tagcolor|set Discord|turned the chat throttle on|turned the chat throttle off)(\s([A-Za-z0-9-_]{2,27}))?( for | to |: )?([ A-Za-z0-9-!_\\s]+)?/gm,
 
     /**
-     * 
+     *
      * For check if a player has said !bw [ign] (ign is optional) in chat
-     * 
-     * 
+     *
+     *
      */
-    'chat:bw-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!bw\s?(\w{2,17})?$/,
+    'chat:bw-stats':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!bw\s?(\w{2,17})?$/,
 
     /**
-     * 
+     *
      * For check if a player has said !sw [ign] (ign is optional) in chat
-     * 
-     * 
+     *
+     *
      */
 
-    'chat:sw-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!sw\s?(\w{2,17})?$/,
+    'chat:sw-stats':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!sw\s?(\w{2,17})?$/,
 
     /**
-     * 
+     *
      * For check if a player has said !cvc [ign] (ign is optional) in chat
-     * 
-     * 
+     *
+     *
      */
-    'chat:cvc-stats-overall': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!cvc\soverall\s?(\w{2,17})?$/,
-    'chat:cvc-stats-defusal': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!cvc\sdefusal\s?(\w{2,17})?$/,
-    'chat:cvc-stats-tdm': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!cvc\stdm\s?(\w{2,17})?$/,
+    'chat:cvc-stats-overall':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\soverall\s?(\w{2,17})?$/,
+    'chat:cvc-stats-defusal':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\sdefusal\s?(\w{2,17})?$/,
+    'chat:cvc-stats-tdm':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\stdm\s?(\w{2,17})?$/,
+
+    /**
+     *
+     * For check if a player has said !mm [ign] (ign is optional) in chat
+     *
+     *
+     */
+
+    'chat:mm-stats':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!mm\s?(\w{2,17})?$/,
 
     /**
      * 
-     * For check if a player has said !mm [ign] (ign is optional) in chat
+     * For check if a player has said !duels [gamemode] [ign] (ign is optional) in chat
+     * 
      * 
      * 
      */
+     
+    'chat:duels-overall':
+       /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(overall||o)\s?(\w{2,17})?.*$/,
+    
+    'chat:duels-bridge':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\sbridge\s?(\w{2,17})?.*$/,
 
-    'chat:mm-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!mm\s?(\w{2,17})?$/,
+    'chat:duels-classic':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(classic||c)\s?(\w{2,17})?.*$/,
+    'chat:duels-uhc':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\suhc\s?(\w{2,17})?.*$/,
+    'chat:duels-op':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\sop\s?(\w{2,17})?.*$/,
+    'chat:duels-sumo':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sumo||sum|sumoo|s|sm)\s?(\w{2,17})?.*$/,
+    'chat:duels-blitz':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(blitz||blits)\s?(\w{2,17})?.*$/,
+    'chat:duels-sw':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sw||skywars)\s?(\w{2,17})?.*$/,
+    'chat:duels-combo':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(combo||comb)\s?(\w{2,17})?.*$/,
+
+    
+
 };

@@ -6,9 +6,8 @@ export default async (uuid: string) => {
     );
 
     const findMemberByUUID = (guild: HypixelGuildResponse, uuid: string): Member | null => {
-        return guild.members.find(member => member.uuid === uuid) || null;
-      };
-    
+        return guild.members.find((member) => member.uuid === uuid) || null;
+    };
 
     return response.status === 200
         ? (((await response.json()) as any).guild as HypixelGuildResponse)

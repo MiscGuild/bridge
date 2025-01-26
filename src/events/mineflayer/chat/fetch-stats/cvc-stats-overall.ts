@@ -5,7 +5,7 @@
 const commandCooldowns = new Map<string, number>();
 
 export default {
-    name: 'chat:cvc-stats-tdm',
+    name: 'chat:cvc-stats-overall',
     runOnce: false,
     run: async (
         bot,
@@ -13,23 +13,31 @@ export default {
         playerRank: string,
         playerName: string,
         guildRank: string,
-        unknownGroup: string,
         target: string
     ) => {
         const _channel = channel;
         const _playerRank = playerRank;
         const _playerName = playerName;
         const _guildRank = guildRank;
-        const _unknownGroup = unknownGroup;
         const _target = target;
 
         const now = Date.now();
-        const cooldownTime = 4 * 60 * 1000;
+        const cooldownTimeMember = 4 * 60 * 1000;
+        const cooldownTimeActive = 2 * 60 * 1000;
 
-        if (commandCooldowns.has(playerName) && _guildRank.includes('Active')) {
+        if (commandCooldowns.has(playerName) && _guildRank.includes('Member')) {
             const lastRun = commandCooldowns.get(playerName);
-            if (lastRun && now - lastRun < cooldownTime) {
-                const remainingTime = Math.ceil((cooldownTime - (now - lastRun)) / 1000);
+            if (lastRun && now - lastRun < cooldownTimeMember) {
+                const remainingTime = Math.ceil((cooldownTimeMember - (now - lastRun)) / 1000);
+                bot.executeCommand(
+                    `/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait.`
+                );
+                return;
+            }
+        } else if (commandCooldowns.has(playerName) && _guildRank.includes('Active')) {
+            const lastRun = commandCooldowns.get(playerName);
+            if (lastRun && now - lastRun < cooldownTimeActive) {
+                const remainingTime = Math.ceil((cooldownTimeActive - (now - lastRun)) / 1000);
                 bot.executeCommand(
                     `/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait.`
                 );
@@ -40,11 +48,8 @@ export default {
         commandCooldowns.set(playerName, now);
 
         if (_target === undefined || _target === null || _target === '') {
-            if (_guildRank.includes('Member')) {
-                bot.executeCommand(
-                    `/gc ${_playerName}, you must have Guild Rank "Active" or higher to check the stats of ${_playerName}! Aborting...`
-                );
-            } else if (
+            if (
+                _guildRank.includes('Member') ||
                 _guildRank.includes('Active') ||
                 _guildRank.includes('Res') ||
                 _guildRank.includes('Mod') ||
@@ -92,20 +97,28 @@ export default {
                             const playerStats = data.player.stats.MCGO;
                             const playerAchievements = data.player.achievements;
 
-                            const _deaths = playerStats.deaths_deathmatch;
-                            const _wins = playerStats.game_wins_deathmatch;
-                            const _kills = playerStats.kills_deathmatch;
-                            const _kdr = _kills / _deaths;
-                            const _headshots = playerStats.headshot_kills;
+                            const _deaths = playerStats.deaths; // Defusal
+                            const _deathsTDM = playerStats.deaths_deathmatch; // TDM
+                            const _game_plays = playerStats.game_plays; // Defusal
+                            const _winsTDM = playerStats.game_wins_deathmatch; // TDM
+                            const _wins = playerStats.game_wins; // Defusal
+                            const _winsOverall = _winsTDM + _wins; // Virtual
+                            const _kills = playerStats.kills; // Defusal
+                            const _tdmKills = playerStats.kills_deathmatch; // TDM
+                            const _overallKills = _kills + _tdmKills; // Virtual
+                            const _overallDeaths = _deaths + _deathsTDM; // Virtual
+                            const _kdr = _overallKills / _overallDeaths; // Virtual
+                            const _headshots = playerStats.headshot_kills; // Virtual
+                            const _bombs = playerStats.bombs_planted; // Defusal
 
                             console.log(
                                 `[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`
                             );
 
                             bot.executeCommand(
-                                `/gc [CVC-TDM] IGN: ${_playerName} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(
+                                `/gc [CVC-OVERALL] IGN: ${_playerName} | KILLS: ${_overallKills} | WINS: ${_winsOverall} | KDR: ${_kdr.toFixed(
                                     2
-                                )} | HEADSHOT KILLS: ${_headshots}`
+                                )} | HEADSHOT KILLS: ${_headshots} | BOMBS PLANTED: ${_bombs}`
                             );
 
                             resolve(data.player); // Ensure promise resolves
@@ -117,11 +130,8 @@ export default {
                 });
             }
         } else {
-            if (_guildRank.includes('Member')) {
-                bot.executeCommand(
-                    `/gc ${_playerName}, you must have Guild Rank "Active" or higher to check the stats of ${_target}! Aborting...`
-                );
-            } else if (
+            if (
+                _guildRank.includes('Member') ||
                 _guildRank.includes('Active') ||
                 _guildRank.includes('Res') ||
                 _guildRank.includes('Mod') ||
@@ -169,23 +179,26 @@ export default {
                             const playerStats = data.player.stats.MCGO;
                             const playerAchievements = data.player.achievements;
 
-                            const _deaths = playerStats.deaths;
-                            const _copkills = playerStats.cop_kills;
-                            const _crimkills = playerStats.criminal_kills;
-                            const _game_plays = playerStats.game_plays;
-                            const _wins = playerStats.game_wins;
-                            const _round_wins = playerStats.round_wins;
-                            const _kills = playerStats.kills;
-                            const _kdr = _kills / _deaths;
-                            const _headshots = playerStats.headshot_kills;
-                            const _bombs = playerStats.bombs_planted;
+                            const _deaths = playerStats.deaths; // Defusal
+                            const _deathsTDM = playerStats.deaths_deathmatch; // TDM
+                            const _game_plays = playerStats.game_plays; // Defusal
+                            const _winsTDM = playerStats.game_wins_deathmatch; // TDM
+                            const _wins = playerStats.game_wins; // Defusal
+                            const _winsOverall = _winsTDM + _wins; // Virtual
+                            const _kills = playerStats.kills; // Defusal
+                            const _tdmKills = playerStats.kills_deathmatch; // TDM
+                            const _overallKills = _kills + _tdmKills; // Virtual
+                            const _overallDeaths = _deaths + _deathsTDM; // Virtual
+                            const _kdr = _overallKills / _overallDeaths; // Virtual
+                            const _headshots = playerStats.headshot_kills; // Virtual
+                            const _bombs = playerStats.bombs_planted; // Defusal
 
                             console.log(
-                                `[DEBUG-TDM] ${_playerName} is checking the stats of ${_target} and succeeded`
+                                `[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`
                             );
 
                             bot.executeCommand(
-                                `/gc [CVC-TDM] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(
+                                `/gc [CVC-OVERALL] IGN: ${_target} | KILLS: ${_overallKills} | WINS: ${_winsOverall} | KDR: ${_kdr.toFixed(
                                     2
                                 )} | HEADSHOT KILLS: ${_headshots} | BOMBS PLANTED: ${_bombs}`
                             );
