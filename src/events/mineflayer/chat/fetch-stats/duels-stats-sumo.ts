@@ -1,5 +1,14 @@
 // This is a work in progress and is not yet functional.
 
+function getRandomHexColor(): string {
+	return (
+		"#" +
+		Math.floor(Math.random() * 0xffffff)
+			.toString(16)
+			.padStart(6, "0")
+	);
+}
+
 export default {
     name: 'chat:duels-sumo',
     runOnce: false,
@@ -17,6 +26,6 @@ export default {
         const _guildRank = guildRank;
         const _target = target;
 
-        bot.executeCommand(`/gc ${playerName}, I'm sorry but this command is not available yet.`);
+        bot.executeCommand(`/gc ${playerName}, I'm sorry but this command is not available yet. | ${getRandomHexColor()}`);
     }
 } as Event;

@@ -93,7 +93,7 @@ export default {
                             'oc',
                             `Player **${escapeMarkdown(
                                 playerName
-                            )}** left the guild! Their join date was ||${formattedLeaveDate}||. They stayed in the guild for **${diffDays}** days. `
+                            )}** was kicked from the guild by ${kickedByPlayerName}! Their join date was ||${formattedLeaveDate}||. They stayed in the guild for **${diffDays}** days.`
                         );
                         console.log(
                             `[DEBUG] ${playerName} left the guild, successfully logged this event.`

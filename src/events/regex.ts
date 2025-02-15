@@ -172,7 +172,7 @@ export default {
      *
      */
     'chat:bw-stats':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!bw\s?(\w{2,17})?$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!bw\s?(\w{2,17})?.*$/,
 
     /**
      *
@@ -182,7 +182,7 @@ export default {
      */
 
     'chat:sw-stats':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!sw\s?(\w{2,17})?$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!sw\s?(\w{2,17})?.*$/,
 
     /**
      *
@@ -191,11 +191,11 @@ export default {
      *
      */
     'chat:cvc-stats-overall':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\soverall\s?(\w{2,17})?$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\soverall\s?(\w{2,17})?.*$/,
     'chat:cvc-stats-defusal':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\sdefusal\s?(\w{2,17})?$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\sdefusal\s?(\w{2,17})?.*$/,
     'chat:cvc-stats-tdm':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\stdm\s?(\w{2,17})?$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\stdm\s?(\w{2,17})?.*$/,
 
     /**
      *
@@ -236,6 +236,20 @@ export default {
     'chat:duels-combo':
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(combo||comb)\s?(\w{2,17})?.*$/,
 
-    
+    /**
+     * 
+     * To check if the message is duplicated
+     */
 
+    'chat:duplicateMessage':
+        /^You cannot say the same message twice!$/,
+
+    /**
+     * 
+     * To check if the player has said !gexp [ign] in chat
+     * 
+     * 
+     */
+    'chat:gexp-stats':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!gexp\s?(\w{2,17})?.*$/,
 };

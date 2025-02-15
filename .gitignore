@@ -123,3 +123,7 @@ dist
 
 #MacOSX SHIT
 .DS_Store
+
+#Prettier
+.prettierrc
+.prettierrc.js
