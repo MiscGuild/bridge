@@ -14,7 +14,7 @@ function getRandomHexColor(): string {
 }
 
 export default {
-	name: "chat:sw-stats",
+	name: "chat:duels-bridge",
 	runOnce: false,
 	run: async (bot, channel: string, playerRank: string, playerName: string, guildRank: string, target: string) => {
 		const _channel = channel;
@@ -54,38 +54,33 @@ export default {
 							if (data.success === false && data.cause === "You have already looked up this name recently") {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`);
 								bot.executeCommand(`/gc ${_playerName}, the player ${_playerName} was looked up recently. Please try again later. | ${getRandomHexColor()}`);
-								return reject("Player not found!");
+								return reject("Player not found! Looked up recently.");
 							} else if (data.success === true && data.player === null) {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_playerName} was not found. | ${getRandomHexColor()}`);
+								bot.executeCommand(`/gc ${_playerName}, the player ${_playerName} was not found.`);
 								return reject("Player not found!");
 							}
 
-							if (!data.player.stats || !data.player.stats.SkyWars || !data.player.achievements) {
+							if (!data.player.stats || !data.player.stats.Duels || !data.player.achievements) {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but incomplete data was received.`);
 								return reject("Incomplete player data received!");
 							}
 
-							const playerStats = data.player.stats.SkyWars;
+							const playerStats = data.player.stats.Duels;
 							const playerAchievements = data.player.achievements;
 
-							const playerLevel = playerStats.levelFormatted;
-							const rm_playerLevel = playerLevel.split(new RegExp("§[a-zA-Z0-9]"))[1];
+							const _wins = playerStats.wins; // updated
+							const _gamesPlayed = playerStats.games_played_duels; // updated
+							const _kills = playerStats.kills; // updated
+							const _losses = playerStats.losses; // updated
+							const _timesDied = playerStats.deaths; // updated
 
-							const playerWinsSolo = playerAchievements.skywars_wins_solo;
-							const playerWinsTeams = playerAchievements.skywars_wins_team;
-							const playerKillsSolo = playerAchievements.skywars_kills_solo;
-							const playerKillsTeams = playerAchievements.skywars_kills_team;
-							const playerWins = playerWinsSolo + playerWinsTeams;
-							const playerKills = playerKillsSolo + playerKillsTeams;
-							const playerDeaths = playerStats.skywars_deaths;
-							const playerKDR = playerKills / playerDeaths;
-							const playerLosses = playerStats.losses;
-							const playerWLR = playerWins / playerLosses;
+							const _kdr = _kills / _timesDied;
+							const _wlr = _wins / _losses;
 
-							console.log(`[DEBUG] ${_playerName} is checking the SW stats of ${_target} and succeeded`);
+							console.log(`[DEBUG] ${_playerName} is checking the BRIDGE stats of ${_playerName} and succeeded`);
 
-							bot.executeCommand(`/gc [SW-STATS] IGN: ${_playerName} | LVL: ${rm_playerLevel} | WINS: ${playerWins} | KDR: ${playerKDR.toFixed(2)} | WLR: ${playerWLR.toFixed(2)} | Total Kills: ${playerKills} | ${getRandomHexColor()}`);
+							bot.executeCommand(`/gc [DUELS-BRIDGE] IGN: ${_playerName} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`);
 
 							resolve(data.player); // Ensure promise resolves
 						})
@@ -111,31 +106,26 @@ export default {
 								return reject("Player not found!");
 							}
 
-							if (!data.player.stats || !data.player.stats.SkyWars || !data.player.achievements) {
+							if (!data.player.stats || !data.player.stats.Duels || !data.player.achievements) {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`);
 								return reject("Incomplete player data received!");
 							}
 
-							const playerStats = data.player.stats.SkyWars;
+							const playerStats = data.player.stats.Duels;
 							const playerAchievements = data.player.achievements;
 
-							const playerLevel = playerStats.levelFormatted;
-							const rm_playerLevel = playerLevel.split(new RegExp("§[a-zA-Z0-9]"))[1];
+							const _wins = playerStats.wins; // updated
+							const _gamesPlayed = playerStats.games_played_duels; // updated
+							const _kills = playerStats.kills; // updated
+							const _losses = playerStats.losses; // updated
+							const _timesDied = playerStats.deaths; // updated
 
-							const playerWinsSolo = playerAchievements.skywars_wins_solo;
-							const playerWinsTeams = playerAchievements.skywars_wins_team;
-							const playerKillsSolo = playerAchievements.skywars_kills_solo;
-							const playerKillsTeams = playerAchievements.skywars_kills_team;
-							const playerWins = playerWinsSolo + playerWinsTeams;
-							const playerKills = playerKillsSolo + playerKillsTeams;
-							const playerDeaths = playerStats.deaths;
-							const playerKDR = playerKills / playerDeaths;
-							const playerLosses = playerStats.losses;
-							const playerWLR = playerWins / playerLosses;
+							const _kdr = _kills / _timesDied;
+							const _wlr = _wins / _losses;
 
-							console.log(`[DEBUG] ${_playerName} is checking the SW stats of ${_target} and succeeded`);
+							console.log(`[DEBUG] ${_playerName} is checking the BRIDGE stats of ${_target} and succeeded`);
 
-							bot.executeCommand(`/gc [SW-STATS] IGN: ${_target} | LVL: ${rm_playerLevel} | WINS: ${playerWins} | KDR: ${playerKDR.toFixed(2)} | WLR: ${playerWLR.toFixed(2)} | Total Kills: ${playerKills} | ${getRandomHexColor()}`);
+							bot.executeCommand(`/gc [DUELS-BRIDGE] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`);
 
 							resolve(data.player); // Ensure promise resolves
 						})

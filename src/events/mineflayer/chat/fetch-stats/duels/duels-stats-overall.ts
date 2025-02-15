@@ -79,7 +79,7 @@ export default {
 							const _kdr = _kills / _timesDied;
 							const _wlr = _wins / _losses;
 
-							console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`);
+							console.log(`[DEBUG] ${_playerName} is checking the stats (Duels Overall) of ${_playerName} and succeeded`);
 
 							bot.executeCommand(`/gc [DUELS] IGN: ${_playerName} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`);
 
@@ -124,7 +124,7 @@ export default {
 							const _kdr = _kills / _timesDied;
 							const _wlr = _wins / _losses;
 
-							console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target} and succeeded`);
+							console.log(`[DEBUG] ${_playerName} is checking the stats (Duels Overall) of ${_target} and succeeded`);
 
 							bot.executeCommand(`/gc [DUELS] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`);
 

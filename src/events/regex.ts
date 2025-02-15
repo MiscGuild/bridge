@@ -216,25 +216,25 @@ export default {
      */
      
     'chat:duels-overall':
-       /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(overall||o)\s?(\w{2,17})?.*$/,
+       /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(overall|o)\s?(\w{2,17})?.*$/,
     
     'chat:duels-bridge':
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\sbridge\s?(\w{2,17})?.*$/,
 
     'chat:duels-classic':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(classic||c)\s?(\w{2,17})?.*$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(classic|c)\s?(\w{2,17})?.*$/,
     'chat:duels-uhc':
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\suhc\s?(\w{2,17})?.*$/,
     'chat:duels-op':
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\sop\s?(\w{2,17})?.*$/,
     'chat:duels-sumo':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sumo||sum|sumoo|s|sm)\s?(\w{2,17})?.*$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sumo|sum|sumoo|s|sm)\s?(\w{2,17})?.*$/,
     'chat:duels-blitz':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(blitz||blits)\s?(\w{2,17})?.*$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(blitz|blits)\s?(\w{2,17})?.*$/,
     'chat:duels-sw':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sw||skywars)\s?(\w{2,17})?.*$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sw|skywars)\s?(\w{2,17})?.*$/,
     'chat:duels-combo':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(combo||comb)\s?(\w{2,17})?.*$/,
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(combo|comb)\s?(\w{2,17})?.*$/,
 
     /**
      * 

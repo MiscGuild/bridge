@@ -13,14 +13,16 @@ function getRandomHexColor(): string {
 	);
 }
 
+
 export default {
-	name: "chat:duels-bridge",
+	name: "chat:mm-stats",
 	runOnce: false,
-	run: async (bot, channel: string, playerRank: string, playerName: string, guildRank: string, target: string) => {
+	run: async (bot, channel: string, playerRank: string, playerName: string, guildRank: string, unknownGroup: string, target: string) => {
 		const _channel = channel;
 		const _playerRank = playerRank;
 		const _playerName = playerName;
 		const _guildRank = guildRank;
+		const _unknownGroup = unknownGroup;
 		const _target = target;
 
 		const now = Date.now();
@@ -44,8 +46,7 @@ export default {
 		}
 
 		commandCooldowns.set(playerName, now);
-
-		if (_target === undefined || _target === null || _target === "") {
+        if (_target === undefined || _target === null || _target === "") {
 			if (_guildRank.includes("Member") || _guildRank.includes("Active") || _guildRank.includes("Elite") || _guildRank.includes("Mod") || _guildRank.includes("Admin") || _guildRank.includes("GM")) {
 				return new Promise((resolve, reject) => {
 					fetch(`https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_playerName}`)
@@ -53,7 +54,7 @@ export default {
 						.then((data) => {
 							if (data.success === false && data.cause === "You have already looked up this name recently") {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_playerName} was looked up recently. Please try again later. | ${getRandomHexColor()}`);
+								bot.executeCommand(`/gc ${_playerName}, the player ${_playerName} was looked up recently. Please try again later.`);
 								return reject("Player not found! Looked up recently.");
 							} else if (data.success === true && data.player === null) {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`);
@@ -61,27 +62,23 @@ export default {
 								return reject("Player not found!");
 							}
 
-							if (!data.player.stats || !data.player.stats.Duels || !data.player.achievements) {
+							if (!data.player.stats || !data.player.stats.MurderMystery || !data.player.achievements) {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but incomplete data was received.`);
 								return reject("Incomplete player data received!");
 							}
 
-							const playerStats = data.player.stats.Duels;
+							const playerStats = data.player.stats.MurderMystery;
 							const playerAchievements = data.player.achievements;
 
-							const _wins = playerStats.wins; // updated
-							const _gamesPlayed = playerStats.games_played_duels; // updated
-							const _kills = playerStats.kills; // updated
-							const _losses = playerStats.losses; // updated
-							const _timesDied = playerStats.deaths; // updated
+							const _wins = playerStats.wins;
+							const _gamesPlayed = playerStats.games;
+							const _kills = playerStats.kills;
+							const _deaths = playerStats.deaths;
+							const _kdr = _kills / _deaths;
 
-							const _kdr = _kills / _timesDied;
-							const _wlr = _wins / _losses;
+							console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target} and succeeded`);
 
-							console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`);
-
-							bot.executeCommand(`/gc [DUELS-BRIDGE] IGN: ${_playerName} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`);
-
+							bot.executeCommand(`/gc [MM-STATS] IGN: ${_playerName} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | GAMES PLAYED: ${_gamesPlayed} | ${getRandomHexColor()}`);
 							resolve(data.player); // Ensure promise resolves
 						})
 						.catch((err) => {
@@ -98,34 +95,31 @@ export default {
 						.then((data) => {
 							if (data.success === false && data.cause === "You have already looked up this name recently") {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later. | ${getRandomHexColor()}`);
+								bot.executeCommand(`/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later.`);
 								return reject("Player not found!");
 							} else if (data.success === true && data.player === null) {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_target} was not found. | ${getRandomHexColor()}`);
+								bot.executeCommand(`/gc ${_playerName}, the player ${_target} was not found.`);
 								return reject("Player not found!");
 							}
 
-							if (!data.player.stats || !data.player.stats.Duels || !data.player.achievements) {
+							if (!data.player.stats || !data.player.stats.MurderMystery || !data.player.achievements) {
 								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`);
 								return reject("Incomplete player data received!");
 							}
 
-							const playerStats = data.player.stats.Duels;
+							const playerStats = data.player.stats.MurderMystery;
 							const playerAchievements = data.player.achievements;
 
-							const _wins = playerStats.wins; // updated
-							const _gamesPlayed = playerStats.games_played_duels; // updated
-							const _kills = playerStats.kills; // updated
-							const _losses = playerStats.losses; // updated
-							const _timesDied = playerStats.deaths; // updated
-
-							const _kdr = _kills / _timesDied;
-							const _wlr = _wins / _losses;
+							const _wins = playerStats.wins;
+							const _gamesPlayed = playerStats.games;
+							const _kills = playerStats.kills;
+							const _deaths = playerStats.deaths;
+							const _kdr = _kills / _deaths;
 
 							console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target} and succeeded`);
 
-							bot.executeCommand(`/gc [DUELS-BRIDGE] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`);
+							bot.executeCommand(`/gc [MM-STATS] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(2)} | GAMES PLAYED: ${_gamesPlayed} | ${getRandomHexColor()}`);
 
 							resolve(data.player); // Ensure promise resolves
 						})

@@ -10,7 +10,7 @@ function getRandomHexColor(): string {
 }
 
 export default {
-    name: 'chat:duels-op',
+    name: 'chat:duels-blitz',
     runOnce: false,
     run: async (
         bot,
@@ -27,5 +27,6 @@ export default {
         const _target = target;
 
         bot.executeCommand(`/gc ${playerName}, I'm sorry but this command is not available yet. | ${getRandomHexColor()}`);
+        console.error(`[DEBUG] ${_playerName} is checking the BLITZ stats of ${_playerName}, but failed. This command is not available yet.`);
     }
 } as Event;
