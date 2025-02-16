@@ -154,7 +154,7 @@ export default {
                                                     'message',
                                                     chatListener2
                                                 );
-                                                break;
+                                                return resolve();
                                             } else {
                                                 counter = 2;
                                                 bot.sendToDiscord(
@@ -167,12 +167,13 @@ export default {
                                                     'message',
                                                     chatListener2
                                                 );
-                                                break;
+                                                return resolve();
                                             }
                                         } else {
                                             console.log(
                                                 `[DEBUG] ${playerName} joined the guild, but failed to get invite data.`
                                             );
+                                            return reject('Invite data not found, this is probably a bug in the Hypixel API (not updating quick enough).');
                                         }
                                     }
                                 })
