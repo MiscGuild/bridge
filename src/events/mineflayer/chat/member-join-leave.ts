@@ -173,6 +173,7 @@ export default {
                                             console.log(
                                                 `[DEBUG] ${playerName} joined the guild, but failed to get invite data.`
                                             );
+                                            bot.mineflayer.removeListener('message', chatListener2);
                                             return reject('Invite data not found, this is probably a bug in the Hypixel API (not updating quick enough).');
                                         }
                                     }

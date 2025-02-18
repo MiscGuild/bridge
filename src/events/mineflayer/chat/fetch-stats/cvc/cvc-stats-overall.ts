@@ -71,7 +71,6 @@ export default {
 
 							const _deaths = playerStats.deaths; // Defusal
 							const _deathsTDM = playerStats.deaths_deathmatch; // TDM
-							const _game_plays = playerStats.game_plays; // Defusal
 							const _winsTDM = playerStats.game_wins_deathmatch; // TDM
 							const _wins = playerStats.game_wins; // Defusal
 							const _winsOverall = _winsTDM + _wins; // Virtual
@@ -121,7 +120,6 @@ export default {
 
 							const _deaths = playerStats.deaths; // Defusal
 							const _deathsTDM = playerStats.deaths_deathmatch; // TDM
-							const _game_plays = playerStats.game_plays; // Defusal
 							const _winsTDM = playerStats.game_wins_deathmatch; // TDM
 							const _wins = playerStats.game_wins; // Defusal
 							const _winsOverall = _winsTDM + _wins; // Virtual
