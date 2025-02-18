@@ -41,6 +41,9 @@ export default {
             console.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
         }
 
+        const fs = require('fs');
+        const path = require('path');
+
         if (type === 'joined') {
             // Join Date
             return new Promise((resolve, reject) => {
@@ -96,14 +99,12 @@ export default {
                             });
                             const joinDate = new Date(member.joined);
 
-                            const fs = require('fs');
-                            const path = require('path');
                             const filePath = path.resolve(__dirname, 'joindata.json');
                             if (!fs.existsSync(filePath)) {
                                 fs.writeFileSync(filePath, '{}');
                             }
 
-                            const _joinData = require('./joindata.json');
+                            const _joinData = require(filePath);
                             if (_joinData[mojangProfile.id]) {
                                 delete _joinData[mojangProfile.id];
                                 _joinData[mojangProfile.id] = joinDate;
@@ -216,7 +217,8 @@ export default {
                             );
                             return reject('Guild data not found!');
                         } else {
-                            const oldJoinData = require('./joindata.json');
+                            const filePath = path.resolve(__dirname, 'joindata.json');
+                            const oldJoinData = require(filePath);
                             const joinDate = oldJoinData[mojangProfile.id];
                             const leaveDate = new Date();
 
