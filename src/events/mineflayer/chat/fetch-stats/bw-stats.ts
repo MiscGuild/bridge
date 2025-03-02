@@ -3,6 +3,7 @@
 // Copyright © 2024 Vliegenier04
 
 const commandCooldowns = new Map<string, number>();
+import env from "../../../../util/env";
 
 function getRandomHexColor(): string {
 	return (
@@ -24,8 +25,8 @@ export default {
 		const _target = target;
 
 		const now = Date.now();
-		const cooldownTimeMember = 4 * 60 * 1000;
-		const cooldownTimeActive = 2 * 60 * 1000;
+		const cooldownTimeMember = env.COMMAND_COOLDOWN_MEMBER;
+		const cooldownTimeActive = env.COMMAND_COOLDOWN_ACTIVE;
 
 		if (commandCooldowns.has(playerName) && _guildRank.includes("Member")) {
 			const lastRun = commandCooldowns.get(playerName);

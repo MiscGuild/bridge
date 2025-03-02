@@ -70,11 +70,8 @@ export default {
 							const playerAchievements = data.player.achievements;
 
 							const _deaths = playerStats.deaths;
-							const _copkills = playerStats.cop_kills;
-							const _crimkills = playerStats.criminal_kills;
 							const _game_plays = playerStats.game_plays;
 							const _wins = playerStats.game_wins;
-							const _round_wins = playerStats.round_wins;
 							const _kills = playerStats.kills;
 							const _kdr = _kills / _deaths;
 							const _headshots = playerStats.headshot_kills;
@@ -117,11 +114,7 @@ export default {
 							const playerAchievements = data.player.achievements;
 
 							const _deaths = playerStats.deaths;
-							const _copkills = playerStats.cop_kills;
-							const _crimkills = playerStats.criminal_kills;
-							const _game_plays = playerStats.game_plays;
 							const _wins = playerStats.game_wins;
-							const _round_wins = playerStats.round_wins;
 							const _kills = playerStats.kills;
 							const _kdr = _kills / _deaths;
 							const _headshots = playerStats.headshot_kills;
