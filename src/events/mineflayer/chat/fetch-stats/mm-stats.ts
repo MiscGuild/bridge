@@ -77,10 +77,7 @@ export default {
 		if (!allowedGuildRanks.some(rank => guildRank.includes(rank))) {
 			return;
 		}
-		console.log(target);
-		console.log(playerName);
 		const lookupName = target && target.trim() !== "" ? target.trim() : playerName;
-		console.log(lookupName);
 		try {
 			const playerData = await fetchMMPlayerData(lookupName);
 			console.log(`[DEBUG] ${playerName} successfully fetched MurderMystery stats for ${lookupName}`);
