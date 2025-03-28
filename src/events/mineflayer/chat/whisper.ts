@@ -7,9 +7,17 @@ export default {
     runOnce: false,
     run: async (bot, playerName: string, message: string) => {
         const errorMessage = `/w ${playerName} There was an error attempting your request! (Check spelling and/or try again later)`;
-        const target = message.startsWith('weeklygexp' || 'weeklygxp' || 'gexp' || 'gxp')
-            ? playerName
-            : (message.split(' ')[0] as string);
+        
+        const startsWithKeyword = ['weeklygexp', 'weeklygxp', 'gexp', 'gxp'].some(prefix =>
+            message.startsWith(prefix)
+        );
+
+        const target = startsWithKeyword ? playerName : message.split(' ')[0];
+
+        if (!target) {
+            console.error("Target is undefined");
+            return;
+        }
 
         const mojangProfile = await fetchMojangProfile(target);
         if (isFetchError(mojangProfile)) {
