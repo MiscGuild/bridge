@@ -1,4 +1,4 @@
-import fetchMojangProfile from "@requests/fetch-mojang-profile";
+import fetchMojangProfile from '../../../../requests/fetch-mojang-profile';
 
 const commandCooldowns = new Map<string, number>();
 
