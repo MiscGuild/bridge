@@ -24,7 +24,7 @@ function isOnCooldown(playerName: string, guildRank: string, now: number): numbe
 }
 
 async function fetchSWPlayerData(lookupName: string): Promise<any> {
-	const resp = await fetchMojangProfile(playerName);
+	const resp = await fetchMojangProfile(lookupName);
 	if (!("id" in resp)){
 		throw new Error("not_found");
 	}
