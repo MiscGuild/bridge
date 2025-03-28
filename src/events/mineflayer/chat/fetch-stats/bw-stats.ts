@@ -1,145 +1,99 @@
-// Regex Pattern:
-// 'chat:bw-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!bw\s?(\w{2,17})?$/,
-// Copyright © 2024 Vliegenier04
-
 const commandCooldowns = new Map<string, number>();
 import env from "../../../../util/env";
+import fetchMojangProfile from "@requests/fetch-mojang-profile";
 
 function getRandomHexColor(): string {
-	return (
-		"#" +
-		Math.floor(Math.random() * 0xffffff)
-			.toString(16)
-			.padStart(6, "0")
-	);
+	return "#" + Math.floor(Math.random() * 0xffffffffffffff).toString(16).padStart(6, "0");
+}
+
+const allowedGuildRanks = ["Member", "Active", "Elite", "Mod", "Admin", "GM"];
+
+function isOnCooldown(playerName: string, guildRank: string, now: number): number | null {
+	let cooldownTime: number | undefined;
+	if (guildRank.includes("Member")) {
+		cooldownTime = env.COMMAND_COOLDOWN_MEMBER;
+	} else if (guildRank.includes("Active")) {
+		cooldownTime = env.COMMAND_COOLDOWN_ACTIVE;
+	}
+	if (cooldownTime) {
+		const lastRun = commandCooldowns.get(playerName);
+		if (lastRun && now - lastRun < cooldownTime) {
+			return Math.ceil((cooldownTime - (now - lastRun)) / 1000);
+		}
+	}
+	return null;
+}
+
+async function fetchPlayerData(playerName: string): Promise<any> {
+	const resp = await fetchMojangProfile(playerName);
+	if (!("id" in resp)){
+		throw new Error("not_found");
+	}
+	const response = await fetch(`https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&uuid=${resp.id}`);
+	const data = await response.json();
+
+	if (!data.success && data.cause === "You have already looked up this player too recently, please try again shortly") {
+		throw new Error("lookedup_recently");
+	} else if (data.success && data.player === null) {
+		throw new Error("not_found");
+	}
+
+	if (!data.player.stats || !data.player.stats.Bedwars || !data.player.achievements) {
+		throw new Error("incomplete_data");
+	}
+
+	return data.player;
+}
+
+function buildStatsMessage(playerName: string, achievements: any, stats: any): string {
+	const level = achievements.bedwars_level;
+	const wins = achievements.bedwars_wins;
+	const fkdr = (stats.final_kills_bedwars / stats.final_deaths_bedwars).toFixed(2);
+	const bblr = (achievements.bedwars_beds / stats.beds_lost_bedwars).toFixed(2);
+	const wlr = (wins / stats.losses_bedwars).toFixed(2);
+	return `/gc [BW-STATS] IGN: ${playerName} | LVL: ${level} | WINS: ${wins} | FKDR: ${fkdr} | BBLR: ${bblr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
 
 export default {
 	name: "chat:bw-stats",
 	runOnce: false,
 	run: async (bot, channel: string, playerRank: string, playerName: string, guildRank: string, target: string) => {
-		const _channel = channel;
-		const _playerRank = playerRank;
-		const _playerName = playerName;
-		const _guildRank = guildRank;
-		const _target = target;
-
 		const now = Date.now();
-		const cooldownTimeMember = env.COMMAND_COOLDOWN_MEMBER;
-		const cooldownTimeActive = env.COMMAND_COOLDOWN_ACTIVE;
-
-		if (commandCooldowns.has(playerName) && _guildRank.includes("Member")) {
-			const lastRun = commandCooldowns.get(playerName);
-			if (lastRun && now - lastRun < cooldownTimeMember) {
-				const remainingTime = Math.ceil((cooldownTimeMember - (now - lastRun)) / 1000);
-				bot.executeCommand(`/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait. | ${getRandomHexColor()}`);
-				return;
-			}
-		} else if (commandCooldowns.has(playerName) && _guildRank.includes("Active")) {
-			const lastRun = commandCooldowns.get(playerName);
-			if (lastRun && now - lastRun < cooldownTimeActive) {
-				const remainingTime = Math.ceil((cooldownTimeActive - (now - lastRun)) / 1000);
-				bot.executeCommand(`/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait. | ${getRandomHexColor()}`);
-				return;
-			}
+		const cooldown = isOnCooldown(playerName, guildRank, now);
+		if (cooldown !== null) {
+			bot.executeCommand(`/gc ${playerName}, you can only use this command again in ${cooldown} seconds. Please wait. | ${getRandomHexColor()}`);
+			return;
 		}
-
 		commandCooldowns.set(playerName, now);
 
-		if (_target === undefined || _target === null || _target === "") {
-			if (_guildRank.includes("Member") || _guildRank.includes("Active") || _guildRank.includes("Elite") || _guildRank.includes("Mod") || _guildRank.includes("Admin") || _guildRank.includes("GM")) {
-				return new Promise((resolve, reject) => {
-					fetch(`https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_playerName}`)
-						.then((response) => response.json())
-						.then((data) => {
-							if (data.success === false && data.cause === "You have already looked up this name recently") {
-								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_playerName} was looked up recently. Please try again later. | ${getRandomHexColor()}`);
-								return reject("Player not found!");
-							} else if (data.success === true && data.player === null) {
-								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_playerName} was not found. Are they nicked? | ${getRandomHexColor()}`);
-								return reject("Player not found!");
-							}
+		// Only allowed roles can use this command
+		if (!allowedGuildRanks.some(rank => guildRank.includes(rank))) {
+			return;
+		}
 
-							if (!data.player.stats || !data.player.stats.Bedwars || !data.player.achievements) {
-								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but incomplete data was received.`);
-								return reject("Incomplete player data received!");
-							}
+		// Determine the lookup name: use target if provided, otherwise use the player's own name
+		const lookupName = target && target.trim() !== "" ? target.trim() : playerName;
 
-							const playerStats = data.player.stats.Bedwars;
-							const playerAchievements = data.player.achievements;
-
-							const playerLevel = playerAchievements.bedwars_level;
-							const playerWins = playerAchievements.bedwars_wins;
-							const playerFinalKills = playerStats.final_kills_bedwars;
-							const playerFinalDeaths = playerStats.final_deaths_bedwars;
-							const playerFKDR = playerFinalKills / playerFinalDeaths;
-							const playerBedsBroken = playerAchievements.bedwars_beds;
-							const playerBedsLost = playerStats.beds_lost_bedwars;
-							const playerLosses = playerStats.losses_bedwars;
-							const playerWLR = playerWins / playerLosses;
-							const playerBBLR = playerBedsBroken / playerBedsLost;
-
-							console.log(`[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`);
-
-							bot.executeCommand(`/gc [BW-STATS] IGN: ${_playerName} | LVL: ${playerLevel} | WINS: ${playerWins} | FKDR: ${playerFKDR.toFixed(2)} | BBLR: ${playerBBLR.toFixed(2)} | WLR: ${playerWLR.toFixed(2)} | ${getRandomHexColor()}`);
-
-							resolve(data.player); // Ensure promise resolves
-						})
-						.catch((err) => {
-							console.error(`[ERROR] Failed to fetch player stats: ${err}`);
-							reject(err);
-						});
-				});
+		try {
+			const playerData = await fetchPlayerData(lookupName);
+			console.log(`[DEBUG] ${playerName} successfully fetched stats for ${lookupName}`);
+			const achievements = playerData.achievements;
+			const stats = playerData.stats.Bedwars;
+			bot.executeCommand(buildStatsMessage(lookupName, achievements, stats));
+			return playerData;
+		} catch (err: any) {
+			console.error(`[ERROR] Failed to fetch stats for ${lookupName}: ${err}`);
+			let errorMsg = "";
+			if (err.message === "lookedup_recently") {
+				errorMsg = `the player ${lookupName} was looked up recently. Please try again later.`;
+			} else if (err.message === "not_found") {
+				errorMsg = lookupName === playerName ? 
+					`the player ${lookupName} was not found. Are they nicked?` : 
+					`the player ${lookupName} was not found.`;
+			} else {
+				errorMsg = "An error occurred while fetching player stats.";
 			}
-		} else {
-			if (_guildRank.includes("Member") || _guildRank.includes("Active") || _guildRank.includes("Elite") || _guildRank.includes("Mod") || _guildRank.includes("Admin") || _guildRank.includes("GM")) {
-				return new Promise((resolve, reject) => {
-					fetch(`https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_target}`)
-						.then((response) => response.json())
-						.then((data) => {
-							if (data.success === false && data.cause === "You have already looked up this name recently") {
-								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later. | ${getRandomHexColor()}`);
-								return reject("Player not found!");
-							} else if (data.success === true && data.player === null) {
-								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`);
-								bot.executeCommand(`/gc ${_playerName}, the player ${_target} was not found. | ${getRandomHexColor()}`);
-								return reject("Player not found!");
-							}
-
-							if (!data.player.stats || !data.player.stats.Bedwars || !data.player.achievements) {
-								console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`);
-								return reject("Incomplete player data received!");
-							}
-
-							const playerStats = data.player.stats.Bedwars;
-							const playerAchievements = data.player.achievements;
-
-							const playerLevel = playerAchievements.bedwars_level;
-							const playerWins = playerAchievements.bedwars_wins;
-							const playerFinalKills = playerStats.final_kills_bedwars;
-							const playerFinalDeaths = playerStats.final_deaths_bedwars;
-							const playerFKDR = playerFinalKills / playerFinalDeaths;
-							const playerBedsBroken = playerAchievements.bedwars_beds;
-							const playerBedsLost = playerStats.beds_lost_bedwars;
-							const playerLosses = playerStats.losses_bedwars;
-							const playerWLR = playerWins / playerLosses;
-							const playerBBLR = playerBedsBroken / playerBedsLost;
-
-							console.log(`[DEBUG] ${_playerName} is checking the stats of ${_target} and succeeded`);
-
-							bot.executeCommand(`/gc [BW-STATS] IGN: ${_target} | LVL: ${playerLevel} | WINS: ${playerWins} | FKDR: ${playerFKDR.toFixed(2)} | BBLR: ${playerBBLR.toFixed(2)} | WLR: ${playerWLR.toFixed(2)} | ${getRandomHexColor()}`);
-
-							resolve(data.player); // Ensure promise resolves
-						})
-						.catch((err) => {
-							console.error(`[ERROR] Failed to fetch player stats: ${err}`);
-							reject(err);
-						});
-				});
-			}
+			bot.executeCommand(`/gc ${playerName}, ${errorMsg} | ${getRandomHexColor()}`);
 		}
 	},
 } as Event;
