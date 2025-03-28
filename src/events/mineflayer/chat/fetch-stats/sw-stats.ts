@@ -1,3 +1,4 @@
+import fetchMojangProfile from '../../../../requests/fetch-mojang-profile';
 const commandCooldowns = new Map<string, number>();
 
 function getRandomHexColor(): string {
@@ -23,11 +24,13 @@ function isOnCooldown(playerName: string, guildRank: string, now: number): numbe
 }
 
 async function fetchSWPlayerData(lookupName: string): Promise<any> {
-	const response = await fetch(
-		`https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${lookupName}`
-	);
+	const resp = await fetchMojangProfile(playerName);
+	if (!("id" in resp)){
+		throw new Error("not_found");
+	}
+	const response = await fetch(`https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&uuid=${resp.id}`);
 	const data = await response.json();
-
+	
 	if (!data.success && data.cause === "You have already looked up this player too recently, please try again shortly") {
 		throw new Error("lookedup_recently");
 	} else if (data.success && data.player === null) {
