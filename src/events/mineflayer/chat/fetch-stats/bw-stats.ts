@@ -1,6 +1,6 @@
 const commandCooldowns = new Map<string, number>();
 import env from "../../../../util/env";
-import fetchMojangProfile from "@requests/fetch-mojang-profile";
+import fetchMojangProfile from '../../../../requests/fetch-mojang-profile';
 
 function getRandomHexColor(): string {
 	return "#" + Math.floor(Math.random() * 0xffffffffffffff).toString(16).padStart(6, "0");
