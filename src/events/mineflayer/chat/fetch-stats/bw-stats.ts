@@ -85,13 +85,13 @@ export default {
 			console.error(`[ERROR] Failed to fetch stats for ${lookupName}: ${err}`);
 			let errorMsg = "";
 			if (err.message === "lookedup_recently") {
-				errorMsg = `the player ${lookupName} was looked up recently. Please try again later.`;
+				errorMsg = `The player ${lookupName} was looked up recently. Please try again later.`;
 			} else if (err.message === "not_found") {
 				errorMsg = lookupName === playerName ? 
-					`the player ${lookupName} was not found. Are they nicked?` : 
-					`the player ${lookupName} was not found.`;
+					`The player ${lookupName} was not found. Are they nicked?` : 
+					`The player ${lookupName} was not found.`;
 			} else {
-				errorMsg = "An error occurred while fetching player stats.";
+				errorMsg = "An error occurred while fetching player stats. Please report this to the bot owner.";
 			}
 			bot.executeCommand(`/gc ${playerName}, ${errorMsg} | ${getRandomHexColor()}`);
 		}

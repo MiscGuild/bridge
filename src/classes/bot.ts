@@ -4,6 +4,8 @@ import {
     EmbedBuilder,
     IntentsBitField,
     TextChannel,
+    REST,
+    Routes
 } from 'discord.js';
 import { BotEvents, createBot } from 'mineflayer';
 import logger from 'consola';
@@ -145,30 +147,44 @@ class Bot {
     private async loadCommands(dir: string) {
         const callback = async (currentDir: string, file: string) => {
             if (!(file.endsWith('.ts') || file.endsWith('.js')) || file.endsWith('.d.ts')) return;
-
             const command = (await import(path.join(currentDir, file))).default as Command;
-
             if (!command.data) {
                 logger.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
                 return;
             }
-
             if (!command.run) {
-                logger.warn(
-                    `The command ${command.data.name} doesn't have an executable function!`
-                );
+                logger.warn(`The command ${command.data.name} doesn't have an executable function!`);
                 return;
             }
-
             this.discord.commands.set(command.data.name, command);
         };
-
         await recursiveWalkDir(
             path.join(__dirname, dir),
             callback,
             'Error while loading commands:'
         );
+        
+        const commands = Array.from(this.discord.commands.values()).map(cmd => {
+            return typeof (cmd.data as any).toJSON === 'function'
+              ? (cmd.data as any).toJSON()
+              : cmd.data;
+          });          
+    
+        
+        const rest = new REST({ version: '10' }).setToken(env.DISCORD_TOKEN);
+    
+        try {
+            console.log(`Started refreshing ${commands.length} application (/) commands.`);
+            await rest.put(
+                Routes.applicationCommands(env.DISCORD_BOT_ID),
+                { body: commands }
+            );
+            console.log(`Successfully reloaded application (/) commands.`);
+        } catch (error) {
+            console.error('Error refreshing commands:', error);
+        }
     }
+    
 
     private async loadEvents(dir: string, emitter: EventEmitter) {
         const callback = async (currentDir: string, file: string) => {
