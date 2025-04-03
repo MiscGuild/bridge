@@ -1,3 +1,6 @@
+# Stored player data
+joindata.json
+
 # Logs
 logs
 logs/
@@ -127,3 +130,7 @@ dist
 #Prettier
 .prettierrc
 .prettierrc.js
+
+# Active Development
+src/events/mineflayer/chat/fetch-stats/gexp-stats.ts
+.vscode/settings.json

@@ -208,16 +208,16 @@ export default {
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!mm\s?(\w{2,17})?.*$/,
 
     /**
-     * 
+     *
      * For check if a player has said !duels [gamemode] [ign] (ign is optional) in chat
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
-     
+
     'chat:duels-overall':
-       /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(overall|o)\s?(\w{2,17})?.*$/,
-    
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(overall|o)\s?(\w{2,17})?.*$/,
+
     'chat:duels-bridge':
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\sbridge\s?(\w{2,17})?.*$/,
 
@@ -237,18 +237,17 @@ export default {
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(combo|comb)\s?(\w{2,17})?.*$/,
 
     /**
-     * 
+     *
      * To check if the message is duplicated
      */
 
-    'chat:duplicateMessage':
-        /^You cannot say the same message twice!$/,
+    'chat:duplicateMessage': /^You cannot say the same message twice!$/,
 
     /**
-     * 
+     *
      * To check if the player has said !gexp [ign] in chat
-     * 
-     * 
+     *
+     *
      */
     'chat:gexp-stats':
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!gexp\s?(\w{2,17})?.*$/,

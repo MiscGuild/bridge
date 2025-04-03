@@ -1,5 +1,5 @@
-import Emojis from '../../../util/emojis';
 import { escapeMarkdown } from 'discord.js';
+import Emojis from '../../../util/emojis';
 
 export default {
     name: 'chat:guildMuteUnmute',
