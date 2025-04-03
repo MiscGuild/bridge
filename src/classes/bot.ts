@@ -5,7 +5,7 @@ import {
     IntentsBitField,
     TextChannel,
     REST,
-    Routes
+    Routes,
 } from 'discord.js';
 import { BotEvents, createBot } from 'mineflayer';
 import logger from 'consola';
@@ -153,7 +153,9 @@ class Bot {
                 return;
             }
             if (!command.run) {
-                logger.warn(`The command ${command.data.name} doesn't have an executable function!`);
+                logger.warn(
+                    `The command ${command.data.name} doesn't have an executable function!`
+                );
                 return;
             }
             this.discord.commands.set(command.data.name, command);
@@ -163,28 +165,23 @@ class Bot {
             callback,
             'Error while loading commands:'
         );
-        
-        const commands = Array.from(this.discord.commands.values()).map(cmd => {
+
+        const commands = Array.from(this.discord.commands.values()).map((cmd) => {
             return typeof (cmd.data as any).toJSON === 'function'
-              ? (cmd.data as any).toJSON()
-              : cmd.data;
-          });          
-    
-        
+                ? (cmd.data as any).toJSON()
+                : cmd.data;
+        });
+
         const rest = new REST({ version: '10' }).setToken(env.DISCORD_TOKEN);
-    
+
         try {
             console.log(`Started refreshing ${commands.length} application (/) commands.`);
-            await rest.put(
-                Routes.applicationCommands(env.DISCORD_BOT_ID),
-                { body: commands }
-            );
+            await rest.put(Routes.applicationCommands(env.DISCORD_BOT_ID), { body: commands });
             console.log(`Successfully reloaded application (/) commands.`);
         } catch (error) {
             console.error('Error refreshing commands:', error);
         }
     }
-    
 
     private async loadEvents(dir: string, emitter: EventEmitter) {
         const callback = async (currentDir: string, file: string) => {

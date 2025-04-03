@@ -1,12 +1,12 @@
 // This is a work in progress and is not yet functional.
 
 function getRandomHexColor(): string {
-	return (
-		"#" +
-		Math.floor(Math.random() * 0xffffff)
-			.toString(16)
-			.padStart(6, "0")
-	);
+    return (
+        '#' +
+        Math.floor(Math.random() * 0xffffff)
+            .toString(16)
+            .padStart(6, '0')
+    );
 }
 
 export default {
@@ -26,7 +26,11 @@ export default {
         const _guildRank = guildRank;
         const _target = target;
 
-        bot.executeCommand(`/gc ${playerName}, I'm sorry but this command is not available yet. | ${getRandomHexColor()}`);
-        console.error(`[DEBUG] ${_playerName} is checking the DUELS-SW stats of ${_playerName}, but failed. This command is not available yet.`);
-    }
+        bot.executeCommand(
+            `/gc ${playerName}, I'm sorry but this command is not available yet. | ${getRandomHexColor()}`
+        );
+        console.error(
+            `[DEBUG] ${_playerName} is checking the DUELS-SW stats of ${_playerName}, but failed. This command is not available yet.`
+        );
+    },
 } as Event;
