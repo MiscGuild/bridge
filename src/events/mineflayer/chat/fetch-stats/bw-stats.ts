@@ -1,14 +1,12 @@
-const commandCooldowns = new Map<string, number>();
 import env from '../../../../util/env';
 import fetchMojangProfile from '../../../../requests/fetch-mojang-profile';
 
+const commandCooldowns = new Map<string, number>();
+
 function getRandomHexColor(): string {
-    return (
-        '#' +
-        Math.floor(Math.random() * 0xffffffffffffff)
-            .toString(16)
-            .padStart(6, '0')
-    );
+    return `#${Math.floor(Math.random() * 0xffffffffffffff)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
 const allowedGuildRanks = ['Member', 'Active', 'Elite', 'Mod', 'Admin', 'GM'];
@@ -97,7 +95,7 @@ export default {
         try {
             const playerData = await fetchPlayerData(lookupName);
             console.log(`[DEBUG] ${playerName} successfully fetched stats for ${lookupName}`);
-            const achievements = playerData.achievements;
+            const { achievements } = playerData;
             const stats = playerData.stats.Bedwars;
             bot.executeCommand(buildStatsMessage(lookupName, achievements, stats));
             return playerData;

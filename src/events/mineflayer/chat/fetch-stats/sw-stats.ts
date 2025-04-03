@@ -1,13 +1,11 @@
 import fetchMojangProfile from '../../../../requests/fetch-mojang-profile';
+
 const commandCooldowns = new Map<string, number>();
 
 function getRandomHexColor(): string {
-    return (
-        '#' +
-        Math.floor(Math.random() * 0xffffffffffffff)
-            .toString(16)
-            .padStart(6, '0')
-    );
+    return `#${Math.floor(Math.random() * 0xffffffffffffff)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
 const allowedGuildRanks = ['Member', 'Active', 'Elite', 'Mod', 'Admin', 'GM'];
@@ -71,9 +69,9 @@ function buildSWStatsMessage(
 
     const totalWins = winsSolo + winsTeams;
     const totalKills = killsSolo + killsTeams;
-    const deaths = stats.deaths;
+    const { deaths } = stats;
     const kdr = totalKills / deaths;
-    const losses = stats.losses;
+    const { losses } = stats;
     const wlr = totalWins / losses;
 
     return `/gc [SW-STATS] IGN: ${lookupName} | LVL: ${rm_playerLevel} | WINS: ${totalWins} | KDR: ${kdr.toFixed(
@@ -119,7 +117,7 @@ export default {
                 `[DEBUG] ${playerName} successfully fetched SkyWars stats for ${lookupName}`
             );
 
-            const achievements = playerData.achievements;
+            const { achievements } = playerData;
             const stats = playerData.stats.SkyWars;
 
             const message = buildSWStatsMessage(lookupName, achievements, stats, isSelfLookup);

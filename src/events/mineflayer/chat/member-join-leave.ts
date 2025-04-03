@@ -1,9 +1,9 @@
-import Emojis from '../../../util/emojis';
 import { escapeMarkdown } from 'discord.js';
+import { BotEvents } from 'mineflayer';
+import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
 import isUserBlacklisted from '../../../blacklist/is-user-blacklisted';
-import { BotEvents } from 'mineflayer';
 
 import getRankColor from '../../../util/get-rank-color';
 import env from '../../../util/env';
@@ -66,7 +66,7 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
         );
     }
 
-    const guild = data.guild;
+    const { guild } = data;
     const member = guild.members.find(
         (member: { uuid: string }) => member.uuid === mojangProfile.id
     );
@@ -207,13 +207,13 @@ export default {
                 `/oc Failed to get Mojang profile of ${playerName}. Please try again later.`
             );
             return;
-        } else {
-            console.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
         }
+        console.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
 
         if (type === 'joined') {
             return processJoinEvent(bot, playerName, mojangProfile);
-        } else if (type === 'left') {
+        }
+        if (type === 'left') {
             return processLeaveEvent(bot, playerName, mojangProfile);
         }
     },

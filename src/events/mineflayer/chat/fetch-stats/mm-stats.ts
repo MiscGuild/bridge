@@ -3,12 +3,9 @@ import fetchMojangProfile from '../../../../requests/fetch-mojang-profile';
 const commandCooldowns = new Map<string, number>();
 
 function getRandomHexColor(): string {
-    return (
-        '#' +
-        Math.floor(Math.random() * 0xffffffffffffff)
-            .toString(16)
-            .padStart(6, '0')
-    );
+    return `#${Math.floor(Math.random() * 0xffffffffffffff)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
 const allowedGuildRanks = ['Member', 'Active', 'Elite', 'Mod', 'Admin', 'GM'];
@@ -57,10 +54,10 @@ async function fetchMMPlayerData(playerName: string): Promise<any> {
 }
 
 function buildMMStatsMessage(lookupName: string, achievements: any, stats: any): string {
-    const wins = stats.wins;
+    const { wins } = stats;
     const gamesPlayed = stats.games;
-    const kills = stats.kills;
-    const deaths = stats.deaths;
+    const { kills } = stats;
+    const { deaths } = stats;
     const kdr = (kills / deaths).toFixed(2);
     return `/gc [MM-STATS] IGN: ${lookupName} | KILLS: ${kills} | WINS: ${wins} | KDR: ${kdr} | GAMES PLAYED: ${gamesPlayed} | ${getRandomHexColor()}`;
 }
@@ -99,7 +96,7 @@ export default {
                 `[DEBUG] ${playerName} successfully fetched MurderMystery stats for ${lookupName}`
             );
 
-            const achievements = playerData.achievements;
+            const { achievements } = playerData;
             const stats = playerData.stats.MurderMystery;
 
             bot.executeCommand(buildMMStatsMessage(lookupName, achievements, stats));

@@ -166,18 +166,16 @@ class Bot {
             'Error while loading commands:'
         );
 
-        const commands = Array.from(this.discord.commands.values()).map((cmd) => {
-            return typeof (cmd.data as any).toJSON === 'function'
-                ? (cmd.data as any).toJSON()
-                : cmd.data;
-        });
+        const commands = Array.from(this.discord.commands.values()).map((cmd) =>
+            typeof (cmd.data as any).toJSON === 'function' ? (cmd.data as any).toJSON() : cmd.data
+        );
 
         const rest = new REST({ version: '10' }).setToken(env.DISCORD_TOKEN);
 
         try {
             console.log(`Started refreshing ${commands.length} application (/) commands.`);
             await rest.put(Routes.applicationCommands(env.DISCORD_BOT_ID), { body: commands });
-            console.log(`Successfully reloaded application (/) commands.`);
+            console.log('Successfully reloaded application (/) commands.');
         } catch (error) {
             console.error('Error refreshing commands:', error);
         }

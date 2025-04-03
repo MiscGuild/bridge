@@ -5,12 +5,9 @@
 const commandCooldowns = new Map<string, number>();
 
 function getRandomHexColor(): string {
-    return (
-        '#' +
-        Math.floor(Math.random() * 0xffffff)
-            .toString(16)
-            .padStart(6, '0')
-    );
+    return `#${Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
 export default {
@@ -82,7 +79,8 @@ export default {
                                     `/gc ${_playerName}, the player ${_playerName} was looked up recently. Please try again later. | ${getRandomHexColor()}`
                                 );
                                 return reject('Player not found! Looked up recently.');
-                            } else if (data.success === true && data.player === null) {
+                            }
+                            if (data.success === true && data.player === null) {
                                 console.log(
                                     `[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`
                                 );
@@ -137,87 +135,86 @@ export default {
                         });
                 });
             }
-        } else {
-            if (
-                _guildRank.includes('Member') ||
-                _guildRank.includes('Active') ||
-                _guildRank.includes('Elite') ||
-                _guildRank.includes('Mod') ||
-                _guildRank.includes('Admin') ||
-                _guildRank.includes('GM')
-            ) {
-                return new Promise((resolve, reject) => {
-                    fetch(
-                        `https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_target}`
-                    )
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (
-                                data.success === false &&
-                                data.cause === 'You have already looked up this name recently'
-                            ) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
-                                );
-                                bot.executeCommand(
-                                    `/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later.`
-                                );
-                                return reject('Player not found!');
-                            } else if (data.success === true && data.player === null) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
-                                );
-                                bot.executeCommand(
-                                    `/gc ${_playerName}, the player ${_target} was not found.`
-                                );
-                                return reject('Player not found!');
-                            }
-
-                            if (
-                                !data.player.stats ||
-                                !data.player.stats.MCGO ||
-                                !data.player.achievements
-                            ) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`
-                                );
-                                return reject('Incomplete player data received!');
-                            }
-
-                            const playerStats = data.player.stats.MCGO;
-                            const playerAchievements = data.player.achievements;
-
-                            const _deaths = playerStats.deaths; // Defusal
-                            const _deathsTDM = playerStats.deaths_deathmatch; // TDM
-                            const _winsTDM = playerStats.game_wins_deathmatch; // TDM
-                            const _wins = playerStats.game_wins; // Defusal
-                            const _winsOverall = _winsTDM + _wins; // Virtual
-                            const _kills = playerStats.kills; // Defusal
-                            const _tdmKills = playerStats.kills_deathmatch; // TDM
-                            const _overallKills = _kills + _tdmKills; // Virtual
-                            const _overallDeaths = _deaths + _deathsTDM; // Virtual
-                            const _kdr = _overallKills / _overallDeaths; // Virtual
-                            const _headshots = playerStats.headshot_kills; // Virtual
-                            const _bombs = playerStats.bombs_planted; // Defusal
-
+        } else if (
+            _guildRank.includes('Member') ||
+            _guildRank.includes('Active') ||
+            _guildRank.includes('Elite') ||
+            _guildRank.includes('Mod') ||
+            _guildRank.includes('Admin') ||
+            _guildRank.includes('GM')
+        ) {
+            return new Promise((resolve, reject) => {
+                fetch(
+                    `https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_target}`
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (
+                            data.success === false &&
+                            data.cause === 'You have already looked up this name recently'
+                        ) {
                             console.log(
-                                `[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`
+                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
                             );
-
                             bot.executeCommand(
-                                `/gc [CVC-OVERALL] IGN: ${_target} | KILLS: ${_overallKills} | WINS: ${_winsOverall} | KDR: ${_kdr.toFixed(
-                                    2
-                                )} | HEADSHOT KILLS: ${_headshots} | BOMBS PLANTED: ${_bombs} | ${getRandomHexColor()}`
+                                `/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later.`
                             );
+                            return reject('Player not found!');
+                        }
+                        if (data.success === true && data.player === null) {
+                            console.log(
+                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
+                            );
+                            bot.executeCommand(
+                                `/gc ${_playerName}, the player ${_target} was not found.`
+                            );
+                            return reject('Player not found!');
+                        }
 
-                            resolve(data.player); // Ensure promise resolves
-                        })
-                        .catch((err) => {
-                            console.error(`[ERROR] Failed to fetch player stats: ${err}`);
-                            reject(err);
-                        });
-                });
-            }
+                        if (
+                            !data.player.stats ||
+                            !data.player.stats.MCGO ||
+                            !data.player.achievements
+                        ) {
+                            console.log(
+                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`
+                            );
+                            return reject('Incomplete player data received!');
+                        }
+
+                        const playerStats = data.player.stats.MCGO;
+                        const playerAchievements = data.player.achievements;
+
+                        const _deaths = playerStats.deaths; // Defusal
+                        const _deathsTDM = playerStats.deaths_deathmatch; // TDM
+                        const _winsTDM = playerStats.game_wins_deathmatch; // TDM
+                        const _wins = playerStats.game_wins; // Defusal
+                        const _winsOverall = _winsTDM + _wins; // Virtual
+                        const _kills = playerStats.kills; // Defusal
+                        const _tdmKills = playerStats.kills_deathmatch; // TDM
+                        const _overallKills = _kills + _tdmKills; // Virtual
+                        const _overallDeaths = _deaths + _deathsTDM; // Virtual
+                        const _kdr = _overallKills / _overallDeaths; // Virtual
+                        const _headshots = playerStats.headshot_kills; // Virtual
+                        const _bombs = playerStats.bombs_planted; // Defusal
+
+                        console.log(
+                            `[DEBUG] ${_playerName} is checking the stats of ${_playerName} and succeeded`
+                        );
+
+                        bot.executeCommand(
+                            `/gc [CVC-OVERALL] IGN: ${_target} | KILLS: ${_overallKills} | WINS: ${_winsOverall} | KDR: ${_kdr.toFixed(
+                                2
+                            )} | HEADSHOT KILLS: ${_headshots} | BOMBS PLANTED: ${_bombs} | ${getRandomHexColor()}`
+                        );
+
+                        resolve(data.player); // Ensure promise resolves
+                    })
+                    .catch((err) => {
+                        console.error(`[ERROR] Failed to fetch player stats: ${err}`);
+                        reject(err);
+                    });
+            });
         }
     },
 } as Event;

@@ -5,12 +5,9 @@
 const commandCooldowns = new Map<string, number>();
 
 function getRandomHexColor(): string {
-    return (
-        '#' +
-        Math.floor(Math.random() * 0xffffff)
-            .toString(16)
-            .padStart(6, '0')
-    );
+    return `#${Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
 export default {
@@ -82,7 +79,8 @@ export default {
                                     `/gc ${_playerName}, the player ${_playerName} was looked up recently. Please try again later. | ${getRandomHexColor()}`
                                 );
                                 return reject('Player not found! Looked up recently.');
-                            } else if (data.success === true && data.player === null) {
+                            }
+                            if (data.success === true && data.player === null) {
                                 console.log(
                                     `[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`
                                 );
@@ -106,7 +104,7 @@ export default {
                             const playerStats = data.player.stats.Duels;
                             const playerAchievements = data.player.achievements;
 
-                            //const _deaths = playerStats.duels_duels_losses; // not available in api
+                            // const _deaths = playerStats.duels_duels_losses; // not available in api
                             const _wins = playerStats.wins; // updated
                             const _gamesPlayed = playerStats.games_played_duels; // updated
                             const _kills = playerStats.kills; // updated
@@ -134,83 +132,82 @@ export default {
                         });
                 });
             }
-        } else {
-            if (
-                _guildRank.includes('Member') ||
-                _guildRank.includes('Active') ||
-                _guildRank.includes('Elite') ||
-                _guildRank.includes('Mod') ||
-                _guildRank.includes('Admin') ||
-                _guildRank.includes('GM')
-            ) {
-                return new Promise((resolve, reject) => {
-                    fetch(
-                        `https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_target}`
-                    )
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (
-                                data.success === false &&
-                                data.cause === 'You have already looked up this name recently'
-                            ) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
-                                );
-                                bot.executeCommand(
-                                    `/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later. | ${getRandomHexColor()}`
-                                );
-                                return reject('Player not found!');
-                            } else if (data.success === true && data.player === null) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
-                                );
-                                bot.executeCommand(
-                                    `/gc ${_playerName}, the player ${_target} was not found. | ${getRandomHexColor()}`
-                                );
-                                return reject('Player not found!');
-                            }
-
-                            if (
-                                !data.player.stats ||
-                                !data.player.stats.Duels ||
-                                !data.player.achievements
-                            ) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`
-                                );
-                                return reject('Incomplete player data received!');
-                            }
-
-                            const playerStats = data.player.stats.Duels;
-                            const playerAchievements = data.player.achievements;
-
-                            const _wins = playerStats.wins; // updated
-                            const _gamesPlayed = playerStats.games_played_duels; // updated
-                            const _kills = playerStats.kills; // updated
-                            const _losses = playerStats.losses; // updated
-                            const _timesDied = playerStats.deaths; // updated
-
-                            const _kdr = _kills / _timesDied;
-                            const _wlr = _wins / _losses;
-
+        } else if (
+            _guildRank.includes('Member') ||
+            _guildRank.includes('Active') ||
+            _guildRank.includes('Elite') ||
+            _guildRank.includes('Mod') ||
+            _guildRank.includes('Admin') ||
+            _guildRank.includes('GM')
+        ) {
+            return new Promise((resolve, reject) => {
+                fetch(
+                    `https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_target}`
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (
+                            data.success === false &&
+                            data.cause === 'You have already looked up this name recently'
+                        ) {
                             console.log(
-                                `[DEBUG] ${_playerName} is checking the stats (Duels Overall) of ${_target} and succeeded`
+                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
                             );
-
                             bot.executeCommand(
-                                `/gc [DUELS] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(
-                                    2
-                                )} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`
+                                `/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later. | ${getRandomHexColor()}`
                             );
+                            return reject('Player not found!');
+                        }
+                        if (data.success === true && data.player === null) {
+                            console.log(
+                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
+                            );
+                            bot.executeCommand(
+                                `/gc ${_playerName}, the player ${_target} was not found. | ${getRandomHexColor()}`
+                            );
+                            return reject('Player not found!');
+                        }
 
-                            resolve(data.player); // Ensure promise resolves
-                        })
-                        .catch((err) => {
-                            console.error(`[ERROR] Failed to fetch player stats: ${err}`);
-                            reject(err);
-                        });
-                });
-            }
+                        if (
+                            !data.player.stats ||
+                            !data.player.stats.Duels ||
+                            !data.player.achievements
+                        ) {
+                            console.log(
+                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`
+                            );
+                            return reject('Incomplete player data received!');
+                        }
+
+                        const playerStats = data.player.stats.Duels;
+                        const playerAchievements = data.player.achievements;
+
+                        const _wins = playerStats.wins; // updated
+                        const _gamesPlayed = playerStats.games_played_duels; // updated
+                        const _kills = playerStats.kills; // updated
+                        const _losses = playerStats.losses; // updated
+                        const _timesDied = playerStats.deaths; // updated
+
+                        const _kdr = _kills / _timesDied;
+                        const _wlr = _wins / _losses;
+
+                        console.log(
+                            `[DEBUG] ${_playerName} is checking the stats (Duels Overall) of ${_target} and succeeded`
+                        );
+
+                        bot.executeCommand(
+                            `/gc [DUELS] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(
+                                2
+                            )} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`
+                        );
+
+                        resolve(data.player); // Ensure promise resolves
+                    })
+                    .catch((err) => {
+                        console.error(`[ERROR] Failed to fetch player stats: ${err}`);
+                        reject(err);
+                    });
+            });
         }
     },
 } as Event;

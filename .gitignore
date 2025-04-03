@@ -133,3 +133,4 @@ dist
 
 # Active Development
 src/events/mineflayer/chat/fetch-stats/gexp-stats.ts
+.vscode/settings.json
