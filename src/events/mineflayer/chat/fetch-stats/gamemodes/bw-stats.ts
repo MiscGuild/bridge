@@ -1,5 +1,4 @@
-import { Achievements } from '@requests/fetch-hypixel-player-profile';
-import { Bedwars } from '@requests/fetch-hypixel-player-profile';
+import { Achievements, Bedwars } from '../../../../../requests/fetch-hypixel-player-profile';
 import { getRandomHexColor } from '../utils/getRandomHexColor';
 import { handleStatsCommand } from '../utils/handleStatsCommand';
 
