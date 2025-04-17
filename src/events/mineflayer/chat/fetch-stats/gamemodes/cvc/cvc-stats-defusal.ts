@@ -14,11 +14,9 @@ function buildStatsMessage(
 
     const headshots = stats?.headshots ?? 0;
 
-    var kdr = (deaths) === 0 ? kills : (kills / deaths);
-    var wlr = (losses) === 0 ? wins : (wins / losses);
+    const kdr = ((deaths) === 0 ? kills : (kills / deaths)).toFixed(2);
+    const wlr = ((losses) === 0 ? wins : (wins / losses)).toFixed(2);
 
-    kdr = kdr.toFixed(2);
-    wlr = wlr.toFixed(2);
 
     return `/gc [CVC-DEFUSAL] IGN: ${lookupName} | KILLS: ${kills}} | WINS: ${wins} | HEADSHOTS: ${headshots} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
