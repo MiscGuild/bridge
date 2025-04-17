@@ -1,0 +1,44 @@
+import { handleStatsCommand } from '../utils/handleStatsCommand';
+import { getRandomHexColor } from '../utils/getRandomHexColor'
+import fetchMojangProfile from '@requests/fetch-mojang-profile';
+import fetchHypixelGuild from '@requests/fetch-hypixel-guild';
+
+function buildStatsMessage(
+    lookupName: string,
+    achievements: any,
+    stats: any
+): string {
+    const playerLevel = stats?.levelFormatted ?? 0;
+
+    const matches = [...playerLevel.matchAll(/§\d(\d)/g)];
+    const rm_playerLevel = matches.map(m => m[1]).join("");
+
+    const winsSolo = achievements?.skywars_wins_solo ?? 0;
+    const winsTeams = achievements?.skywars_wins_team ?? 0;
+    const killsSolo = achievements?.skywars_kills_solo ?? 0;
+    const killsTeams = achievements?.skywars_kills_team ?? 0;
+    const soloDeaths = achievements?.skywars_deaths_solo ?? 0;
+    const teamsDeaths = achievements?.skywars_deaths_team ?? 0;
+
+    const lossesSolo = achievements?.skywars_losses_solo ?? 0;
+    const lossesTeams = achievements?.skywars_losses_team ?? 0;
+    const losses = (lossesSolo + lossesTeams) === 0 ? 1 : (lossesSolo + lossesTeams);
+
+    const deaths = (soloDeaths + teamsDeaths) === 0 ? 1 : (soloDeaths + teamsDeaths);
+    
+    const totalWins = winsSolo + winsTeams;
+    const totalKills = killsSolo + killsTeams;
+    const kdr = (totalKills / deaths).toFixed(2);
+    const wlr = (totalWins / losses).toFixed(2);
+
+
+    return `/gc [SkyWars] IGN: ${lookupName} | LVL: ${rm_playerLevel} | WINS: ${totalWins} | Kills: ${totalKills} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
+}
+
+export default {
+    name: 'chat:sw-stats',
+    runOnce: false,
+    run: async (bot, channel, playerRank, playerName, guildRank, target) => {
+        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'SkyWars', buildStatsMessage);
+    }
+} as Event;
