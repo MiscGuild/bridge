@@ -18,9 +18,11 @@ const path = require('path');
 async function checkAndKickIfBlacklisted(bot: any, playerName: string): Promise<void> {
     const profile = await fetchMojangProfile(playerName);
     if (!isFetchError(profile) && isUserBlacklisted(profile.id)) {
-        bot.executeCommand(
-            `/g kick ${playerName} You have been blacklisted from the guild. Mistake? --> ${env.DISCORD_INVITE_LINK}`
-        );
+        // Wait for 2 seconds before kicking the player to avoid API being overloaded and thus blacklist being bypassable.
+        
+        setTimeout(() => {
+            bot.executeCommand(`/g kick ${playerName} You have been blacklisted from the guild. Apply on the Discord server: .gg/miscellaneous`);
+        } , 2000);
     }
 }
 
