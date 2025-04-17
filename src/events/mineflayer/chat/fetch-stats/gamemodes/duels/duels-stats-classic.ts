@@ -21,7 +21,7 @@ export default {
     name: 'chat:duels-classic',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'Bedwars', buildStatsMessage);
+        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'Duels', buildStatsMessage);
     }
 } as Event;
 
