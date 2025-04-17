@@ -1,5 +1,4 @@
-import { Achievements } from '@requests/fetch-hypixel-player-profile';
-import { Duels } from '@requests/fetch-hypixel-player-profile';
+import { Achievements, Duels } from '../../../../../../requests/fetch-hypixel-player-profile';
 import { getRandomHexColor } from '../../utils/getRandomHexColor';
 import { handleStatsCommand } from '../../utils/handleStatsCommand';
 
