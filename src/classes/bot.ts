@@ -131,29 +131,6 @@ class Bot {
         }
     }
 
-    public async blacklistChecker() {
-        const GuildChecker = (await import('../util/refreshBlacklist')).default;
-        const checker = new GuildChecker();
-    
-        const run = async () => {
-            try {
-                await checker.refreshBlacklist();
-                console.log('Blacklist refreshed!');
-            } catch (error) {
-                console.error('Error refreshing blacklist:', error);
-            }
-        };
-    
-        // Schedule the first execution after 10 seconds
-        setTimeout(() => {
-            run(); // Execute once after 10 seconds
-    
-            // Schedule subsequent executions every 5 minutes
-            setInterval(run, 5 * 60 * 1000); // 5 minutes in milliseconds
-        }, 10 * 1000); // 10 seconds in milliseconds
-    }
-    
-
     public setStatus() {
         const plural = this.onlineCount - 1 !== 1;
 
@@ -250,10 +227,6 @@ class Bot {
         ]);
 
         await this.discord.login(env.DISCORD_TOKEN);
-
-        if (env.BLACKLIST_CHECKER_ENABLED === true) {
-            this.blacklistChecker();
-        }
     }
 }
 
