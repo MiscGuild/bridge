@@ -33,6 +33,7 @@ const envSchema = z
         BOT_OWNER_ID: SNOWFLAKE_SCHEMA,
         STAFF_ROLE_ID: SNOWFLAKE_SCHEMA,
         HYPIXEL_GUILD_NAME: z.string().min(1),
+        DISCORD_BOT_ID: SNOWFLAKE_SCHEMA,
         COMMAND_COOLDOWN_MEMBER: z.coerce.number().int().positive().default(30000),
         COMMAND_COOLDOWN_ACTIVE: z.coerce.number().int().positive().default(15000),
     })

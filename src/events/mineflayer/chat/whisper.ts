@@ -7,15 +7,15 @@ export default {
     runOnce: false,
     run: async (bot, playerName: string, message: string) => {
         const errorMessage = `/w ${playerName} There was an error attempting your request! (Check spelling and/or try again later)`;
-        
-        const startsWithKeyword = ['weeklygexp', 'weeklygxp', 'gexp', 'gxp'].some(prefix =>
+
+        const startsWithKeyword = ['weeklygexp', 'weeklygxp', 'gexp', 'gxp'].some((prefix) =>
             message.startsWith(prefix)
         );
 
         const target = startsWithKeyword ? playerName : message.split(' ')[0];
 
         if (!target) {
-            console.error("Target is undefined");
+            console.error('Target is undefined');
             return;
         }
 
