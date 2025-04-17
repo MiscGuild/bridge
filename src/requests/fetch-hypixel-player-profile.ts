@@ -8795,4 +8795,87 @@ export interface Duels {
     rematch_option_1?: string;
     duels_winstreak_best_mw_duel?: number;
     duels_winstreak_mw_duel?: number;
+
+    kills?: number;
+    wins?: number;
+    losses?: number;
+    deaths?: number;
+
+    blitz_duel_wins?: number;  
+    blitz_duel_losses?: number;
+    blitz_duel_kills?: number;
+    blitz_duel_deaths?: number;
+
+    bridge_kills?: number;
+    bridge_deaths?: number;
+    bridge_four_goals?: number;
+    bridge_doubles_goals?: number;
+    bridge_3v3v3v3_goals?: number;
+    bridge_duel_goals?: number;
+    bridge_2v2v2v2_goals?: number;
+    bridge_threes_goals?: number;
+    duels_bridge_wins?: number;
+    duels_bridge_four_teams_wins?: number;
+    duels_bridge_doubles_wins?: number;
+    duels_bridge_3v3v3v3_wins?: number;
+    duels_bridge_duels_wins?: number;
+    bridge_four_v_four_wins?: number;
+    duels_bridge_teams_wins?: number;
+    bridge_wins?: number;
+    bridge_2v2v2v2_wins?: number;
+    bridge_3v3v3v3_losses?: number;
+    bridge_doubles_losses?: number;
+    bridge_four_losses?: number;
+    bridge_duel_losses?: number;
+    bridge_2v2v2v2_losses?: number;
+
+    classic_duel_kills?: number;
+    classic_duel_wins?: number;
+    classic_duel_losses?: number;
+    classic_duel_deaths?: number;
+
+    combo_duel_wins?: number;
+    combo_duel_kills?: number;
+    combo_duel_losses?: number;
+    combo_duel_deaths?: number;
+
+    op_duel_wins?: number;
+    op_doubles_wins?: number;
+    op_duel_kills?: number;
+    op_doubles_kills?: number;
+    op_duel_losses?: number;
+    op_doubles_losses?: number;
+    op_duel_deaths?: number;
+    op_doubles_deaths?: number;
+
+    sumo_duel_wins?: number;
+    sumo_duel_kills?: number;
+    sumo_duel_losses?: number;
+    sumo_duel_deaths?: number;
+
+    sw_duel_losses?: number;
+    sw_doubles_losses?: number;
+    sw_duel_kills?: number;
+    sw_doubles_kills?: number;
+    sw_duel_deaths?: number;
+    sw_doubles_deaths?: number;
+    sw_duel_wins?: number;
+    sw_doubles_wins?: number;
+
+    uhc_duel_wins?: number;
+    uhc_doubles_wins?: number;
+    uhc_four_wins?: number;
+    uhc_meetup_wins?: number;
+    uhc_duel_kills?: number;
+    uhc_doubles_kills?: number;
+    uhc_four_kills?: number;
+    uhc_meetup_kills?: number;
+    uhc_duel_deaths?: number;
+    uhc_doubles_deaths?: number;
+    uhc_four_deaths?: number;
+    uhc_meetup_deaths?: number;
+    uhc_four_losses?: number;
+    uhc_doubles_losses?: number;
+    uhc_duel_losses?: number;
+    uhc_meetup_losses?: number;
 }
