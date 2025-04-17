@@ -18,11 +18,11 @@ function buildStatsMessage(
     const winsTeams = achievements?.skywars_wins_team ?? 0;
     const killsSolo = achievements?.skywars_kills_solo ?? 0;
     const killsTeams = achievements?.skywars_kills_team ?? 0;
-    const soloDeaths = achievements?.skywars_deaths_solo ?? 0;
-    const teamsDeaths = achievements?.skywars_deaths_team ?? 0;
+    const soloDeaths = stats?.deaths_solo ?? 0;
+    const teamsDeaths = stats?.deaths_team ?? 0;
 
-    const lossesSolo = achievements?.skywars_losses_solo ?? 0;
-    const lossesTeams = achievements?.skywars_losses_team ?? 0;
+    const lossesSolo = stats?.losses_solo ?? 0;
+    const lossesTeams = stats?.losses_team ?? 0;
     const losses = lossesSolo + lossesTeams;
 
     const deaths = soloDeaths + teamsDeaths;
