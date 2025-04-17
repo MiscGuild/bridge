@@ -1,212 +1,44 @@
-// Regex Pattern:
-// 'chat:bw-stats': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!bw\s?(\w{2,17})?$/,
-// Copyright © 2024 Vliegenier04
+import { Achievements } from '@requests/fetch-hypixel-player-profile';
+import { Duels } from '@requests/fetch-hypixel-player-profile';
+import { getRandomHexColor } from '../../utils/getRandomHexColor';
+import { handleStatsCommand } from '../../utils/handleStatsCommand';
 
-const commandCooldowns = new Map<string, number>();
+function buildStatsMessage(playerName: string, achievements: Achievements, stats: Duels): string {
+    const kills = stats?.bridge_kills ?? 0;
+    const deaths = stats?.bridge_deaths ?? 0;
 
-function getRandomHexColor(): string {
-    return `#${Math.floor(Math.random() * 0xffffff)
-        .toString(16)
-        .padStart(6, '0')}`;
+    const bridgeWins = stats?.bridge_wins ?? 0;
+    const duels_bridge_four_teams_wins = stats?.duels_bridge_four_teams_wins ?? 0;
+    const duels_bridge_doubles_wins = stats?.duels_bridge_doubles_wins ?? 0;
+    const duels_bridge_3v3v3v3_wins = stats?.duels_bridge_3v3v3v3_wins ?? 0;
+    const duels_bridge_duels_wins = stats?.duels_bridge_duels_wins ?? 0;
+    const bridge_four_v_four_wins = stats?.bridge_four_v_four_wins ?? 0;
+    const duels_bridge_teams_wins = stats?.duels_bridge_teams_wins ?? 0;
+    const bridge_wins = stats?.bridge_wins ?? 0;
+    const bridge_2v2v2v2_wins = stats?.bridge_2v2v2v2_wins ?? 0;
+    const wins = bridgeWins + duels_bridge_four_teams_wins + duels_bridge_doubles_wins + duels_bridge_3v3v3v3_wins + duels_bridge_duels_wins + bridge_four_v_four_wins + duels_bridge_teams_wins + bridge_2v2v2v2_wins;
+
+    const bridge_3v3v3v3_losses = stats?.bridge_3v3v3v3_losses ?? 0;
+    const bridge_doubles_losses = stats?.bridge_doubles_losses ?? 0;
+    const bridge_four_losses = stats?.bridge_four_losses ?? 0;
+    const bridge_duel_losses = stats?.bridge_duel_losses ?? 0;
+    const bridge_2v2v2v2_losses = stats?.bridge_2v2v2v2_losses ?? 0;
+    const overallLosses = bridge_3v3v3v3_losses + bridge_doubles_losses + bridge_four_losses + bridge_duel_losses + bridge_2v2v2v2_losses;
+
+    const wlr = ((overallLosses === 0) ? wins : wins / overallLosses).toFixed(2);
+    const kdr = ((deaths === 0) ? kills : kills / deaths).toFixed(2);
+
+
+    return `/gc [Bridge Duels] IGN: ${playerName} | WINS: ${wins} | KILLS: ${kills} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
+
 
 export default {
     name: 'chat:duels-bridge',
     runOnce: false,
-    run: async (
-        bot,
-        channel: string,
-        playerRank: string,
-        playerName: string,
-        guildRank: string,
-        target: string
-    ) => {
-        const _channel = channel;
-        const _playerRank = playerRank;
-        const _playerName = playerName;
-        const _guildRank = guildRank;
-        const _target = target;
-
-        const now = Date.now();
-        const cooldownTimeMember = 4 * 60 * 1000;
-        const cooldownTimeActive = 2 * 60 * 1000;
-
-        if (commandCooldowns.has(playerName) && _guildRank.includes('Member')) {
-            const lastRun = commandCooldowns.get(playerName);
-            if (lastRun && now - lastRun < cooldownTimeMember) {
-                const remainingTime = Math.ceil((cooldownTimeMember - (now - lastRun)) / 1000);
-                bot.executeCommand(
-                    `/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait. | ${getRandomHexColor()}`
-                );
-                return;
-            }
-        } else if (commandCooldowns.has(playerName) && _guildRank.includes('Active')) {
-            const lastRun = commandCooldowns.get(playerName);
-            if (lastRun && now - lastRun < cooldownTimeActive) {
-                const remainingTime = Math.ceil((cooldownTimeActive - (now - lastRun)) / 1000);
-                bot.executeCommand(
-                    `/gc ${playerName}, you can only use this command again in ${remainingTime} seconds. Please wait. | ${getRandomHexColor()}`
-                );
-                return;
-            }
-        }
-
-        commandCooldowns.set(playerName, now);
-
-        if (_target === undefined || _target === null || _target === '') {
-            if (
-                _guildRank.includes('Member') ||
-                _guildRank.includes('Active') ||
-                _guildRank.includes('Elite') ||
-                _guildRank.includes('Mod') ||
-                _guildRank.includes('Admin') ||
-                _guildRank.includes('GM')
-            ) {
-                return new Promise((resolve, reject) => {
-                    fetch(
-                        `https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_playerName}`
-                    )
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (
-                                data.success === false &&
-                                data.cause === 'You have already looked up this name recently'
-                            ) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`
-                                );
-                                bot.executeCommand(
-                                    `/gc ${_playerName}, the player ${_playerName} was looked up recently. Please try again later. | ${getRandomHexColor()}`
-                                );
-                                return reject('Player not found! Looked up recently.');
-                            }
-                            if (data.success === true && data.player === null) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but failed.`
-                                );
-                                bot.executeCommand(
-                                    `/gc ${_playerName}, the player ${_playerName} was not found.`
-                                );
-                                return reject('Player not found!');
-                            }
-
-                            if (
-                                !data.player.stats ||
-                                !data.player.stats.Duels ||
-                                !data.player.achievements
-                            ) {
-                                console.log(
-                                    `[DEBUG] ${_playerName} is checking the stats of ${_playerName}, but incomplete data was received.`
-                                );
-                                return reject('Incomplete player data received!');
-                            }
-
-                            const playerStats = data.player.stats.Duels;
-                            const playerAchievements = data.player.achievements;
-
-                            const _wins = playerStats.wins; // updated
-                            const _gamesPlayed = playerStats.games_played_duels; // updated
-                            const _kills = playerStats.kills; // updated
-                            const _losses = playerStats.losses; // updated
-                            const _timesDied = playerStats.deaths; // updated
-
-                            const _kdr = _kills / _timesDied;
-                            const _wlr = _wins / _losses;
-
-                            console.log(
-                                `[DEBUG] ${_playerName} is checking the BRIDGE stats of ${_playerName} and succeeded`
-                            );
-
-                            bot.executeCommand(
-                                `/gc [DUELS-BRIDGE] IGN: ${_playerName} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(
-                                    2
-                                )} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`
-                            );
-
-                            resolve(data.player); // Ensure promise resolves
-                        })
-                        .catch((err) => {
-                            console.error(`[ERROR] Failed to fetch player stats: ${err}`);
-                            reject(err);
-                        });
-                });
-            }
-        } else if (
-            _guildRank.includes('Member') ||
-            _guildRank.includes('Active') ||
-            _guildRank.includes('Elite') ||
-            _guildRank.includes('Mod') ||
-            _guildRank.includes('Admin') ||
-            _guildRank.includes('GM')
-        ) {
-            return new Promise((resolve, reject) => {
-                fetch(
-                    `https://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&name=${_target}`
-                )
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (
-                            data.success === false &&
-                            data.cause === 'You have already looked up this name recently'
-                        ) {
-                            console.log(
-                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
-                            );
-                            bot.executeCommand(
-                                `/gc ${_playerName}, the player ${_target} was looked up recently. Please try again later. | ${getRandomHexColor()}`
-                            );
-                            return reject('Player not found!');
-                        }
-                        if (data.success === true && data.player === null) {
-                            console.log(
-                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but failed.`
-                            );
-                            bot.executeCommand(
-                                `/gc ${_playerName}, the player ${_target} was not found. | ${getRandomHexColor()}`
-                            );
-                            return reject('Player not found!');
-                        }
-
-                        if (
-                            !data.player.stats ||
-                            !data.player.stats.Duels ||
-                            !data.player.achievements
-                        ) {
-                            console.log(
-                                `[DEBUG] ${_playerName} is checking the stats of ${_target}, but incomplete data was received.`
-                            );
-                            return reject('Incomplete player data received!');
-                        }
-
-                        const playerStats = data.player.stats.Duels;
-                        const playerAchievements = data.player.achievements;
-
-                        const _wins = playerStats.wins; // updated
-                        const _gamesPlayed = playerStats.games_played_duels; // updated
-                        const _kills = playerStats.kills; // updated
-                        const _losses = playerStats.losses; // updated
-                        const _timesDied = playerStats.deaths; // updated
-
-                        const _kdr = _kills / _timesDied;
-                        const _wlr = _wins / _losses;
-
-                        console.log(
-                            `[DEBUG] ${_playerName} is checking the BRIDGE stats of ${_target} and succeeded`
-                        );
-
-                        bot.executeCommand(
-                            `/gc [DUELS-BRIDGE] IGN: ${_target} | KILLS: ${_kills} | WINS: ${_wins} | KDR: ${_kdr.toFixed(
-                                2
-                            )} | WLR: ${_wlr.toFixed(2)} | ${getRandomHexColor()}`
-                        );
-
-                        resolve(data.player); // Ensure promise resolves
-                    })
-                    .catch((err) => {
-                        console.error(`[ERROR] Failed to fetch player stats: ${err}`);
-                        reject(err);
-                    });
-            });
-        }
-    },
+    run: async (bot, channel, playerRank, playerName, guildRank, target) => {
+        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'Bedwars', buildStatsMessage);
+    }
 } as Event;
+
+
