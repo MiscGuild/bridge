@@ -3,7 +3,6 @@ import { Bedwars } from '@requests/fetch-hypixel-player-profile';
 import { getRandomHexColor } from '../utils/getRandomHexColor';
 import { handleStatsCommand } from '../utils/handleStatsCommand';
 
-
 function buildStatsMessage(playerName: string, achievements: Achievements, stats: Bedwars): string {
     const level = achievements?.bedwars_level ?? 0;
     const solo_wins = stats?.eight_one_wins_bedwars ?? 0;

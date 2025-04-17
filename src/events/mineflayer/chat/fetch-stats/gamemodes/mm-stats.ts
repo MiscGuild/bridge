@@ -1,19 +1,15 @@
 import { getRandomHexColor } from '../utils/getRandomHexColor';
 import { handleStatsCommand } from '../utils/handleStatsCommand';
+import { MurderMystery } from '@requests/fetch-hypixel-player-profile';
 
-
-const commandCooldowns = new Map<string, number>();
-
-function buildStatsMessage(lookupName: string, achievements: any, stats: any): string {
+function buildStatsMessage(lookupName: string, achievements: any, stats: MurderMystery): string {
     const wins = stats?.wins ?? 0;
-    const losses = stats?.losses ?? 1;
     const gamesPlayed = stats?.games ?? 0;
     const kills = stats?.kills ?? 0;
     const deaths = stats?.deaths ?? 1;
     const kdr = (kills / deaths).toFixed(2);
-    const wlr = (wins / losses).toFixed(2);
 
-    return `/gc [Murder Mystery] IGN: ${lookupName} | KILLS: ${kills} | WINS: ${wins} | KDR: ${kdr} | WLR: ${wlr} | GAMES PLAYED: ${gamesPlayed} | ${getRandomHexColor()}`;
+    return `/gc [Murder Mystery] IGN: ${lookupName} | KILLS: ${kills} | WINS: ${wins} | KDR: ${kdr} | GAMES PLAYED: ${gamesPlayed} | ${getRandomHexColor()}`;
 }
 
 export default {

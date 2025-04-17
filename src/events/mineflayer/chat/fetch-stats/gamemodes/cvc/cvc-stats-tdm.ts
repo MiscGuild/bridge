@@ -1,21 +1,20 @@
 import { handleStatsCommand } from '../../utils/handleStatsCommand';
 import { getRandomHexColor } from '../../utils/getRandomHexColor';
+import { MCGO } from '@requests/fetch-hypixel-player-profile';
 
 function buildStatsMessage(
     lookupName: string,
     achievements: any,
-    stats: any
+    stats: MCGO
 ): string {
-    const tdmKills = stats.kills_deathmatch;
-    const deathsTDM = stats.deaths_deathmatch;
+    const tdmKills = stats?.kills_deathmatch ?? 0;
+    const deathsTDM = stats?.deaths_deathmatch ?? 0;
 
-    const winsTDM = stats.game_wins_deathmatch;
-    const lossesTDM = stats.game_losses_deathmatch;
+    const winsTDM = stats?.game_wins_deathmatch ?? 0;
 
     const kdr = ((deathsTDM === 0 ? tdmKills : tdmKills / deathsTDM)).toFixed(2);
-    const wlr = ((lossesTDM === 0 ? winsTDM : winsTDM / lossesTDM)).toFixed(2);
 
-    return `/gc [CVC-TDM] IGN: ${lookupName} | KILLS: ${tdmKills} | WINS: ${winsTDM} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
+    return `/gc [CVC-TDM] IGN: ${lookupName} | KILLS: ${tdmKills} | WINS: ${winsTDM} | KDR: ${kdr} | ${getRandomHexColor()}`;
 }
 
 export default {

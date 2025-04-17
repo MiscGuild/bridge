@@ -1,7 +1,5 @@
 import { handleStatsCommand } from '../utils/handleStatsCommand';
 import { getRandomHexColor } from '../utils/getRandomHexColor'
-import fetchMojangProfile from '@requests/fetch-mojang-profile';
-import fetchHypixelGuild from '@requests/fetch-hypixel-guild';
 
 function buildStatsMessage(
     lookupName: string,

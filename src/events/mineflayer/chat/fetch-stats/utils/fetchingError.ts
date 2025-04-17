@@ -1,4 +1,3 @@
-
 import { getRandomHexColor } from "./getRandomHexColor";
 
 export function handleFetchError(
