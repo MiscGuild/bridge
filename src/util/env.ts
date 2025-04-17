@@ -36,6 +36,7 @@ const envSchema = z
         DISCORD_BOT_ID: SNOWFLAKE_SCHEMA,
         COMMAND_COOLDOWN_MEMBER: z.coerce.number().int().positive().default(30000),
         COMMAND_COOLDOWN_ACTIVE: z.coerce.number().int().positive().default(15000),
+        BLACKLIST_CHECKER_ENABLED: BOOLEAN_SCHEMA,
     })
     .refine((data) => !data.REMINDER_ENABLED || data.REMINDER_MESSAGE.trim() !== '', {
         message: 'Reminders are enabled but a message has not been set',

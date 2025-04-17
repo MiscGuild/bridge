@@ -1,5 +1,4 @@
 import { escapeMarkdown } from 'discord.js';
-import { BotEvents } from 'mineflayer';
 import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
