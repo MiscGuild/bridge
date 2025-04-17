@@ -251,4 +251,18 @@ export default {
      */
     'chat:gexp-stats':
         /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!gexp\s?(\w{2,17})?.*$/,
+
+    /** 
+     * Global regex for all commands
+     * 
+     * Returns:
+     * *  - Command
+     * *  - GameMode
+     * *  - Player Name
+     *
+     * 
+     */
+
+    'chat:command':
+        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!([a-z]{2,4})\s?([a-z]{2,17})?.*$/
 };
