@@ -1,30 +1,48 @@
-// This is a work in progress and is not yet functional.
+import { Achievements } from '@requests/fetch-hypixel-player-profile';
+import { Duels } from '@requests/fetch-hypixel-player-profile';
+import { getRandomHexColor } from '../../utils/getRandomHexColor';
+import { handleStatsCommand } from '../../utils/handleStatsCommand';
 
-function getRandomHexColor(): string {
-    return `#${Math.floor(Math.random() * 0xffffff)
-        .toString(16)
-        .padStart(6, '0')}`;
+function buildStatsMessage(playerName: string, achievements: Achievements, stats: Duels): string {
+    const soloKills = stats?.uhc_duel_kills ?? 0;
+    const doublesKills = stats?.uhc_doubles_kills ?? 0;
+    const fourKills = stats?.uhc_four_kills ?? 0;
+    const meetupKills = stats?.uhc_meetup_kills ?? 0;
+    const kills = soloKills + doublesKills + fourKills + meetupKills;
+
+
+    const soloDeaths = stats?.uhc_duel_deaths ?? 0;
+    const doublesDeaths = stats?.uhc_doubles_deaths ?? 0;
+    const fourDeaths = stats?.uhc_four_deaths ?? 0;
+    const meetupDeaths = stats?.uhc_meetup_deaths ?? 0;
+    const deaths = soloDeaths + doublesDeaths + fourDeaths + meetupDeaths;
+
+
+    const soloWins = stats?.uhc_duel_wins ?? 0;
+    const doublesWins = stats?.uhc_doubles_wins ?? 0;
+    const fourWins = stats?.uhc_four_wins ?? 0;
+    const meetupWins = stats?.uhc_meetup_wins ?? 0;
+    const wins = soloWins + doublesWins + fourWins + meetupWins;
+
+    const soloLosses = stats?.uhc_duel_losses ?? 0;
+    const doublesLosses = stats?.uhc_doubles_losses ?? 0;
+    const fourLosses = stats?.uhc_four_losses ?? 0;
+    const meetupLosses = stats?.uhc_meetup_losses ?? 0;
+    const losses = soloLosses + doublesLosses + fourLosses + meetupLosses;
+
+    const wlr = ((losses === 0) ? wins : wins / losses).toFixed(2);
+    const kdr = ((deaths === 0) ? kills : kills / deaths).toFixed(2);
+
+    return `/gc [UHC Duels] IGN: ${playerName} | WINS: ${wins} | KILLS: ${kills} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
+
 
 export default {
     name: 'chat:duels-uhc',
     runOnce: false,
-    run: async (
-        bot,
-        channel: string,
-        playerRank: string,
-        playerName: string,
-        guildRank: string,
-        target: string
-    ) => {
-        const _channel = channel;
-        const _playerRank = playerRank;
-        const _playerName = playerName;
-        const _guildRank = guildRank;
-        const _target = target;
-
-        bot.executeCommand(
-            `/gc ${playerName}, I'm sorry but this command is not available yet. | ${getRandomHexColor()}`
-        );
-    },
+    run: async (bot, channel, playerRank, playerName, guildRank, target) => {
+        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'Bedwars', buildStatsMessage);
+    }
 } as Event;
+
+
