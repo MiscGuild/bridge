@@ -5,9 +5,22 @@ export default async (username: string) => {
         `https://api.hypixel.net/player?key=${env.HYPIXEL_API_KEY}&name=${username}`
     );
 
-    return response.status === 200
-        ? (((await response.json()) as any).player as HypixelPlayerResponse)
-        : (response as FetchError);
+    if (response.status === 200) {
+        const data = await response.json();
+        if (data && data.player !== null) {
+            return data.player as HypixelPlayerResponse;
+        } else {
+            return {
+                status: 404,
+                statusText: 'Player not found',
+            };
+        }
+    } else {
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    }
 };
 
 /**
