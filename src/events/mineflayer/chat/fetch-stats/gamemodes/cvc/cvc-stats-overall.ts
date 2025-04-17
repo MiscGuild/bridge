@@ -30,7 +30,7 @@ function buildStatsMessage(
     const headshots = stats.headshot_kills;
     const bombs = stats.bombs_planted;
 
-    return `/gc [CVC-DEFUSAL] IGN: ${lookupName} | KILLS: ${killsOverall} | WINS: ${winsOverall} | HEADSHOT KILLS: ${headshots} | BOMBS PLANTED: ${bombs} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
+    return `/gc [CVC-OVERALL] IGN: ${lookupName} | KILLS: ${killsOverall} | WINS: ${winsOverall} | HEADSHOT KILLS: ${headshots} | BOMBS PLANTED: ${bombs} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
 
 export default {
