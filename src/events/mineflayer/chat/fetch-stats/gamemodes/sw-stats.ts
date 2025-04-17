@@ -10,8 +10,9 @@ function buildStatsMessage(
 ): string {
     const playerLevel = stats?.levelFormatted ?? 0;
 
-    const matches = [...playerLevel.matchAll(/§\d(\d)/g)];
+    const matches = [...playerLevel.matchAll(/§[0-9a-f](\d)/gi)];
     const rm_playerLevel = matches.map(m => m[1]).join("");
+
 
     const winsSolo = achievements?.skywars_wins_solo ?? 0;
     const winsTeams = achievements?.skywars_wins_team ?? 0;
@@ -22,17 +23,16 @@ function buildStatsMessage(
 
     const lossesSolo = achievements?.skywars_losses_solo ?? 0;
     const lossesTeams = achievements?.skywars_losses_team ?? 0;
-    const losses = (lossesSolo + lossesTeams) === 0 ? 1 : (lossesSolo + lossesTeams);
+    const losses = lossesSolo + lossesTeams;
 
-    const deaths = (soloDeaths + teamsDeaths) === 0 ? 1 : (soloDeaths + teamsDeaths);
+    const deaths = soloDeaths + teamsDeaths;
     
     const totalWins = winsSolo + winsTeams;
     const totalKills = killsSolo + killsTeams;
-    const kdr = (totalKills / deaths).toFixed(2);
-    const wlr = (totalWins / losses).toFixed(2);
+    const kdr = (totalKills / (deaths ? deaths : 1)).toFixed(2);
+    const wlr = (totalWins / (losses ? losses : 1)).toFixed(2);
 
-
-    return `/gc [SkyWars] IGN: ${lookupName} | LVL: ${rm_playerLevel} | WINS: ${totalWins} | Kills: ${totalKills} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
+    return `/gc [StarWars] IGN: ${lookupName} | LVL: ${rm_playerLevel} | WINS: ${totalWins} | Kills: ${totalKills} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
 
 export default {
