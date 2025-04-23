@@ -1,5 +1,6 @@
+import fs from 'fs';
+import path from 'path';
 import { escapeMarkdown } from 'discord.js';
-import { BotEvents } from 'mineflayer';
 import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
@@ -8,18 +9,13 @@ import isUserBlacklisted from '../../../blacklist/is-user-blacklisted';
 import getRankColor from '../../../util/get-rank-color';
 import env from '../../../util/env';
 
-// Bring in Node modules once at the top.
-const fs = require('fs');
-const path = require('path');
-
 /**
  * If a joining player's Mojang profile is blacklisted, kick them from the guild.
  */
 async function checkAndKickIfBlacklisted(bot: any, playerName: string): Promise<void> {
     const profile = await fetchMojangProfile(playerName);
     if (!isFetchError(profile) && isUserBlacklisted(profile.id)) {
-        // Wait for 2 seconds before kicking the player to avoid API being overloaded and thus blacklist being bypassable.
-
+        // Wait for 2 seconds before kicking the player to avoid API being overloaded.
         setTimeout(() => {
             bot.executeCommand(
                 `/g kick ${playerName} You have been blacklisted from the guild. Apply on the Discord server: .gg/miscellaneous`
@@ -56,57 +52,53 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
     );
     const data = await response.json();
 
-    if (data.success === false || data.guild === null) {
-        console.log(`[DEBUG] ${playerName} joined the guild, but failed to get guild data.`);
+    if (!data.success || !data.guild) {
         bot.executeCommand(`/oc Failed to get guild data of recently joined member ${playerName}.`);
         throw new Error('Hypixel API failed to return guild data');
     }
 
     if (isFetchError(mojangProfile)) {
-        console.log(`[DEBUG] ${playerName} joined the guild, but failed to get guild data.`);
         bot.executeCommand(`/oc Failed to get guild data of recently joined member ${playerName}.`);
-        throw new Error(
-            'Playername was invalid. Probably an error with the regex or the username was unusual'
-        );
+        throw new Error('Playername was invalid. Error with regex or unusual username');
     }
 
     const { guild } = data;
-    const member = guild.members.find(
+    const members = guild.members.find(
         (member: { uuid: string }) => member.uuid === mojangProfile.id
     );
 
-    if (!member) {
-        console.log(`[DEBUG] ${playerName} joined the guild, but failed to get guild data.`);
+    if (!members) {
         bot.executeCommand(`/oc Failed to get guild data of recently joined member ${playerName}.`);
-        throw new Error("Player doesn't seem to be in the guild on the Hypixel API ");
+        throw new Error("Player doesn't seem to be in the guild on the Hypixel API");
     }
 
-    const joinDatetoSend = new Date(member.joined).toLocaleString('en-US', {
+    const joinDate = new Date(members.joined).toLocaleString('en-US', {
         timeZone: 'Europe/Amsterdam',
     });
-    const joinDate = new Date(member.joined);
 
     const filePath = path.resolve(__dirname, 'joindata.json');
     if (!fs.existsSync(filePath)) {
         fs.writeFileSync(filePath, '{}');
     }
-    const joinData = require(filePath);
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const joinData = JSON.parse(fileContent);
     const alreadyExisted = Object.prototype.hasOwnProperty.call(joinData, mojangProfile.id);
     joinData[mojangProfile.id] = joinDate;
     fs.writeFileSync(filePath, JSON.stringify(joinData, null, 4));
+
     if (!alreadyExisted) {
+        // eslint-disable-next-line no-console
         console.log(`[DEBUG] ${playerName} joined the guild, wrote join data to file.`);
     }
 
     bot.executeCommand(`/g log ${playerName} 1`);
 
     // Listen for the log message to extract invite information.
-    await new Promise<void>((resolve, reject) => {
+    await new Promise<void>((resolve) => {
         bot.mineflayer.once('message', async (message: any) => {
             const messageContent = message.toString();
             const logEntries = messageContent.split('\n');
 
-            // Define the regex (without the global flag) to match log entries.
             const regex =
                 /(([A-Za-z]{3}\s[0-9]{1,2}\s[0-9]{4}) (([0-9]{2}):([0-9]{2})) ((EDT|EST))): ([A-Za-z0-9-_]{2,27}) (joined|left|invited|kicked|muted|unmuted|set rank of|set MOTD|set guild tag|set guild tagcolor|set Discord|turned the chat throttle on|turned the chat throttle off)( ([A-Za-z0-9-_]{2,27})?)?( for | to |: )?([ A-Za-z0-9\-!_\\s]+)?/;
             const validEntries = logEntries.filter((entry: string) => regex.test(entry));
@@ -117,7 +109,7 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
                         'oc',
                         `Player **${escapeMarkdown(
                             playerName
-                        )}** joined the guild! Their join date is ||${joinDatetoSend}||.\n\nThey were invited by **${
+                        )}** joined the guild! Their join date is ||${joinDate}||.\n\nThey were invited by **${
                             validEntries[1].split(' ')[5]
                         }**.`
                     );
@@ -126,17 +118,16 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
                         'oc',
                         `Player **${escapeMarkdown(
                             playerName
-                        )}** joined the guild! Their join date is ||${joinDatetoSend}||.\n\nThey weren't invited by anyone.`
+                        )}** joined the guild! Their join date is ||${joinDate}||.\n\nThey weren't invited by anyone.`
                     );
                 }
                 resolve();
             } else {
-                console.log(
+                bot.sendToDiscord(
+                    'oc',
                     `[DEBUG] ${playerName} joined the guild, but failed to get invite data.`
                 );
-                reject(
-                    'Invite data not found, this is an issue with /g log and the associated regex'
-                );
+                throw new Error('Invite data not found');
             }
         });
     });
@@ -155,24 +146,19 @@ async function processLeaveEvent(bot: any, playerName: string, mojangProfile: an
     );
     const data = await response.json();
 
-    if (data.success === false || data.guild === null) {
-        console.log(`[DEBUG] ${playerName} left the guild, but failed to get guild data.`);
-        bot.executeCommand(
-            `/oc Failed to get guild data of recently left member ${playerName}. Please try again later.`
-        );
+    if (!data.success || !data.guild) {
+        bot.executeCommand(`/oc Failed to get guild data of recently left member ${playerName}.`);
         throw new Error('Guild data not found!');
     }
 
     if (isFetchError(mojangProfile)) {
-        console.log(`[DEBUG] ${playerName} left the guild, but failed to get guild data.`);
-        bot.executeCommand(
-            `/oc Failed to get guild data of recently left member ${playerName}. Please try again later. It's safe to assume they left the guild within 5 minutes.`
-        );
+        bot.executeCommand(`/oc Failed to get guild data of recently left member ${playerName}.`);
         throw new Error('Guild data not found!');
     }
 
     const filePath = path.resolve(__dirname, 'joindata.json');
-    const oldJoinData = require(filePath);
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const oldJoinData = JSON.parse(fileContent);
     const joinDate = oldJoinData[mojangProfile.id];
     const leaveDate = new Date();
 
@@ -210,15 +196,14 @@ export default {
             bot.executeCommand(
                 `/oc Failed to get Mojang profile of ${playerName}. Please try again later.`
             );
-            return;
+            throw new Error('Playername was invalid. Error with regex or unusual username');
         }
-        console.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
 
         if (type === 'joined') {
-            return processJoinEvent(bot, playerName, mojangProfile);
+            processJoinEvent(bot, playerName, mojangProfile);
         }
         if (type === 'left') {
-            return processLeaveEvent(bot, playerName, mojangProfile);
+            processLeaveEvent(bot, playerName, mojangProfile);
         }
     },
 } as Event;

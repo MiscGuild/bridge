@@ -1,13 +1,14 @@
-import { getRandomHexColor } from './getRandomHexColor';
+import getRandomHexColor from './getRandomHexColor';
 import { isOnCooldown, setCooldown } from './isOnCooldown';
-import fetchHypixelPlayerProfile from '../../../../../requests/fetch-hypixel-player-profile';
+import fetchHypixelPlayerProfile, {
+    Stats,
+} from '../../../../../requests/fetch-hypixel-player-profile';
 import isFetchError from '../../../../../requests/is-fetch-error';
-import { handleFetchError } from './fetchingError';
-import { Stats } from '../../../../../requests/fetch-hypixel-player-profile';
+import handleFetchError from './fetchingError';
 
 type GameModeKey = keyof Stats;
 
-export async function handleStatsCommand(
+export default async function handleStatsCommand(
     bot: any,
     channel: string,
     playerRank: string,

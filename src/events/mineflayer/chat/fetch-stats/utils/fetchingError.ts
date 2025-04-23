@@ -1,11 +1,12 @@
 import { getRandomHexColor } from './getRandomHexColor';
 
-export function handleFetchError(
+export default function handleFetchError(
     playerData: FetchError,
     playerName: string,
     lookupName: string,
     bot: { executeCommand: (cmd: string) => void }
 ): void {
+    // eslint-disable-next-line no-console
     console.error(`[ERROR] Failed to fetch stats for ${lookupName}: ${playerData.statusText}`);
     let errorMsg = '';
 

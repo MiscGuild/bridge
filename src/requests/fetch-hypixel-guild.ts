@@ -5,9 +5,6 @@ export default async (uuid: string) => {
         `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&player=${uuid}`
     );
 
-    const findMemberByUUID = (guild: HypixelGuildResponse, uuid: string): Member | null =>
-        guild.members.find((member) => member.uuid === uuid) || null;
-
     return response.status === 200
         ? (((await response.json()) as any).guild as HypixelGuildResponse)
         : (response as FetchError);

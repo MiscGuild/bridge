@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 import { escapeMarkdown } from 'discord.js';
 import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
@@ -25,6 +28,7 @@ export default {
             true
         );
 
+        // eslint-disable-next-line no-console
         console.log(
             `[DEBUG] ${playerName} was kicked by ${kickedByPlayerName}. Trying to log this...`
         );
@@ -36,70 +40,51 @@ export default {
             );
             return;
         }
+
+        // eslint-disable-next-line no-console
         console.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
 
-        return new Promise((resolve, reject) => {
-            fetch(
-                `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&name=${env.HYPIXEL_GUILD_NAME}`
-            )
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success === false) {
-                        console.log(
-                            `[DEBUG] ${playerName} left the guild, but failed to get guild data.`
-                        );
-                        bot.executeCommand(
-                            `/oc Failed to get guild data of recently left member ${playerName}. Please try again later.`
-                        );
-                        return reject('Guild data not found!');
-                    }
-                    if (data.success === true && data.guild === null) {
-                        console.log(
-                            `[DEBUG] ${playerName} left the guild, but failed to get guild data.`
-                        );
-                        bot.executeCommand(
-                            `/oc Failed to get guild data of recently left member ${playerName}. Please try again later.`
-                        );
-                        return reject('Guild data not found!');
-                    }
-
-                    if (isFetchError(mojangProfile)) {
-                        console.log(
-                            `[DEBUG] ${playerName} left the guild, but failed to get guild data.`
-                        );
-                        bot.executeCommand(
-                            `/oc Failed to get guild data of recently left member ${playerName}. Please try again later. It's safe to assume they left the guild within 5 minutes.`
-                        );
-                        return reject('Guild data not found!');
-                    }
-                    const oldJoinData = require('./joindata.json');
-                    const joinDate = oldJoinData[mojangProfile.id];
-                    const leaveDate = new Date();
-
-                    const timeDiff = Math.abs(
-                        new Date(leaveDate).getTime() - new Date(joinDate).getTime()
-                    );
-                    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    const formattedLeaveDate =
-                        diffDays > 1
-                            ? new Date(joinDate).toLocaleString('en-US', {
-                                  timeZone: 'Europe/Amsterdam',
-                              })
-                            : new Date(joinDate).toLocaleString('en-US', {
-                                  timeZone: 'Europe/Amsterdam',
-                              });
-
-                    bot.sendToDiscord(
-                        'oc',
-                        `Player **${escapeMarkdown(
-                            playerName
-                        )}** was kicked from the guild by ${kickedByPlayerName}! Their join date was ||${formattedLeaveDate}||. They stayed in the guild for **${diffDays}** days.`
-                    );
+        await fetch(
+            `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&name=${env.HYPIXEL_GUILD_NAME}`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data.success || data.guild === null || isFetchError(mojangProfile)) {
+                    // eslint-disable-next-line no-console
                     console.log(
-                        `[DEBUG] ${playerName} left the guild, successfully logged this event.`
+                        `[DEBUG] ${playerName} left the guild, but failed to get guild data.`
                     );
-                    return resolve();
+                    bot.executeCommand(
+                        `/oc Failed to get guild data of recently left member ${playerName}. Please try again later. It's safe to assume they left the guild within 5 minutes.`
+                    );
+                    return;
+                }
+
+                const filePath = path.resolve(__dirname, 'joindata.json');
+                const fileContent = fs.readFileSync(filePath, 'utf8');
+                const oldJoinData = JSON.parse(fileContent);
+                const joinDate = oldJoinData[mojangProfile.id];
+                const leaveDate = new Date();
+
+                const timeDiff = Math.abs(
+                    new Date(leaveDate).getTime() - new Date(joinDate).getTime()
+                );
+                const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                const formattedLeaveDate = new Date(joinDate).toLocaleString('en-US', {
+                    timeZone: 'Europe/Amsterdam',
                 });
-        });
+
+                bot.sendToDiscord(
+                    'oc',
+                    `Player **${escapeMarkdown(
+                        playerName
+                    )}** was kicked from the guild by ${kickedByPlayerName}! Their join date was ||${formattedLeaveDate}||. They stayed in the guild for **${diffDays}** days.`
+                );
+
+                // eslint-disable-next-line no-console
+                console.log(
+                    `[DEBUG] ${playerName} left the guild, successfully logged this event.`
+                );
+            });
     },
 } as Event;

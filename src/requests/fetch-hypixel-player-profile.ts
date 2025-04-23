@@ -9,18 +9,16 @@ export default async (username: string) => {
         const data = await response.json();
         if (data && data.player !== null) {
             return data.player as HypixelPlayerResponse;
-        } else {
-            return {
-                status: 404,
-                statusText: 'Player not found',
-            };
         }
-    } else {
         return {
-            status: response.status,
-            statusText: response.statusText,
+            status: 404,
+            statusText: 'Player not found',
         };
     }
+    return {
+        status: response.status,
+        statusText: response.statusText,
+    };
 };
 
 /**

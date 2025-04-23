@@ -173,10 +173,13 @@ class Bot {
         const rest = new REST({ version: '10' }).setToken(env.DISCORD_TOKEN);
 
         try {
+            // eslint-disable-next-line no-console
             console.log(`Started refreshing ${commands.length} application (/) commands.`);
             await rest.put(Routes.applicationCommands(env.DISCORD_BOT_ID), { body: commands });
+            // eslint-disable-next-line no-console
             console.log('Successfully reloaded application (/) commands.');
         } catch (error) {
+            // eslint-disable-next-line no-console
             console.error('Error refreshing commands:', error);
         }
     }

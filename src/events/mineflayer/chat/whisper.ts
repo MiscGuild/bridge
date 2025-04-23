@@ -15,6 +15,7 @@ export default {
         const target = startsWithKeyword ? playerName : message.split(' ')[0];
 
         if (!target) {
+            // eslint-disable-next-line no-console
             console.error('Target is undefined');
             return;
         }
