@@ -44,6 +44,8 @@ export async function handleStatsCommand(
         const message = buildStatsMessage(lookupName, achievements, gameStats);
         bot.executeCommand(message);
     } else {
-        bot.executeCommand(`/gc ${playerName}, No ${gameModeKey} stats found for ${lookupName}. | ${getRandomHexColor()}`);
+        bot.executeCommand(
+            `/gc ${playerName}, No ${gameModeKey} stats found for ${lookupName}. | ${getRandomHexColor()}`
+        );
     }
 }

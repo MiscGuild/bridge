@@ -19,19 +19,25 @@ function buildStatsMessage(playerName: string, achievements: Achievements, stats
     const doublesLosses = stats?.op_doubles_losses ?? 0;
     const losses = soloLosses + doublesLosses;
 
-    const wlr = ((losses === 0) ? wins : wins / losses).toFixed(2);
-    const kdr = ((deaths === 0) ? kills : kills / deaths).toFixed(2);
+    const wlr = (losses === 0 ? wins : wins / losses).toFixed(2);
+    const kdr = (deaths === 0 ? kills : kills / deaths).toFixed(2);
 
     return `/gc [OP Duels] IGN: ${playerName} | WINS: ${wins} | KILLS: ${kills} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
-
 
 export default {
     name: 'chat:duels-op',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'Duels', buildStatsMessage);
-    }
+        await handleStatsCommand(
+            bot,
+            channel,
+            playerRank,
+            playerName,
+            guildRank,
+            target,
+            'Duels',
+            buildStatsMessage
+        );
+    },
 } as Event;
-
-
