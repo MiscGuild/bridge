@@ -1,4 +1,4 @@
-import { getRandomHexColor } from './getRandomHexColor';
+import getRandomHexColor from './getRandomHexColor';
 
 export default function handleFetchError(
     playerData: FetchError,

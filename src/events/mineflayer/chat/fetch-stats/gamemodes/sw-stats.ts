@@ -1,4 +1,4 @@
-import { handleStatsCommand } from '../utils/handleStatsCommand';
+import handleStatsCommand from '../utils/handleStatsCommand';
 import getRandomHexColor from '../utils/getRandomHexColor';
 
 function buildStatsMessage(lookupName: string, achievements: any, stats: any): string {

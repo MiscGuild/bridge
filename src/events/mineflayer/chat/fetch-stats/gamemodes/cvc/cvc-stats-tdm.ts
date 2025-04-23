@@ -1,6 +1,6 @@
 import { MCGO } from '@requests/fetch-hypixel-player-profile';
-import { handleStatsCommand } from '../../utils/handleStatsCommand';
-import { getRandomHexColor } from '../../utils/getRandomHexColor';
+import handleStatsCommand from '../../utils/handleStatsCommand';
+import getRandomHexColor from '../../utils/getRandomHexColor';
 
 function buildStatsMessage(lookupName: string, achievements: any, stats: MCGO): string {
     const tdmKills = stats?.kills_deathmatch ?? 0;

@@ -1,6 +1,7 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import { writeFile } from 'fs';
 import logError from './log-error';
+import bot from '..';
 
 /**
  * @param path The path to the target file. Path must begin from the path root.
@@ -25,7 +26,8 @@ export default (
             return;
         }
 
-        logError(err, 'Failed to write to file');
+        logError(bot, err as Error, 'Failed to write to file');
+
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setTitle('Error')
