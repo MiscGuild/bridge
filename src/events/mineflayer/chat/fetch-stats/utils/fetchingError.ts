@@ -1,3 +1,4 @@
+import logger from 'consola';
 import getRandomHexColor from './getRandomHexColor';
 
 export default function handleFetchError(
@@ -6,8 +7,7 @@ export default function handleFetchError(
     lookupName: string,
     bot: { executeCommand: (cmd: string) => void }
 ): void {
-    // eslint-disable-next-line no-console
-    console.error(`[ERROR] Failed to fetch stats for ${lookupName}: ${playerData.statusText}`);
+    logger.error(`[ERROR] Failed to fetch stats for ${lookupName}: ${playerData.statusText}`);
     let errorMsg = '';
 
     if (

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { escapeMarkdown } from 'discord.js';
+import logger from 'consola';
 import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
@@ -87,8 +88,7 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
     fs.writeFileSync(filePath, JSON.stringify(joinData, null, 4));
 
     if (!alreadyExisted) {
-        // eslint-disable-next-line no-console
-        console.log(`[DEBUG] ${playerName} joined the guild, wrote join data to file.`);
+        logger.log(`[DEBUG] ${playerName} joined the guild, wrote join data to file.`);
     }
 
     bot.executeCommand(`/g log ${playerName} 1`);

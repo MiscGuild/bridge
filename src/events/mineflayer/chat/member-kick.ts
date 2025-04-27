@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { escapeMarkdown } from 'discord.js';
+import logger from 'consola';
 import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
@@ -28,8 +29,7 @@ export default {
             true
         );
 
-        // eslint-disable-next-line no-console
-        console.log(
+        logger.log(
             `[DEBUG] ${playerName} was kicked by ${kickedByPlayerName}. Trying to log this...`
         );
 
@@ -41,8 +41,7 @@ export default {
             return;
         }
 
-        // eslint-disable-next-line no-console
-        console.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
+        logger.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
 
         await fetch(
             `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&name=${env.HYPIXEL_GUILD_NAME}`
@@ -50,8 +49,7 @@ export default {
             .then((response) => response.json())
             .then((data) => {
                 if (!data.success || data.guild === null || isFetchError(mojangProfile)) {
-                    // eslint-disable-next-line no-console
-                    console.log(
+                    logger.log(
                         `[DEBUG] ${playerName} left the guild, but failed to get guild data.`
                     );
                     bot.executeCommand(
@@ -81,10 +79,7 @@ export default {
                     )}** was kicked from the guild by ${kickedByPlayerName}! Their join date was ||${formattedLeaveDate}||. They stayed in the guild for **${diffDays}** days.`
                 );
 
-                // eslint-disable-next-line no-console
-                console.log(
-                    `[DEBUG] ${playerName} left the guild, successfully logged this event.`
-                );
+                logger.log(`[DEBUG] ${playerName} left the guild, successfully logged this event.`);
             });
     },
 } as Event;

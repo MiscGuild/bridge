@@ -1,3 +1,4 @@
+import logger from 'consola';
 import fetchHypixelGuild from '../../../requests/fetch-hypixel-guild';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
@@ -15,8 +16,7 @@ export default {
         const target = startsWithKeyword ? playerName : message.split(' ')[0];
 
         if (!target) {
-            // eslint-disable-next-line no-console
-            console.error('Target is undefined');
+            logger.error('Target is undefined');
             return;
         }
 
