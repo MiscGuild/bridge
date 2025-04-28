@@ -1,2 +1,2 @@
 export const getRandomHexColor = (): string =>
-    `#${(Math.random() * 0xffffffffff | 0).toString(16).padStart(6, '0')}`;
+    `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0')}`;
