@@ -1,8 +1,18 @@
 import env from '../util/env';
 
-export default async (username: string) => {
+export default async (username: string | null = null, uuid: string | null = null) => {
+    if (!username && !uuid) {
+        return {
+            status: 400,
+            statusText: 'Username or UUID must be provided',
+        };
+    }
+
+    const queryParam = uuid ? `uuid=${uuid}` : `name=${username}`;
+
+    
     const response = await fetch(
-        `https://api.hypixel.net/player?key=${env.HYPIXEL_API_KEY}&name=${username}`
+        `https://api.hypixel.net/player?key=${env.HYPIXEL_API_KEY}${queryParam}`
     );
 
     if (response.status === 200) {
@@ -8801,7 +8811,7 @@ export interface Duels {
     losses?: number;
     deaths?: number;
 
-    blitz_duel_wins?: number;  
+    blitz_duel_wins?: number;
     blitz_duel_losses?: number;
     blitz_duel_kills?: number;
     blitz_duel_deaths?: number;
