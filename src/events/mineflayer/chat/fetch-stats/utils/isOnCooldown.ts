@@ -3,9 +3,7 @@ const commandCooldowns = new Map<string, number>();
 export function isOnCooldown(playerName: string, guildRank: string, now: number): number | null {
     let cooldownTime: number | undefined;
     if (guildRank.includes('Member')) {
-        cooldownTime = 4 * 60 * 1000;
-    } else if (guildRank.includes('Active')) {
-        cooldownTime = 2 * 60 * 1000;
+        cooldownTime = 1 * 60 * 1000;
     }
 
     if (cooldownTime) {
