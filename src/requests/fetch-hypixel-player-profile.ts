@@ -1,19 +1,12 @@
 import env from '../util/env';
 
-export default async (username: string | null = null, uuid: string | null = null) => {
-    if (!username && !uuid) {
-        return {
-            status: 400,
-            statusText: 'Username or UUID must be provided',
-        };
-    }
+export default async (usernameUUID: string) => {
+    const queryParam = usernameUUID.length == 32 ? `uuid=${usernameUUID}` : `name=${usernameUUID}`;
 
-    const queryParam = uuid ? `uuid=${uuid}` : `name=${username}`;
-
-    
     const response = await fetch(
-        `https://api.hypixel.net/player?key=${env.HYPIXEL_API_KEY}${queryParam}`
+        `https://api.hypixel.net/player?key=${env.HYPIXEL_API_KEY}&${queryParam}`
     );
+
 
     if (response.status === 200) {
         const data = await response.json();
