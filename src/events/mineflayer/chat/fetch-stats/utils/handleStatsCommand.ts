@@ -34,12 +34,11 @@ export default async function handleStatsCommand(
     const profile = await fetchMojangProfile(lookupName);
 
     let playerData: any;
-    if ("id" in profile && typeof profile.id === "string" && profile.id.length === 32) {
+    if ('id' in profile && typeof profile.id === 'string' && profile.id.length === 32) {
         playerData = await fetchHypixelPlayerProfile(profile.id);
     } else {
         playerData = await fetchHypixelPlayerProfile(lookupName);
     }
-
 
     if (isFetchError(playerData)) {
         handleFetchError(playerData, playerName, lookupName, bot);

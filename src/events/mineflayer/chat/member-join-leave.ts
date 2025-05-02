@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
 import { escapeMarkdown } from 'discord.js';
 import logger from 'consola';
@@ -78,14 +78,18 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
     });
 
     const filePath = path.resolve(__dirname, 'joindata.json');
-    if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, '{}');
+
+    try {
+        await fs.access(filePath);
+    } catch {
+        await fs.writeFile(filePath, '{}');
     }
-    const fileContent = fs.readFileSync(filePath, 'utf8');
+
+    const fileContent = await fs.readFile(filePath, 'utf8');
     const joinData = JSON.parse(fileContent);
     const alreadyExisted = Object.prototype.hasOwnProperty.call(joinData, mojangProfile.id);
     joinData[mojangProfile.id] = joinDate;
-    fs.writeFileSync(filePath, JSON.stringify(joinData, null, 4));
+    await fs.writeFile(filePath, JSON.stringify(joinData, null, 4));
 
     if (!alreadyExisted) {
         logger.log(`[DEBUG] ${playerName} joined the guild, wrote join data to file.`);
@@ -157,7 +161,7 @@ async function processLeaveEvent(bot: any, playerName: string, mojangProfile: an
     }
 
     const filePath = path.resolve(__dirname, 'joindata.json');
-    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const fileContent = await fs.readFile(filePath, 'utf8');
     const oldJoinData = JSON.parse(fileContent);
     const joinDate = oldJoinData[mojangProfile.id];
     const leaveDate = new Date();

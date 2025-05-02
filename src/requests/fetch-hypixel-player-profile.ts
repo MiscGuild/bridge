@@ -1,12 +1,11 @@
 import env from '../util/env';
 
 export default async (usernameUUID: string) => {
-    const queryParam = usernameUUID.length == 32 ? `uuid=${usernameUUID}` : `name=${usernameUUID}`;
+    const queryParam = usernameUUID.length === 32 ? `uuid=${usernameUUID}` : `name=${usernameUUID}`;
 
     const response = await fetch(
         `https://api.hypixel.net/player?key=${env.HYPIXEL_API_KEY}&${queryParam}`
     );
-
 
     if (response.status === 200) {
         const data = await response.json();
