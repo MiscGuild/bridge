@@ -19,14 +19,13 @@
         "consola": "^2.15.3",
         "discord.js": "14.10.2",
         "dotenv": "^16.4.5",
-        "g": "^2.0.1",
         "hypixel-api-reborn": "^11.3.7",
         "mineflayer": "^4.20.1",
         "obscenity": "^0.1.4",
         "pnpm": "^9.14.2",
         "prismarine-chat": "^1.10.1",
-        "zod": "^3.23.8",
-        "tsconfig-paths": "^4.2.0"
+        "tsconfig-paths": "^4.2.0",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@jejebecarte/eslint-config": "^1.0.6",

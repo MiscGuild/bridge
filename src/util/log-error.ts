@@ -1,9 +1,8 @@
 import { TextChannel } from 'discord.js';
 import logger from 'consola';
 import env from './env';
-import bot from '..';
 
-export default async (err: Error, message?: string) => {
+export default async (bot: any, err: Error, message?: string) => {
     logger.error(err, message ? `\n\n${message}` : undefined);
 
     if (bot.discord.isReady()) {

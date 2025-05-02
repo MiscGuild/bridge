@@ -1,15 +1,15 @@
-import { getRandomHexColor } from './getRandomHexColor';
+import getRandomHexColor from './getRandomHexColor';
 import { isOnCooldown, setCooldown } from './isOnCooldown';
-import fetchHypixelPlayerProfile from '../../../../../requests/fetch-hypixel-player-profile';
-import fetchMojangProfile from '../../../../../requests/fetch-mojang-profile';
+import fetchHypixelPlayerProfile, {
+    Stats,
+} from '../../../../../requests/fetch-hypixel-player-profile';
 import isFetchError from '../../../../../requests/is-fetch-error';
-import { handleFetchError } from './fetchingError';
-import { Stats } from '../../../../../requests/fetch-hypixel-player-profile';
-import { UserSelectMenuBuilder } from 'discord.js';
+import handleFetchError from './fetchingError';
+import fetchMojangProfile from '../../../../../requests/fetch-mojang-profile';
 
 type GameModeKey = keyof Stats;
 
-export async function handleStatsCommand(
+export default async function handleStatsCommand(
     bot: any,
     channel: string,
     playerRank: string,
@@ -35,12 +35,11 @@ export async function handleStatsCommand(
     const profile = await fetchMojangProfile(lookupName);
 
     let playerData: any;
-    if ("id" in profile && typeof profile.id === "string" && profile.id.length === 32) {
+    if ('id' in profile && typeof profile.id === 'string' && profile.id.length === 32) {
         playerData = await fetchHypixelPlayerProfile(profile.id);
     } else {
         playerData = await fetchHypixelPlayerProfile(lookupName);
     }
-
 
     if (isFetchError(playerData)) {
         handleFetchError(playerData, playerName, lookupName, bot);
@@ -54,6 +53,8 @@ export async function handleStatsCommand(
         const message = buildStatsMessage(lookupName, achievements, gameStats);
         bot.executeCommand(message);
     } else {
-        bot.executeCommand(`/gc ${playerName}, No ${gameModeKey} stats found for ${lookupName}. | ${getRandomHexColor()}`);
+        bot.executeCommand(
+            `/gc ${playerName}, No ${gameModeKey} stats found for ${lookupName}. | ${getRandomHexColor()}`
+        );
     }
 }

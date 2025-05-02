@@ -1,29 +1,26 @@
 import env from '../util/env';
 
 export default async (usernameUUID: string) => {
-    const queryParam = usernameUUID.length == 32 ? `uuid=${usernameUUID}` : `name=${usernameUUID}`;
+    const queryParam = usernameUUID.length === 32 ? `uuid=${usernameUUID}` : `name=${usernameUUID}`;
 
     const response = await fetch(
         `https://api.hypixel.net/player?key=${env.HYPIXEL_API_KEY}&${queryParam}`
     );
 
-
     if (response.status === 200) {
         const data = await response.json();
         if (data && data.player !== null) {
             return data.player as HypixelPlayerResponse;
-        } else {
-            return {
-                status: 404,
-                statusText: 'Player not found',
-            };
         }
-    } else {
         return {
-            status: response.status,
-            statusText: response.statusText,
+            status: 404,
+            statusText: 'Player not found',
         };
     }
+    return {
+        status: response.status,
+        statusText: response.statusText,
+    };
 };
 
 /**
@@ -291,7 +288,7 @@ export interface Arena {
     lvl_health?: number;
     magical_chest?: number;
     offensive?: string;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     penalty?: number;
     rating?: number;
     support?: string;
@@ -360,7 +357,7 @@ export interface Battleground {
     warrior_plays?: number;
     warrior_skill1?: number;
     warrior_spec?: string;
-    weapon_inventory?: (WeaponInventoryEntity)[] | null;
+    weapon_inventory?: WeaponInventoryEntity[] | null;
     win_streak?: number;
     wins?: number;
     wins_avenger?: number;
@@ -422,7 +419,7 @@ export interface Battleground {
     mage_skill5?: number;
     mage_armor_selection?: number;
     salvaged_weapons_epic?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     crafted?: number;
     crafted_epic?: number;
     reroll_epic?: number;
@@ -565,7 +562,7 @@ export interface HungerGames {
     knight?: number;
     meatmaster?: number;
     necromancer?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     reddragon?: number;
     rogue?: number;
     scout?: number;
@@ -576,7 +573,7 @@ export interface HungerGames {
     wolftamer?: number;
     wins_teams?: number;
     monthly_kills_b?: number;
-    "votes_Caelum v2"?: number;
+    'votes_Caelum v2'?: number;
     votes_Citadel?: number;
     votes_City?: number;
     "votes_Aelin's Tower"?: number;
@@ -625,7 +622,7 @@ export interface MCGO {
     round_wins?: number;
     shots_fired?: number;
     selectedKnifeDev?: string;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     mcgo?: Mcgo;
     knife_damage_increase?: number;
     knife_attack_delay?: number;
@@ -671,7 +668,7 @@ export interface MCGO {
     kills_deathmatch?: number;
     criminal_kills_deathmatch?: number;
     monthly_kills_b?: number;
-    "game_wins_melon factory"?: number;
+    'game_wins_melon factory'?: number;
     game_wins_reserve?: number;
     show_lobby_prefix?: boolean;
     selected_lobby_prefix?: string;
@@ -698,7 +695,7 @@ export interface Paintball {
     hat?: string;
     kills?: number;
     killstreaks?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     shots_fired?: number;
     superluck?: number;
     transfusion?: number;
@@ -717,7 +714,7 @@ export interface Quake {
     killsound?: string;
     killstreaks?: number;
     muzzle?: string;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     sight?: string;
     trigger?: string;
     wins?: number;
@@ -759,7 +756,7 @@ export interface TNTGames {
     doublejump_tntrun?: number;
     kills_capture?: number;
     kineticwizard_explode?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     spleef_doublejump?: number;
     spleef_repulse?: number;
     spleef_triple?: number;
@@ -838,7 +835,7 @@ export interface UHC {
     equippedKit?: string;
     heads_eaten?: number;
     kills?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     perk_alchemy_line_a?: number;
     perk_armorsmith_line_a?: number;
     perk_enchanting_line_a?: number;
@@ -915,7 +912,7 @@ export interface VampireZ {
     kill_booster?: number;
     loot_drops?: number;
     most_vampire_kills?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     renfield?: number;
     theology?: number;
     vampire_deaths?: number;
@@ -970,7 +967,7 @@ export interface Walls {
     monthly_wins_a?: number;
     monthly_wins_b?: number;
     opportunity?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     ready?: number;
     redstone_expert?: number;
     sage?: number;
@@ -1149,7 +1146,7 @@ export interface Walls3 {
     monthly_finalKills_Zombie_a?: number;
     monthly_finalKills_Zombie_b?: number;
     mutations_visibility?: boolean;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     pigman_a?: number;
     pigman_b?: number;
     pigman_c?: number;
@@ -5157,7 +5154,7 @@ export interface GingerBread {
     booster_active?: string;
     frame_active?: string;
     engine_active?: string;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     skin_active?: string;
     jacket_active?: string;
     pants_active?: string;
@@ -5241,7 +5238,7 @@ export interface SkyWars {
     losses_kit_basic_solo_default?: number;
     kills?: number;
     egg_thrown?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     blocks_broken?: number;
     assists_solo?: number;
     assists_kit_basic_solo_default?: number;
@@ -5394,10 +5391,10 @@ export interface SkyWars {
     wins_kit_attacking_team_scout?: number;
     games_kit_attacking_team_scout?: number;
     assists_kit_attacking_team_scout?: number;
-    "survived_players_kit_defending_team_baseball-player"?: number;
-    "kills_kit_defending_team_baseball-player"?: number;
-    "losses_kit_defending_team_baseball-player"?: number;
-    "deaths_kit_defending_team_baseball-player"?: number;
+    'survived_players_kit_defending_team_baseball-player'?: number;
+    'kills_kit_defending_team_baseball-player'?: number;
+    'losses_kit_defending_team_baseball-player'?: number;
+    'deaths_kit_defending_team_baseball-player'?: number;
     team_speed_boost?: number;
     solo_juggernaut?: number;
     kills_monthly_b?: number;
@@ -5448,7 +5445,7 @@ export interface SkyWars {
     mega_notoriety?: number;
     team_nourishment?: number;
     team_knowledge?: number;
-    "solo_annoy-o-mite"?: number;
+    'solo_annoy-o-mite'?: number;
     ranked_instant_smelting?: number;
     games_kit_mining_team_cannoneer?: number;
     survived_players_kit_mining_team_cannoneer?: number;
@@ -5501,7 +5498,7 @@ export interface SkyWars {
     solo_fat?: number;
     mega_marksmanship?: number;
     solo_blazing_arrows?: number;
-    "team_annoy-o-mite"?: number;
+    'team_annoy-o-mite'?: number;
     games_ranked?: number;
     deaths_ranked?: number;
     kills_kit_ranked_ranked_default?: number;
@@ -5530,7 +5527,7 @@ export interface SkyWars {
     wins_ranked?: number;
     assists_ranked?: number;
     assists_kit_ranked_ranked_armorer?: number;
-    "games_kit_defending_team_baseball-player"?: number;
+    'games_kit_defending_team_baseball-player'?: number;
     winstreak_kit_advanced_solo_knight?: number;
     killstreak_kit_advanced_solo_knight?: number;
     losses_kit_enderchest_solo_enderchest?: number;
@@ -5571,16 +5568,16 @@ export interface SkyWars {
     games_kit_basic_solo_speleologist?: number;
     killstreak_kit_basic_solo_speleologist?: number;
     survived_players_kit_basic_solo_speleologist?: number;
-    "kit_mega_mega_baseball-player"?: number;
-    "survived_players_kit_mega_mega_baseball-player"?: number;
-    "killstreak_kit_mega_mega_baseball-player"?: number;
-    "winstreak_kit_mega_mega_baseball-player"?: number;
-    "games_kit_mega_mega_baseball-player"?: number;
-    "wins_kit_mega_mega_baseball-player"?: number;
-    "kills_kit_mega_mega_baseball-player"?: number;
-    "deaths_kit_mega_mega_baseball-player"?: number;
-    "losses_kit_mega_mega_baseball-player"?: number;
-    "assists_kit_mega_mega_baseball-player"?: number;
+    'kit_mega_mega_baseball-player'?: number;
+    'survived_players_kit_mega_mega_baseball-player'?: number;
+    'killstreak_kit_mega_mega_baseball-player'?: number;
+    'winstreak_kit_mega_mega_baseball-player'?: number;
+    'games_kit_mega_mega_baseball-player'?: number;
+    'wins_kit_mega_mega_baseball-player'?: number;
+    'kills_kit_mega_mega_baseball-player'?: number;
+    'deaths_kit_mega_mega_baseball-player'?: number;
+    'losses_kit_mega_mega_baseball-player'?: number;
+    'assists_kit_mega_mega_baseball-player'?: number;
     kit_mega_mega_armorsmith?: number;
     kit_mega_mega_healer?: number;
     kit_mega_mega_hunter?: number;
@@ -5658,24 +5655,24 @@ export interface SkyWars {
     melee_kills_kit_ranked_ranked_armorer?: number;
     melee_kills_ranked?: number;
     chests_opened_mega?: number;
-    "most_kills_game_kit_mega_mega_baseball-player"?: number;
+    'most_kills_game_kit_mega_mega_baseball-player'?: number;
     most_kills_game_mega?: number;
     melee_kills_mega?: number;
-    "melee_kills_kit_mega_mega_baseball-playe"?: number;
-    "time_played_kit_mega_mega_baseball-player"?: number;
-    "chests_opened_kit_mega_mega_baseball-player"?: number;
+    'melee_kills_kit_mega_mega_baseball-playe'?: number;
+    'time_played_kit_mega_mega_baseball-player'?: number;
+    'chests_opened_kit_mega_mega_baseball-player'?: number;
     time_played_mega?: number;
-    "longest_bow_shot_kit_mega_mega_baseball-player"?: number;
+    'longest_bow_shot_kit_mega_mega_baseball-player'?: number;
     fastest_win_mega?: number;
-    "fastest_win_kit_mega_mega_baseball-player"?: number;
+    'fastest_win_kit_mega_mega_baseball-player'?: number;
     longest_bow_shot_mega?: number;
-    "arrows_hit_kit_mega_mega_baseball-playe"?: number;
+    'arrows_hit_kit_mega_mega_baseball-playe'?: number;
     arrows_shot_mega?: number;
-    "arrows_shot_kit_mega_mega_baseball-player"?: number;
+    'arrows_shot_kit_mega_mega_baseball-player'?: number;
     void_kills_mega?: number;
     arrows_hit_mega?: number;
-    "void_kills_kit_mega_mega_baseball-player"?: number;
-    "mob_kills_kit_mega_mega_baseball-player"?: number;
+    'void_kills_kit_mega_mega_baseball-player'?: number;
+    'mob_kills_kit_mega_mega_baseball-player'?: number;
     mob_kills?: number;
     mob_kills_mega?: number;
     chests_opened_kit_mega_mega_armorer?: number;
@@ -5777,7 +5774,7 @@ export interface SkyWars {
     time_played_kit_basic_solo_scout?: number;
     games_kit_basic_solo_scout?: number;
     chests_opened_kit_basic_solo_scout?: number;
-    "quickjoin_uses_Festive Shire"?: number;
+    'quickjoin_uses_Festive Shire'?: number;
     fastest_win_kit_mining_team_speleologist?: number;
     time_played_kit_mining_team_speleologist?: number;
     melee_kills_kit_mining_team_speleologist?: number;
@@ -5859,12 +5856,12 @@ export interface SkyWars {
     longest_bow_kill_solo?: number;
 }
 export interface KitDefendingTeamDiscoInventoryOrKitBasicSoloDiscoInventory {
-    "LEATHER_CHESTPLATE:0"?: string;
-    "NOTE_BLOCK:0"?: string;
-    "LEATHER_LEGGINGS:0"?: string;
-    "GOLD_HELMET:0"?: string;
-    "JUKEBOX:0"?: string;
-    "LEATHER_BOOTS:0"?: string;
+    'LEATHER_CHESTPLATE:0'?: string;
+    'NOTE_BLOCK:0'?: string;
+    'LEATHER_LEGGINGS:0'?: string;
+    'GOLD_HELMET:0'?: string;
+    'JUKEBOX:0'?: string;
+    'LEATHER_BOOTS:0'?: string;
 }
 export interface TrueCombat {
     win_streak?: number;
@@ -5889,7 +5886,7 @@ export interface TrueCombat {
     golden_skulls?: number;
     giant_zombie?: number;
     solo_chaos_bounty_hunter?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     crazywalls_kills_solo_chaos?: number;
     crazywalls_wins_solo_chaos?: number;
     solo_chaos_super_luck?: number;
@@ -5962,7 +5959,7 @@ export interface TrueCombat {
     crafting_lucky_rejuvenate?: number;
     crafting_lucky_gold_ingots?: number;
     solo_knowledge?: number;
-    "solo_chaos_annoy-o-mite"?: number;
+    'solo_chaos_annoy-o-mite'?: number;
     kit_basic_chaos_armorer?: number;
     crafting_lucky_ender_pearls?: number;
     solo_vampirism?: number;
@@ -6083,7 +6080,7 @@ export interface SuperSmash {
     lastLevel_SANIC?: number;
     xp_GREEN_HOOD?: number;
     lastLevel_GREEN_HOOD?: number;
-    packages?: (null)[] | null;
+    packages?: null[] | null;
     pg_CAKE_MONSTER?: number;
     pg_SHOOP_DA_WHOOP?: number;
     pg_SERGEANT_SHIELD?: number;
@@ -7526,7 +7523,7 @@ export interface HeroLevelBoosterActive {
     plays?: number;
 }
 export interface SpeedUHC {
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     tearWellUses?: number;
     found_LEGENDARY?: number;
     tears?: number;
@@ -7714,7 +7711,7 @@ export interface SpeedUHC {
     wins_mastery_berserk?: number;
     losses_mastery_berserk?: number;
     deaths_mastery_berserk?: number;
-    "§fSplashPotionofHeal(4❤)_drop"?: number;
+    '§fSplashPotionofHeal(4❤)_drop'?: number;
     mastery_huntsman?: number;
     wins_mastery_huntsman?: number;
     kills_mastery_huntsman?: number;
@@ -7746,7 +7743,7 @@ export interface SpeedUHC {
 }
 export interface SkyClash {
     card_packs?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     perk_arrow_deflection?: number;
     perk_creeper_new?: boolean;
     perk_arrow_deflection_new?: boolean;
@@ -8138,94 +8135,94 @@ export interface SkyClash {
     losses_perk_bigger_bangs?: number;
 }
 export interface GuardianInventory {
-    "POTION:5"?: string;
-    "IRON_BOOTS:0"?: string;
-    "CHAINMAIL_CHESTPLATE:0"?: string;
-    "SKULL_ITEM:3"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "COMPASS:0"?: string;
-    "IRON_CHESTPLATE:0"?: string;
+    'POTION:5'?: string;
+    'IRON_BOOTS:0'?: string;
+    'CHAINMAIL_CHESTPLATE:0'?: string;
+    'SKULL_ITEM:3'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'COMPASS:0'?: string;
+    'IRON_CHESTPLATE:0'?: string;
 }
 export interface SwordsmanInventory {
-    "LEATHER_CHESTPLATE:0"?: string;
-    "LEATHER_LEGGINGS:0"?: string;
-    "IRON_HELMET:0"?: string;
-    "SKULL_ITEM:3"?: string;
-    "POTION:9"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "LEATHER_BOOTS:0"?: string;
-    "COMPASS:0"?: string;
-    "DIAMOND_SWORD:0"?: string;
-    "LEATHER_HELMET:0"?: string;
+    'LEATHER_CHESTPLATE:0'?: string;
+    'LEATHER_LEGGINGS:0'?: string;
+    'IRON_HELMET:0'?: string;
+    'SKULL_ITEM:3'?: string;
+    'POTION:9'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'LEATHER_BOOTS:0'?: string;
+    'COMPASS:0'?: string;
+    'DIAMOND_SWORD:0'?: string;
+    'LEATHER_HELMET:0'?: string;
 }
 export interface ArcherInventory {
-    "ARROW:0"?: string;
-    "BOW:0"?: string;
-    "CHAINMAIL_CHESTPLATE:0"?: string;
-    "SKULL_ITEM:3"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "COMPASS:0"?: string;
+    'ARROW:0'?: string;
+    'BOW:0'?: string;
+    'CHAINMAIL_CHESTPLATE:0'?: string;
+    'SKULL_ITEM:3'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'COMPASS:0'?: string;
 }
 export interface ClericInventory {
-    "LEATHER_CHESTPLATE:0"?: string;
-    "POTION:5"?: string;
-    "GOLD_HELMET:0"?: string;
-    "GOLD_SWORD:0"?: string;
-    "SKULL_ITEM:3"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "COMPASS:0"?: string;
-    "LEATHER_HELMET:0"?: string;
-    "GOLD_CHESTPLATE:0"?: string;
-    "LEATHER_LEGGINGS:0"?: string;
-    "GOLD_LEGGINGS:0"?: string;
-    "GOLD_BOOTS:0"?: string;
-    "GOLDEN_APPLE:0"?: string;
+    'LEATHER_CHESTPLATE:0'?: string;
+    'POTION:5'?: string;
+    'GOLD_HELMET:0'?: string;
+    'GOLD_SWORD:0'?: string;
+    'SKULL_ITEM:3'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'COMPASS:0'?: string;
+    'LEATHER_HELMET:0'?: string;
+    'GOLD_CHESTPLATE:0'?: string;
+    'LEATHER_LEGGINGS:0'?: string;
+    'GOLD_LEGGINGS:0'?: string;
+    'GOLD_BOOTS:0'?: string;
+    'GOLDEN_APPLE:0'?: string;
 }
 export interface TreasureHunterInventory {
-    "WEB:0"?: string;
-    "GOLD_PICKAXE:0"?: string;
-    "GOLD_HELMET:0"?: string;
-    "SKULL_ITEM:3"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "COMPASS:0"?: string;
+    'WEB:0'?: string;
+    'GOLD_PICKAXE:0'?: string;
+    'GOLD_HELMET:0'?: string;
+    'SKULL_ITEM:3'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'COMPASS:0'?: string;
 }
 export interface BerserkerInventory {
-    "COOKED_BEEF:0"?: string;
-    "POTION:1"?: string;
-    "CHAINMAIL_CHESTPLATE:0"?: string;
-    "SKULL_ITEM:3"?: string;
-    "STONE_AXE:0"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "COMPASS:0"?: string;
-    "IRON_CHESTPLATE:0"?: string;
-    "LEATHER_HELMET:0"?: string;
+    'COOKED_BEEF:0'?: string;
+    'POTION:1'?: string;
+    'CHAINMAIL_CHESTPLATE:0'?: string;
+    'SKULL_ITEM:3'?: string;
+    'STONE_AXE:0'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'COMPASS:0'?: string;
+    'IRON_CHESTPLATE:0'?: string;
+    'LEATHER_HELMET:0'?: string;
 }
 export interface NecromancerInventory {
-    "CHAINMAIL_LEGGINGS:0"?: string;
-    "POTION:12"?: string;
-    "ARROW:0"?: string;
-    "BOW:0"?: string;
-    "CHAINMAIL_BOOTS:0"?: string;
-    "MONSTER_EGG:51"?: string;
-    "SKULL_ITEM:3"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "COMPASS:0"?: string;
+    'CHAINMAIL_LEGGINGS:0'?: string;
+    'POTION:12'?: string;
+    'ARROW:0'?: string;
+    'BOW:0'?: string;
+    'CHAINMAIL_BOOTS:0'?: string;
+    'MONSTER_EGG:51'?: string;
+    'SKULL_ITEM:3'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'COMPASS:0'?: string;
 }
 export interface ScoutInventory {
-    "WOOD:0"?: string;
-    "IRON_BOOTS:0"?: string;
-    "SKULL_ITEM:3"?: string;
-    "SKULL_ITEM:2"?: string;
-    "SKULL_ITEM:1"?: string;
-    "COMPASS:0"?: string;
-    "STONE_SWORD:0"?: string;
+    'WOOD:0'?: string;
+    'IRON_BOOTS:0'?: string;
+    'SKULL_ITEM:3'?: string;
+    'SKULL_ITEM:2'?: string;
+    'SKULL_ITEM:1'?: string;
+    'COMPASS:0'?: string;
+    'STONE_SWORD:0'?: string;
 }
 export interface Legacy {
     next_tokens_seconds?: number;
@@ -8275,9 +8272,9 @@ export interface Bedwars {
     four_four_emerald_resources_collected_bedwars?: number;
     Experience?: number;
     void_kills_bedwars?: number;
-    "four_four_permanent _items_purchased_bedwars"?: number;
+    'four_four_permanent _items_purchased_bedwars'?: number;
     four_four_void_kills_bedwars?: number;
-    "permanent _items_purchased_bedwars"?: number;
+    'permanent _items_purchased_bedwars'?: number;
     entity_attack_final_kills_bedwars?: number;
     fall_kills_bedwars?: number;
     four_four_void_final_kills_bedwars?: number;
@@ -8301,7 +8298,7 @@ export interface Bedwars {
     four_three__items_purchased_bedwars?: number;
     four_three_emerald_resources_collected_bedwars?: number;
     four_three_gold_resources_collected_bedwars?: number;
-    "four_three_permanent _items_purchased_bedwars"?: number;
+    'four_three_permanent _items_purchased_bedwars'?: number;
     four_three_diamond_resources_collected_bedwars?: number;
     four_three_items_purchased_bedwars?: number;
     four_three_kills_bedwars?: number;
@@ -8322,7 +8319,7 @@ export interface Bedwars {
     four_three_entity_attack_final_kills_bedwars?: number;
     entity_attack_deaths_bedwars?: number;
     four_three_final_kills_bedwars?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     bedwars_box_commons?: number;
     bedwars_box?: number;
     chest_history?: string;
@@ -8333,7 +8330,7 @@ export interface Bedwars {
     four_three_entity_attack_kills_bedwars?: number;
     eight_two_beds_broken_bedwars?: number;
     eight_two_emerald_resources_collected_bedwars?: number;
-    "eight_two_permanent _items_purchased_bedwars"?: number;
+    'eight_two_permanent _items_purchased_bedwars'?: number;
     eight_two_resources_collected_bedwars?: number;
     eight_two_diamond_resources_collected_bedwars?: number;
     eight_two_kills_bedwars?: number;
@@ -8362,7 +8359,7 @@ export interface Bedwars {
     eight_one__items_purchased_bedwars?: number;
     eight_one_items_purchased_bedwars?: number;
     eight_one_diamond_resources_collected_bedwars?: number;
-    "eight_one_permanent _items_purchased_bedwars"?: number;
+    'eight_one_permanent _items_purchased_bedwars'?: number;
     eight_one_void_kills_bedwars?: number;
     eight_one_kills_bedwars?: number;
     eight_one_resources_collected_bedwars?: number;
@@ -8416,7 +8413,7 @@ export interface Bedwars {
     shop_sort?: string;
     activeKillEffect?: string;
     four_four_fire_tick_deaths_bedwars?: number;
-    chest_history_new?: (string)[] | null;
+    chest_history_new?: string[] | null;
     bedwars_box_epics?: number;
     quickjoin_uses_Playground?: number;
     eight_one_fall_deaths_bedwars?: number;
@@ -8458,7 +8455,7 @@ export interface Bedwars {
     eight_one_fall_kills_bedwars?: number;
 }
 export interface MurderMystery {
-    murdermystery_books?: (string)[] | null;
+    murdermystery_books?: string[] | null;
     quickjoin_uses_total?: number;
     quickjoin_uses_Transport?: number;
     games_archives_MURDER_CLASSIC?: number;
@@ -8472,11 +8469,11 @@ export interface MurderMystery {
     wins_MURDER_CLASSIC?: number;
     granted_chests?: number;
     mm_chests?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     MurderMystery_openedCommons?: number;
     MurderMystery_openedChests?: number;
     MurderMystery_openedRares?: number;
-    mm_chest_history?: (string)[] | null;
+    mm_chest_history?: string[] | null;
     coins_pickedup_MURDER_CLASSIC?: number;
     games_ancient_tomb?: number;
     games_ancient_tomb_MURDER_CLASSIC?: number;
@@ -8556,7 +8553,7 @@ export interface MurderMystery {
     coins_pickedup_library?: number;
     coins_pickedup_library_MURDER_CLASSIC?: number;
     games_library?: number;
-    "quickjoin_uses_Ancient Tomb"?: number;
+    'quickjoin_uses_Ancient Tomb'?: number;
     detective_wins_hypixel_world?: number;
     detective_wins?: number;
     detective_wins_MURDER_CLASSIC?: number;
@@ -8640,7 +8637,7 @@ export interface MurderMystery {
     trap_kills_towerfall?: number;
     trap_kills?: number;
     was_hero_towerfall_MURDER_CLASSIC?: number;
-    "quickjoin_uses_Gold Rush"?: number;
+    'quickjoin_uses_Gold Rush'?: number;
     games_gold_rush_MURDER_CLASSIC?: number;
     deaths_gold_rush?: number;
     deaths_gold_rush_MURDER_CLASSIC?: number;
@@ -8705,7 +8702,7 @@ export interface MurderMystery {
     thrown_knife_kills_gold_rush_MURDER_CLASSIC?: number;
     knife_kills_gold_rush?: number;
     knife_kills_gold_rush_MURDER_CLASSIC?: number;
-    "quickjoin_uses_Hypixel World"?: number;
+    'quickjoin_uses_Hypixel World'?: number;
     knife_kills_hypixel_world?: number;
     kills_as_murderer_hypixel_world?: number;
     kills_as_murderer_hypixel_world_MURDER_CLASSIC?: number;
@@ -8762,14 +8759,14 @@ export interface MurderMystery {
     suicides_gold_rush_MURDER_CLASSIC?: number;
     suicides_gold_rush?: number;
     mm_christmas_chests?: number;
-    chest_history_new?: (string)[] | null;
+    chest_history_new?: string[] | null;
     MurderMystery_openedEpics?: number;
     MurderMystery_openedLegendaries?: number;
     active_kill_note?: string;
 }
 export interface BuildBattle {
     wins_solo_normal?: number;
-    packages?: (string)[] | null;
+    packages?: string[] | null;
     wins?: number;
     games_played?: number;
     score?: number;
@@ -8778,7 +8775,7 @@ export interface BuildBattle {
     correct_guesses?: number;
     weekly_coins_a?: number;
     total_votes?: number;
-    buildbattle_loadout?: (string)[] | null;
+    buildbattle_loadout?: string[] | null;
     weekly_coins_b?: number;
     super_votes?: number;
     new_selected_hat?: string;
