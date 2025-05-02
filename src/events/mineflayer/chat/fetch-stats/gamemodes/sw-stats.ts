@@ -1,16 +1,11 @@
 import { handleStatsCommand } from '../utils/handleStatsCommand';
-import { getRandomHexColor } from '../utils/getRandomHexColor'
+import { getRandomHexColor } from '../utils/getRandomHexColor';
 
-function buildStatsMessage(
-    lookupName: string,
-    achievements: any,
-    stats: any
-): string {
+function buildStatsMessage(lookupName: string, achievements: any, stats: any): string {
     const playerLevel = stats?.levelFormatted ?? 0;
 
     const matches = [...playerLevel.matchAll(/§[0-9a-f](\d)/gi)];
-    const rm_playerLevel = matches.map(m => m[1]).join("");
-
+    const rm_playerLevel = matches.map((m) => m[1]).join('');
 
     const winsSolo = achievements?.skywars_wins_solo ?? 0;
     const winsTeams = achievements?.skywars_wins_team ?? 0;
@@ -24,7 +19,7 @@ function buildStatsMessage(
     const losses = lossesSolo + lossesTeams;
 
     const deaths = soloDeaths + teamsDeaths;
-    
+
     const totalWins = winsSolo + winsTeams;
     const totalKills = killsSolo + killsTeams;
     const kdr = (totalKills / (deaths ? deaths : 1)).toFixed(2);
@@ -37,6 +32,15 @@ export default {
     name: 'chat:sw-stats',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'SkyWars', buildStatsMessage);
-    }
+        await handleStatsCommand(
+            bot,
+            channel,
+            playerRank,
+            playerName,
+            guildRank,
+            target,
+            'SkyWars',
+            buildStatsMessage
+        );
+    },
 } as Event;

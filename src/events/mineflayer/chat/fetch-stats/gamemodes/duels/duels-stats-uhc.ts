@@ -9,13 +9,11 @@ function buildStatsMessage(playerName: string, achievements: Achievements, stats
     const meetupKills = stats?.uhc_meetup_kills ?? 0;
     const kills = soloKills + doublesKills + fourKills + meetupKills;
 
-
     const soloDeaths = stats?.uhc_duel_deaths ?? 0;
     const doublesDeaths = stats?.uhc_doubles_deaths ?? 0;
     const fourDeaths = stats?.uhc_four_deaths ?? 0;
     const meetupDeaths = stats?.uhc_meetup_deaths ?? 0;
     const deaths = soloDeaths + doublesDeaths + fourDeaths + meetupDeaths;
-
 
     const soloWins = stats?.uhc_duel_wins ?? 0;
     const doublesWins = stats?.uhc_doubles_wins ?? 0;
@@ -29,19 +27,25 @@ function buildStatsMessage(playerName: string, achievements: Achievements, stats
     const meetupLosses = stats?.uhc_meetup_losses ?? 0;
     const losses = soloLosses + doublesLosses + fourLosses + meetupLosses;
 
-    const wlr = ((losses === 0) ? wins : wins / losses).toFixed(2);
-    const kdr = ((deaths === 0) ? kills : kills / deaths).toFixed(2);
+    const wlr = (losses === 0 ? wins : wins / losses).toFixed(2);
+    const kdr = (deaths === 0 ? kills : kills / deaths).toFixed(2);
 
     return `/gc [UHC Duels] IGN: ${playerName} | WINS: ${wins} | KILLS: ${kills} | KDR: ${kdr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
-
 
 export default {
     name: 'chat:duels-uhc',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'Duels', buildStatsMessage);
-    }
+        await handleStatsCommand(
+            bot,
+            channel,
+            playerRank,
+            playerName,
+            guildRank,
+            target,
+            'Duels',
+            buildStatsMessage
+        );
+    },
 } as Event;
-
-
