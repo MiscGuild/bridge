@@ -28,9 +28,7 @@ export default {
             await bot.executeTask(`/g kick ${user} ${reason}`);
             embed
                 .setTitle('Kicked!')
-                .setDescription(
-                    `\`${user}\` has been kicked for \`${reason}\` by \`${interaction.user.username}\``
-                )
+                .setDescription(`\`${user}\` has been kicked for \`${reason}\` by \`${interaction.user.username}\``)
                 .setColor('Red');
         } catch (e) {
             embed

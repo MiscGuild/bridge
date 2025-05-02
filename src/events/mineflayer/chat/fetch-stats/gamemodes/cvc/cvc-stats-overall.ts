@@ -2,7 +2,11 @@ import { handleStatsCommand } from '../../utils/handleStatsCommand';
 import { getRandomHexColor } from '../../utils/getRandomHexColor';
 import { MCGO } from '@requests/fetch-hypixel-player-profile';
 
-function buildStatsMessage(lookupName: string, achievements: any, stats: MCGO): string {
+function buildStatsMessage(
+    lookupName: string,
+    achievements: any,
+    stats: MCGO
+): string {
     const killsDefusal = stats?.kills ?? 0;
     const tdmKills = stats?.kills_deathmatch ?? 0;
     const killsOverall = killsDefusal + tdmKills;
@@ -11,11 +15,14 @@ function buildStatsMessage(lookupName: string, achievements: any, stats: MCGO): 
     const deathsTDM = stats?.deaths_deathmatch ?? 0;
     const overallDeaths = deathsDefusal + deathsTDM;
 
+
     const winsTDM = stats?.game_wins_deathmatch ?? 0;
     const winsDefusal = stats?.game_wins ?? 0;
     const winsOverall = winsTDM + winsDefusal;
 
-    const kdr = (overallDeaths === 0 ? killsOverall : killsOverall / overallDeaths).toFixed(2);
+
+
+    const kdr = ((overallDeaths === 0 ? killsOverall : killsOverall / overallDeaths)).toFixed(2);
 
     const headshots = stats.headshot_kills;
     const bombs = stats.bombs_planted;
@@ -27,15 +34,6 @@ export default {
     name: 'chat:cvc-stats-overall',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(
-            bot,
-            channel,
-            playerRank,
-            playerName,
-            guildRank,
-            target,
-            'MCGO',
-            buildStatsMessage
-        );
-    },
+        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'MCGO', buildStatsMessage);
+    }
 } as Event;

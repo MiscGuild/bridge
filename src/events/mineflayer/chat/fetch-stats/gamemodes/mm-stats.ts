@@ -16,15 +16,6 @@ export default {
     name: 'chat:mm-stats',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(
-            bot,
-            channel,
-            playerRank,
-            playerName,
-            guildRank,
-            target,
-            'MurderMystery',
-            buildStatsMessage
-        );
-    },
+        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'MurderMystery', buildStatsMessage);
+    }
 } as Event;

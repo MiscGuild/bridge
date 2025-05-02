@@ -29,32 +29,21 @@ function buildStatsMessage(playerName: string, achievements: Achievements, stats
 
     const total_wins = solo_wins + doubles_wins + threes_wins + fours_wins;
     const total_losses = solo_losses + doubles_losses + threes_losses + fours_losses;
-    const total_bed_breaks =
-        solo_bed_breaks + doubles_bed_breaks + threes_bed_breaks + fours_bed_breaks;
-    const total_bed_losses =
-        solo_bed_losses + doubles_bed_losses + threes_bed_losses + fours_bed_losses;
+    const total_bed_breaks = solo_bed_breaks + doubles_bed_breaks + threes_bed_breaks + fours_bed_breaks;
+    const total_bed_losses = solo_bed_losses + doubles_bed_losses + threes_bed_losses + fours_bed_losses;
     const fkdr = (final_deaths === 0 ? final_kills : final_kills / final_deaths).toFixed(2);
     const wlr = (total_losses === 0 ? total_wins : total_wins / total_losses).toFixed(2);
-    const bblr = (
-        total_bed_losses === 0 ? total_bed_breaks : total_bed_breaks / total_bed_losses
-    ).toFixed(2);
+    const bblr = (total_bed_losses === 0 ? total_bed_breaks : total_bed_breaks / total_bed_losses).toFixed(2);
 
     return `/gc [BedWars] IGN: ${playerName} | LVL: ${level} | WINS: ${total_wins} | FKDR: ${fkdr} | BBLR: ${bblr} | WLR: ${wlr} | ${getRandomHexColor()}`;
 }
+
 
 export default {
     name: 'chat:bw-stats',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(
-            bot,
-            channel,
-            playerRank,
-            playerName,
-            guildRank,
-            target,
-            'Bedwars',
-            buildStatsMessage
-        );
-    },
+        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'Bedwars', buildStatsMessage);
+    }
 } as Event;
+

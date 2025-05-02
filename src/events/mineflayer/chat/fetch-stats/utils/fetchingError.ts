@@ -1,4 +1,4 @@
-import { getRandomHexColor } from './getRandomHexColor';
+import { getRandomHexColor } from "./getRandomHexColor";
 
 export function handleFetchError(
     playerData: FetchError,
@@ -10,8 +10,7 @@ export function handleFetchError(
     let errorMsg = '';
 
     if (
-        playerData.statusText ===
-            'You have already looked up this player too recently, please try again shortly' ||
+        playerData.statusText === 'You have already looked up this player too recently, please try again shortly' ||
         playerData.statusText === 'Too Many Requests'
     ) {
         errorMsg = `The player ${lookupName} was looked up recently. Please try again later.`;
@@ -21,8 +20,7 @@ export function handleFetchError(
                 ? `The player ${lookupName} was not found. Are they nicked?`
                 : `The player ${lookupName} was not found.`;
     } else {
-        errorMsg =
-            'An error occurred while fetching player stats. Please report this to the bot owner.';
+        errorMsg = 'An error occurred while fetching player stats. Please report this to the bot owner.';
     }
 
     bot.executeCommand(`/gc ${playerName}, ${errorMsg} | ${getRandomHexColor()}`);

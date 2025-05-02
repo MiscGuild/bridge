@@ -19,12 +19,10 @@ async function checkAndKickIfBlacklisted(bot: any, playerName: string): Promise<
     const profile = await fetchMojangProfile(playerName);
     if (!isFetchError(profile) && isUserBlacklisted(profile.id)) {
         // Wait for 2 seconds before kicking the player to avoid API being overloaded and thus blacklist being bypassable.
-
+        
         setTimeout(() => {
-            bot.executeCommand(
-                `/g kick ${playerName} You have been blacklisted from the guild. Apply on the Discord server: .gg/miscellaneous`
-            );
-        }, 2000);
+            bot.executeCommand(`/g kick ${playerName} You have been blacklisted from the guild. Apply on the Discord server: .gg/miscellaneous`);
+        } , 2000);
     }
 }
 
