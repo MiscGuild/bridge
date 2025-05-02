@@ -4,8 +4,6 @@ import {
     EmbedBuilder,
     IntentsBitField,
     TextChannel,
-    REST,
-    Routes,
 } from 'discord.js';
 import { BotEvents, createBot } from 'mineflayer';
 import logger from 'consola';
@@ -165,20 +163,6 @@ class Bot {
             callback,
             'Error while loading commands:'
         );
-
-        const commands = Array.from(this.discord.commands.values()).map((cmd) =>
-            typeof (cmd.data as any).toJSON === 'function' ? (cmd.data as any).toJSON() : cmd.data
-        );
-
-        const rest = new REST({ version: '10' }).setToken(env.DISCORD_TOKEN);
-
-        try {
-            logger.log(`Started refreshing ${commands.length} application (/) commands.`);
-            await rest.put(Routes.applicationCommands(env.DISCORD_BOT_ID), { body: commands });
-            logger.log('Successfully reloaded application (/) commands.');
-        } catch (error) {
-            logger.error('Error refreshing commands:', error);
-        }
     }
 
     private async loadEvents(dir: string, emitter: EventEmitter) {
