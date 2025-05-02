@@ -5,6 +5,7 @@ import fetchHypixelPlayerProfile, {
 } from '../../../../../requests/fetch-hypixel-player-profile';
 import isFetchError from '../../../../../requests/is-fetch-error';
 import handleFetchError from './fetchingError';
+import fetchMojangProfile from '../../../../../requests/fetch-mojang-profile';
 
 type GameModeKey = keyof Stats;
 
