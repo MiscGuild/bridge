@@ -31,7 +31,15 @@ export default async function handleStatsCommand(
     setCooldown(playerName, now);
 
     const lookupName = target && target.trim() !== '' ? target.trim() : playerName;
-    const playerData = await fetchHypixelPlayerProfile(lookupName);
+    const profile = await fetchMojangProfile(lookupName);
+
+    let playerData: any;
+    if ("id" in profile && typeof profile.id === "string" && profile.id.length === 32) {
+        playerData = await fetchHypixelPlayerProfile(profile.id);
+    } else {
+        playerData = await fetchHypixelPlayerProfile(lookupName);
+    }
+
 
     if (isFetchError(playerData)) {
         handleFetchError(playerData, playerName, lookupName, bot);
