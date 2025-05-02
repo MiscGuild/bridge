@@ -1,11 +1,9 @@
 import getRandomHexColor from './getRandomHexColor';
 import { isOnCooldown, setCooldown } from './isOnCooldown';
-import fetchHypixelPlayerProfile, {
-    Stats,
-} from '../../../../../requests/fetch-hypixel-player-profile';
-import isFetchError from '../../../../../requests/is-fetch-error';
+import fetchHypixelPlayerProfile, { Stats } from '../../requests/fetch-hypixel-player-profile';
+import isFetchError from '../../requests/is-fetch-error';
 import handleFetchError from './fetchingError';
-import fetchMojangProfile from '../../../../../requests/fetch-mojang-profile';
+import fetchMojangProfile from '../../requests/fetch-mojang-profile';
 
 type GameModeKey = keyof Stats;
 

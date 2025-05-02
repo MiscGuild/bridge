@@ -1,6 +1,6 @@
 import { MCGO } from '@requests/fetch-hypixel-player-profile';
-import handleStatsCommand from '../../utils/handleStatsCommand';
-import getRandomHexColor from '../../utils/getRandomHexColor';
+import handleStatsCommand from '../../../../../../util/stat-utils/handleStatsCommand';
+import getRandomHexColor from '../../../../../../util/stat-utils/getRandomHexColor';
 
 function buildStatsMessage(lookupName: string, achievements: any, stats: MCGO): string {
     const killsDefusal = stats?.kills ?? 0;
