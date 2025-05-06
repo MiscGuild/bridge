@@ -1,4 +1,10 @@
+const RANK = String.raw`(\[.*?])?`;
+const PLAYER_NAME = String.raw`\w{2,17}`;
+const GUILD_RANK = String.raw`\[.{1,15}]`;
+const CHANNEL = String.raw`(Guild|Officer)`;
+const CHAT_PREFIX = String.raw`^${CHANNEL} > (${RANK})?\s*(${PLAYER_NAME}).*?(${GUILD_RANK})?:`;
 export default {
+
     /**
      * When a message is blocked for containing suspicious content
      *
@@ -19,7 +25,9 @@ export default {
      *  - Guild Rank
      *  - Message
      */
-    'chat:guildChat': /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)$/,
+    'chat:guildChat': new RegExp(
+        String.raw`${CHAT_PREFIX} (.*)$`
+    ),
 
     /**
      * When the guild levels up
@@ -42,7 +50,10 @@ export default {
      *  - Duration
      */
     'chat:guildMuteUnmute':
-        /^(\[.*])?\s*(\w{2,17}) has (muted|unmuted) (\[.*])?\s*(\w{2,17})(?: for (\d*[a-z]))?$/,
+        new RegExp(
+            String.raw`/^${RANK}\s*(\w{2,17}) has (muted|unmuted) ${RANK}\s*(\w{2,17})(?: for (\d*[a-z]))?$/,`
+        ),
+
 
     /**
      * When a member connects to or disconnects from Hypixel
@@ -51,7 +62,10 @@ export default {
      *  - Player Name
      *  - joined / left
      */
-    'chat:joinLeave': /^Guild > (\w{2,17}).*? (joined|left)\.$/,
+    'chat:joinLeave': new RegExp(
+        String.raw`^Guild > (${PLAYER_NAME}).*? (joined|left)\.$`
+    ),
+
 
     /**
      * When the bot detects it is in Limbo
@@ -89,7 +103,9 @@ export default {
      *  - Player Name
      *  - joined / left
      */
-    'chat:memberJoinLeave': /^(\[.*])?\s*(\w{2,17}).*? (joined|left) the guild!$/,
+    'chat:memberJoinLeave': new RegExp(
+        String.raw`${RANK}?\s*(${PLAYER_NAME}).*? (joined|left) the guild!$`
+    ),
 
     /**
      * When a player is kicked from the guild
@@ -141,7 +157,9 @@ export default {
      *  - Player Name
      *  - Message
      */
-    'chat:whisper': /^From (?:\[.*])?\s*(\w{2,17}).*?: (.+)$/,
+    'chat:whisper': new RegExp(
+        String.raw`^From ${RANK}?\s*(${PLAYER_NAME}).*?: (.+)$`
+    ),
 
     /**
      *
@@ -171,8 +189,10 @@ export default {
      *
      *
      */
-    'chat:bw-stats':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!bw\s?(\w{2,17})?.*$/,
+    'chat:bw-stats': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?:\s!bw\s?(${PLAYER_NAME})?.*$`
+    ),
+
 
     /**
      *
@@ -181,8 +201,10 @@ export default {
      *
      */
 
-    'chat:sw-stats':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!sw\s?(\w{2,17})?.*$/,
+    'chat:sw-stats': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?:\s!sw\s?(${PLAYER_NAME})?.*$`
+    ),
+
 
     /**
      *
@@ -190,12 +212,16 @@ export default {
      *
      *
      */
-    'chat:cvc-stats-overall':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\soverall\s?(\w{2,17})?.*$/,
-    'chat:cvc-stats-defusal':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\sdefusal\s?(\w{2,17})?.*$/,
-    'chat:cvc-stats-tdm':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!cvc\stdm\s?(\w{2,17})?.*$/,
+    'chat:cvc-stats-overall': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?:\s!cvc\soverall\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:cvc-stats-defusal': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?:\s!cvc\sdefusal\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:cvc-stats-tdm': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?:\s!cvc\stdm\s?(${PLAYER_NAME})?.*$`
+    ),
+
 
     /**
      *
@@ -204,8 +230,10 @@ export default {
      *
      */
 
-    'chat:mm-stats':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!mm\s?(\w{2,17})?.*$/,
+    'chat:mm-stats': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?:\s!mm\s?(${PLAYER_NAME})?.*$`
+    ),
+
 
     /**
      *
@@ -215,26 +243,34 @@ export default {
      *
      */
 
-    'chat:duels-overall':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(overall|o)\s?(\w{2,17})?.*$/,
+    'chat:duels-overall': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\s(overall|o)\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-bridge': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\sbridge\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-classic': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\s(classic|c)\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-uhc': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\suhc\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-op': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\sop\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-sumo': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\s(sumo|sum|sumoo|s|sm)\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-blitz': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\s(blitz|blits)\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-sw': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\s(sw|skywars)\s?(${PLAYER_NAME})?.*$`
+    ),
+    'chat:duels-combo': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: !duels\s(combo|comb)\s?(${PLAYER_NAME})?.*$`
+    ),
 
-    'chat:duels-bridge':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\sbridge\s?(\w{2,17})?.*$/,
-
-    'chat:duels-classic':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(classic|c)\s?(\w{2,17})?.*$/,
-    'chat:duels-uhc':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\suhc\s?(\w{2,17})?.*$/,
-    'chat:duels-op':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\sop\s?(\w{2,17})?.*$/,
-    'chat:duels-sumo':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sumo|sum|sumoo|s|sm)\s?(\w{2,17})?.*$/,
-    'chat:duels-blitz':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(blitz|blits)\s?(\w{2,17})?.*$/,
-    'chat:duels-sw':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(sw|skywars)\s?(\w{2,17})?.*$/,
-    'chat:duels-combo':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!duels\s(combo|comb)\s?(\w{2,17})?.*$/,
 
     /**
      *
@@ -249,8 +285,10 @@ export default {
      *
      *
      */
-    'chat:gexp-stats':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!gexp\s?(\w{2,17})?.*$/,
+    'chat:gexp-stats': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: (.*)!gexp\s?(${PLAYER_NAME})?.*$`
+    ),
+
 
     /** 
      * Global regex for all commands
@@ -263,6 +301,8 @@ export default {
      * 
      */
 
-    'chat:command':
-        /^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?: (.*)!([a-z]{2,4})\s?([a-z]{2,17})?.*$/
+    'chat:command': new RegExp(
+        String.raw`^${CHANNEL} > ${RANK}?\s*(${PLAYER_NAME}).*?${GUILD_RANK}?: (.*)!([a-z]{2,4})\s?([a-z]{2,17})?.*$`
+    ),
+
 };
