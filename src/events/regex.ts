@@ -105,7 +105,7 @@ export default {
         String.raw`${CHAT_PREFIX}\s!duels\sop\s?${PLAYER_NAME}?.*$`
     ),
     'chat:duels-sumo': new RegExp(
-        String.raw`${CHAT_PREFIX}\s!duels\s(?:sumo|sum|sumoo|s|sm)\s+${PLAYER_NAME}?$`
+        String.raw`${CHAT_PREFIX}\s!duels\s(?:sumo|sum|sumoo|s|sm)\s?${PLAYER_NAME}?.*$`
     ),
     'chat:duels-blitz': new RegExp(
         String.raw`${CHAT_PREFIX}\s!duels\s(blitz|blits)\s?${PLAYER_NAME}?.*$`
