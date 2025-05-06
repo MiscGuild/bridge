@@ -182,7 +182,6 @@ export interface Achievements {
     bridge_wins?: number;
     duels_bridge_four_teams_wins?: number;
     duels_bridge_doubles_wins?: number;
-    duels_bridge_3v3v3v3_wins?: number;
     duels_bridge_duels_wins?: number;
     bridge_four_v_four_wins?: number;
     duels_bridge_teams_wins?: number;
@@ -3022,6 +3021,7 @@ export interface Duels {
     bridge_four_losses?: number;
     bridge_duel_losses?: number;
     bridge_2v2v2v2_losses?: number;
+    bridge_3v3v3v3_wins?: number;
 
     classic_duel_kills?: number;
     classic_duel_wins?: number;
