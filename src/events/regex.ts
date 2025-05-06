@@ -290,15 +290,15 @@ export default {
     ),
 
 
-    /** 
+    /**
      * Global regex for all commands
-     * 
+     *
      * Returns:
      * *  - Command
-     * *  - GameMode
+     * *  - GameModepn
      * *  - Player Name
      *
-     * 
+     *
      */
 
     'chat:command': new RegExp(

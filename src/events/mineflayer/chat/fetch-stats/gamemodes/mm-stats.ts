@@ -1,5 +1,5 @@
-import { getRandomHexColor } from '../utils/getRandomHexColor';
-import { handleStatsCommand } from '../utils/handleStatsCommand';
+import getRandomHexColor from '../utils/getRandomHexColor';
+import handleStatsCommand from '../utils/handleStatsCommand';
 import { MurderMystery } from '../../../../../requests/fetch-hypixel-player-profile';
 
 function buildStatsMessage(lookupName: string, achievements: any, stats: MurderMystery): string {
@@ -16,6 +16,15 @@ export default {
     name: 'chat:mm-stats',
     runOnce: false,
     run: async (bot, channel, playerRank, playerName, guildRank, target) => {
-        await handleStatsCommand(bot, channel, playerRank, playerName, guildRank, target, 'MurderMystery', buildStatsMessage);
-    }
+        await handleStatsCommand(
+            bot,
+            channel,
+            playerRank,
+            playerName,
+            guildRank,
+            target,
+            'MurderMystery',
+            buildStatsMessage
+        );
+    },
 } as Event;
