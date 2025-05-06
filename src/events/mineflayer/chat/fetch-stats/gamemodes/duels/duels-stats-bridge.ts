@@ -9,7 +9,7 @@ function buildStatsMessage(playerName: string, achievements: Achievements, stats
     const bridgeWins = achievements?.bridge_wins ?? 0;
     const bridgeFourTeamsWins = achievements?.duels_bridge_four_teams_wins ?? 0;
     const bridgeDoublesWins = achievements?.duels_bridge_doubles_wins ?? 0;
-    const bridge3v3v3v3Wins = achievements?.duels_bridge_3v3v3v3_wins ?? 0;
+    const bridge3v3v3v3Wins = stats?.bridge_3v3v3v3_wins ?? 0;
     const bridgeDuelsWins = achievements?.duels_bridge_duels_wins ?? 0;
     const bridgeTeamsWins = achievements?.duels_bridge_teams_wins ?? 0;
     const bridge2v2v2v2Wins = stats?.bridge_2v2v2v2_wins ?? 0;
