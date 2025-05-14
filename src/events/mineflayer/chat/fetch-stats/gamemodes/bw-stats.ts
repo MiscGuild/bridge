@@ -1,6 +1,6 @@
 import { Achievements, Bedwars } from '../../../../../requests/fetch-hypixel-player-profile';
-import getRandomHexColor from '../utils/getRandomHexColor';
-import handleStatsCommand from '../utils/handleStatsCommand';
+import getRandomHexColor from '../../../../../util/stat-utils/getRandomHexColor';
+import handleStatsCommand from '../../../../../util/stat-utils/handleStatsCommand';
 
 function buildStatsMessage(playerName: string, achievements: Achievements, stats: Bedwars): string {
     const level = achievements?.bedwars_level ?? 0;
