@@ -1,18 +1,17 @@
-import { Duels } from '../../../../../../requests/fetch-hypixel-player-profile';
+import { Achievements, Duels } from '../../../../../../requests/fetch-hypixel-player-profile';
 import getRandomHexColor from '../../../../../../util/stat-utils/getRandomHexColor';
 import handleStatsCommand from '../../../../../../util/stat-utils/handleStatsCommand';
 
-function buildStatsMessage(playerName: string, stats: Duels): string {
+function buildStatsMessage(playerName: string, achievements: Achievements, stats: Duels): string {
     const kills = stats?.bridge_kills ?? 0;
     const deaths = stats?.bridge_deaths ?? 0;
 
-    const bridgeWins = stats?.bridge_wins ?? 0;
-    const bridgeFourTeamsWins = stats?.duels_bridge_four_teams_wins ?? 0;
-    const bridgeDoublesWins = stats?.duels_bridge_doubles_wins ?? 0;
-    const bridge3v3v3v3Wins = stats?.duels_bridge_3v3v3v3_wins ?? 0;
-    const bridgeDuelsWins = stats?.duels_bridge_duels_wins ?? 0;
-    const bridgeFourVFourWins = stats?.bridge_four_v_four_wins ?? 0;
-    const bridgeTeamsWins = stats?.duels_bridge_teams_wins ?? 0;
+    const bridgeWins = achievements?.bridge_wins ?? 0;
+    const bridgeFourTeamsWins = achievements?.duels_bridge_four_teams_wins ?? 0;
+    const bridgeDoublesWins = achievements?.duels_bridge_doubles_wins ?? 0;
+    const bridge3v3v3v3Wins = achievements?.duels_bridge_3v3v3v3_wins ?? 0;
+    const bridgeDuelsWins = achievements?.duels_bridge_duels_wins ?? 0;
+    const bridgeTeamsWins = achievements?.duels_bridge_teams_wins ?? 0;
     const bridge2v2v2v2Wins = stats?.bridge_2v2v2v2_wins ?? 0;
 
     const wins =
@@ -21,7 +20,6 @@ function buildStatsMessage(playerName: string, stats: Duels): string {
         bridgeDoublesWins +
         bridge3v3v3v3Wins +
         bridgeDuelsWins +
-        bridgeFourVFourWins +
         bridgeTeamsWins +
         bridge2v2v2v2Wins;
 

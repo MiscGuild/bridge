@@ -38,7 +38,6 @@ export default async function handleStatsCommand(
     } else {
         playerData = await fetchHypixelPlayerProfile(lookupName);
     }
-
     if (isFetchError(playerData)) {
         handleFetchError(playerData, playerName, lookupName, bot);
         return;
