@@ -1,6 +1,6 @@
 import { Achievements, Duels } from '../../../../../../requests/fetch-hypixel-player-profile';
-import getRandomHexColor from '../../../../../../util/stat-utils/getRandomHexColor';
-import handleStatsCommand from '../../../../../../util/stat-utils/handleStatsCommand';
+import getRandomHexColor from '../../../../../../util/getRandomHexColor';
+import handleStatsCommand from '../../../../../../util/handleStatsCommand';
 
 function buildStatsMessage(playerName: string, achievements: Achievements, stats: Duels): string {
     const kills = stats?.bridge_kills ?? 0;

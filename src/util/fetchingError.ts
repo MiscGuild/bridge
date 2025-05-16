@@ -12,7 +12,7 @@ export default function handleFetchError(
 
     if (
         playerData.statusText ===
-            'You have already looked up this player too recently, please try again shortly' ||
+        'You have already looked up this player too recently, please try again shortly' ||
         playerData.statusText === 'Too Many Requests'
     ) {
         errorMsg = `The player ${lookupName} was looked up recently. Please try again later.`;
