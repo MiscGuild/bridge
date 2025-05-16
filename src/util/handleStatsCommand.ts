@@ -1,5 +1,5 @@
 import getRandomHexColor from './getRandomHexColor';
-import { isOnCooldown, setCooldown } from './stat-utils/isOnCooldown';
+import { isOnCooldown, setCooldown } from './isOnCooldown';
 import fetchHypixelPlayerProfile, { Stats } from '../requests/fetch-hypixel-player-profile';
 import isFetchError from '../requests/is-fetch-error';
 import handleFetchError from './fetchingError';
