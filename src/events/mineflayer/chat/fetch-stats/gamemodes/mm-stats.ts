@@ -1,5 +1,5 @@
-import getRandomHexColor from '../utils/getRandomHexColor';
-import handleStatsCommand from '../utils/handleStatsCommand';
+import getRandomHexColor from '../../../../../util/stat-utils/getRandomHexColor';
+import handleStatsCommand from '../../../../../util/stat-utils/handleStatsCommand';
 import { MurderMystery } from '../../../../../requests/fetch-hypixel-player-profile';
 
 function buildStatsMessage(lookupName: string, achievements: any, stats: MurderMystery): string {
