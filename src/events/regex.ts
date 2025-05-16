@@ -122,7 +122,7 @@ export default {
     ),
 
     'chat:command': new RegExp(
-        String.raw`${CHAT_PREFIX}\s!([a-z]{2,4})\s?${PLAYER_NAME}?.*$`
+        String.raw`^(Guild|Officer) > (\[.*])?\s*(\w{2,17}).*?(\[.{1,15}])?:\s!([a-z]{2,4})\s?([a-z]{2,17})?.*$`
     ),
 
 
