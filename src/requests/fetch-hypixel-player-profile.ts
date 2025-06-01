@@ -179,7 +179,6 @@ export interface Achievements {
     buildbattle_build_battle_score?: number;
     buildbattle_build_battle_voter?: number;
     buildbattle_guess_the_build_winner?: number;
-    bridge_wins?: number;
     duels_bridge_four_teams_wins?: number;
     duels_bridge_doubles_wins?: number;
     duels_bridge_duels_wins?: number;
@@ -3039,22 +3038,47 @@ export interface Duels {
     blitz_duel_kills?: number;
     blitz_duel_deaths?: number;
 
-    bridge_kills?: number;
-    bridge_deaths?: number;
-    bridge_four_goals?: number;
-    bridge_doubles_goals?: number;
-    bridge_3v3v3v3_goals?: number;
-    bridge_duel_goals?: number;
-    bridge_2v2v2v2_goals?: number;
-    bridge_threes_goals?: number;
-    bridge_wins?: number;
-    bridge_2v2v2v2_wins?: number;
-    bridge_3v3v3v3_losses?: number;
-    bridge_doubles_losses?: number;
-    bridge_four_losses?: number;
+    // Bridge 1v1
+    bridge_duel_wins?: number;
+    bridge_duel_bridge_kills?: number;
+    bridge_duel_bridge_deaths?: number;
     bridge_duel_losses?: number;
-    bridge_2v2v2v2_losses?: number;
+
+    // Bridge 2v2
+    bridge_doubles_wins?: number;
+    bridge_doubles_bridge_kills?: number;
+    bridge_doubles_bridge_deaths?: number;
+    bridge_doubles_losses?: number;
+
+    // Bridge 3v3v3v3
+    bridge_3v3v3v3_bridge_kills?: number;
+    bridge_3v3v3v3_bridge_deaths?: number;
     bridge_3v3v3v3_wins?: number;
+    bridge_3v3v3v3_losses?: number;
+
+    // Bridge 4v4 / Teams
+    bridge_four_wins?: number;
+    bridge_four_bridge_kills?: number;
+    bridge_four_bridge_deaths?: number;
+    bridge_four_losses?: number;
+
+    // Bridge 3v3
+    bridge_threes_wins?: number;
+    bridge_threes_losses?: number;
+    bridge_threes_bridge_kills?: number;
+    bridge_threes_bridge_deaths?: number;
+
+    // Bridge 2v2v2v2
+    bridge_2v2v2v2_wins?: number;
+    bridge_2v2v2v2_losses?: number;
+    bridge_2v2v2v2_bridge_kills?: number;
+    bridge_2v2v2v2_bridge_deaths?: number;
+
+    // Bridge CTF
+    capture_threes_wins?: number;
+    capture_threes_losses?: number;
+    capture_threes_bridge_kills?: number;
+    capture_threes_bridge_deaths?: number;
 
     classic_duel_kills?: number;
     classic_duel_wins?: number;
