@@ -18,7 +18,7 @@ export default {
     'chat:commentBlocked':
         /^We blocked your comment "(.+)" as it is breaking our rules because (.+). https:\/\/www\.hypixel\.net\/rules\/$/,
 
-    'chat:guildChat': /^Guild|Officer > (\[.*])?\s*([A-Za-z0-9_-]{2,17}).*?(\[.{1,15}]): (.*)$/,
+    'chat:guildChat': new RegExp(`${GUILD_CHAT_PREFIX} (.*)$`),
 
     'chat:guildLevelUp': /^\s{19}The Guild has reached Level (\d+)!$/,
 

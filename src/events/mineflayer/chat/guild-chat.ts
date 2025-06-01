@@ -12,12 +12,9 @@ export default {
         guildRank: string | undefined,
         message: string
     ) => {
-        const safePlayerName = typeof playerName === 'string' ? playerName : '[Unknown]';
-        const safeMessage = typeof message === 'string' ? message : '';
-
-        const content = ` **${rank ? `${rank} ` : ''}${escapeMarkdown(safePlayerName)}${
+        const content = ` **${rank ? `${rank} ` : ''}${escapeMarkdown(playerName)}${
             guildRank ? ` ${guildRank}` : ''
-        }:** ${escapeMarkdown(safeMessage)}`;
+        }:** ${escapeMarkdown(message)}`;
 
         await bot.sendToDiscord(channel === 'Guild' ? 'gc' : 'oc', content, getRankColor(rank));
     },
