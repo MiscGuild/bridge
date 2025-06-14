@@ -4,7 +4,7 @@ import _blacklist from '../blacklist/_blacklist.json';
 import writeToJsonFile from '../util/write-to-json-file';
 import fetchErrorEmbed from '../requests/fetch-error-embed';
 import fetchMojangProfile from '../requests/fetch-mojang-profile';
-import isFetchError from '../requests/is-fetch-error';
+import { isFetchError } from '../util/fetchError';
 
 export default {
     data: {
@@ -54,6 +54,12 @@ export default {
     run: async (bot, interaction, args) => {
         const type = interaction.options.getSubcommand() as 'add' | 'remove';
         const mojangProfile = await fetchMojangProfile(args[0] as string);
+
+        if (isFetchError(mojangProfile)) {
+            const embed = fetchErrorEmbed(mojangProfile);
+            await interaction.reply({ embeds: [embed] });
+            return;
+        }
         const blacklist = _blacklist as BlacklistEntry[];
 
         if (isFetchError(mojangProfile)) {

@@ -1,6 +1,3 @@
-import fs from 'fs/promises';
-import path from 'path';
-
 import { escapeMarkdown } from 'discord.js';
 import logger from 'consola';
 import Emojis from '../../../util/emojis';
@@ -41,42 +38,28 @@ export default {
             return;
         }
 
-        logger.log(`[DEBUG] Found Mojang profile of ${playerName}. ID: ${mojangProfile.id}`);
-
         try {
             const response = await fetch(
                 `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&name=${env.HYPIXEL_GUILD_NAME}`
             );
             const data = await response.json();
 
-            if (!data.success || data.guild === null || isFetchError(mojangProfile)) {
-                logger.log(`[DEBUG] ${playerName} left the guild, but failed to get guild data.`);
+            if (!data.success || data.guild === null) {
+                logger.log(`[DEBUG] ${playerName} was kicked, but failed to get guild data.`);
                 bot.executeCommand(
-                    `/oc Failed to get guild data of recently left member ${playerName}. Please try again later. It's safe to assume they left the guild within 5 minutes.`
+                    `/oc Failed to get guild data of recently kicked member ${playerName}. Please try again later. It's safe to assume they left the guild within 5 minutes.`
                 );
                 return;
             }
-
-            const filePath = path.resolve(__dirname, 'joindata.json');
-            const fileContent = await fs.readFile(filePath, 'utf8');
-            const oldJoinData = JSON.parse(fileContent);
-            const joinDate = oldJoinData[mojangProfile.id];
-            const leaveDate = new Date();
-
-            const timeDiff = Math.abs(new Date(leaveDate).getTime() - new Date(joinDate).getTime());
-            const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            const formattedLeaveDate = new Date(joinDate).toLocaleString('en-US', {
-                timeZone: 'Europe/Amsterdam',
-            });
 
             bot.sendToDiscord(
                 'oc',
                 `Player **${escapeMarkdown(
                     playerName
-                )}** was kicked from the guild by ${kickedByPlayerName}! Their join date was ||${formattedLeaveDate}||. They stayed in the guild for **${diffDays}** days.`
+                )}** was kicked from the guild by ${escapeMarkdown(kickedByPlayerName)}!`
             );
 
-            logger.log(`[DEBUG] ${playerName} left the guild, successfully logged this event.`);
+            logger.log(`[DEBUG] ${playerName} was kicked and the event was logged.`);
         } catch (error) {
             logger.error(`[ERROR] Failed to handle memberKick event: ${error}`);
             bot.executeCommand(

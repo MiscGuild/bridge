@@ -1,6 +1,13 @@
 import env from '../util/env';
 
-export default async (usernameUUID: string) => {
+export interface FetchError {
+    status: number;
+    statusText: string;
+}
+
+export default async function fetchHypixelPlayerProfile(
+    usernameUUID: string
+): Promise<HypixelPlayerResponse | FetchError> {
     const queryParam = usernameUUID.length === 32 ? `uuid=${usernameUUID}` : `name=${usernameUUID}`;
 
     const response = await fetch(
@@ -17,11 +24,12 @@ export default async (usernameUUID: string) => {
             statusText: 'Player not found',
         };
     }
+
     return {
         status: response.status,
         statusText: response.statusText,
     };
-};
+}
 
 /**
  * Attenuated version of source: https://github.com/unaussprechlich/hypixel-api-typescript/
@@ -39,7 +47,9 @@ interface HypixelPlayerResponse {
     karma?: number;
     knownAliases?: string[] | null;
     knownAliasesLower?: string[] | null;
-    stats?: Stats;
+    stats?: {
+        [key: string]: any;
+    };
     lastLogin?: number;
     mainlobbytutorial?: boolean;
     networkExp?: number;

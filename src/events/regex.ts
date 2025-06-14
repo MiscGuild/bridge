@@ -3,14 +3,14 @@
 const RANK = String.raw`(\[.*])?`; // Rank (optional)
 const PLAYER_NAME = String.raw`([A-Za-z0-9_-]{2,17})`; // Player Name
 const GUILD_RANK = String.raw`(\[.{1,15}])?`; // Guild Rank (optional)
-const CHANNEL = String.raw`(Guild|Officer|From|To)`; // Channel
-
+const CHANNEL = String.raw`(Guild|Officer)`; // Channel
+const CHANNEL_DM = String.raw`(From|To)`; // DM Channel
 /* ---------- Chat Prefixes ------------------------------------------------ */
 
 const GUILD_CHAT_PREFIX = String.raw`^${CHANNEL} > ${RANK}\s*${PLAYER_NAME}.*?${GUILD_RANK}:`;
 
 // DM Chat Prefix -- Unused, but kept for reference
-// const DM_CHAT_PREFIX = String.raw`^${CHANNEL} ${RANK}\s*${PLAYER_NAME}:`;
+const DM_CHAT_PREFIX = String.raw`^${CHANNEL_DM} ${RANK}\s*${PLAYER_NAME}:`;
 
 /* ---------- Regex patterns ------------------------------------------------ */
 
@@ -109,7 +109,7 @@ export default {
         'i'
     ),
     'chat:duels-sw': new RegExp(
-        String.raw`${GUILD_CHAT_PREFIX}\s!duels\s(?:sw|skywars)(?:\s${PLAYER_NAME})?.*$`,
+        String.raw`${GUILD_CHAT_PREFIX}\s!duels\s(sw|skywars)(?:\s${PLAYER_NAME})?.*$`,
         'i'
     ),
     'chat:duels-combo': new RegExp(
@@ -119,6 +119,11 @@ export default {
 
     'chat:gexp-stats': new RegExp(
         String.raw`${GUILD_CHAT_PREFIX}\s!gexp(?:\s${PLAYER_NAME})?.*$`,
+        'i'
+    ),
+
+    'chat:gexp-stats-DM': new RegExp(
+        String.raw`${DM_CHAT_PREFIX}\s!gexp(?:\s${PLAYER_NAME})?.*$`,
         'i'
     ),
 

@@ -1,9 +1,8 @@
 import getRandomHexColor from './getRandomHexColor';
 import { isOnCooldown, setCooldown } from './isOnCooldown';
 import fetchHypixelPlayerProfile, { Stats } from '../requests/fetch-hypixel-player-profile';
-import isFetchError from '../requests/is-fetch-error';
-import handleFetchError from './fetchingError';
 import fetchMojangProfile from '../requests/fetch-mojang-profile';
+import { isFetchError, handleFetchError } from './fetchError';
 
 type GameModeKey = keyof Stats;
 
@@ -29,29 +28,36 @@ export default async function handleStatsCommand(
 
     setCooldown(playerName, now);
 
-    const lookupName = target && target.trim() !== '' ? target.trim() : playerName;
+    const lookupName = target?.trim() || playerName;
     const profile = await fetchMojangProfile(lookupName);
 
-    let playerData: any;
-    if ('id' in profile && typeof profile.id === 'string' && profile.id.length === 32) {
-        playerData = await fetchHypixelPlayerProfile(profile.id);
-    } else {
-        playerData = await fetchHypixelPlayerProfile(lookupName);
+    if (isFetchError(profile)) {
+        handleFetchError(profile, playerName, lookupName, bot);
+        return;
     }
+
+    const playerData = await fetchHypixelPlayerProfile(profile.id);
+
     if (isFetchError(playerData)) {
         handleFetchError(playerData, playerName, lookupName, bot);
         return;
     }
 
-    const gameStats = playerData?.stats?.[gameModeKey];
-    const achievements = playerData?.achievements;
+    if ('stats' in playerData && 'achievements' in playerData) {
+        const gameStats = playerData.stats?.[gameModeKey];
+        const { achievements } = playerData;
 
-    if (gameStats && achievements) {
-        const message = buildStatsMessage(lookupName, achievements, gameStats);
-        bot.executeCommand(message);
+        if (gameStats && achievements) {
+            const message = buildStatsMessage(lookupName, achievements, gameStats);
+            bot.executeCommand(message);
+        } else {
+            bot.executeCommand(
+                `/gc ${playerName}, No ${gameModeKey} stats found for ${lookupName}. | ${getRandomHexColor()}`
+            );
+        }
     } else {
         bot.executeCommand(
-            `/gc ${playerName}, No ${gameModeKey} stats found for ${lookupName}. | ${getRandomHexColor()}`
+            `/gc ${playerName}, Unable to retrieve stats for ${lookupName}. | ${getRandomHexColor()}`
         );
     }
 }

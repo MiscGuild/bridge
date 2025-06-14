@@ -1,19 +1,7 @@
 import env from '../util/env';
+import { FetchError } from '../util/fetchError';
 
-export default async (uuid: string) => {
-    const response = await fetch(
-        `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&player=${uuid}`
-    );
-
-    return response.status === 200
-        ? (((await response.json()) as any).guild as HypixelGuildResponse)
-        : (response as FetchError);
-};
-
-/**
- * Source: https://github.com/unaussprechlich/hypixel-api-typescript/
- */
-interface HypixelGuildResponse {
+export interface HypixelGuildResponse {
     _id: string;
     name: string;
     coins: number;
@@ -32,7 +20,7 @@ interface HypixelGuildResponse {
     tagColor?: string;
 }
 
-interface Member {
+export interface Member {
     uuid: string;
     rank: string;
     joined: number;
@@ -47,4 +35,33 @@ interface Banner {
 interface Pattern {
     Pattern?: string;
     Color?: string | number;
+}
+
+export default async function fetchHypixelGuild(
+    uuid: string
+): Promise<HypixelGuildResponse | FetchError> {
+    try {
+        const response = await fetch(
+            `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&player=${uuid}`
+        );
+
+        if (!response.ok) {
+            const text = await response.text();
+            return {
+                error: 'Hypixel API error',
+                status: response.status,
+                statusText: response.statusText,
+                details: text,
+            };
+        }
+
+        const data = await response.json();
+        return data.guild as HypixelGuildResponse;
+    } catch (err) {
+        return {
+            error: 'Network error or invalid JSON',
+            statusText: 'Fetch failed',
+            details: err,
+        };
+    }
 }

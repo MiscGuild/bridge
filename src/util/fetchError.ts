@@ -1,19 +1,47 @@
 import logger from 'consola';
 import getRandomHexColor from './getRandomHexColor';
 
-export default function handleFetchError(
+export interface FetchError {
+    error: string;
+    status?: number;
+    statusText?: string;
+    details?: any;
+}
+
+/**
+ * Type guard to check if a response is a FetchError.
+ */
+export function isFetchError(response: unknown): response is FetchError {
+    return (
+        typeof response === 'object' &&
+        response !== null &&
+        'error' in response &&
+        typeof (response as any).error === 'string'
+    );
+}
+
+/**
+ * Handles a FetchError and sends an appropriate message to the player.
+ */
+export function handleFetchError(
     playerData: FetchError,
     playerName: string,
     lookupName: string,
     bot: { executeCommand: (cmd: string) => void }
 ): void {
-    logger.error(`[ERROR] Failed to fetch stats for ${lookupName}: ${playerData.statusText}`);
+    logger.error(
+        `[ERROR] Failed to fetch stats for ${lookupName}: ${
+            playerData.statusText ?? playerData.error
+        }`
+    );
+
     let errorMsg = '';
+    const statusText = playerData.statusText ?? playerData.error;
 
     if (
-        playerData.statusText ===
+        statusText ===
             'You have already looked up this player too recently, please try again shortly' ||
-        playerData.statusText === 'Too Many Requests'
+        statusText === 'Too Many Requests'
     ) {
         errorMsg = `The player ${lookupName} was looked up recently. Please try again later.`;
     } else if (playerData.status === 404) {

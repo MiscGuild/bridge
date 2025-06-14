@@ -23,11 +23,13 @@ export default {
             }
         }
 
-        if (isUserBlacklisted(mojangProfile.id)) {
-            bot.sendGuildMessage(
-                'oc',
-                `The player ${playerName} is blacklisted. Do NOT accept their join request.`
-            );
+        if (!isFetchError(mojangProfile)) {
+            if (isUserBlacklisted((mojangProfile as { id: string }).id)) {
+                bot.sendGuildMessage(
+                    'oc',
+                    `The player ${playerName} is blacklisted. Do NOT accept their join request.`
+                );
+            }
         }
     },
 } as Event;

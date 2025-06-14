@@ -1,8 +1,8 @@
 const getRandomHexColor = (): string => {
-    const hex = Math.floor(Math.random() * 0xffffff)
+    const hex = Math.floor(Math.random() * 0xffffffff)
         .toString(16)
-        .padStart(6, '0');
+        .padStart(8, '0');
     return `#${hex}`;
 };
 
-export default getRandomHexColor; // Export the function
+export default getRandomHexColor;

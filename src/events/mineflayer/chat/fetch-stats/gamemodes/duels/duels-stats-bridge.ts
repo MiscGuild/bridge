@@ -1,7 +1,6 @@
 import { Achievements, Duels } from '../../../../../../requests/fetch-hypixel-player-profile';
 import getRandomHexColor from '../../../../../../util/getRandomHexColor';
 import handleStatsCommand from '../../../../../../util/handleStatsCommand';
-import logger from '../../../../../../util/log-error';
 
 function buildStatsMessage(playerName: string, achievements: Achievements, stats: Duels): string {
     // Bridge 1v1

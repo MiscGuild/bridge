@@ -1,7 +1,5 @@
-import { promises as fs } from 'fs';
-import path from 'path';
 import { escapeMarkdown } from 'discord.js';
-import logger from 'consola';
+import getRandomHexColor from '@util/getRandomHexColor';
 import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
@@ -15,13 +13,14 @@ import env from '../../../util/env';
  */
 async function checkAndKickIfBlacklisted(bot: any, playerName: string): Promise<void> {
     const profile = await fetchMojangProfile(playerName);
-    if (!isFetchError(profile) && isUserBlacklisted(profile.id)) {
-        // Wait for 2 seconds before kicking the player to avoid API being overloaded.
-        setTimeout(() => {
-            bot.executeCommand(
-                `/g kick ${playerName} You have been blacklisted from the guild. Apply on the Discord server: .gg/miscellaneous`
-            );
-        }, 2000);
+    if (!isFetchError(profile)) {
+        if (profile && 'id' in profile && isUserBlacklisted(profile.id)) {
+            setTimeout(() => {
+                bot.executeCommand(
+                    `/g kick ${playerName} You have been blacklisted from the guild. Apply on the Discord server: .gg/miscellaneous`
+                );
+            }, 2000);
+        }
     }
 }
 
@@ -41,11 +40,7 @@ async function sendGuildEventMessage(
 }
 
 /**
- * Handles the join event:
- * - Fetches guild data from the Hypixel API.
- * - Finds the member’s join date.
- * - Writes the join date to a JSON file.
- * - Executes a log command and listens for the invite log message.
+ * Handles the join event.
  */
 async function processJoinEvent(bot: any, playerName: string, mojangProfile: any): Promise<void> {
     const response = await fetch(
@@ -69,7 +64,9 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
     );
 
     if (!members) {
-        bot.executeCommand(`/oc Failed to get guild data of recently joined member ${playerName}.`);
+        bot.executeCommand(
+            `/oc Player ${playerName} doesn't seem to be in the guild according to the Hypixel API. | ${getRandomHexColor()}`
+        );
         throw new Error("Player doesn't seem to be in the guild on the Hypixel API");
     }
 
@@ -77,27 +74,8 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
         timeZone: 'Europe/Amsterdam',
     });
 
-    const filePath = path.resolve(__dirname, 'joindata.json');
-
-    try {
-        await fs.access(filePath);
-    } catch {
-        await fs.writeFile(filePath, '{}');
-    }
-
-    const fileContent = await fs.readFile(filePath, 'utf8');
-    const joinData = JSON.parse(fileContent);
-    const alreadyExisted = Object.prototype.hasOwnProperty.call(joinData, mojangProfile.id);
-    joinData[mojangProfile.id] = joinDate;
-    await fs.writeFile(filePath, JSON.stringify(joinData, null, 4));
-
-    if (!alreadyExisted) {
-        logger.log(`[DEBUG] ${playerName} joined the guild, wrote join data to file.`);
-    }
-
     bot.executeCommand(`/g log ${playerName} 1`);
 
-    // Listen for the log message to extract invite information.
     await new Promise<void>((resolve) => {
         bot.mineflayer.once('message', async (message: any) => {
             const messageContent = message.toString();
@@ -138,46 +116,10 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
 }
 
 /**
- * Handles the leave event:
- * - Fetches guild data.
- * - Reads the join date from the JSON file.
- * - Calculates how many days the member was in the guild.
- * - Sends a Discord message with the information.
+ * Handles the leave event.
  */
-async function processLeaveEvent(bot: any, playerName: string, mojangProfile: any): Promise<void> {
-    const response = await fetch(
-        `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&name=${env.HYPIXEL_GUILD_NAME}`
-    );
-    const data = await response.json();
-
-    if (!data.success || !data.guild) {
-        bot.executeCommand(`/oc Failed to get guild data of recently left member ${playerName}.`);
-        throw new Error('Guild data not found!');
-    }
-
-    if (isFetchError(mojangProfile)) {
-        bot.executeCommand(`/oc Failed to get guild data of recently left member ${playerName}.`);
-        throw new Error('Guild data not found!');
-    }
-
-    const filePath = path.resolve(__dirname, 'joindata.json');
-    const fileContent = await fs.readFile(filePath, 'utf8');
-    const oldJoinData = JSON.parse(fileContent);
-    const joinDate = oldJoinData[mojangProfile.id];
-    const leaveDate = new Date();
-
-    const timeDiff = Math.abs(leaveDate.getTime() - new Date(joinDate).getTime());
-    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    const formattedJoinDate = new Date(joinDate).toLocaleString('en-US', {
-        timeZone: 'Europe/Amsterdam',
-    });
-
-    bot.sendToDiscord(
-        'oc',
-        `Player **${escapeMarkdown(
-            playerName
-        )}** left the guild! Their join date was ||${formattedJoinDate}||. They stayed in the guild for **${diffDays}** days.`
-    );
+async function processLeaveEvent(bot: any, playerName: string): Promise<void> {
+    bot.sendToDiscord('oc', `Player **${escapeMarkdown(playerName)}** left the guild!`);
 }
 
 export default {
@@ -204,10 +146,10 @@ export default {
         }
 
         if (type === 'joined') {
-            processJoinEvent(bot, playerName, mojangProfile);
+            await processJoinEvent(bot, playerName, mojangProfile);
         }
         if (type === 'left') {
-            processLeaveEvent(bot, playerName, mojangProfile);
+            await processLeaveEvent(bot, playerName);
         }
     },
 } as Event;
