@@ -6,7 +6,7 @@ import isUserBlacklisted from '../../../blacklist/is-user-blacklisted';
 
 import getRankColor from '../../../util/get-rank-color';
 import env from '../../../util/env';
-import getRandomHexColor from '@util/getRandomHexColor';
+import getRandomHexColor from '../../../util/getRandomHexColor';
 
 /**
  * If a joining player's Mojang profile is blacklisted, kick them from the guild.
