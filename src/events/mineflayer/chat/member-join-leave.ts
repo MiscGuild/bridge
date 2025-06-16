@@ -1,5 +1,4 @@
 import { escapeMarkdown } from 'discord.js';
-import getRandomHexColor from '@util/getRandomHexColor';
 import Emojis from '../../../util/emojis';
 import fetchMojangProfile from '../../../requests/fetch-mojang-profile';
 import isFetchError from '../../../requests/is-fetch-error';
@@ -7,6 +6,7 @@ import isUserBlacklisted from '../../../blacklist/is-user-blacklisted';
 
 import getRankColor from '../../../util/get-rank-color';
 import env from '../../../util/env';
+import getRandomHexColor from '@util/getRandomHexColor';
 
 /**
  * If a joining player's Mojang profile is blacklisted, kick them from the guild.
@@ -64,15 +64,9 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
     );
 
     if (!members) {
-        bot.executeCommand(
-            `/oc Player ${playerName} doesn't seem to be in the guild according to the Hypixel API. | ${getRandomHexColor()}`
-        );
+        bot.executeCommand(`/oc Player ${playerName} doesn't seem to be in the guild according to the Hypixel API. | ${getRandomHexColor}`);
         throw new Error("Player doesn't seem to be in the guild on the Hypixel API");
     }
-
-    const joinDate = new Date(members.joined).toLocaleString('en-US', {
-        timeZone: 'Europe/Amsterdam',
-    });
 
     bot.executeCommand(`/g log ${playerName} 1`);
 
@@ -91,7 +85,7 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
                         'oc',
                         `Player **${escapeMarkdown(
                             playerName
-                        )}** joined the guild! Their join date is ||${joinDate}||.\n\nThey were invited by **${
+                        )}** joined the guild!\n\nThey were invited by **${
                             validEntries[1].split(' ')[5]
                         }**.`
                     );
@@ -100,7 +94,7 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
                         'oc',
                         `Player **${escapeMarkdown(
                             playerName
-                        )}** joined the guild! Their join date is ||${joinDate}||.\n\nThey weren't invited by anyone.`
+                        )}** joined the guild!\n\nThey weren't invited by anyone.`
                     );
                 }
                 resolve();
