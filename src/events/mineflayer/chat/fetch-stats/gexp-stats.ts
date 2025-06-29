@@ -8,7 +8,21 @@ function buildGEXPMessage(
     playerGEXP: any
 ): string {
     const playerGEXPAccumulated = playerGEXP.reduce((acc: any, curr: any) => acc + curr, 0);
-    return `/${runChannel} ${requestName}, Here are the GEXP stats for ${lookupName}: '${playerGEXPAccumulated}' acumulated GEXP over the past 7 days. | ${getRandomHexColor()}`;
+    if (playerGEXPAccumulated === 0) {
+        return `/${runChannel} ${requestName} No GEXP stats found for ${lookupName}. Make sure the player has been active in the past 7 days. | ${getRandomHexColor()}`;
+    } else if (playerGEXPAccumulated < 5000) {
+        return `/${runChannel} ${requestName} ${lookupName} has a total of ${playerGEXPAccumulated} GEXP accumulated over the past 7 days. Keep grinding! | ${getRandomHexColor()}`;
+    } else if (playerGEXPAccumulated < 10000) {
+        return `/${runChannel} ${requestName} Great job, ${lookupName}! You've accumulated ${playerGEXPAccumulated} GEXP over the past week. Keep it up! | ${getRandomHexColor()}`;
+    } else if (playerGEXPAccumulated < 100000) {
+        return `/${runChannel} ${requestName} Impressive, ${lookupName}! You've racked up ${playerGEXPAccumulated} GEXP in the last 7 days. Keep pushing! | ${getRandomHexColor()}`;
+    } else if (playerGEXPAccumulated < 1000000) {
+        return `/${runChannel} ${requestName} Amazing work, ${lookupName}! You've accumulated ${playerGEXPAccumulated} GEXP over the past week. You're on fire! | ${getRandomHexColor()}`;
+    } else if (playerGEXPAccumulated < 250000) {
+        return `/${runChannel} ${requestName} Outstanding, ${lookupName}! You've amassed a whopping ${playerGEXPAccumulated} GEXP in the last 7 days. Keep dominating! | ${getRandomHexColor()}`;
+    } else {
+        return `/${runChannel} ${requestName} [GEXP] ${lookupName} has achieved ${playerGEXPAccumulated} GEXP over the past week. | ${getRandomHexColor()}`;
+    }
 }
 
 export default {

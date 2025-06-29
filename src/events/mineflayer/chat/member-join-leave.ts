@@ -64,7 +64,9 @@ async function processJoinEvent(bot: any, playerName: string, mojangProfile: any
     );
 
     if (!members) {
-        bot.executeCommand(`/oc Player ${playerName} doesn't seem to be in the guild according to the Hypixel API. | ${getRandomHexColor}`);
+        bot.executeCommand(
+            `/oc Player ${playerName} doesn't seem to be in the guild according to the Hypixel API. | ${getRandomHexColor}`
+        );
         throw new Error("Player doesn't seem to be in the guild on the Hypixel API");
     }
 

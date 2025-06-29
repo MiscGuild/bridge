@@ -38,7 +38,7 @@ class Bot {
         password: env.MINECRAFT_PASSWORD,
         host: 'mc.hypixel.net',
         auth: 'microsoft',
-        version: '1.20',
+        version: env.MINECRAFT_VERSION,
         defaultChatPatterns: false,
     });
 
