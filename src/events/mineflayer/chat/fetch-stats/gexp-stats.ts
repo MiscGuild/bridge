@@ -11,9 +11,9 @@ function buildGEXPMessage(
     if (playerGEXPAccumulated === 0) {
         return `/${runChannel} No GEXP stats found for ${lookupName}. Make sure the player has been active in the past 7 days. | ${getRandomHexColor()}`;
     } else if (playerGEXPAccumulated < 5000) {
-        return `/${runChannel} Great! ${lookupName} has a total of ${playerGEXPAccumulated} GEXP accumulated over the past 7 days. Keep grinding! This member is egible for kick by the way ;-; | ${getRandomHexColor()}`;
+        return `/${runChannel} Great! ${lookupName} has a total of ${playerGEXPAccumulated} GEXP accumulated over the past 7 days. Keep grinding! This member is eligible for kick by the way. | ${getRandomHexColor()}`;
     } else if (playerGEXPAccumulated < 10000) {
-        return `/${runChannel} Wowies! ${lookupName} has accumulated ${playerGEXPAccumulated} GEXP over the past week. Keep it up! This member is egible for kick by the way ;-; | ${getRandomHexColor()}`;
+        return `/${runChannel} Wowies! ${lookupName} has accumulated ${playerGEXPAccumulated} GEXP over the past week. Keep it up! This member is eligible for kick by the way. | ${getRandomHexColor()}`;
     } else if (playerGEXPAccumulated < 100000) {
         return `/${runChannel} Impressive! ${lookupName} has racked up ${playerGEXPAccumulated} GEXP in the last 7 days. Keep pushing! | ${getRandomHexColor()}`;
     } else if (playerGEXPAccumulated > 100000 && playerGEXPAccumulated < 250000) {
