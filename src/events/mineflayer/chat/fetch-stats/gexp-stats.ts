@@ -17,7 +17,7 @@ function buildGEXPMessage(
     } else if (playerGEXPAccumulated < 100000) {
         return `/${runChannel} Impressive! ${lookupName} has racked up ${playerGEXPAccumulated} GEXP in the last 7 days. Keep pushing! | ${getRandomHexColor()}`;
     } else if (playerGEXPAccumulated > 100000 && playerGEXPAccumulated < 250000) {
-        return `/${runChannel} Amazing work! ${lookupName} has accumulated ${playerGEXPAccumulated} GEXP over the past week. On fire!| ${getRandomHexColor()}`;
+        return `/${runChannel} Amazing work! ${lookupName} has accumulated ${playerGEXPAccumulated} GEXP over the past week. On fire! | ${getRandomHexColor()}`;
     } else if (playerGEXPAccumulated > 250000) {
         return `/${runChannel} Outstandin'! ${lookupName} has amassed a whopping ${playerGEXPAccumulated} GEXP in the last 7 days. Keep dominating! | ${getRandomHexColor()}`;
     } else {
