@@ -11,7 +11,8 @@ export default class Mineflayer {
     private static createBot = () =>
         createBot({
             username: env.MINECRAFT_EMAIL,
-            password: env.MINECRAFT_PASSWORD,
+            // password no longer required for msa
+            // password: env.MINECRAFT_PASSWORD,
             host: 'mc.hypixel.net',
             auth: 'microsoft',
             // 1.8.9 for hypixel LTS

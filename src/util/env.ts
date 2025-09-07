@@ -14,7 +14,6 @@ const SNOWFLAKE_SCHEMA = z.coerce.string().regex(/^\d*$/gm);
 const envSchema = z
     .object({
         MINECRAFT_EMAIL: z.string().email(),
-        MINECRAFT_PASSWORD: z.string(), // no minimum length allows for manual authorization
         HYPIXEL_API_KEY: z.string(),
         MINECRAFT_CHAT_SEPARATOR: z.string().trim().min(1),
         USE_PROFANITY_FILTER: BOOLEAN_SCHEMA,
