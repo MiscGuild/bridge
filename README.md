@@ -136,7 +136,7 @@ To raise an issue or bug report, please contact a developer or [open an issue](h
 
 ## Acknowledgements
 
-Parts of this project adapts code from the following repositories:
+Parts of this project adapt code from the following repositories:
 
 -   [hychat-mc/self-host](https://github.com/hychat-mc/self-host) under the MIT License.
 	- [xMdb/hypixel-guild-chat-bot](https://github.com/xmdb/hypixel-guild-chat-bot) originally licensed under the GPL-3.0 License, relicensed under the MIT License with explicit permission from the original author.
