@@ -48,7 +48,7 @@
 ### Prerequisites
 
 -   [Git](https://git-scm.com/downloads)
--   [NodeJS](https://nodejs.org/en/) >=18.20.4 and npm
+-   [NodeJS](https://nodejs.org/en/) and npm
 -   A full access Minecraft Java Edition account
 
 ### Setup
@@ -84,7 +84,7 @@ $ pnpm install
 $ pnpm run setup-files
 ```
 
-8. Fill out the `.env` file with your credentials.
+8. Fill out the `.env` file with your Minecraft account email and other details.
 
 9. Promote the Minecraft account used by the bot to Officer in-game in order for it to view the Officer chat and run privileged commands.
 
@@ -124,9 +124,9 @@ Pull requests are welcome. If you would like to chat with other developers pleas
 
 Before submitting your changes for review, please ensure:
 
--   the application is fully functional
--   your code has been thoroughly tested
--   your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+-   The application is fully functional
+-   Your code has been thoroughly tested
+-   Your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 Give this repository a ⭐ if it helped you!
 
@@ -136,10 +136,11 @@ To raise an issue or bug report, please contact a developer or [open an issue](h
 
 ## Acknowledgements
 
-Parts of this project use code from the following repositories:
+Parts of this project adapts code from the following repositories:
 
--   [Hychat Self-Host](https://github.com/hychat-mc/self-host) under the MIT License.
--   [Hypixel API TypeScript](https://github.com/unaussprechlich/hypixel-api-typescript) under the MIT License.
+-   [hychat-mc/self-host](https://github.com/hychat-mc/self-host) under the MIT License.
+	- [xMdb/hypixel-guild-chat-bot](https://github.com/xmdb/hypixel-guild-chat-bot) originally licensed under the GPL-3.0 License, relicensed under the MIT License with explicit permission from the original author.
+-   [unaussprechlich/hypixel-api-typescript](https://github.com/unaussprechlich/hypixel-api-typescript) under the MIT License.
 
 ## License
 
