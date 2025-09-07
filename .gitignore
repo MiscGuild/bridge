@@ -123,3 +123,6 @@ dist
 
 #MacOSX SHIT
 .DS_Store
+
+# goodbye blacklist
+src/blacklist/_blacklist.json
