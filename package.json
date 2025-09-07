@@ -16,23 +16,23 @@
         "start": "node ."
     },
     "dependencies": {
-        "discord.js": "14.10.2",
-        "dotenv": "^16.4.5",
-        "mineflayer": "^4.20.1",
-        "obscenity": "^0.1.4",
-        "prismarine-chat": "^1.10.1",
+        "discord.js": "14.22.1",
+        "dotenv": "^17.2.2",
+        "mineflayer": "^4.32.0",
+        "obscenity": "^0.4.5",
+        "prismarine-chat": "^1.11.0",
         "winston": "^3.17.0",
-        "zod": "^3.23.8"
+        "zod": "^4.1.5"
     },
     "devDependencies": {
         "@jejebecarte/eslint-config": "^1.0.7",
-        "@types/node-fetch": "^2.6.11",
-        "eslint": "^8.57.1",
-        "pm2": "^5.4.2",
-        "prettier": "^2.8.8",
+        "@types/node-fetch": "^2.6.13",
+        "eslint": "^9.35.0",
+        "pm2": "^6.0.10",
+        "prettier": "^3.6.2",
         "ts-node-dev": "^2.0.0",
-        "tsc-alias": "^1.8.10",
+        "tsc-alias": "^1.8.16",
         "tsconfig-paths": "^4.2.0",
-        "typescript": "^4.9.5"
+        "typescript": "^5.9.2"
     }
 }
