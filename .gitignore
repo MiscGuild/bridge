@@ -125,4 +125,5 @@ dist
 .DS_Store
 
 # goodbye blacklist
-src/blacklist/_blacklist.json
+src/util/blacklist/_blacklist.json
+src/util/blacklist/
