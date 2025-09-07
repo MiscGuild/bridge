@@ -2,7 +2,7 @@ import { TextChannel } from 'discord.js';
 import env from '@util/env';
 
 export default {
-    name: 'ready',
+    name: 'clientReady',
     runOnce: true,
     run: async (bridge) => {
         bridge.discord.application?.commands.set(
