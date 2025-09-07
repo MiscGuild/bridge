@@ -14,7 +14,7 @@ export default class Mineflayer {
             password: env.MINECRAFT_PASSWORD,
             host: 'mc.hypixel.net',
             auth: 'microsoft',
-            version: '1.20',
+            version: '1.8.9',
             defaultChatPatterns: false,
         });
 
