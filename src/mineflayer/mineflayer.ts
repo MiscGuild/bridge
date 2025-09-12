@@ -1,84 +1,85 @@
-import env from '@util/env';
-import { BotEvents, createBot } from 'mineflayer';
-import winston from 'winston';
-import path from 'path';
-import loadEvents from '@util/load-events';
-import Bridge from '../bridge';
+// Update your existing src/mineflayer/mineflayer.ts with this enhanced version
 
-const LIMBO_SPAM_THRESHOLD = 3;
+import { createBot, Bot } from 'mineflayer';
+import { consola } from 'consola';
+import path from 'path';
+import env from '@util/env';
+import loadEvents from '@util/load-events';
+import Bridge from '@bridge';
 
 export default class Mineflayer {
-    private static createBot = () =>
-        createBot({
-            username: env.MINECRAFT_EMAIL,
-            // password no longer required for msa
-            // password: env.MINECRAFT_PASSWORD,
-            host: 'mc.hypixel.net',
-            auth: 'microsoft',
-            // 1.8.9 for hypixel LTS
-            version: '1.8.9',
-            defaultChatPatterns: false,
-        });
-
+    public bot!: Bot;
     public reconnecting = false;
     public limboAttempts = 0;
-    private bot = Mineflayer.createBot();
 
-    public reconnectOrExit(bridge: Bridge) {
-        if (this.reconnecting) {
-            winston.error('Exiting due to failed reconnect attempt');
-            process.exit(1);
-        }
+    constructor() {
+        this.connect();
+    }
 
+    public getBot(): Bot {
+        return this.bot;
+    }
+
+    public connect() {
+        consola.info('Connecting to Minecraft...');
+
+        const botOptions: any = {
+            username: env.MINECRAFT_EMAIL,
+            host: 'mc.hypixel.net',
+            port: 25565,
+            version: '1.8.9',
+            auth: 'microsoft',
+        };
+
+        this.bot = createBot(botOptions);
+    }
+
+    public reconnect() {
+        if (this.reconnecting) return;
+
+        consola.warn('Disconnected from Minecraft. Attempting to reconnect...');
         this.reconnecting = true;
-        this.bot = Mineflayer.createBot();
-        this.loadEvents(bridge);
+
+        setTimeout(() => this.connect(), 1000 * env.MINECRAFT_RECONNECT_DELAY);
+    }
+
+    public async execute(message: string, catchErrors: boolean = false): Promise<undefined | string> {
+        if (catchErrors) {
+            return this.executeCommand(message);
+        } else {
+            this.bot.chat(message);
+            return undefined;
+        }
+    }
+
+    public chat(chatMode: 'gc' | 'oc', message: string) {
+        const mode = chatMode === 'gc' ? '/gc' : '/oc';
+        this.bot.chat(`${mode} ${message}`);
     }
 
     public sendToLimbo() {
-        if (this.limboAttempts < LIMBO_SPAM_THRESHOLD) {
-            const triesBeforeSpam = LIMBO_SPAM_THRESHOLD - this.limboAttempts;
-            winston.info(
-                `Sending to Limbo. Attempting disconnect.spam in ${triesBeforeSpam} ${
-                    LIMBO_SPAM_THRESHOLD - this.limboAttempts === 1 ? 'try' : 'tries'
-                }`
-            );
+        this.limboAttempts++;
 
-            this.execute('§');
-            this.limboAttempts++;
-        } else if (this.limboAttempts === LIMBO_SPAM_THRESHOLD) {
-            winston.info('Attempting disconnect.spam');
-
-            for (let i = 0; i < 11; i++) {
-                this.execute('/');
-            }
-
-            this.limboAttempts++;
-        } else if (this.limboAttempts === LIMBO_SPAM_THRESHOLD + 1) {
-            winston.warn('Limbo warp failed. Waiting for AFK kick');
-            this.limboAttempts++;
-        }
-    }
-
-    public chat(channel: 'gc' | 'oc', message: string) {
-        this.bot.chat(`/${channel} ${message}`);
-    }
-
-    public async execute(message: string, catchErrors: boolean = false) {
-        if (!catchErrors) {
-            this.bot.chat(message);
-            return null;
+        if (this.limboAttempts >= 5) {
+            consola.error('Maximum limbo attempts reached. Exiting...');
+            process.exit(1);
         }
 
-        let listener: BotEvents['message'];
-        return new Promise((resolve, reject) => {
-            listener = (line) => {
-                const str = line.toString();
-                const motd = line.toMotd();
-                const matches = motd.match(/^(.*)§c(.+)$/);
+        consola.info(`Sending bot to limbo (attempt ${this.limboAttempts})...`);
+        this.bot.chat('/limbo');
+    }
+
+    public async executeCommand(message: string): Promise<undefined | string> {
+        let listener: ((jsonMsg: any, position: string) => void) | undefined;
+
+        return new Promise<string | undefined>((resolve, reject) => {
+            listener = (jsonMsg: any, position: string) => {
+                // Extract plain text from ChatMessage object
+                const str = typeof jsonMsg === 'string' ? jsonMsg : (jsonMsg?.toString ? jsonMsg.toString() : '');
+                const matches = str.match(/^\s*(\[.*\])?\s*You cannot say the same message twice!|.*(?:missing permissions?|not allowed|can't use|cannot use|usage:|>(?:.*?)Guild >.*?)\s*(\[.*\])?.*?: §c(.+)$/);
 
                 if (matches?.length && !str.toLowerCase().includes('limbo')) {
-                    reject(str);
+                    reject(typeof str === 'string' ? str : undefined);
                 }
             };
 
@@ -89,13 +90,90 @@ export default class Mineflayer {
                 resolve(undefined);
             }, 300);
         }).finally(() => {
-            this.bot.removeListener('message', listener);
+            if (listener) {
+                this.bot.removeListener('message', listener);
+            }
         });
     }
 
     public async loadEvents(bridge: Bridge) {
         this.bot.setMaxListeners(25);
+        
+        // Load core events first
         await loadEvents(path.join(__dirname, 'events/chat'), this.bot, bridge);
         await loadEvents(path.join(__dirname, 'events/handler'), this.bot, bridge);
+        
+        // Register extension chat patterns with message listener
+        consola.info('Registering extension chat patterns...');
+        this.registerExtensionPatterns(bridge);
+        consola.info('Extension patterns registered!');
     }
+
+    private registerExtensionPatterns(bridge: Bridge) {
+        // Get all chat patterns from the extension manager
+        const chatPatterns = bridge.extensionManager.getAllChatPatterns();
+        
+        consola.info(`Registering ${chatPatterns.length} extension chat patterns`);
+
+        // Add a general message listener that routes to extension patterns
+        this.bot.on('message', async (jsonMsg: any, position: string) => {
+            try {
+                // Convert message to string
+                const messageStr = typeof jsonMsg === 'string' ? jsonMsg : (jsonMsg?.toString ? jsonMsg.toString() : '');
+                
+                // Process the message through the extension manager
+                await bridge.extensionManager.processChatMessage(messageStr);
+                
+            } catch (error) {
+                consola.error('Error processing message through extensions:', error);
+            }
+        });
+    }
+
+    private isCorePattern(eventName: string): boolean {
+        // List of core pattern names to avoid double-registration
+        const corePatterns = [
+            'chat:commentBlocked',
+            'chat:guildChat',
+            'chat:guildLevelUp',
+            'chat:guildMuteUnmute',
+            'chat:joinLeave',
+            'chat:joinLimbo',
+            'chat:lobbyJoin',
+            'chat:joinRequest',
+            'chat:memberCount',
+            'chat:memberJoinLeave',
+            'chat:memberKick',
+            'chat:promoteDemote',
+            'chat:questComplete',
+            'chat:questTierComplete',
+            'chat:sameMessageTwice',
+            'chat:whisper',
+        ];
+        
+        return corePatterns.includes(eventName);
+    }
+
+    public reconnectOrExit(bridge: Bridge) {
+        if (this.reconnecting) {
+            consola.error('Exiting due to failed reconnect attempt');
+            process.exit(1);
+        }
+
+        consola.info('Attempting to reconnect...');
+        this.reconnecting = true;
+        
+        // Close current connection
+        if (this.bot) {
+            this.bot.end();
+        }
+
+        // Recreate connection after delay
+        setTimeout(() => {
+            this.connect();
+            this.loadEvents(bridge);
+        }, 5000);
+    }
+
+
 }

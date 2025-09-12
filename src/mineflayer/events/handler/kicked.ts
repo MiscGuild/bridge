@@ -1,4 +1,4 @@
-import winston from 'winston';
+import consola from 'consola';
 import emojis from '@util/emojis';
 
 export default {
@@ -43,7 +43,7 @@ export default {
             `${emojis.error} The bot was kicked from the server due to ${message}`
         );
 
-        winston.error(
+        consola.error(
             `The bot was kicked from the server.\nReason: ${reason}\nLogged in: ${loggedIn}`
         );
 

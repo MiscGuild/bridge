@@ -1,10 +1,10 @@
-import winston from 'winston';
+import consola from 'consola';
 
 export default {
     name: 'error',
     runOnce: false,
     run: (bridge, error: Error) => {
-        winston.error('Encountered an unexpected error:', error);
+        consola.error('Encountered an unexpected error:', error);
         bridge.mineflayer.reconnectOrExit(bridge);
     },
 } as BotEvent;

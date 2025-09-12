@@ -1,7 +1,7 @@
 import { Bot } from 'mineflayer';
 import EventEmitter from 'events';
 import path from 'path';
-import winston from 'winston';
+import consola from 'consola';
 import regex from '@mineflayer/events/regex';
 import recursiveWalkDir from '@util/recursive-walk-dir';
 import Bridge from '../bridge';
@@ -16,12 +16,12 @@ export default async function loadEvents(dir: string, emitter: EventEmitter, bri
             .default as BotEvent;
 
         if (!name) {
-            winston.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
+            consola.warn(`The event ${path.join(currentDir, file)} doesn't have a name!`);
             return;
         }
 
         if (!run) {
-            winston.warn(`The event ${name} doesn't have an executable function!`);
+            consola.warn(`The event ${name} doesn't have an executable function!`);
             return;
         }
 

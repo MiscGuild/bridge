@@ -1,0 +1,9 @@
+{
+  "name": "guild-invite-tracker",
+  "version": "1.0.0",
+  "description": "Tracks guild member invites by monitoring guild logs",
+  "main": "index.ts",
+  "keywords": ["mineflayer", "extension", "guild", "invite", "tracker"],
+  "author": "MiscGuild Bridge Bot Team",
+  "license": "MIT"
+}

@@ -3,6 +3,7 @@
         "target": "ESNext",
         "module": "CommonJS",
         "moduleResolution": "Node",
+        "baseUrl": "./",
         "outDir": "./dist",
         "resolveJsonModule": true,
         "preserveConstEnums": true,
@@ -15,12 +16,34 @@
         "allowJs": false,
         "skipLibCheck": true,
         "isolatedModules": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "paths": {
             "@blacklist/*": ["./src/blacklist/*"],
             "@discord/*": ["./src/discord/*"],
             "@mineflayer/*": ["./src/mineflayer/*"],
             "@requests/*": ["./src/requests/*"],
-            "@util/*": ["./src/util/*"]
+            "@util/*": ["./src/util/*"],
+            "@plugins/*": ["./src/plugins/*"],
+            "@types/*": ["./src/@types/*"],
+            "@config/*": ["./config/*"],
+            "@bridge": ["./src/bridge.ts"]
         }
-    }
+    },
+    "ts-node": {
+        "require": ["tsconfig-paths/register"],
+        "transpileOnly": true,
+        "files": true
+    },
+    "include": [
+        "src/**/*",
+        "plugins/**/*",
+        "config/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.test.ts",
+        "**/*.spec.ts"
+    ]
 }

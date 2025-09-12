@@ -1,10 +1,10 @@
-import winston from 'winston';
+import consola from 'consola';
 
 export default {
     name: 'end',
     runOnce: false,
     run: (bridge, reason: string) => {
-        winston.error(`The bot session has abruptly ended: ${reason}`);
+        consola.error(`The bot session has abruptly ended: ${reason}`);
         bridge.mineflayer.reconnectOrExit(bridge);
     },
 } as BotEvent;

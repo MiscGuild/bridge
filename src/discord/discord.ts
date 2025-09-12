@@ -1,9 +1,9 @@
 import { Client, Collection, ColorResolvable, EmbedBuilder, TextChannel } from 'discord.js';
 import recursiveWalkDir from '@util/recursive-walk-dir';
-import winston from 'winston';
+import consola from 'consola';
 import path from 'path';
 import loadEvents from '@util/load-events';
-import Bridge from '../bridge';
+import Bridge from '@bridge';
 
 export default class Discord extends Client {
     public readonly commands: Collection<string, Command> = new Collection();
@@ -34,12 +34,12 @@ export default class Discord extends Client {
             const command = (await import(path.join(currentDir, file))).default as Command;
 
             if (!command.data) {
-                winston.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
+                consola.warn(`The command ${path.join(currentDir, file)} doesn't have a name!`);
                 return;
             }
 
             if (!command.run) {
-                winston.warn(
+                consola.warn(
                     `The command ${command.data.name} doesn't have an executable function!`
                 );
                 return;

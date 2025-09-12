@@ -1,0 +1,8 @@
+{
+  "responseDelay": 500,
+  "minDelay": 200,
+  "maxDelay": 2000,
+  "randomDelayVariation": 0.3,
+  "enabled": false,
+  "greetingResponseChance": 0.3
+}

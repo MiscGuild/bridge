@@ -1,38 +1,66 @@
 {
-    "name": "bridge",
-    "version": "1.0.0",
-    "main": "dist",
-    "license": "MIT",
-    "private": false,
-    "scripts": {
-        "build": "tsc && tsc-alias",
-        "clean": "rm -r dist/",
-        "dev": "ts-node-dev --respawn --transpile-only --poll -r tsconfig-paths/register src/index.ts",
-        "format": "prettier --write .",
-        "lint": "prettier --check . && eslint .",
-        "pm2:kill": "pm2 kill",
-        "pm2:start": "pm2 start dist/index.js --attach --name bridge",
-        "setup-files": "node scripts/setup-files.js",
-        "start": "node ."
-    },
-    "dependencies": {
-        "discord.js": "14.22.1",
-        "dotenv": "^17.2.2",
-        "mineflayer": "^4.32.0",
-        "obscenity": "^0.4.5",
-        "prismarine-chat": "^1.11.0",
-        "winston": "^3.17.0",
-        "zod": "^4.1.5"
-    },
-    "devDependencies": {
-        "@jejebecarte/eslint-config": "^1.0.7",
-        "@types/node-fetch": "^2.6.13",
-        "eslint": "^9.35.0",
-        "pm2": "^6.0.10",
-        "prettier": "^3.6.2",
-        "ts-node-dev": "^2.0.0",
-        "tsc-alias": "^1.8.16",
-        "tsconfig-paths": "^4.2.0",
-        "typescript": "^5.9.2"
-    }
+  "name": "guild-bridge-bot",
+  "version": "1.0.0",
+  "description": "A bot used to Bridge between Discord and Hypixel guild chats",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "start": "node dist/src/index.js",
+    "build": "tsc && npm run build:extensions",
+    "build:extensions": "node scripts/build-extensions.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "setup-files": "node scripts/setup-files.js",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:kill": "pm2 delete bridge",
+    "pm2:logs": "pm2 logs bridge",
+    "pm2:restart": "pm2 restart bridge",
+    "extension:create": "node dist/plugin-system/mineflayer-extension-cli.js create",
+    "extension:list": "node dist/plugin-system/mineflayer-extension-cli.js list",
+    "test:extensions": "node test-extensions.mjs"
+  },
+  "keywords": [
+    "minecraft",
+    "discord",
+    "hypixel",
+    "guild",
+    "bridge",
+    "bot",
+    "mineflayer"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/builders": "^1.11.3",
+    "@discordjs/collection": "^1.5.3",
+    "@discordjs/formatters": "^0.6.1",
+    "@discordjs/rest": "^2.6.0",
+    "@discordjs/util": "^1.1.1",
+    "@discordjs/ws": "^1.2.3",
+    "consola": "^3.4.2",
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.2",
+    "mineflayer": "^4.32.0",
+    "node-cron": "^3.0.0",
+    "obscenity": "^0.4.5",
+    "prismarine-chat": "^1.11.0",
+    "winston": "^3.11.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/node-cron": "^3.0.0",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/guild-bridge-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/guild-bridge-bot/issues"
+  },
+  "homepage": "https://github.com/your-username/guild-bridge-bot#readme"
 }

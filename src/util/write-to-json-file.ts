@@ -1,6 +1,6 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import { writeFile } from 'fs';
-import winston from 'winston';
+import consola from 'consola';
 
 /**
  * @param path The path to the target file. Path must begin from the path root.
@@ -24,7 +24,7 @@ export default (
             return;
         }
 
-        winston.error('Failed to write to file:', err);
+        consola.error('Failed to write to file:', err);
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setTitle('Error')

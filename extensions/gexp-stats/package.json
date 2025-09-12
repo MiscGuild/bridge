@@ -1,0 +1,9 @@
+{
+  "name": "gexp-stats",
+  "version": "1.0.0",
+  "description": "Guild experience (GEXP) statistics checker for Hypixel players",
+  "main": "index.ts",
+  "keywords": ["mineflayer", "extension", "hypixel", "gexp", "guild", "experience"],
+  "author": "MiscGuild Bridge Bot Team",
+  "license": "MIT"
+}

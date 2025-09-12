@@ -42,6 +42,39 @@
 -   Toggleable slowmode to control member usage.
 -   Basic filtering of extreme profanity to protect bot accounts from abuse.
 -   Configurable in-game reminders to spread the word about news and upcoming events.
+-   **🔌 Mineflayer Extension System**: Universal plugin system for extending bot functionality with custom chat commands and patterns.
+
+## Mineflayer Extension System
+
+This bridge includes a powerful extension system that allows you to add custom functionality without modifying the core bot code. Create extensions that respond to chat patterns, handle commands, and integrate with Discord.
+
+### Quick Start with Extensions
+
+```bash
+# Build the extension system
+./build-extensions.sh
+
+# Test the extension system
+node test-extensions.mjs
+
+# Create a new extension
+node src/plugin-system/mineflayer-extension-cli.js create "My Extension"
+
+# List extensions
+node src/plugin-system/mineflayer-extension-cli.js list
+```
+
+### Features
+
+- **Chat Pattern Routing**: Automatically routes chat messages to appropriate extensions
+- **Priority System**: Handle conflicts between patterns with priority levels
+- **Hot Reloading**: Reload extensions without restarting the bot
+- **Discord Integration**: Built-in Discord webhook and message support
+- **Configuration Management**: Schema-based config validation
+- **Health Monitoring**: Monitor extension health and performance
+- **CLI Tools**: Command-line interface for managing extensions
+
+See the [Extension Documentation](src/plugin-system/MINEFLAYER_EXTENSIONS.md) for detailed guides and examples.
 
 ## Installation
 

@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, Interaction } from 'discord.js';
-import winston from 'winston';
+import consola from 'consola';
 import env from '@util/env';
 
 export default {
@@ -11,7 +11,7 @@ export default {
         const command = bridge.discord.commands.get(interaction.commandName);
 
         if (!command) {
-            winston.error(`Unknown slash command: ${interaction.commandName}`);
+            consola.error(`Unknown slash command: ${interaction.commandName}`);
             return;
         }
 
@@ -49,7 +49,7 @@ export default {
                 ephemeral: true,
             });
 
-            winston.error(`An error occured in ${interaction.commandName}:`, e);
+            consola.error(`An error occured in ${interaction.commandName}:`, e);
         }
     },
 } as BotEvent;

@@ -1,0 +1,22 @@
+{
+  "name": "fun-bot",
+  "version": "1.0.0",
+  "description": "A playful extension with entertaining responses to various messages",
+  "main": "index.ts",
+  "author": "MiscGuild Bridge Bot Team",
+  "license": "MIT",
+  "extension": {
+    "id": "fun-bot",
+    "name": "Fun Bot",
+    "description": "A playful extension with entertaining responses to various messages",
+    "dependencies": []
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

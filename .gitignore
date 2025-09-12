@@ -1,3 +1,13 @@
+# Extensions
+#extensions/*
+
+# Extension Scripts
+scripts/build-extensions.js
+
+# Extensions Building
+
+
+
 # Logs
 logs
 logs/

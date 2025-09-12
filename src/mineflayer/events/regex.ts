@@ -1,4 +1,14 @@
-export default {
+/**
+ * Core Minecraft Chat Regex Patterns
+ * 
+ * This file contains the core regex patterns for parsing Hypixel chat messages.
+ * Extensions can add additional patterns through the MineflayerExtensionManager.
+ */
+
+import Bridge from '@bridge';
+
+// Core regex patterns for Hypixel chat parsing
+const coreRegexPatterns = {
     /**
      * When a message is blocked for containing suspicious content
      *
@@ -143,3 +153,62 @@ export default {
      */
     'chat:whisper': /^From (?:\[.*])?\s*(\w{2,17}).*?: (.+)$/,
 };
+
+/**
+ * Get all available regex patterns including core and extension patterns
+ * @param bridge - Bridge instance to get extension patterns from
+ * @returns Combined patterns object
+ */
+export function getAllRegexPatterns(bridge?: Bridge): Record<string, RegExp> {
+    const allPatterns: Record<string, RegExp> = { ...coreRegexPatterns };
+
+    // Add extension patterns if bridge is available and extension manager is loaded
+    if (bridge?.extensionManager) {
+        try {
+            const extensionPatterns = bridge.extensionManager.getAllChatPatterns();
+            
+            for (const pattern of extensionPatterns) {
+                // Convert extension patterns to the legacy format for backward compatibility
+                const eventName = `extension:${pattern.extensionId}:${pattern.id}`;
+                allPatterns[eventName] = pattern.pattern;
+            }
+        } catch (error) {
+            // Extension manager might not be ready yet, ignore errors
+        }
+    }
+
+    return allPatterns;
+}
+
+/**
+ * Legacy function for backward compatibility
+ * @deprecated Use getAllRegexPatterns instead or use the extension system directly
+ */
+export function buildUnifiedRegexPatterns(bridge?: Bridge): Record<string, RegExp> {
+    const unifiedPatterns: Record<string, RegExp> = { ...coreRegexPatterns };
+
+    // For backward compatibility, try to use the old plugin loader if it exists
+    if (bridge && 'pluginLoader' in bridge && bridge.pluginLoader) {
+        try {
+            const pluginPatterns = (bridge.pluginLoader as any).getPluginRegexPatterns();
+            
+            for (const [eventName, pattern] of pluginPatterns) {
+                unifiedPatterns[eventName] = pattern;
+            }
+        } catch (error) {
+            // Old plugin loader might not exist, ignore errors
+        }
+    }
+
+    // Also add extension patterns for new system
+    const newPatterns = getAllRegexPatterns(bridge);
+    Object.assign(unifiedPatterns, newPatterns);
+
+    return unifiedPatterns;
+}
+
+// Export core patterns for direct access
+export { coreRegexPatterns };
+
+// Default export for backward compatibility
+export default coreRegexPatterns;

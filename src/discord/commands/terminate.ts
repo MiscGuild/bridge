@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import winston from 'winston';
+import consola from 'consola';
 
 export default {
     data: {
@@ -13,7 +13,7 @@ export default {
             .setDescription('The bot has been terminated.');
 
         bridge.mineflayer.chat('gc', 'Session terminated');
-        winston.info(`Session terminated by ${interaction.member?.user.username}`);
+        consola.info(`Session terminated by ${interaction.member?.user.username}`);
         await interaction.reply({ embeds: [embed] });
 
         process.exit();

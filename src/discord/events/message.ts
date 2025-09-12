@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 import { DataSet, RegExpMatcher, englishDataset, englishRecommendedTransformers } from 'obscenity';
-import winston from 'winston';
+import consola from 'consola';
 import emojis from '@util/emojis';
 import env from '@util/env';
 
@@ -47,14 +47,14 @@ export default {
             await message.channel.send(
                 `${emojis.warning} ${message.author.username}, could not delete message.`
             );
-            winston.error(e);
+            consola.error(e);
         }
 
         if (profanityMatcher?.hasMatch(message.content)) {
             await message.channel.send(
                 `${emojis.warning} ${message.author.username}, you may not use profane language!`
             );
-            winston.warn(`Comment blocked: ${message.content}`);
+            consola.warn(`Comment blocked: ${message.content}`);
             bridge.discord.send(
                 'oc',
                 `${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked. This message was not sent to Hypixel.`

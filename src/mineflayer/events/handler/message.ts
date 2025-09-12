@@ -1,10 +1,10 @@
-import winston from 'winston';
+import consola from 'consola';
 import { ChatMessage } from 'prismarine-chat';
 
 export default {
     name: 'message',
     runOnce: false,
     run: (_bridge, message: ChatMessage) => {
-        winston.info(message.toAnsi());
+        consola.info(message.toAnsi());
     },
 } as BotEvent;

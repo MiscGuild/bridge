@@ -1,0 +1,9 @@
+{
+  "name": "hypixel-stats",
+  "version": "2.0.0",
+  "description": "Comprehensive Hypixel player statistics checker with support for all major game modes",
+  "main": "index.ts",
+  "keywords": ["mineflayer", "extension", "hypixel", "stats", "bedwars", "skywars", "duels"],
+  "author": "MiscGuild Bridge Bot Team",
+  "license": "MIT"
+}
