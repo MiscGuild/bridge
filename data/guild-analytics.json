@@ -695,10 +695,40 @@
         "legendmeh": 3,
         "Racken": 3
       }
+    },
+    "2026-01-19": {
+      "date": "2026-01-19",
+      "messagesReceived": 30,
+      "commandsUsed": 0,
+      "membersJoined": 0,
+      "membersLeft": 0,
+      "membersKicked": 0,
+      "promotions": 0,
+      "demotions": 0,
+      "guildLevelUps": 0,
+      "questsCompleted": 0,
+      "activeUsers": [
+        "MiscBridge",
+        "Vliegenier04",
+        "ArJx",
+        "blueberryallen",
+        "hzyyyyyyyyy",
+        "desinnaz",
+        "MufinIsTooSleepy"
+      ],
+      "topChatters": {
+        "MiscBridge": 7,
+        "Vliegenier04": 11,
+        "ArJx": 1,
+        "blueberryallen": 6,
+        "hzyyyyyyyyy": 3,
+        "desinnaz": 1,
+        "MufinIsTooSleepy": 1
+      }
     }
   },
   "totalStats": {
-    "totalMessages": 5170,
+    "totalMessages": 5200,
     "totalCommands": 49,
     "totalJoins": 3,
     "totalLeaves": 0,

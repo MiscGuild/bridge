@@ -929,7 +929,8 @@ class SessionTrackerExtension {
             // Convert array back to Map
             this.activeSessions.clear();
             for (const session of sessionsArray) {
-                const key = `${session.username}-${session.game}`;
+                // Use uuid-game as key (same format as when creating sessions)
+                const key = `${session.uuid}-${session.game}`;
                 this.activeSessions.set(key, session);
             }
 
@@ -1262,6 +1263,26 @@ class SessionTrackerExtension {
 
         if (this.api) {
             this.api.log.info('Session Tracker Extension cleaned up');
+        }
+    }
+
+    /**
+     * Destroy method called when extension is being disabled/unloaded
+     */
+    async destroy(): Promise<void> {
+        if (this.api) {
+            this.api.log.info('Session Tracker Extension shutting down...');
+        }
+
+        // Save active sessions one final time before shutdown
+        await this.saveActiveSessions();
+        await this.saveSessionHistory();
+
+        // Run cleanup
+        await this.cleanup();
+
+        if (this.api) {
+            this.api.log.success('Session Tracker Extension shut down successfully');
         }
     }
 }

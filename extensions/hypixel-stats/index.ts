@@ -917,34 +917,21 @@ class HypixelStatsExtension {
             this.config.guildRankCooldowns || this.defaultConfig.guildRankCooldowns;
         let cooldownSeconds: number | undefined;
 
-        // Check for exact guild rank match first
-        if (guildRank && rankCooldowns[guildRank]) {
-            cooldownSeconds = rankCooldowns[guildRank];
-        } else if (guildRank) {
-            // Try to match guild rank keywords (case-insensitive)
-            if (
-                guildRank.toLowerCase().includes('guild master') ||
-                guildRank.toLowerCase().includes('guildmaster') ||
-                guildRank.toLowerCase().includes('gm')
-            ) {
-                cooldownSeconds = rankCooldowns['Guild Master'];
-            } else if (guildRank.toLowerCase().includes('leader')) {
-                cooldownSeconds = rankCooldowns['Leader'];
-            } else if (
-                guildRank.toLowerCase().includes('moderator') ||
-                guildRank.toLowerCase().includes('mod')
-            ) {
-                cooldownSeconds = rankCooldowns['Moderator'];
-            } else if (guildRank.toLowerCase().includes('elite')) {
-                cooldownSeconds = rankCooldowns['Elite'];
-            } else if (guildRank.toLowerCase().includes('member')) {
-                cooldownSeconds = rankCooldowns['Member'];
-            }
+        // Debug logging
+        if (this.api) {
+            this.api.log.debug(`Checking cooldown for ${playerName} with rank: ${guildRank}`);
+            this.api.log.debug(`Available cooldowns: ${JSON.stringify(rankCooldowns)}`);
         }
 
-        // Default to Member cooldown if no rank detected
+        // Check for exact guild rank match first (without brackets)
+        const cleanRank = guildRank?.replace(/[[\]]/g, '');
+        if (cleanRank && rankCooldowns[cleanRank] !== undefined) {
+            cooldownSeconds = rankCooldowns[cleanRank];
+        }
+
+        // Default to RANK_1 (lowest rank) cooldown if no rank detected
         if (cooldownSeconds === undefined) {
-            cooldownSeconds = rankCooldowns['Member'];
+            cooldownSeconds = parseInt(process.env.COOLDOWN_RANK_1 || '60');
         }
 
         // No cooldown if set to 0

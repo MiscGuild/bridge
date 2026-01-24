@@ -159,17 +159,39 @@ class StaffManagementExtension {
         banFile: 'staff-bans.json',
         dailyReports: true,
         reportChannel: 'oc', // Officer channel
-        debugMode: true,
+        debugMode: false,
     };
 
-    // Staff ranks that can access analytics
-    private analyticsRanks = ['[Mod]', '[Leader]', '[GM]', '[Guild Master]'];
-    // Admin ranks that can use reboot
-    private adminRanks = ['[Leader]', '[GM]', '[Guild Master]'];
-    // Staff ranks that can use ban commands (configurable via BAN_ALLOWED_RANKS env var)
-    private banRanks = process.env.BAN_ALLOWED_RANKS
-        ? process.env.BAN_ALLOWED_RANKS.split(',').map((r) => r.trim())
-        : ['[Leader]', '[GM]', '[Guild Master]', 'Officer'];
+    // Build staff ranks from environment variables
+    private get analyticsRanks(): string[] {
+        // Ranks that can access analytics: RANK_4 (Mod), RANK_5 (Leader), RANK_LEADER (GM)
+        const ranks: string[] = [];
+        if (process.env.RANK_4) ranks.push(`[${process.env.RANK_4}]`);
+        if (process.env.RANK_5) ranks.push(`[${process.env.RANK_5}]`);
+        if (process.env.RANK_LEADER) ranks.push(`[${process.env.RANK_LEADER}]`);
+        return ranks;
+    }
+
+    private get adminRanks(): string[] {
+        // Admin ranks that can use reboot: RANK_5 (Leader), RANK_LEADER (GM)
+        const ranks: string[] = [];
+        if (process.env.RANK_5) ranks.push(`[${process.env.RANK_5}]`);
+        if (process.env.RANK_LEADER) ranks.push(`[${process.env.RANK_LEADER}]`);
+        return ranks;
+    }
+
+    private get banRanks(): string[] {
+        // Staff ranks that can use ban commands (configurable via BAN_ALLOWED_RANKS env var)
+        if (process.env.BAN_ALLOWED_RANKS) {
+            return process.env.BAN_ALLOWED_RANKS.split(',').map((r) => r.trim());
+        }
+        // Default to RANK_4 (Mod), RANK_5 (Leader), RANK_LEADER (GM)
+        const ranks: string[] = [];
+        if (process.env.RANK_4) ranks.push(`[${process.env.RANK_4}]`);
+        if (process.env.RANK_5) ranks.push(`[${process.env.RANK_5}]`);
+        if (process.env.RANK_LEADER) ranks.push(`[${process.env.RANK_LEADER}]`);
+        return ranks;
+    }
 
     async init(context: any, api: ExtensionAPI): Promise<void> {
         api.log.info(`🔧 Initializing Staff Management Extension...`);

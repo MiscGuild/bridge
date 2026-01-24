@@ -52,6 +52,9 @@ const envSchema = z
         // === STAFF MANAGEMENT SETTINGS ===
         BAN_ALLOWED_RANKS: OPTIONAL_STRING_SCHEMA,
 
+        // === TERMINAL REPL ===
+        ENABLE_TERMINAL: BOOLEAN_SCHEMA.optional(),
+
         // === COOLDOWN SETTINGS ===
         // RANK_1 is lowest, RANK_LEADER is highest
         COOLDOWN_RANK_1: z.coerce.number().int().min(0).default(60),
