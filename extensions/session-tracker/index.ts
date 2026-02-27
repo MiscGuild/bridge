@@ -44,6 +44,7 @@ interface ChatPattern {
     pattern: RegExp;
     priority: number;
     description: string;
+    passthrough?: boolean;
     handler: (context: ChatMessageContext, api: ExtensionAPI) => Promise<void>;
 }
 

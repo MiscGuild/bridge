@@ -67,6 +67,7 @@ interface ChatPattern {
     pattern: RegExp;
     priority: number;
     description?: string;
+    passthrough?: boolean;
     handler: (context: ChatMessageContext, api: ExtensionAPI) => Promise<void> | void;
 }
 
@@ -150,6 +151,7 @@ class StaffManagementExtension {
     private banListPath: string = '';
     private reportInterval: NodeJS.Timeout | null = null;
     private saveInterval: NodeJS.Timeout | null = null;
+    private banCheckInterval: NodeJS.Timeout | null = null;
     private api: ExtensionAPI | null = null;
 
     // Default configuration
@@ -213,6 +215,9 @@ class StaffManagementExtension {
         // Remove any expired bans
         await this.removeExpiredBans();
 
+        // Start ban enforcement cycle
+        this.startBanEnforcementCycle(api);
+
         // Set up daily report scheduler
         if (this.config.dailyReports) {
             this.setupReportScheduler();
@@ -237,6 +242,9 @@ class StaffManagementExtension {
         if (this.reportInterval) {
             clearInterval(this.reportInterval);
         }
+        if (this.banCheckInterval) {
+            clearInterval(this.banCheckInterval);
+        }
     }
 
     async onEnable(context: any, api: ExtensionAPI): Promise<void> {
@@ -253,6 +261,11 @@ class StaffManagementExtension {
         if (this.saveInterval) {
             clearInterval(this.saveInterval);
             this.saveInterval = null;
+        }
+
+        if (this.banCheckInterval) {
+            clearInterval(this.banCheckInterval);
+            this.banCheckInterval = null;
         }
 
         // Save any remaining data before shutdown
@@ -395,14 +408,25 @@ class StaffManagementExtension {
                 description: 'Show all banned users (Staff only)',
                 handler: this.handleBanlist.bind(this),
             },
-            // Analytics logging patterns - HIGH PRIORITY to catch system messages
+            // Analytics logging patterns - PASSTHROUGH so they don't block other handlers
             {
                 id: 'analytics-member-join-leave',
                 extensionId: 'staff-management',
                 pattern: /^(\[.*])?\s*(\w{2,17}).*? (joined|left) the guild!$/,
                 priority: 1,
+                passthrough: true,
                 description: 'Logs member joins and leaves for analytics',
                 handler: this.handleMemberJoinLeaveLog.bind(this),
+            },
+            // Urchin blacklist auto-check on guild join (toggleable via URCHIN_JOIN_CHECK env)
+            {
+                id: 'urchin-join-check',
+                extensionId: 'staff-management',
+                pattern: /^(\[.*])?\s*(\w{2,17}).*? joined the guild!$/,
+                priority: 2,
+                passthrough: true,
+                description: 'Auto-checks new guild members against Urchin blacklist',
+                handler: this.handleUrchinJoinCheck.bind(this),
             },
             {
                 id: 'analytics-member-kick',
@@ -410,6 +434,7 @@ class StaffManagementExtension {
                 pattern:
                     /^(\[.*])?\s*(\w{2,17}).*? was kicked from the guild by (\[.*])?\s*(\w{2,17}).*?!$/,
                 priority: 1,
+                passthrough: true,
                 description: 'Logs member kicks for analytics',
                 handler: this.handleMemberKickLog.bind(this),
             },
@@ -418,6 +443,7 @@ class StaffManagementExtension {
                 extensionId: 'staff-management',
                 pattern: /^(\[.*])?\s*(\w{2,17}).*? was (promoted|demoted) from (.*) to (.*)$/,
                 priority: 1,
+                passthrough: true,
                 description: 'Logs promotions and demotions for analytics',
                 handler: this.handlePromoteDemoteLog.bind(this),
             },
@@ -426,6 +452,7 @@ class StaffManagementExtension {
                 extensionId: 'staff-management',
                 pattern: /^\s{19}The Guild has reached Level (\d*)!$/,
                 priority: 1,
+                passthrough: true,
                 description: 'Logs guild level ups for analytics',
                 handler: this.handleGuildLevelUpLog.bind(this),
             },
@@ -434,6 +461,7 @@ class StaffManagementExtension {
                 extensionId: 'staff-management',
                 pattern: /^\s{17}GUILD QUEST COMPLETED!$/,
                 priority: 1,
+                passthrough: true,
                 description: 'Logs quest completions for analytics',
                 handler: this.handleQuestCompleteLog.bind(this),
             },
@@ -442,6 +470,7 @@ class StaffManagementExtension {
                 extensionId: 'staff-management',
                 pattern: /^\s{17}GUILD QUEST TIER (\d*) COMPLETED!$/,
                 priority: 1,
+                passthrough: true,
                 description: 'Logs quest tier completions for analytics',
                 handler: this.handleQuestTierCompleteLog.bind(this),
             },
@@ -451,6 +480,7 @@ class StaffManagementExtension {
                 pattern:
                     /^Guild > (?:\[[^\]]+\]\s+)?([A-Za-z0-9_]{3,16})(?:\s+\[[^\]]+\])?:\s*(.+)$/,
                 priority: 500,
+                passthrough: true,
                 description: 'Logs guild chat messages for analytics',
                 handler: this.handleGuildChatLog.bind(this),
             },
@@ -1322,56 +1352,58 @@ class StaffManagementExtension {
         const bridgeBans = this.banList.bans.filter((b) => b.type === 'bridge');
         const cmdBans = this.banList.bans.filter((b) => b.type === 'command');
 
-        const sendMessage = (msg: string) => {
-            this.sendToChannel(context, api, msg);
-        };
-
+        // Send ban list via DMs to the requester
+        const dm = (msg: string) => api.chat.sendPrivateMessage(context.username, msg);
         const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+        // Notify the user in-channel that the list is being sent via DM
+        this.sendToChannel(context, api, `${context.username}, check your DMs for the ban list.`);
+        await delay(600);
+
         // Send header
-        sendMessage('Ban List:');
+        dm('Ban List:');
         await delay(500);
 
         // Send guild bans
-        sendMessage(`🔨 Guild Bans (${guildBans.length}):`);
+        dm(`Guild Bans (${guildBans.length}):`);
         await delay(500);
         if (guildBans.length === 0) {
-            sendMessage('  None');
+            dm('  None');
             await delay(500);
         } else {
             for (const ban of guildBans) {
-                sendMessage(`  • ${ban.name} - Expires: ${ban.endDate} - Reason: ${ban.reason}`);
+                dm(`  ${ban.name} - Expires: ${ban.endDate} - Reason: ${ban.reason}`);
                 await delay(500);
             }
         }
 
         // Send bridge bans
-        sendMessage(`🚫 Bridge Bans (${bridgeBans.length}):`);
+        dm(`Bridge Bans (${bridgeBans.length}):`);
         await delay(500);
         if (bridgeBans.length === 0) {
-            sendMessage('  None');
+            dm('  None');
             await delay(500);
         } else {
             for (const ban of bridgeBans) {
-                sendMessage(`  • ${ban.name} - Expires: ${ban.endDate} - Reason: ${ban.reason}`);
+                dm(`  ${ban.name} - Expires: ${ban.endDate} - Reason: ${ban.reason}`);
                 await delay(500);
             }
         }
 
         // Send command bans
-        sendMessage(`⛔ Command Bans (${cmdBans.length}):`);
+        dm(`Command Bans (${cmdBans.length}):`);
         await delay(500);
         if (cmdBans.length === 0) {
-            sendMessage('  None');
+            dm('  None');
             await delay(500);
         } else {
             for (const ban of cmdBans) {
-                sendMessage(`  • ${ban.name} - Expires: ${ban.endDate} - Reason: ${ban.reason}`);
+                dm(`  ${ban.name} - Expires: ${ban.endDate} - Reason: ${ban.reason}`);
                 await delay(500);
             }
         }
 
-        api.log.info(`Ban list requested by ${context.username}`);
+        api.log.info(`Ban list sent via DM to ${context.username}`);
     }
 
     /**
@@ -1481,6 +1513,106 @@ class StaffManagementExtension {
         } else if (action.toLowerCase() === 'left') {
             await this.logEvent('leave', playerName);
             api.log.info(`Logged guild leave: ${playerName}`);
+        }
+    }
+
+    /**
+     * Automatically check a newly joined guild member against the Urchin blacklist.
+     * Sends results to officer chat. Toggleable via URCHIN_JOIN_CHECK env var.
+     */
+    private async handleUrchinJoinCheck(
+        context: ChatMessageContext,
+        api: ExtensionAPI
+    ): Promise<void> {
+        // Check if the feature is enabled
+        if (process.env.URCHIN_JOIN_CHECK?.toLowerCase() !== 'true') return;
+
+        const urchinApiKey = process.env.URCHIN_API_KEY;
+        if (!urchinApiKey) {
+            api.log.debug('Urchin join-check skipped: no URCHIN_API_KEY set');
+            return;
+        }
+
+        const match = context.raw.match(/^(\[.*])?\s*(\w{2,17}).*? joined the guild!$/);
+        if (!match) return;
+
+        const playerName = match[2];
+        api.log.info(`🔍 Urchin join-check: looking up ${playerName}...`);
+
+        try {
+            // Step 1: Get UUID from Mojang
+            const mojangRes = await fetch(
+                `https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(playerName)}`,
+                {
+                    headers: {
+                        'User-Agent': 'MiscellaneousBridge/2.6 (info@vliegenier04.dev)',
+                        Accept: 'application/json',
+                    },
+                }
+            );
+
+            if (!mojangRes.ok) {
+                api.log.warn(`Urchin join-check: failed to resolve UUID for ${playerName}`);
+                return;
+            }
+
+            const mojangData: any = await mojangRes.json();
+            const uuid = mojangData.id; // UUID without hyphens
+
+            // Step 2: Query Urchin API
+            const urchinRes = await fetch(
+                `https://urchin.ws/player/${uuid}?key=${urchinApiKey}&sources=GAME,MANUAL,CHAT,ME,PARTY`,
+                {
+                    headers: {
+                        'User-Agent': 'MiscellaneousBridge/2.6 (info@vliegenier04.dev)',
+                        Accept: 'application/json',
+                    },
+                }
+            );
+
+            if (urchinRes.status === 404) {
+                // Not tagged — all clear
+                api.chat.sendOfficerChat(
+                    `[Urchin] ${playerName} joined — no blacklist tags found ✓`
+                );
+                api.log.info(`Urchin join-check: ${playerName} is clean`);
+                return;
+            }
+
+            if (!urchinRes.ok) {
+                api.log.warn(
+                    `Urchin join-check: API returned ${urchinRes.status} for ${playerName}`
+                );
+                return;
+            }
+
+            const urchinData: any = await urchinRes.json();
+
+            if (!urchinData?.tags || urchinData.tags.length === 0) {
+                api.chat.sendOfficerChat(
+                    `[Urchin] ${playerName} joined — no blacklist tags found ✓`
+                );
+                api.log.info(`Urchin join-check: ${playerName} is clean`);
+                return;
+            }
+
+            // Player IS tagged — warn in OC
+            const tagCount = urchinData.tags.length;
+            api.chat.sendOfficerChat(
+                `⚠️ [Urchin] ${playerName} joined with ${tagCount} blacklist tag(s)!`
+            );
+
+            // Send each tag as a separate OC message with a small delay
+            for (const tag of urchinData.tags) {
+                const tagType = (tag.type || 'UNKNOWN').toUpperCase().replace(/ /g, '-');
+                const reason = tag.reason || 'No reason given';
+                await new Promise((resolve) => setTimeout(resolve, 600));
+                api.chat.sendOfficerChat(`  [${tagType}] ${playerName} — ${reason}`);
+            }
+
+            api.log.warn(`Urchin join-check: ${playerName} has ${tagCount} tag(s)!`);
+        } catch (error) {
+            api.log.error(`Urchin join-check error for ${playerName}:`, error);
         }
     }
 
@@ -2043,6 +2175,109 @@ class StaffManagementExtension {
             if (this.api) {
                 this.api.log.error('Failed to save analytics data:', error);
             }
+        }
+    }
+
+    /**
+     * Start the ban enforcement cycle.
+     * Periodically fetches the guild member list from the Hypixel API
+     * and kicks any members found in the ban list.
+     */
+    private startBanEnforcementCycle(api: ExtensionAPI): void {
+        const intervalMinutes = parseInt(process.env.BAN_CHECK_INTERVAL || '10', 10);
+        const intervalMs = intervalMinutes * 60 * 1000;
+
+        api.log.info(
+            `🔨 Ban enforcement cycle started — checking every ${intervalMinutes} minute(s)`
+        );
+
+        // Run once immediately on startup
+        this.enforceBans(api).catch((err) =>
+            api.log.error('Ban enforcement cycle error (initial):', err)
+        );
+
+        // Then repeat on the configured interval
+        this.banCheckInterval = setInterval(() => {
+            this.enforceBans(api).catch((err) =>
+                api.log.error('Ban enforcement cycle error:', err)
+            );
+        }, intervalMs);
+    }
+
+    /**
+     * Fetch the guild member list and kick any banned members.
+     */
+    private async enforceBans(api: ExtensionAPI): Promise<void> {
+        // Only enforce guild bans (bridge/command bans don't require kicking)
+        const guildBans = this.banList.bans.filter(
+            (b) => b.type === 'guild' && !this.isBanExpired(b.endDate)
+        );
+
+        if (guildBans.length === 0) {
+            api.log.debug('🔨 Ban enforcement: no active guild bans to enforce');
+            return;
+        }
+
+        // Remove any expired bans first
+        await this.removeExpiredBans();
+
+        const guildName = process.env.HYPIXEL_GUILD_NAME;
+        if (!guildName) {
+            api.log.error('BAN ENFORCEMENT: HYPIXEL_GUILD_NAME not set in .env');
+            return;
+        }
+
+        // Fetch guild data from Hypixel API
+        let guildMembers: { uuid: string; rank: string }[];
+        try {
+            const res = await fetch(
+                `https://api.hypixel.net/guild?name=${encodeURIComponent(guildName)}&key=${process.env.HYPIXEL_API_KEY}`
+            );
+            if (!res.ok) {
+                api.log.error(`BAN ENFORCEMENT: Hypixel API returned ${res.status}`);
+                return;
+            }
+            const data: any = await res.json();
+            if (!data?.guild?.members) {
+                api.log.error('BAN ENFORCEMENT: No guild member data returned');
+                return;
+            }
+            guildMembers = data.guild.members;
+        } catch (error) {
+            api.log.error('BAN ENFORCEMENT: Failed to fetch guild data:', error);
+            return;
+        }
+
+        // Build a set of member UUIDs currently in the guild (Hypixel UUIDs are un-dashed)
+        const memberUUIDs = new Set(guildMembers.map((m) => m.uuid.replace(/-/g, '')));
+
+        // Check each guild ban against current members
+        let kickCount = 0;
+        for (const ban of guildBans) {
+            const banUUID = ban.uuid.replace(/-/g, '');
+            if (memberUUIDs.has(banUUID)) {
+                api.log.warn(
+                    `🔨 Ban enforcement: kicking ${ban.name} (banned by ${ban.bannedBy}, reason: ${ban.reason})`
+                );
+
+                api.chat.executeCommand(
+                    `/g kick ${ban.name} Banned by ${ban.bannedBy}. Reason: ${ban.reason}. Appeal: .gg/misc`
+                );
+
+                kickCount++;
+
+                // Wait between kicks to avoid rate limits
+                await new Promise((resolve) => setTimeout(resolve, 1500));
+            }
+        }
+
+        if (kickCount > 0) {
+            api.log.success(`🔨 Ban enforcement: kicked ${kickCount} banned member(s)`);
+            api.chat.sendOfficerChat(
+                `[Ban Enforcement] Kicked ${kickCount} banned member(s) from the guild`
+            );
+        } else {
+            api.log.debug('🔨 Ban enforcement: no banned members found in guild');
         }
     }
 

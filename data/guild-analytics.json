@@ -725,11 +725,45 @@
         "desinnaz": 1,
         "MufinIsTooSleepy": 1
       }
+    },
+    "2026-02-27": {
+      "date": "2026-02-27",
+      "messagesReceived": 80,
+      "commandsUsed": 4,
+      "membersJoined": 0,
+      "membersLeft": 0,
+      "membersKicked": 0,
+      "promotions": 0,
+      "demotions": 0,
+      "guildLevelUps": 0,
+      "questsCompleted": 0,
+      "activeUsers": [
+        "Swethe",
+        "Vliegenier04",
+        "HidingInTheBusch",
+        "MiscBridge",
+        "Ziyy_17",
+        "ChromeCompany",
+        "Flawlessd",
+        "DaBaoss",
+        "Yeezys"
+      ],
+      "topChatters": {
+        "Swethe": 27,
+        "Vliegenier04": 17,
+        "HidingInTheBusch": 7,
+        "MiscBridge": 13,
+        "Ziyy_17": 1,
+        "ChromeCompany": 7,
+        "Flawlessd": 2,
+        "DaBaoss": 3,
+        "Yeezys": 3
+      }
     }
   },
   "totalStats": {
-    "totalMessages": 5200,
-    "totalCommands": 49,
+    "totalMessages": 5280,
+    "totalCommands": 53,
     "totalJoins": 3,
     "totalLeaves": 0,
     "totalKicks": 1,

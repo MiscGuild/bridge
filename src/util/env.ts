@@ -51,6 +51,8 @@ const envSchema = z
 
         // === STAFF MANAGEMENT SETTINGS ===
         BAN_ALLOWED_RANKS: OPTIONAL_STRING_SCHEMA,
+        BAN_CHECK_INTERVAL: z.coerce.number().int().min(1).default(10), // Minutes between ban enforcement checks
+        URCHIN_JOIN_CHECK: BOOLEAN_SCHEMA.optional(), // Auto-check new members against Urchin blacklist
 
         // === TERMINAL REPL ===
         ENABLE_TERMINAL: BOOLEAN_SCHEMA.optional(),

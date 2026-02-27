@@ -108,7 +108,9 @@ export default class Bridge {
                     console.log('  /oc <message>              - Send message to officer chat');
                     console.log('  /pm <username> <message>   - Send private message');
                     console.log('  /cmd <command>             - Send raw Minecraft command');
-                    console.log('  !<command>                 - Use any extension command (e.g., !gexp, !session)');
+                    console.log(
+                        '  !<command>                 - Use any extension command (e.g., !gexp, !session)'
+                    );
                     console.log('  help                       - Show this help message');
                     console.log('  quit/exit                  - Shutdown the bot\n');
                 } else if (cmd === '/gc') {

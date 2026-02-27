@@ -1,0 +1,19 @@
+{
+    "enabled": true,
+    "action": "mute",
+    "muteDuration": "1h",
+    "warnBeforeMute": true,
+    "maxWarnings": 2,
+    "warningResetMinutes": 60,
+    "warningChannel": "both",
+    "notifyOfficerChat": true,
+    "logToConsole": true,
+    "customBlockedTerms": [],
+    "customAllowedTerms": [],
+    "exemptRanks": [],
+    "offenses": [
+        { "duration": "1h", "message": "Second offense — muted for 1 hour." },
+        { "duration": "1d", "message": "Third offense — muted for 1 day." }
+    ],
+    "offenseResetHours": 24
+}

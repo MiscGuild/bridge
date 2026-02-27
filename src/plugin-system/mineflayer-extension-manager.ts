@@ -55,6 +55,7 @@ interface ChatPattern {
     priority: number;
     description?: string;
     handler: (context: ChatMessageContext, api: ExtensionAPI) => Promise<void> | void;
+    passthrough?: boolean; // If true, don't break after match - allow subsequent patterns to also run
 }
 
 interface ExtensionManifest {
@@ -254,7 +255,14 @@ export class MineflayerExtensionManager extends EventEmitter {
             .filter((p) => this.enabledExtensions.has(p.extensionId))
             .sort((a, b) => a.priority - b.priority);
 
+        let matched = false;
+
         for (const pattern of patterns) {
+            // Skip non-passthrough patterns if we already matched a non-passthrough
+            if (matched && !pattern.passthrough) {
+                continue;
+            }
+
             // Determine what to match against based on pattern characteristics
             // If pattern starts with "Guild >" or similar, it expects raw message format
             // If pattern starts with "!" or similar command characters, it expects just the message content
@@ -272,7 +280,12 @@ export class MineflayerExtensionManager extends EventEmitter {
                 try {
                     messageContext.matches = matches;
                     await pattern.handler(messageContext, this.extensionAPI);
-                    break; // Stop after first match
+
+                    // If this is a passthrough pattern, continue matching
+                    // Otherwise, mark as matched so only passthrough patterns run after
+                    if (!pattern.passthrough) {
+                        matched = true;
+                    }
                 } catch (error) {
                     consola.error(`Error in chat pattern handler ${pattern.id}:`, error);
                     this.emit('extensionError', pattern.extensionId, error);

@@ -4,6 +4,7 @@ import consola from 'consola';
 import emojis from '../../util/emojis';
 import env from '../../util/env';
 import { isBridgeBanned } from '../../blacklist/check-user-ban';
+import { containsBrainrot } from '../../../extensions/brainrot-filter/index';
 
 const whitelist = ['ass', 'bitch', 'cock', 'dick', 'fuck'];
 const dataset = new DataSet<{ originalWord: string }>()
@@ -69,6 +70,15 @@ export default {
             bridge.discord.send(
                 'oc',
                 `${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked. This message was not sent to Hypixel.`
+            );
+        } else if (containsBrainrot(message.content)) {
+            await message.channel.send(
+                `${emojis.warning} ${message.author.username}, brainrot terms are not allowed!`
+            );
+            consola.warn(`Brainrot blocked from Discord: ${message.content}`);
+            bridge.discord.send(
+                'oc',
+                `${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked by the brainrot filter. This message was not sent to Hypixel.`
             );
         } else {
             const content = `${name} ${env.MINECRAFT_CHAT_SEPARATOR} ${message.content.replace(

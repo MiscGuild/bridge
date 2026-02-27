@@ -1,0 +1,14 @@
+{
+    "name": "brainrot-filter",
+    "version": "1.0.0",
+    "description": "Filters brainrot/slang terms from guild chat and mutes offenders",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {}
+}
