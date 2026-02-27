@@ -4,6 +4,7 @@
         "module": "CommonJS",
         "moduleResolution": "Node",
         "baseUrl": "./",
+        "rootDir": "./src",
         "outDir": "./dist",
         "resolveJsonModule": true,
         "preserveConstEnums": true,

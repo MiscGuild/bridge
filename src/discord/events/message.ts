@@ -4,7 +4,7 @@ import consola from 'consola';
 import emojis from '../../util/emojis';
 import env from '../../util/env';
 import { isBridgeBanned } from '../../blacklist/check-user-ban';
-import { containsBrainrot } from '../../../extensions/brainrot-filter/index';
+import { containsBrainrot } from '../../util/brainrot-terms';
 
 const whitelist = ['ass', 'bitch', 'cock', 'dick', 'fuck'];
 const dataset = new DataSet<{ originalWord: string }>()
