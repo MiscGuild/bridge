@@ -10,9 +10,6 @@ yarn.lock
 # Dependencies
 node_modules
 
-# Data files
-data/
-
 # Logs
 *.log
 npm-debug.log*

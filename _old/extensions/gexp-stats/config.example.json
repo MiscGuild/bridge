@@ -1,9 +1,0 @@
-{
-    "enabled": true,
-    "guildRankCooldowns": {
-        "Guild Master": 0,
-        "Leader": 10,
-        "Moderator": 20,
-        "Member": 60
-    }
-}

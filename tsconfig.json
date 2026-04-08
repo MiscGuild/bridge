@@ -3,7 +3,7 @@
         "target": "ESNext",
         "module": "CommonJS",
         "moduleResolution": "Node",
-        "baseUrl": "./",
+        "baseUrl": "./src",
         "rootDir": "./src",
         "outDir": "./dist",
         "resolveJsonModule": true,
@@ -18,8 +18,21 @@
         "skipLibCheck": true,
         "isolatedModules": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "paths": {
+            "@/bot/*": ["bot/*"],
+            "@/discord/*": ["discord/*"],
+            "@/bridge/*": ["bridge/*"],
+            "@/api/*": ["api/*"],
+            "@/db/*": ["db/*"],
+            "@/services/*": ["services/*"],
+            "@/modules/*": ["modules/*"],
+            "@/queue/*": ["queue/*"],
+            "@/monitoring/*": ["monitoring/*"],
+            "@/util/*": ["util/*"],
+            "@/config/*": ["config/*"]
+        }
     },
-    "include": ["src/**/*", "plugins/**/*", "config/**/*"],
-    "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist", "dashboard", "**/*.test.ts", "**/*.spec.ts"]
 }
