@@ -194,13 +194,4 @@ export default class Bridge {
     }
 }
 
-const handleError = (e: Error) => consola.error(e);
-const handleShutdown = async (bridge: Bridge) => {
-    await bridge.shutdown();
-    process.exit(0);
-};
 
-// Handle graceful shutdown
-process.on('SIGINT', () => handleShutdown(new Bridge()));
-process.on('SIGTERM', () => handleShutdown(new Bridge()));
-process.on('uncaughtException', handleError).on('unhandledRejection', handleError);

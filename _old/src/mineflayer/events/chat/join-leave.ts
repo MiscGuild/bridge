@@ -6,7 +6,12 @@ export default {
     runOnce: false,
     run: async (bridge, playerName: string, status: 'joined' | 'left') => {
         const emoji = status === 'joined' ? emojis.join : emojis.leave;
-        bridge.onlineCount = status === 'joined' ? bridge.onlineCount++ : bridge.onlineCount--;
+        if (status === 'joined') {
+            bridge.onlineCount += 1;
+        } else {
+            bridge.onlineCount -= 1;
+        }
+        bridge.setStatus();
 
         await bridge.discord.send(
             'gc',
