@@ -68,6 +68,12 @@ export const bansRepo = {
         await db.from('bans').update({ is_active: false }).eq('id', id);
     },
 
+    async removeByUsername(username: string): Promise<void> {
+        const db = getSupabaseClient();
+        if (!db) return;
+        await db.from('bans').update({ is_active: false }).ilike('username', username).eq('is_active', true);
+    },
+
     async expireOverdue(): Promise<void> {
         const db = getSupabaseClient();
         if (!db) return;

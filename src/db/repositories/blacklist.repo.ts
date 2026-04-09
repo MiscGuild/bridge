@@ -53,6 +53,16 @@ export const blacklistRepo = {
         return (data as BlacklistRecord | null) ?? null;
     },
 
+    async add(input: CreateBlacklistInput): Promise<BlacklistRecord | null> {
+        return blacklistRepo.create(input);
+    },
+
+    async remove(uuid: string): Promise<void> {
+        const db = getSupabaseClient();
+        if (!db) return;
+        await db.from('blacklist').update({ is_active: false }).eq('uuid', uuid);
+    },
+
     async deactivate(id: string): Promise<void> {
         const db = getSupabaseClient();
         if (!db) return;

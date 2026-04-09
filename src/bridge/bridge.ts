@@ -8,6 +8,8 @@ import { applyFilters, FilterResult } from '@/bridge/filters/index';
 import { blacklistRepo } from '@/db/repositories/blacklist.repo';
 import { bansRepo } from '@/db/repositories/bans.repo';
 import messageQueue from '@/queue/message-queue';
+import { moduleManager, initModules, trackEvent, trackGuildEvent } from '@/modules/index';
+import { startHealthMonitor, incrementMetric } from '@/monitoring/health';
 
 // Handlers
 import { handleGuildChat } from '@/bot/handlers/guild-chat';
@@ -58,6 +60,9 @@ export default class Bridge {
 
         await this.discord.login(env.DISCORD_TOKEN);
 
+        initModules(this);
+        startHealthMonitor(this);
+
         if (env.REMINDER_ENABLED && env.REMINDER_MESSAGE) {
             setInterval(() => {
                 this.bot.chat('gc', env.REMINDER_MESSAGE);
@@ -100,19 +105,47 @@ export default class Bridge {
             if (!event) return;
 
             switch (event.type) {
-                case 'guildChat':       await handleGuildChat(this, event); break;
+                case 'guildChat': {
+                    // Dispatch to module commands first (e.g. !bw, !gexp)
+                    const handled = await moduleManager.dispatch(event, this);
+                    if (!handled) await handleGuildChat(this, event);
+                    trackEvent(event);
+                    incrementMetric('messagesIn');
+                    break;
+                }
                 case 'joinLeave':       await handleJoinLeave(this, event); break;
-                case 'memberJoinLeave': await handleMemberJoinLeave(this, event); break;
-                case 'memberKick':      await handleMemberKick(this, event); break;
-                case 'promoteDemote':   await handlePromoteDemote(this, event); break;
+                case 'memberJoinLeave':
+                    await handleMemberJoinLeave(this, event);
+                    await trackGuildEvent(event, this);
+                    trackEvent(event);
+                    break;
+                case 'memberKick':
+                    await handleMemberKick(this, event);
+                    await trackGuildEvent(event, this);
+                    trackEvent(event);
+                    break;
+                case 'promoteDemote':
+                    await handlePromoteDemote(this, event);
+                    await trackGuildEvent(event, this);
+                    trackEvent(event);
+                    break;
                 case 'guildMuteUnmute': await handleGuildMuteUnmute(this, event); break;
                 case 'memberCount':     await handleMemberCount(this, event); break;
                 case 'joinRequest':     await handleJoinRequest(this, event); break;
-                case 'guildLevelUp':    await handleGuildLevelUp(this, event); break;
+                case 'guildLevelUp':
+                    await handleGuildLevelUp(this, event);
+                    trackEvent(event);
+                    break;
                 case 'joinLimbo':       await handleJoinLimbo(this, event); break;
                 case 'lobbyJoin':       await handleLobbyJoin(this, event); break;
-                case 'questComplete':   await handleQuestComplete(this, event); break;
-                case 'questTierComplete': await handleQuestTierComplete(this, event); break;
+                case 'questComplete':
+                    await handleQuestComplete(this, event);
+                    trackEvent(event);
+                    break;
+                case 'questTierComplete':
+                    await handleQuestTierComplete(this, event);
+                    trackEvent(event);
+                    break;
                 case 'sameMessageTwice': await handleSameMessageTwice(this, event); break;
                 case 'commentBlocked':  await handleCommentBlocked(this, event); break;
                 case 'whisper':         await handleWhisper(this, event); break;
@@ -151,7 +184,7 @@ export default class Bridge {
         });
     }
 
-    private async loadBans(): Promise<void> {
+    public async loadBans(): Promise<void> {
         try {
             const bans = await bansRepo.getActive();
             this.bridgeBanned.clear();
