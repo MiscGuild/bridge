@@ -10,7 +10,6 @@ function getApiKeys(): string[] {
     return [
         env.HYPIXEL_API_KEY,
         env.FALLBACK_HYPIXEL_API_KEY,
-        env['2ND_FALLBACK_HYPIXEL_API_KEY'],
     ].filter((k): k is string => Boolean(k));
 }
 
