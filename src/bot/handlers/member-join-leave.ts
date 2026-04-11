@@ -4,19 +4,7 @@ import { escapeMarkdown, getRankColor } from '@/util/formatting';
 import emojis from '@/util/emojis';
 import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
-
-async function checkUrchinBan(uuid: string): Promise<boolean> {
-    const key = process.env['URCHIN_API_KEY'];
-    if (!key || !env.URCHIN_JOIN_CHECK) return false;
-    try {
-        const res = await fetch(`https://api.urchin.gg/v1/player/${uuid}`, {
-            headers: { Authorization: `Bearer ${key}`, 'User-Agent': 'BridgeBot/2.0' },
-        });
-        if (!res.ok) return false;
-        const data = (await res.json()) as { banned?: boolean };
-        return data.banned === true;
-    } catch { return false; }
-}
+import { isUrchinFlagged } from '@/modules/blacklist/index';
 
 export async function handleMemberJoinLeave(
     bridge: Bridge,
@@ -30,10 +18,10 @@ export async function handleMemberJoinLeave(
                 bridge.bot.execute(
                     `/g kick ${event.playerName} You have been blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
                 );
-            } else {
+            } else if (env.URCHIN_JOIN_CHECK && env.URCHIN_API_KEY) {
                 // Urchin API auto-check on guild join
-                const banned = await checkUrchinBan(profile.id);
-                if (banned) {
+                const flagged = await isUrchinFlagged(profile.id);
+                if (flagged) {
                     bridge.bot.execute(
                         `/g kick ${event.playerName} Urchin-flagged. Dispute? ${env.DISCORD_INVITE_LINK}`
                     );

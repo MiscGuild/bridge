@@ -3,30 +3,39 @@ import type { ModuleCommand } from '@/modules/types';
 import { blacklistRepo } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
 import cooldowns from '@/util/cooldown';
+import env from '@/config/env';
 
 interface UrchinTag {
-    tag: string;
     type: string;
-    description?: string;
+    reason?: string;
 }
 
 interface UrchinResponse {
-    uuid: string;
-    username: string;
-    tags: UrchinTag[];
-    banned: boolean;
+    tags?: UrchinTag[];
 }
 
-async function checkUrchin(uuid: string): Promise<UrchinResponse | null> {
-    const urchinApiKey = process.env['URCHIN_API_KEY'];
-    if (!urchinApiKey) return null;
+function hex(): string {
+    return `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0')}`;
+}
+
+/**
+ * Query Urchin API using the same URL format as the original extension:
+ * https://urchin.ws/player/{uuid}?key={key}&sources=GAME,MANUAL,CHAT,ME,PARTY
+ */
+async function queryUrchin(uuid: string): Promise<UrchinResponse | null> {
+    const apiKey = env.URCHIN_API_KEY;
+    if (!apiKey) return null;
     try {
-        const res = await fetch(`https://api.urchin.gg/v1/player/${uuid}`, {
+        const url = `https://urchin.ws/player/${uuid}?key=${apiKey}&sources=GAME,MANUAL,CHAT,ME,PARTY`;
+        const res = await fetch(url, {
             headers: {
-                Authorization: `Bearer ${urchinApiKey}`,
-                'User-Agent': 'BridgeBot/2.0',
+                'User-Agent': 'MiscellaneousBridge/2.6 (info@vliegenier04.dev)',
+                Accept: 'application/json',
             },
         });
+        if (res.status === 404) return { tags: [] };
+        if (res.status === 401) return null; // invalid key
+        if (res.status === 429) return null; // rate limited
         if (!res.ok) return null;
         return await res.json() as UrchinResponse;
     } catch {
@@ -34,23 +43,29 @@ async function checkUrchin(uuid: string): Promise<UrchinResponse | null> {
     }
 }
 
+/** Simplified check for auto-kick on guild join */
+export async function isUrchinFlagged(uuid: string): Promise<boolean> {
+    const data = await queryUrchin(uuid);
+    return !!data?.tags && data.tags.length > 0;
+}
+
 export function registerBlacklistModule(commands: ModuleCommand[]): void {
 
-    // !view <username> — check Urchin tags + internal blacklist
+    // !view [username] — check Urchin tags + internal blacklist (self if no arg)
     commands.push({
         commandId: 'blacklist:view',
-        pattern: /^!view\s+(\S+)$/i,
+        pattern: /^!view(?:\s+(\S+))?$/i,
         async handler(ctx, bridge) {
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'urchin');
             if (remaining > 0) {
-                bridge.bot.chat('gc', `${ctx.username}, cooldown: ${remaining}s`);
+                bridge.bot.chat('gc', `${ctx.username}, cooldown: ${remaining}s | ${hex()}`);
                 return;
             }
 
-            const target = ctx.matches[1]!;
+            const target = ctx.matches[1]?.trim() ?? ctx.username;
             const profile = await mojangService.getProfile(target);
             if (!profile) {
-                bridge.bot.chat('gc', `Could not find player: ${target}`);
+                bridge.bot.chat('gc', `[NOT-TAGGED] ${target} is not a valid Minecraft username. | ${hex()}`);
                 return;
             }
 
@@ -58,31 +73,33 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
 
             // Internal blacklist check
             const internalEntry = await blacklistRepo.getByUuid(profile.id).catch(() => null);
+            if (internalEntry) {
+                bridge.bot.chat('gc', `[INTERNAL] ${profile.name} - ${internalEntry.reason ?? 'No reason'} | ${hex()}`);
+            }
 
             // Urchin API check
-            const urchin = await checkUrchin(profile.id);
+            const urchin = await queryUrchin(profile.id);
 
-            const parts: string[] = [`[${profile.name}]`];
-
-            if (internalEntry) {
-                parts.push(`INTERNAL BLACKLIST: ${internalEntry.reason ?? 'No reason'}`);
+            if (!urchin) {
+                if (!internalEntry) {
+                    bridge.bot.chat('gc', `[ERROR] Failed to check blacklist for ${profile.name}. Try again later. | ${hex()}`);
+                }
+                return;
             }
 
-            if (urchin) {
-                if (urchin.banned) {
-                    parts.push(`URCHIN BANNED`);
+            if (!urchin.tags || urchin.tags.length === 0) {
+                if (!internalEntry) {
+                    bridge.bot.chat('gc', `[NOT-TAGGED] ${profile.name} has no tags in the blacklist. | ${hex()}`);
                 }
-                if (urchin.tags.length > 0) {
-                    parts.push(`Tags: ${urchin.tags.map(t => t.tag).join(', ')}`);
-                }
-                if (!urchin.banned && urchin.tags.length === 0 && !internalEntry) {
-                    parts.push(`Clean`);
-                }
-            } else if (!internalEntry) {
-                parts.push(`Not blacklisted`);
+                return;
             }
 
-            bridge.bot.chat('gc', parts.join(' | '));
+            // Display each tag individually, matching original format
+            for (const tag of urchin.tags) {
+                const tagType = (tag.type || 'UNKNOWN').toUpperCase().replace(/ /g, '-');
+                const reason = tag.reason || 'No reason given';
+                bridge.bot.chat('gc', `[${tagType}] ${profile.name} - ${reason} | ${hex()}`);
+            }
         },
     });
 

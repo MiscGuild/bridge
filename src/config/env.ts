@@ -66,6 +66,7 @@ const envSchema = z.object({
     BAN_ALLOWED_RANKS: OPTIONAL_STRING,
     BAN_CHECK_INTERVAL: z.coerce.number().int().min(1).default(10),
     URCHIN_JOIN_CHECK: OPTIONAL_BOOLEAN,
+    URCHIN_API_KEY: OPTIONAL_STRING,
 
     // === TERMINAL REPL ===
     ENABLE_TERMINAL: OPTIONAL_BOOLEAN,
