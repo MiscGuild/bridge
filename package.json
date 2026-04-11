@@ -1,6 +1,6 @@
 {
     "name": "guild-bridge-bot",
-    "version": "2.0.1",
+    "version": "3.0.0-alpha",
     "description": "A bot used to Bridge between Discord and Hypixel guild chats",
     "main": "dist/index.js",
     "scripts": {
