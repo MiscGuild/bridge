@@ -5,7 +5,7 @@
     "main": "dist/index.js",
     "scripts": {
         "start": "node dist/index.js",
-        "build": "tsc && npm run build:extensions",
+        "build": "tsc && tsc-alias",
         "build:extensions": "node scripts/build-extensions.js",
         "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
         "setup-files": "node scripts/setup-files.js",
@@ -67,6 +67,7 @@
         "eslint": "^8.0.0",
         "prettier": "^3.0.0",
         "ts-node-dev": "^2.0.0",
+        "tsc-alias": "^1.8.16",
         "typescript": "^5.3.0"
     }
 }
