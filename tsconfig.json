@@ -30,7 +30,8 @@
             "@/queue/*": ["queue/*"],
             "@/monitoring/*": ["monitoring/*"],
             "@/util/*": ["util/*"],
-            "@/config/*": ["config/*"]
+            "@/config/*": ["config/*"],
+            "@/terminal/*": ["terminal/*"]
         }
     },
     "include": ["src/**/*"],
