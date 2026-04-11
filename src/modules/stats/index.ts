@@ -290,51 +290,51 @@ function makeStatCmd(
 export function registerStatsModule(commands: ModuleCommand[]): void {
     // BW sub-modes must be registered BEFORE the overall !bw catch-all
     commands.push(
-        makeStatCmd('stats:bw:solo', /^!bw\s+(?:solo|1s|solos)\s*(\S+)?$/i, buildBwSolo),
-        makeStatCmd('stats:bw:doubles', /^!bw\s+(?:doubles|2s|duos)\s*(\S+)?$/i, buildBwDoubles),
-        makeStatCmd('stats:bw:threes', /^!bw\s+(?:threes|3s|3v3|trios)\s*(\S+)?$/i, buildBwThrees),
-        makeStatCmd('stats:bw:fours', /^!bw\s+(?:fours|4s|4v4v4v4|quads)\s*(\S+)?$/i, buildBwFours),
-        makeStatCmd('stats:bw:4v4', /^!bw\s+4v4\s*(\S+)?$/i, buildBw4v4),
-        makeStatCmd('stats:bw', /^!bw(?:\s+(\S+))?$/i, buildBwOverall),
+        makeStatCmd('stats:bw:solo', /^!bw\s+(?:solo|1s|solos)\s*(\S+)?/i, buildBwSolo),
+        makeStatCmd('stats:bw:doubles', /^!bw\s+(?:doubles|2s|duos)\s*(\S+)?/i, buildBwDoubles),
+        makeStatCmd('stats:bw:threes', /^!bw\s+(?:threes|3s|3v3|trios)\s*(\S+)?/i, buildBwThrees),
+        makeStatCmd('stats:bw:fours', /^!bw\s+(?:fours|4s|4v4v4v4|quads)\s*(\S+)?/i, buildBwFours),
+        makeStatCmd('stats:bw:4v4', /^!bw\s+4v4\s*(\S+)?/i, buildBw4v4),
+        makeStatCmd('stats:bw', /^!bw(?:\s+(\S+))?/i, buildBwOverall),
     );
 
     // SkyWars
-    commands.push(makeStatCmd('stats:sw', /^!sw(?:\s+(\S+))?$/i, buildSkywars));
+    commands.push(makeStatCmd('stats:sw', /^!sw(?:\s+(\S+))?/i, buildSkywars));
 
     // Duels — overall + 7 sub-modes
     commands.push(
-        makeStatCmd('stats:duels', /^!duels(?:\s+(\S+))?$/i, buildDuels),
-        makeStatCmd('stats:uhcduels', /^!uhcduels(?:\s+(\S+))?$/i, buildUhcDuels),
-        makeStatCmd('stats:swduels', /^!swduels(?:\s+(\S+))?$/i, buildSwDuels),
-        makeStatCmd('stats:classicduels', /^!classicduels(?:\s+(\S+))?$/i, buildClassicDuels),
-        makeStatCmd('stats:bowduels', /^!bowduels(?:\s+(\S+))?$/i, buildBowDuels),
-        makeStatCmd('stats:opduels', /^!opduels(?:\s+(\S+))?$/i, buildOpDuels),
-        makeStatCmd('stats:comboduels', /^!comboduels(?:\s+(\S+))?$/i, buildComboDuels),
-        makeStatCmd('stats:potionduels', /^!potionduels(?:\s+(\S+))?$/i, buildPotionDuels),
+        makeStatCmd('stats:duels', /^!duels(?:\s+(\S+))?/i, buildDuels),
+        makeStatCmd('stats:uhcduels', /^!uhcduels(?:\s+(\S+))?/i, buildUhcDuels),
+        makeStatCmd('stats:swduels', /^!swduels(?:\s+(\S+))?/i, buildSwDuels),
+        makeStatCmd('stats:classicduels', /^!classicduels(?:\s+(\S+))?/i, buildClassicDuels),
+        makeStatCmd('stats:bowduels', /^!bowduels(?:\s+(\S+))?/i, buildBowDuels),
+        makeStatCmd('stats:opduels', /^!opduels(?:\s+(\S+))?/i, buildOpDuels),
+        makeStatCmd('stats:comboduels', /^!comboduels(?:\s+(\S+))?/i, buildComboDuels),
+        makeStatCmd('stats:potionduels', /^!potionduels(?:\s+(\S+))?/i, buildPotionDuels),
     );
 
     // Other game modes
     commands.push(
-        makeStatCmd('stats:uhc', /^!uhc(?:\s+(\S+))?$/i, buildUhc),
-        makeStatCmd('stats:mm', /^!mm(?:\s+(\S+))?$/i, buildMM),
-        makeStatCmd('stats:bb', /^!bb(?:\s+(\S+))?$/i, buildBB),
-        makeStatCmd('stats:arcade', /^!arcade(?:\s+(\S+))?$/i, buildArcade),
-        makeStatCmd('stats:tnt', /^!tnt(?:\s+(\S+))?$/i, buildTnt),
-        makeStatCmd('stats:cvc', /^!cvc(?:\s+(\S+))?$/i, buildCvc),
-        makeStatCmd('stats:mw', /^!mw(?:\s+(\S+))?$/i, buildMW),
-        makeStatCmd('stats:pit', /^!pit(?:\s+(\S+))?$/i, buildPit),
+        makeStatCmd('stats:uhc', /^!uhc(?:\s+(\S+))?/i, buildUhc),
+        makeStatCmd('stats:mm', /^!mm(?:\s+(\S+))?/i, buildMM),
+        makeStatCmd('stats:bb', /^!bb(?:\s+(\S+))?/i, buildBB),
+        makeStatCmd('stats:arcade', /^!arcade(?:\s+(\S+))?/i, buildArcade),
+        makeStatCmd('stats:tnt', /^!tnt(?:\s+(\S+))?/i, buildTnt),
+        makeStatCmd('stats:cvc', /^!cvc(?:\s+(\S+))?/i, buildCvc),
+        makeStatCmd('stats:mw', /^!mw(?:\s+(\S+))?/i, buildMW),
+        makeStatCmd('stats:pit', /^!pit(?:\s+(\S+))?/i, buildPit),
     );
 
     // GEXP
     commands.push(
-        makeStatCmd('stats:gexp', /^!gexp(?:\s+(\S+))?$/i, buildGexp as any, async (uuid) => hypixelService.getGuild(uuid)),
+        makeStatCmd('stats:gexp', /^!gexp(?:\s+(\S+))?/i, buildGexp as any, async (uuid) => hypixelService.getGuild(uuid)),
     );
 
     // SkyBlock commands
     commands.push(
-        makeStatCmd('stats:sb:skills', /^!(?:sb\s+)?skills(?:\s+(\S+))?$/i, buildSbSkills, fetchSkyblockData),
-        makeStatCmd('stats:sb:slayers', /^!(?:sb\s+)?slayers(?:\s+(\S+))?$/i, buildSbSlayers, fetchSkyblockData),
-        makeStatCmd('stats:sb:dungeons', /^!(?:sb\s+)?dungeons(?:\s+(\S+))?$/i, buildSbDungeons, fetchSkyblockData),
-        makeStatCmd('stats:sb', /^!sb(?:\s+(\S+))?$/i, buildSbOverview, fetchSkyblockData),
+        makeStatCmd('stats:sb:skills', /^!(?:sb\s+)?skills(?:\s+(\S+))?/i, buildSbSkills, fetchSkyblockData),
+        makeStatCmd('stats:sb:slayers', /^!(?:sb\s+)?slayers(?:\s+(\S+))?/i, buildSbSlayers, fetchSkyblockData),
+        makeStatCmd('stats:sb:dungeons', /^!(?:sb\s+)?dungeons(?:\s+(\S+))?/i, buildSbDungeons, fetchSkyblockData),
+        makeStatCmd('stats:sb', /^!sb(?:\s+(\S+))?/i, buildSbOverview, fetchSkyblockData),
     );
 }

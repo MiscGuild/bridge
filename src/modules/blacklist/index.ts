@@ -54,7 +54,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
     // !view [username] — check Urchin tags + internal blacklist (self if no arg)
     commands.push({
         commandId: 'blacklist:view',
-        pattern: /^!view(?:\s+(\S+))?$/i,
+        pattern: /^!view(?:\s+(\S+))?/i,
         async handler(ctx, bridge) {
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'urchin');
             if (remaining > 0) {
@@ -98,7 +98,9 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             for (const tag of urchin.tags) {
                 const tagType = (tag.type || 'UNKNOWN').toUpperCase().replace(/ /g, '-');
                 const reason = tag.reason || 'No reason given';
-                bridge.bot.chat('gc', `[${tagType}] ${profile.name} - ${reason} | ${hex()}`);
+                let msg = `[${tagType}] ${profile.name} - ${reason} | ${hex()}`;
+                if (msg.length > 200) msg = msg.slice(0, 197) + '...';
+                bridge.bot.chat('gc', msg);
             }
         },
     });
@@ -106,7 +108,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
     // !blacklist add <username> [reason] — add to internal blacklist (staff only)
     commands.push({
         commandId: 'blacklist:add',
-        pattern: /^!blacklist\s+add\s+(\S+)(?:\s+(.+))?$/i,
+        pattern: /^!blacklist\s+add\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             const rank = ctx.guildRank?.replace(/[\[\]]/g, '').toLowerCase() ?? '';
@@ -132,7 +134,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
     // !blacklist remove <username> — remove from internal blacklist (staff only)
     commands.push({
         commandId: 'blacklist:remove',
-        pattern: /^!blacklist\s+remove\s+(\S+)$/i,
+        pattern: /^!blacklist\s+remove\s+(\S+)/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             const rank = ctx.guildRank?.replace(/[\[\]]/g, '').toLowerCase() ?? '';

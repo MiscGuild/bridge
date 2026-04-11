@@ -20,7 +20,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
     // !gban <username> [reason] — ban from guild (kicks via /g kick, logs to DB)
     commands.push({
         commandId: 'mod:gban',
-        pattern: /^!gban\s+(\S+)(?:\s+(.+))?$/i,
+        pattern: /^!gban\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
@@ -52,7 +52,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
     // !bridgeban <username> [reason] — ban from bridge chat (in-memory + DB)
     commands.push({
         commandId: 'mod:bridgeban',
-        pattern: /^!bridgeban\s+(\S+)(?:\s+(.+))?$/i,
+        pattern: /^!bridgeban\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
@@ -83,7 +83,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
     // !cmdban <username> [reason] — ban from using bot commands
     commands.push({
         commandId: 'mod:cmdban',
-        pattern: /^!cmdban\s+(\S+)(?:\s+(.+))?$/i,
+        pattern: /^!cmdban\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
@@ -113,7 +113,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
     // !unban <username> — remove all active bans
     commands.push({
         commandId: 'mod:unban',
-        pattern: /^!unban\s+(\S+)$/i,
+        pattern: /^!unban\s+(\S+)/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
@@ -134,7 +134,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
     // !banlist — list all active bans (officer chat)
     commands.push({
         commandId: 'mod:banlist',
-        pattern: /^!banlist$/i,
+        pattern: /^!banlist/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
@@ -159,7 +159,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
     // !reboot — restart the bot process (staff only)
     commands.push({
         commandId: 'mod:reboot',
-        pattern: /^!reboot$/i,
+        pattern: /^!reboot/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
@@ -175,7 +175,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
     // !save — force flush all JSON data stores to disk
     commands.push({
         commandId: 'mod:save',
-        pattern: /^!save$/i,
+        pattern: /^!save/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {

@@ -124,7 +124,7 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
     // !analytics [today|weekly] command (staff only)
     commands.push({
         commandId: 'analytics',
-        pattern: /^!analytics(?:\s+(today|weekly|week))?$/i,
+        pattern: /^!analytics(?:\s+(today|weekly|week))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
@@ -139,7 +139,7 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
     // !statsreport - manually trigger the daily report (staff only)
     commands.push({
         commandId: 'statsreport',
-        pattern: /^!statsreport$/i,
+        pattern: /^!statsreport/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
