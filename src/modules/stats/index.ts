@@ -27,11 +27,14 @@ function bwStar(level: number): string {
 }
 
 function swLevel(exp: number): number {
-    const xps = [0, 20, 70, 150, 250, 500, 1000, 2000, 3500, 6000, 10000, 15000];
-    if (exp >= 15000) return Math.floor((exp - 15000) / 10000 + 12);
-    let lvl = 0;
-    for (let i = 0; i < xps.length; i++) { if (exp >= xps[i]!) lvl = i; }
-    return lvl;
+    // Cumulative XP thresholds for levels 1-20 (from Hypixel wiki, Apr 2025)
+    const thresholds = [
+        0, 10, 35, 75, 125, 250, 500, 1000, 1750, 2750,
+        4000, 5550, 7300, 9300, 11800, 14800, 18300, 22300, 26800, 31800,
+    ];
+    if (exp >= 31800) return 20 + Math.floor((exp - 31800) / 5000);
+    for (let i = thresholds.length - 1; i >= 0; i--) { if (exp >= thresholds[i]!) return i + 1; }
+    return 1;
 }
 
 function swStar(level: number): string {
