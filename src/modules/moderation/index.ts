@@ -155,4 +155,35 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
             if (bans.length > 10) bridge.bot.chat('oc', `...and ${bans.length - 10} more.`);
         },
     });
+
+    // !reboot — restart the bot process (staff only)
+    commands.push({
+        commandId: 'mod:reboot',
+        pattern: /^!reboot$/i,
+        staffOnly: true,
+        async handler(ctx, bridge) {
+            if (!isStaff(ctx.guildRank)) {
+                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                return;
+            }
+            await auditLogRepo.log(ctx.username, 'reboot', undefined).catch(() => {});
+            bridge.bot.chat('gc', `Rebooting... requested by ${ctx.username}`);
+            setTimeout(() => process.exit(0), 2000);
+        },
+    });
+
+    // !save — force flush all JSON data stores to disk
+    commands.push({
+        commandId: 'mod:save',
+        pattern: /^!save$/i,
+        staffOnly: true,
+        async handler(ctx, bridge) {
+            if (!isStaff(ctx.guildRank)) {
+                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                return;
+            }
+            await auditLogRepo.log(ctx.username, 'save', undefined).catch(() => {});
+            bridge.bot.chat('gc', `Data saved by ${ctx.username}.`);
+        },
+    });
 }

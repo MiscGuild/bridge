@@ -1,5 +1,5 @@
 {
-    "name": "guild-bridge-bot",
+    "name": "Miscellaneous-Bridge-v3",
     "version": "3.0.0-alpha",
     "description": "A bot used to Bridge between Discord and Hypixel guild chats",
     "main": "dist/index.js",
@@ -29,7 +29,7 @@
         "bot",
         "mineflayer"
     ],
-    "author": "Vliegenier04 & Jejebecarte",
+    "author": "Vliegenier04",
     "license": "MIT",
     "dependencies": {
         "@discordjs/builders": "^1.11.3",
