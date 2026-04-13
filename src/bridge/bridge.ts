@@ -134,9 +134,6 @@ export default class Bridge {
                     await trackGuildEvent(event, this);
                     trackEvent(event);
                     break;
-                case 'guildInvite':
-                    await this.discord.send('gc', `📨 **${event.inviterRank ? `${event.inviterRank} ` : ''}${event.inviterName}** invited **${event.inviteeRank ? `${event.inviteeRank} ` : ''}${event.inviteeName}** to the guild!`);
-                    break;
                 case 'promoteDemote':
                     await handlePromoteDemote(this, event);
                     await trackGuildEvent(event, this);
