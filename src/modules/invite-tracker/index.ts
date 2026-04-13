@@ -55,15 +55,13 @@ export async function trackInviteOnJoin(bridge: Bridge, playerName: string): Pro
     await new Promise(r => setTimeout(r, 2000));
 
     const inviter = await lookupInviter(bridge, playerName);
-    if (!inviter) {
-        consola.debug(`${playerName} joined without an invite (open guild or /g accept).`);
-        return;
+    if (inviter) {
+        consola.info(`${inviter} invited ${playerName} to the guild.`);
+        bridge.bot.chat('oc', `${playerName} was invited by ${inviter}`);
+        const profile = await mojangService.getProfile(playerName).catch(() => null);
+        await inviteRepo.create(inviter, playerName, profile?.id ?? '').catch(() => {});
+        await inviteRepo.markAccepted(playerName).catch(() => {});
     }
-
-    consola.info(`${inviter} invited ${playerName} to the guild.`);
-    const profile = await mojangService.getProfile(playerName).catch(() => null);
-    await inviteRepo.create(inviter, playerName, profile?.id ?? '').catch(() => {});
-    await inviteRepo.markAccepted(playerName).catch(() => {});
 }
 
 export function registerInviteTrackerModule(commands: ModuleCommand[]): void {
