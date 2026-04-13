@@ -28,15 +28,17 @@ const LOG_SEPARATOR = /^-{10,}$/;
  */
 export async function lookupInviter(bridge: Bridge, playerName: string): Promise<string | null> {
     try {
-        const lines = await bridge.bot.collectLines(`/g log ${playerName}`, {
+        const rawLines = await bridge.bot.collectLines(`/g log ${playerName}`, {
             timeout: 3000,
-            endPattern: LOG_SEPARATOR,
-            endCount: 2,
         });
+
+        // Mineflayer may deliver the guild log as a single multi-line string
+        const lines = rawLines.flatMap(l => l.split('\n'));
 
         for (const line of lines) {
             const m = line.match(INVITE_LOG_PATTERN);
             if (m && m[2]!.toLowerCase() === playerName.toLowerCase()) {
+                consola.info(`[invite-tracker] Found inviter: ${m[1]} for ${playerName}`);
                 return m[1]!;
             }
         }

@@ -138,7 +138,9 @@ export class MinecraftBot {
             let endSeen = 0;
 
             const listener = (jsonMsg: unknown) => {
-                const str = typeof jsonMsg === 'string' ? jsonMsg : String(jsonMsg);
+                const raw = typeof jsonMsg === 'string' ? jsonMsg : String(jsonMsg);
+                // Strip Minecraft color/formatting codes (§X)
+                const str = raw.replace(/§./g, '');
                 lines.push(str);
 
                 if (endPattern && endPattern.test(str)) {
