@@ -6,6 +6,7 @@ import { DiscordClient } from '@/discord/client';
 import { parseChatMessage } from '@/bot/chat-parser';
 import { applyFilters, FilterResult } from '@/bridge/filters/index';
 import { blacklistRepo } from '@/db/repositories/blacklist.repo';
+import { mutesRepo } from '@/db/repositories/mutes.repo';
 import { bansRepo } from '@/db/repositories/bans.repo';
 import messageQueue from '@/queue/message-queue';
 import { moduleManager, initModules, trackEvent, trackGuildEvent } from '@/modules/index';
@@ -25,6 +26,7 @@ import {
     handleWhisper,
 } from '@/bot/handlers/misc';
 import { trackInviteOnJoin } from '@/modules/invite-tracker/index';
+import { syncDiscordMuteRole } from '@/modules/mute-warn/index';
 
 export default class Bridge {
     public readonly bot: MinecraftBot;
@@ -81,6 +83,14 @@ export default class Bridge {
             const expired = await blacklistRepo.expireOverdue().catch(() => [] as string[]);
             for (const uuid of expired) this.blacklist.remove(uuid);
         }, 60 * 60 * 1000);
+
+        // Periodic mute expiry sweep — remove Discord Muted role (every 5 minutes)
+        setInterval(async () => {
+            const expired = await mutesRepo.expireOverdue().catch(() => []);
+            for (const mute of expired) {
+                await syncDiscordMuteRole(this, mute.discord_id, false).catch(() => {});
+            }
+        }, 5 * 60 * 1000);
 
         consola.success('Bridge started!');
     }

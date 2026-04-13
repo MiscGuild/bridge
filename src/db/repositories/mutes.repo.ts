@@ -114,25 +114,38 @@ export const mutesRepo = {
         await writeMutes(all);
     },
 
-    async expireOverdue(): Promise<void> {
+    async expireOverdue(): Promise<MuteRecord[]> {
         const now = new Date().toISOString();
+        const expired: MuteRecord[] = [];
+
         const db = getSupabaseClient();
         if (db) {
-            await db.from('mutes').update({ is_active: false })
+            // Fetch expired records before deactivating so we can return them
+            const { data: expiredData } = await db.from('mutes').select('*')
                 .eq('is_active', true)
                 .not('expires_at', 'is', null)
                 .lt('expires_at', now);
-            return;
+            if (expiredData && expiredData.length > 0) {
+                expired.push(...(expiredData as MuteRecord[]));
+                await db.from('mutes').update({ is_active: false })
+                    .eq('is_active', true)
+                    .not('expires_at', 'is', null)
+                    .lt('expires_at', now);
+            }
+            return expired;
         }
+
         const all = await readMutes();
         let changed = false;
         for (const m of all) {
             if (m.is_active && m.expires_at && m.expires_at < now) {
                 m.is_active = false;
                 changed = true;
+                expired.push(m);
             }
         }
         if (changed) await writeMutes(all);
+        return expired;
     },
 };
 
