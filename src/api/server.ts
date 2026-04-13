@@ -17,6 +17,7 @@ import analyticsRouter from './routes/analytics';
 import sessionsRouter from './routes/sessions';
 import webhooksRouter from './routes/webhooks';
 import authRouter from './routes/auth';
+import gexpRouter from './routes/gexp';
 
 export function createApiServer(bridge: import('@/bridge/bridge').default) {
     const app = express();
@@ -43,6 +44,7 @@ export function createApiServer(bridge: import('@/bridge/bridge').default) {
     app.use(`${API_PREFIX}/analytics`, authMiddleware, analyticsRouter);
     app.use(`${API_PREFIX}/sessions`, authMiddleware, sessionsRouter);
     app.use(`${API_PREFIX}/webhooks`, authMiddleware, webhooksRouter);
+    app.use(`${API_PREFIX}/gexp`, authMiddleware, gexpRouter);
 
     // Global error handler
     app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {

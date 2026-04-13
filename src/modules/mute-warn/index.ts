@@ -44,7 +44,8 @@ export function formatRemaining(expiresAt: string | null): string {
 // ── Discord Role Sync ─────────────────────────────────────────────────────────
 
 /**
- * Add or remove the Bridge-Muted role from a Discord member.
+ * Add or remove the Muted role from a Discord member on guild mute/unmute.
+ * This is the full server mute role, separate from Bridge-Muted.
  * Silently skips if role ID not configured or member not found.
  */
 export async function syncDiscordMuteRole(
@@ -52,7 +53,7 @@ export async function syncDiscordMuteRole(
     discordId: string | null | undefined,
     muted: boolean
 ): Promise<void> {
-    const roleId = env.BRIDGE_MUTED_ROLE_ID;
+    const roleId = env.MUTED_ROLE_ID;
     if (!roleId || !discordId) return;
 
     try {
@@ -62,9 +63,9 @@ export async function syncDiscordMuteRole(
         if (!member) return;
 
         if (muted && !member.roles.cache.has(roleId)) {
-            await member.roles.add(roleId, 'Bridge mute sync');
+            await member.roles.add(roleId, 'Guild mute sync');
         } else if (!muted && member.roles.cache.has(roleId)) {
-            await member.roles.remove(roleId, 'Bridge unmute sync');
+            await member.roles.remove(roleId, 'Guild unmute sync');
         }
     } catch (err) {
         consola.warn('Failed to sync Discord mute role:', err);

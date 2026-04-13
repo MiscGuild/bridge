@@ -165,3 +165,30 @@ CREATE TABLE IF NOT EXISTS bot_health (
 );
 
 CREATE INDEX IF NOT EXISTS idx_bot_health_timestamp ON bot_health (timestamp DESC);
+
+-- =====================================================
+-- gexp_daily (Guild Experience history per member)
+-- =====================================================
+CREATE TABLE IF NOT EXISTS gexp_daily (
+    date            DATE NOT NULL,
+    uuid            TEXT NOT NULL,
+    username        TEXT NOT NULL,
+    gexp_earned     INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (date, uuid)
+);
+
+CREATE INDEX IF NOT EXISTS idx_gexp_daily_uuid ON gexp_daily (uuid, date DESC);
+CREATE INDEX IF NOT EXISTS idx_gexp_daily_date ON gexp_daily (date DESC);
+
+-- Leaderboard RPC function for Supabase
+CREATE OR REPLACE FUNCTION gexp_leaderboard(p_start DATE, p_end DATE, p_limit INT)
+RETURNS TABLE(uuid TEXT, username TEXT, total BIGINT) AS $$
+    SELECT uuid,
+           (ARRAY_AGG(username ORDER BY date DESC))[1] AS username,
+           SUM(gexp_earned)::BIGINT AS total
+    FROM gexp_daily
+    WHERE date >= p_start AND date <= p_end
+    GROUP BY uuid
+    ORDER BY total DESC
+    LIMIT p_limit;
+$$ LANGUAGE sql STABLE;
