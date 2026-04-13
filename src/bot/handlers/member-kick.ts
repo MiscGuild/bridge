@@ -4,12 +4,15 @@ import { escapeMarkdown } from '@/util/formatting';
 import emojis from '@/util/emojis';
 
 export async function handleMemberKick(bridge: Bridge, event: ParsedMemberKick): Promise<void> {
-    await bridge.discord.send(
-        'gc',
-        `${emojis.kick} **${event.rank ? `${event.rank} ` : ''}${escapeMarkdown(event.playerName)}** was kicked by **${event.kickerRank ? `${event.kickerRank} ` : ''}${escapeMarkdown(event.kickerName)}**`,
-        undefined,
-        true
+    const kickerStr = `${event.kickerRank ? `${event.kickerRank} ` : ''}${escapeMarkdown(event.kickerName)}`;
+    const playerStr = `${event.rank ? `${event.rank} ` : ''}${escapeMarkdown(event.playerName)}`;
+
+    await bridge.discord.send('gc',
+        `${emojis.kick} **${playerStr}** was kicked by **${kickerStr}**`,
+        undefined, true
     );
 
-    bridge.bot.chat('oc', `Player ${event.playerName} was kicked from the guild by ${event.kickerName}.`);
+    await bridge.discord.send('oc',
+        `${emojis.kick} **${playerStr}** was kicked from the guild by **${kickerStr}**`
+    );
 }

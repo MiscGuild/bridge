@@ -18,14 +18,17 @@ export async function handleMemberJoinLeave(
                 bridge.bot.execute(
                     `/g kick ${event.playerName} You have been blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
                 );
-                bridge.bot.chat('oc', `⚠️ Auto-kicked ${event.playerName}: blacklisted`);
+                await bridge.discord.send('oc', `⚠️ Auto-kicked **${escapeMarkdown(event.playerName)}**: on guild blacklist`);
             }
 
             // Urchin check — report to OC, don't auto-kick
             if (env.URCHIN_API_KEY) {
                 const tags = await getUrchinTags(profile.id).catch(() => []);
                 if (tags.length > 0) {
-                    bridge.bot.chat('oc', `⚠️ ${event.playerName} has Urchin tags: ${tags.join(', ')}`);
+                    await bridge.discord.send('oc',
+                        `⚠️ **${escapeMarkdown(event.playerName)}** joined and has Urchin tags: **${tags.join(', ')}**`,
+                        0xff5555
+                    );
                 }
             }
         }
