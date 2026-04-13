@@ -10,4 +10,6 @@ export async function handleMemberKick(bridge: Bridge, event: ParsedMemberKick):
         undefined,
         true
     );
+
+    bridge.bot.chat('oc', `Player ${event.playerName} was kicked from the guild by ${event.kickerName}.`);
 }
