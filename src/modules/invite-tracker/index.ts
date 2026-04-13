@@ -2,6 +2,7 @@ import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand } from '@/modules/types';
 import { inviteRepo } from '@/db/repositories/invites.repo';
 import { mojangService } from '@/services/mojang';
+import { EmbedBuilder } from 'discord.js';
 import { consola } from 'consola';
 
 /**
@@ -57,20 +58,30 @@ export async function trackInviteOnJoin(bridge: Bridge, playerName: string): Pro
     await new Promise(r => setTimeout(r, 2000));
 
     const inviter = await lookupInviter(bridge, playerName);
+    const profile = await mojangService.getProfile(playerName).catch(() => null);
+
     if (inviter) {
         consola.info(`${inviter} invited ${playerName} to the guild.`);
-        await bridge.discord.send('oc',
-            `📨 **${playerName}** joined the guild! They were invited by **${inviter}**.`,
-            0x57f287
-        );
-        const profile = await mojangService.getProfile(playerName).catch(() => null);
+        const embed = new EmbedBuilder()
+            .setColor(0x57f287)
+            .setTitle('📨 Player Joined — Invited')
+            .setThumbnail(`https://mc-heads.net/avatar/${profile?.id ?? playerName}/64`)
+            .addFields(
+                { name: 'Player', value: playerName, inline: true },
+                { name: 'Invited by', value: inviter, inline: true },
+            )
+            .setTimestamp();
+        await bridge.discord.sendEmbed('oc', embed);
         await inviteRepo.create(inviter, playerName, profile?.id ?? '').catch(() => {});
         await inviteRepo.markAccepted(playerName).catch(() => {});
     } else {
-        await bridge.discord.send('oc',
-            `📥 **${playerName}** joined the guild without an invite.`,
-            0xfee75c
-        );
+        const embed = new EmbedBuilder()
+            .setColor(0xfee75c)
+            .setTitle('📥 Player Joined — No Invite')
+            .setThumbnail(`https://mc-heads.net/avatar/${profile?.id ?? playerName}/64`)
+            .addFields({ name: 'Player', value: playerName, inline: true })
+            .setTimestamp();
+        await bridge.discord.sendEmbed('oc', embed);
     }
 }
 

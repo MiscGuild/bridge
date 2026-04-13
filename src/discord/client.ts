@@ -52,6 +52,17 @@ export class DiscordClient extends Client {
         }
     }
 
+    public async sendEmbed(
+        channel: 'gc' | 'oc',
+        embed: EmbedBuilder
+    ): Promise<void> {
+        if (channel === 'gc') {
+            await this.memberChannel?.send({ embeds: [embed] });
+        } else {
+            await this.officerChannel?.send({ embeds: [embed] });
+        }
+    }
+
     public async loadCommands(): Promise<void> {
         const dir = path.join(__dirname, 'commands');
         if (!fs.existsSync(dir)) return;
