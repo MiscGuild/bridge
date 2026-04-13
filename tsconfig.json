@@ -20,18 +20,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "paths": {
-            "@/bot/*": ["bot/*"],
-            "@/discord/*": ["discord/*"],
-            "@/bridge/*": ["bridge/*"],
-            "@/api/*": ["api/*"],
-            "@/db/*": ["db/*"],
-            "@/services/*": ["services/*"],
-            "@/modules/*": ["modules/*"],
-            "@/queue/*": ["queue/*"],
-            "@/monitoring/*": ["monitoring/*"],
-            "@/util/*": ["util/*"],
-            "@/config/*": ["config/*"],
-            "@/terminal/*": ["terminal/*"]
+            "@/*": ["./*"]
         }
     },
     "include": ["src/**/*"],
