@@ -122,6 +122,7 @@ export async function handleMuteSyncFromGame(
     muterName: string,
     duration?: string
 ): Promise<void> {
+    consola.info(`[mute-sync] ${action} ${targetName} by ${muterName} (duration: ${duration ?? 'none'})`);
     const profile = await mojangService.getProfile(targetName).catch(() => null);
     const uuid = profile?.id ?? '';
 
