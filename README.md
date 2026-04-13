@@ -1,7 +1,7 @@
 <h1 align="center">Miscellaneous Guild Bridge</h1>
 
 <p align="center">
-    A bot used to Bridge between Discord and Hypixel guild chats.
+    A feature-rich Discord ↔ Hypixel guild chat bridge bot for the Miscellaneous guild.
 </p>
 
 <h3 align="center">
@@ -16,165 +16,239 @@
     </a>
 </h3>
 
-> [!Warning]
-> This application will log into Minecraft using Mineflayer, a JavaScript API for Minecraft. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License](https://github.com/MiscGuild/bridge/blob/master/LICENSE).
+> [!WARNING]
+> This application logs into Minecraft using Mineflayer, a JavaScript API for Minecraft. This may be against the rules of some servers and could result in punishment. All contributors to this repository are not liable for damages, and no warranty is provided under the [MIT License](LICENSE).
 
-> [!Note]
-> This application will no longer receive updates that contain new features or QOL improvements. Updates, where necessary, will only contain patches for security vulnerabilities and bugs.
+---
 
 - [Features](#features)
+- [Commands](#commands)
+  - [In-game (Guild Chat)](#in-game-guild-chat)
+  - [Discord Slash Commands](#discord-slash-commands)
 - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Setup](#setup)
-    - [Hypixel API keys](#hypixel-api-keys)
-    - [Process management](#process-management)
-- [Contributing](#contributing)
-    - [Issues and bug reports](#issues-and-bug-reports)
-- [Acknowledgements](#acknowledgements)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Environment Variables](#environment-variables)
+  - [Database (Supabase)](#database-supabase)
+  - [Process Management](#process-management)
 - [License](#license)
+
+---
 
 ## Features
 
-- Bridges between Discord and Hypixel guild chats.
-- Sends all guild related messages, including chat, guild announcements and more to Discord.
-- Automatic restarts and reconnections.
-- Privileged slash commands to control bot behaviour in-game.
-- Toggleable slowmode to control member usage.
-- Basic filtering of extreme profanity to protect bot accounts from abuse.
-- Configurable in-game reminders to spread the word about news and upcoming events.
-- **🔌 Mineflayer Extension System**: Universal plugin system for extending bot functionality with custom chat commands and patterns.
+- **Bidirectional chat bridge** — Guild chat and Officer chat ↔ Discord channels
+- **Rich Discord embeds** for all guild events (joins, leaves, kicks, mutes, promotions)
+- **Officer channel notifications** — invite tracking, Urchin cheater alerts, auto-kicks, all as rich embeds
+- **Guild invite tracker** — detects who invited a new member via `/g log`, stores history
+- **Dual blacklist system**
+  - *Guild Blacklist* — blocks players from the guild, supports expiry
+  - *Urchin Blacklist* — real-time cheater tag checks on join
+- **Mute/warn system** — syncs in-game guild mutes to a Discord Muted role (auto-expires)
+- **GEXP history** — tracks daily guild experience, leaderboard with bar chart, player graphs
+- **28+ stat commands** — BedWars, SkyWars, Duels, UHC, Pit, SkyBlock, and more
+- **Session tracking** — track stat gains during a play session
+- **Analytics** — daily message counts, top chatters, guild event tracking
+- **REST API** — protected endpoints for guild data, stats, analytics, GEXP, moderation
+- **Health monitoring** — periodic snapshots and uptime tracking
+- **Configurable cooldowns** per guild rank
+- **Filters** — profanity filter, brainrot filter
+- **Reminders** — periodic in-game announcements
+- **Supabase or JSON fallback** for all persistent storage
 
-## Mineflayer Extension System
+---
 
-This bridge includes a powerful extension system that allows you to add custom functionality without modifying the core bot code. Create extensions that respond to chat patterns, handle commands, and integrate with Discord.
+## Commands
 
-### Quick Start with Extensions
+### In-game (Guild Chat)
 
-```bash
-# Build the extension system
-./build-extensions.sh
+> Commands work in both Guild Chat (`gc`) and Officer Chat (`oc`). Responses are sent back to the same channel.
 
-# Test the extension system
-node test-extensions.mjs
+#### Stats
+| Command | Description |
+|---|---|
+| `!bw [player]` | BedWars overall stats |
+| `!bw solo/doubles/threes/fours/4v4 [player]` | BedWars by mode |
+| `!sw [player]` | SkyWars stats |
+| `!duels [player]` | Duels overall stats |
+| `!uhcduels / !swduels / !classicduels / !bowduels / !opduels / !comboduels / !potionduels [player]` | Duels by mode |
+| `!uhc [player]` | UHC stats |
+| `!mm [player]` | Murder Mystery stats |
+| `!bb [player]` | Build Battle stats |
+| `!arcade [player]` | Arcade stats |
+| `!tnt [player]` | TNT Games stats |
+| `!cvc [player]` | Cops and Crims stats |
+| `!mw [player]` | Mega Walls stats |
+| `!pit [player]` | Pit stats |
+| `!gexp [player]` | Guild EXP — today and weekly total |
+| `!guild [player]` | Guild info (name, level, members, GEXP) — omit player for bot's guild |
+| `!sb [player]` | SkyBlock overview |
+| `!skills / !slayers / !dungeons [player]` | SkyBlock sub-stats |
 
-# Create a new extension
-node src/plugin-system/mineflayer-extension-cli.js create "My Extension"
+#### Sessions
+| Command | Description |
+|---|---|
+| `!bwsession / !swsession / !cvcsession` | Start a stat tracking session |
+| `!endbwsession` / `!endswsession` / `!endcvcsession` | End session and show gains |
+| `!showbwsession` / `!showswsession` / `!showcvcsession` | Show current session progress |
 
-# List extensions
-node src/plugin-system/mineflayer-extension-cli.js list
-```
+#### GEXP Leaderboard
+| Command | Description |
+|---|---|
+| `!gexptop [days]` | Top 5 GEXP earners over the last N days (default 7) |
 
-### Features
+#### Invite Tracker
+| Command | Description |
+|---|---|
+| `!invites [player]` | View invite history for a player |
+| `!inviteleaderboard` | Top 5 inviters |
 
-- **Chat Pattern Routing**: Automatically routes chat messages to appropriate extensions
-- **Priority System**: Handle conflicts between patterns with priority levels
-- **Hot Reloading**: Reload extensions without restarting the bot
-- **Discord Integration**: Built-in Discord webhook and message support
-- **Configuration Management**: Schema-based config validation
-- **Health Monitoring**: Monitor extension health and performance
-- **CLI Tools**: Command-line interface for managing extensions
+#### Moderation (Staff Only)
+| Command | Description |
+|---|---|
+| `!ban <player> <reason>` | Bridge-ban a player |
+| `!unban <player>` | Remove bridge-ban |
+| `!mute / !unmute` | Toggle in-game guild mute tracking |
+| `!warn <player> <reason>` | Warn a player (OC only) |
+| `!warns <player>` | View warnings |
+| `!clearwarns <player>` | Clear warnings (OC only) |
+| `!ismuted <player>` | Check mute status |
+| `!blacklist view <player>` | Check Urchin blacklist tags |
+| `!blacklist add <player> <reason> [duration]` | Add to guild blacklist |
+| `!blacklist remove <player>` | Remove from guild blacklist |
+| `!blacklist list` | List all blacklisted players |
+| `!reboot` | Restart the bot |
+| `!save` | Force-save JSON data |
 
-See the [Extension Documentation](src/plugin-system/MINEFLAYER_EXTENSIONS.md) for detailed guides and examples.
+---
+
+### Discord Slash Commands
+
+| Command | Description |
+|---|---|
+| `/blacklist check/add/remove/list` | Manage guild blacklist and check Urchin tags |
+| `/gexp player <username> [days]` | Player GEXP history graph |
+| `/gexp leaderboard [days] [top]` | Guild GEXP leaderboard with chart |
+| `/gexp sync` | Force-sync GEXP data from Hypixel |
+| `/mute mute/unmute/info` | Manage Discord mute role sync |
+| `/warn add/list/clear` | Manage player warnings |
+| `/kick <player> [reason]` | Kick from guild |
+| `/invite <player>` | Invite to guild |
+| `/promote / /demote <player>` | Promote or demote a guild member |
+| `/announce <message>` | Send guild announcement |
+| `/slowmode <seconds>` | Set bridge channel slowmode |
+| `/command <cmd>` | Execute arbitrary Minecraft command |
+
+---
 
 ## Installation
 
 ### Prerequisites
 
 - [Git](https://git-scm.com/downloads)
-- [NodeJS](https://nodejs.org/en/) and npm
-- A full access Minecraft Java Edition account
+- [Node.js](https://nodejs.org/en/) 18+ and npm
+- A full-access Minecraft Java Edition account
+- A Hypixel API key ([developer.hypixel.net](https://developer.hypixel.net/dashboard))
 
 ### Setup
 
-1. Install [pnpm](https://pnpm.io/) via one of their [installation methods](https://pnpm.io/installation), or the following command:
-
+1. Clone the repository:
 ```bash
-$ npm install -g pnpm
+git clone https://github.com/MiscGuild/bridge.git
+cd bridge
 ```
 
-2. Clone the repository into a directory of your choice.
-
+2. Install dependencies:
 ```bash
-$ git clone https://github.com/MiscGuild/bridge.git
+npm install
 ```
 
-3. Enter the new directory and install packages.
+3. Create a Discord bot at the [Discord Developer Portal](https://discord.com/developers/applications). Under the **Bot** tab, enable **Message Content Intent**.
 
+4. Invite the bot to your server using OAuth2 with scopes `bot` and `application.commands`.
+
+5. Run the setup script to generate `.env`:
 ```bash
-$ cd bridge
-$ pnpm install
+npm run setup-files
 ```
 
-4. Make a new Discord bot account on the [Discord Developer Portal](https://discord.com/developers/applications) and retrieve the bot token.
+6. Fill in `.env` with your credentials (see [Environment Variables](#environment-variables)).
 
-5. Under the `Bot` tab, grant the bot the `Message Content` Intent.
+7. Promote the Minecraft bot account to **Officer** in-game so it can read Officer Chat and run privileged commands.
 
-6. Generate an invite URL by going to the OAuth2 tab and clicking on the URL Generator. Add the `bot` and `application.commands` scopes, before opening the link to invite the bot to your server.
-
-7. Setup the project config files.
-
+8. Build and start:
 ```bash
-$ pnpm run setup-files
+npm run build
+npm start
 ```
 
-8. Fill out the `.env` file with your Minecraft account email and other details.
+---
 
-9. Promote the Minecraft account used by the bot to Officer in-game in order for it to view the Officer chat and run privileged commands.
+### Environment Variables
 
-10. On Hypixel, set the account's `Private Message Privacy` setting under `My Profile > Social Settings` to `Low` or `High`, allowing guild members to privately message the bot to see their weekly guild experience total.
+| Variable | Required | Description |
+|---|---|---|
+| `MINECRAFT_EMAIL` | ✅ | Minecraft account email |
+| `MINECRAFT_PASSWORD` | — | Password (omit for Microsoft auth) |
+| `HYPIXEL_API_KEY` | ✅ | Hypixel API key |
+| `FALLBACK_HYPIXEL_API_KEY` | — | Secondary API key for rate limit fallback |
+| `HYPIXEL_GUILD_NAME` | ✅ | Your guild name |
+| `DISCORD_TOKEN` | ✅ | Discord bot token |
+| `DISCORD_SERVER_ID` | ✅ | Your Discord server ID |
+| `DISCORD_INVITE_LINK` | ✅ | e.g. `discord.gg/yourcode` |
+| `MEMBER_CHANNEL_ID` | ✅ | Guild chat bridge channel |
+| `OFFICER_CHANNEL_ID` | ✅ | Officer chat bridge channel |
+| `BLACKLIST_CHANNEL_ID` | ✅ | Blacklist log channel |
+| `BOT_OWNER_ID` | ✅ | Your Discord user ID |
+| `STAFF_ROLE_ID` | ✅ | Staff role ID for command gating |
+| `BRIDGE_MUTED_ROLE_ID` | — | Role that blocks bridge chat access |
+| `MUTED_ROLE_ID` | — | Role for full server mute (synced with `/g mute`) |
+| `BRIDGE_ACCESS_ROLE_ID` | — | Role granting bridge access to non-members |
+| `GUILD_MEMBER_ROLE_IDS` | — | Comma-separated member role IDs |
+| `URCHIN_API_KEY` | — | Urchin cheater database API key |
+| `SUPABASE_URL` | — | Supabase project URL (uses JSON files if omitted) |
+| `SUPABASE_SERVICE_KEY` | — | Supabase service role key |
+| `API_PORT` | — | REST API port (default: `3001`) |
+| `API_KEY` | — | API key for protected endpoints |
+| `JWT_SECRET` | — | JWT secret for dashboard auth |
+| `USE_PROFANITY_FILTER` | — | Enable profanity filter (default: `true`) |
+| `USE_BRAINROT_FILTER` | — | Enable brainrot term filter (default: `true`) |
+| `MINIMUM_NETWORK_LEVEL` | — | Minimum Hypixel network level to use bridge |
+| `REMINDER_ENABLED` | — | Enable periodic in-game reminders |
+| `REMINDER_MESSAGE` | — | Reminder message text |
+| `REMINDER_FREQUENCY` | — | Reminder interval in minutes |
+| `COOLDOWN_RANK_1` – `RANK_5` | — | Command cooldowns per rank in seconds |
+| `RANK_1` – `RANK_LEADER` | — | Guild rank names matching Hypixel |
+| `ENABLE_TERMINAL` | — | Enable interactive terminal REPL |
 
-11. Build and run the bot.
+---
 
-```bash
-$ pnpm run build
-$ pnpm start
+### Database (Supabase)
+
+All data defaults to local JSON files in `data/`. To use Supabase, set `SUPABASE_URL` and `SUPABASE_SERVICE_KEY`, then run the schema:
+
+```sql
+-- Run src/db/schema.sql in your Supabase SQL editor
 ```
 
-### Hypixel API keys
+Tables: `guild_members`, `chat_messages`, `analytics_daily`, `analytics_chatters`, `sessions`, `bans`, `blacklist`, `mutes`, `warns`, `invites`, `gexp_daily`, `audit_log`, `webhooks`, `bot_health`.
 
-After the June 2023 [Hypixel Public API update](https://hypixel.net/threads/hypixel-developer-dashboard-public-api-changes-june-2023.5364455/), Development API Keys now expire after three days but can be easily renewed.
+---
 
-To acquire a permanent key, first generate a Development Key [here](https://developer.hypixel.net/dashboard). Then, fill out the form under `Apps > Create app > Personal API Key`. Please note that applications concerning bridge bots may be denied.
+### Process Management
 
-Alternatively, you may omit the `HYPIXEL_API_KEY` field of the `.env` file, but some features such as minimum network level enforcement will be disabled.
-
-### Process management
-
-If you are self-hosting or your process manager does not automatically restart the bot in the event of a crash, you may use [PM2](https://pm2.keymetrics.io/), a process manager for Node.js applications.
-
-Use the `pm2:start` script instead of the `start` script to launch the bot. To stop the process, use the `pm2:kill` script.
+Use [PM2](https://pm2.keymetrics.io/) to keep the bot running in the background:
 
 ```bash
-$ pnpm run pm2:start
-$ pnpm run pm2:kill
+npm run pm2:start    # Start
+npm run pm2:kill     # Stop
+npm run pm2:restart  # Restart
+npm run pm2:logs     # View logs
 ```
 
-Please refer to the [PM2 documentation](https://pm2.keymetrics.io/docs/usage/quick-start/) for more configuration options and information about PM2.
-
-## Contributing
-
-Pull requests are welcome. If you would like to chat with other developers please join our [Discord](https://discord.gg/bHFWukp).
-
-Before submitting your changes for review, please ensure:
-
-- The application is fully functional
-- Your code has been thoroughly tested
-- Your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
-
-Give this repository a ⭐ if it helped you!
-
-### Issues and bug reports
-
-To raise an issue or bug report, please contact a developer or [open an issue](https://github.com/MiscGuild/bridge/issues).
-
-## Acknowledgements
-
-Parts of this project adapt code from the following repositories:
-
-- [hychat-mc/self-host](https://github.com/hychat-mc/self-host) under the MIT License.
-    - [xMdb/hypixel-guild-chat-bot](https://github.com/xmdb/hypixel-guild-chat-bot) originally licensed under the GPL-3.0 License, relicensed under the MIT License with explicit permission from the original author.
-- [unaussprechlich/hypixel-api-typescript](https://github.com/unaussprechlich/hypixel-api-typescript) under the MIT License.
+---
 
 ## License
 
-This is an open-source project licensed under the [MIT License](https://github.com/MiscGuild/bridge/blob/master/LICENSE).
+This is an open-source project licensed under the [MIT License](LICENSE).
+
