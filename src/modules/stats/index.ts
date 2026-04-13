@@ -21,6 +21,26 @@ function fmt(n: number): string {
     return n.toLocaleString();
 }
 
+/** Hypixel guild level from total guild XP */
+function guildLevel(exp: number): number {
+    const thresholds = [
+        100000, 150000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 2000000, 2500000,
+        2500000, 2500000, 2500000, 2500000, 3000000,
+    ];
+    let level = 0;
+    let remaining = exp;
+    for (let i = 0; remaining > 0; i++) {
+        const needed = i < thresholds.length ? thresholds[i]! : 3000000;
+        if (remaining >= needed) {
+            remaining -= needed;
+            level++;
+        } else {
+            break;
+        }
+    }
+    return level;
+}
+
 function bwStar(level: number): string {
     const sym = level >= 1000 ? '✫' : '✪';
     return `[${level}${sym}]`;
@@ -337,4 +357,58 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         makeStatCmd('stats:sb:dungeons', /^!(?:sb\s+)?dungeons(?:\s+(\S+))?/i, buildSbDungeons, fetchSkyblockData),
         makeStatCmd('stats:sb', /^!sb(?:\s+(\S+))?/i, buildSbOverview, fetchSkyblockData),
     );
+
+    // Guild info command — !guild or !guild <player>
+    commands.push({
+        commandId: 'stats:guild',
+        pattern: /^!guild(?:\s+(\S+))?/i,
+        async handler(ctx, bridge) {
+            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'stats:guild');
+            if (remaining > 0) { bridge.bot.chat('gc', `${ctx.username}, cooldown: ${remaining}s`); return; }
+
+            const target = ctx.matches[1]?.trim();
+
+            // Resolve UUID: use target player, or fall back to bot itself
+            let uuid: string;
+            if (target) {
+                const profile = await mojangService.getProfile(target).catch(() => null);
+                if (!profile) { bridge.bot.chat('gc', `Could not find player: ${target}`); return; }
+                uuid = profile.id;
+            } else {
+                const botName = (process.env.MINECRAFT_BOT_NAME ?? process.env.MINECRAFT_EMAIL ?? '').split('@')[0];
+                if (!botName) { bridge.bot.chat('gc', 'Bot name not configured.'); return; }
+                const botProfile = await mojangService.getProfile(botName).catch(() => null);
+                if (!botProfile) { bridge.bot.chat('gc', 'Could not resolve bot profile.'); return; }
+                uuid = botProfile.id;
+            }
+
+            const guild = await hypixelService.getGuild(uuid);
+            if (!guild) {
+                bridge.bot.chat('gc', target ? `${target} is not in a guild.` : 'Could not fetch guild data.');
+                return;
+            }
+
+            const members = guild.members ?? [];
+            const level = guildLevel(guild.exp ?? 0);
+            const tag = guild.tag ? ` [${guild.tag}]` : '';
+
+            // Aggregate today + weekly GEXP from all members
+            const todayStr = new Date().toISOString().slice(0, 10);
+            let todayGexp = 0;
+            let weeklyGexp = 0;
+            for (const m of members) {
+                const history = m.expHistory ?? {};
+                const entries = Object.entries(history).sort(([a], [b]) => b.localeCompare(a));
+                todayGexp += entries.find(([d]) => d === todayStr)?.[1] ?? entries[0]?.[1] ?? 0;
+                weeklyGexp += entries.slice(0, 7).reduce((sum, [, v]) => sum + v, 0);
+            }
+
+            const created = new Date(guild.created).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+            bridge.bot.chat('gc',
+                `${guild.name}${tag} | Level: ${level} | Members: ${members.length}/125 | Today: ${fmt(todayGexp)} | Weekly: ${fmt(weeklyGexp)} | Created: ${created}`
+            );
+            cooldowns.setCooldown(ctx.username, 'stats:guild', ctx.guildRank);
+        },
+    });
 }
