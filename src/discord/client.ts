@@ -28,6 +28,7 @@ export class DiscordClient extends Client {
             allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
             intents: [
                 IntentsBitField.Flags.Guilds,
+                IntentsBitField.Flags.GuildMembers,
                 IntentsBitField.Flags.GuildMessages,
                 IntentsBitField.Flags.MessageContent,
             ],

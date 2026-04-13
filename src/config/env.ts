@@ -68,6 +68,11 @@ const envSchema = z.object({
     URCHIN_JOIN_CHECK: OPTIONAL_BOOLEAN,
     URCHIN_API_KEY: OPTIONAL_STRING,
 
+    // === BRIDGE ACCESS ROLES ===
+    BRIDGE_MUTED_ROLE_ID: OPTIONAL_STRING,    // Discord role that blocks bridge usage
+    BRIDGE_ACCESS_ROLE_ID: OPTIONAL_STRING,   // Discord role for non-guild bridge access
+    GUILD_MEMBER_ROLE_IDS: OPTIONAL_STRING,   // Comma-separated role IDs that indicate guild membership
+
     // === TERMINAL REPL ===
     ENABLE_TERMINAL: OPTIONAL_BOOLEAN,
 

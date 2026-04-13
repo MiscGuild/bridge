@@ -6,6 +6,7 @@ import { registerSessionsModule } from '@/modules/sessions/index';
 import { registerAnalyticsModule, trackEvent } from '@/modules/analytics/index';
 import { registerModerationModule } from '@/modules/moderation/index';
 import { registerBlacklistModule } from '@/modules/blacklist/index';
+import { registerMuteWarnModule } from '@/modules/mute-warn/index';
 import { trackGuildEvent, syncGuildMembers } from '@/modules/guild-tracker/index';
 
 export const moduleManager = new ModuleManager();
@@ -17,6 +18,7 @@ registerSessionsModule(commands);
 registerAnalyticsModule(commands);
 registerModerationModule(commands);
 registerBlacklistModule(commands);
+registerMuteWarnModule(commands);
 
 /** Call this after bridge is ready — wires analytics scheduler + guild sync */
 export function initModules(bridge: Bridge): void {

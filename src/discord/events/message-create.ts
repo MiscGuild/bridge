@@ -14,6 +14,37 @@ const profanityMatcher = env.USE_PROFANITY_FILTER
     ? new RegExpMatcher({ ...dataset.build(), ...englishRecommendedTransformers })
     : null;
 
+const guildMemberRoleIds = env.GUILD_MEMBER_ROLE_IDS
+    ? env.GUILD_MEMBER_ROLE_IDS.split(',').map(id => id.trim()).filter(Boolean)
+    : [];
+
+/** Check if a member has permission to use the bridge */
+function hasBridgeAccess(member: Message['member']): boolean {
+    if (!member) return false;
+    const roles = member.roles.cache;
+
+    // Staff always have access
+    if (env.STAFF_ROLE_ID && roles.has(env.STAFF_ROLE_ID)) return true;
+
+    // Guild member roles grant access
+    if (guildMemberRoleIds.some(id => roles.has(id))) return true;
+
+    // Bridge-Access role grants access to non-guild members
+    if (env.BRIDGE_ACCESS_ROLE_ID && roles.has(env.BRIDGE_ACCESS_ROLE_ID)) return true;
+
+    // If no role-based access is configured, fall back to "has a member object" (original behavior)
+    if (!env.BRIDGE_MUTED_ROLE_ID && !env.BRIDGE_ACCESS_ROLE_ID && guildMemberRoleIds.length === 0) {
+        return true;
+    }
+
+    return false;
+}
+
+function isBridgeMuted(member: Message['member']): boolean {
+    if (!member) return false;
+    return !!(env.BRIDGE_MUTED_ROLE_ID && member.roles.cache.has(env.BRIDGE_MUTED_ROLE_ID));
+}
+
 export default {
     name: 'messageCreate',
     once: false,
@@ -26,6 +57,21 @@ export default {
             (message.channel !== bridge.discord.memberChannel &&
                 message.channel !== bridge.discord.officerChannel)
         ) return;
+
+        // Bridge-Muted role blocks bridge access
+        if (isBridgeMuted(message.member)) {
+            await message.delete().catch(() => {});
+            await message.channel.send(
+                `${emojis.warning} ${message.author.username}, you are muted from the bridge.`
+            ).then(m => setTimeout(() => m.delete().catch(() => {}), 5_000));
+            return;
+        }
+
+        // Role-based access check
+        if (!hasBridgeAccess(message.member)) {
+            await message.delete().catch(() => {});
+            return;
+        }
 
         const name = env.USE_FIRST_WORD_OF_AUTHOR_NAME
             ? (message.member.displayName.split(' ')[0] ?? message.member.displayName)
