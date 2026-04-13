@@ -48,6 +48,11 @@ export async function isUrchinFlagged(uuid: string): Promise<boolean> {
     return !!data?.tags && data.tags.length > 0;
 }
 
+export async function getUrchinTags(uuid: string): Promise<string[]> {
+    const data = await queryUrchin(uuid);
+    return data?.tags?.map(t => t.type) ?? [];
+}
+
 export function registerBlacklistModule(commands: ModuleCommand[]): void {
 
     // !view [username] — check Urchin tags + internal blacklist (self if no arg)

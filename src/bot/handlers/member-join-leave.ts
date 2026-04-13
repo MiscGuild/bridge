@@ -4,7 +4,7 @@ import { escapeMarkdown, getRankColor } from '@/util/formatting';
 import emojis from '@/util/emojis';
 import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
-import { isUrchinFlagged } from '@/modules/blacklist/index';
+import { getUrchinTags } from '@/modules/blacklist/index';
 
 export async function handleMemberJoinLeave(
     bridge: Bridge,
@@ -13,19 +13,19 @@ export async function handleMemberJoinLeave(
     if (event.status === 'joined') {
         const profile = await mojangService.getProfile(event.playerName);
         if (profile) {
-            // Internal blacklist check
+            // Internal blacklist check — auto-kick
             if (bridge.blacklist.isBlacklisted(profile.id)) {
                 bridge.bot.execute(
                     `/g kick ${event.playerName} You have been blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
                 );
-            } else if (env.URCHIN_JOIN_CHECK && env.URCHIN_API_KEY) {
-                // Urchin API auto-check on guild join
-                const flagged = await isUrchinFlagged(profile.id);
-                if (flagged) {
-                    bridge.bot.execute(
-                        `/g kick ${event.playerName} Urchin-flagged. Dispute? ${env.DISCORD_INVITE_LINK}`
-                    );
-                    bridge.bot.chat('oc', `⚠️ Auto-kicked ${event.playerName}: Urchin flagged`);
+                bridge.bot.chat('oc', `⚠️ Auto-kicked ${event.playerName}: blacklisted`);
+            }
+
+            // Urchin check — report to OC, don't auto-kick
+            if (env.URCHIN_API_KEY) {
+                const tags = await getUrchinTags(profile.id).catch(() => []);
+                if (tags.length > 0) {
+                    bridge.bot.chat('oc', `⚠️ ${event.playerName} has Urchin tags: ${tags.join(', ')}`);
                 }
             }
         }
