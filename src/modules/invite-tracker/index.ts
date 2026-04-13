@@ -59,10 +59,12 @@ export async function trackInviteOnJoin(bridge: Bridge, playerName: string): Pro
     const inviter = await lookupInviter(bridge, playerName);
     if (inviter) {
         consola.info(`${inviter} invited ${playerName} to the guild.`);
-        bridge.bot.chat('oc', `${playerName} was invited by ${inviter}`);
+        bridge.bot.chat('oc', `Player ${playerName} joined the guild! They were invited by ${inviter}.`);
         const profile = await mojangService.getProfile(playerName).catch(() => null);
         await inviteRepo.create(inviter, playerName, profile?.id ?? '').catch(() => {});
         await inviteRepo.markAccepted(playerName).catch(() => {});
+    } else {
+        bridge.bot.chat('oc', `Player ${playerName} joined the guild without an invite.`);
     }
 }
 
