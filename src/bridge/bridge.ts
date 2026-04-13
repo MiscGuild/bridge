@@ -123,9 +123,9 @@ export default class Bridge {
 
             switch (event.type) {
                 case 'guildChat': {
-                    // Dispatch to module commands first (e.g. !bw, !gexp)
-                    const handled = await moduleManager.dispatch(event, this);
-                    if (!handled) await handleGuildChat(this, event);
+                    // Always forward to Discord, then dispatch module commands
+                    await handleGuildChat(this, event);
+                    await moduleManager.dispatch(event, this);
                     trackEvent(event);
                     incrementMetric('messagesIn');
                     break;
