@@ -32,10 +32,9 @@ function hasBridgeAccess(member: Message['member']): boolean {
     // Bridge-Access role grants access to non-guild members
     if (env.BRIDGE_ACCESS_ROLE_ID && roles.has(env.BRIDGE_ACCESS_ROLE_ID)) return true;
 
-    // If no role-based access is configured, fall back to "has a member object" (original behavior)
-    if (!env.BRIDGE_MUTED_ROLE_ID && !env.BRIDGE_ACCESS_ROLE_ID && guildMemberRoleIds.length === 0) {
-        return true;
-    }
+    // If no guild member roles are configured, fall back to Discord channel permissions
+    // (anyone who can see the channel gets access)
+    if (guildMemberRoleIds.length === 0) return true;
 
     return false;
 }

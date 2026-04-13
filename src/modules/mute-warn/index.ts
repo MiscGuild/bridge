@@ -19,7 +19,7 @@ function isStaff(guildRank?: string): boolean {
  * Parse duration string like "1d", "2h", "30m" into an ISO expiry timestamp.
  * Returns null for permanent.
  */
-function parseDuration(dur?: string): string | null {
+export function parseDuration(dur?: string): string | null {
     if (!dur) return null;
     const match = dur.match(/^(\d+)([mhd])$/i);
     if (!match) return null;
@@ -30,7 +30,7 @@ function parseDuration(dur?: string): string | null {
 }
 
 /** Format remaining duration for display */
-function formatRemaining(expiresAt: string | null): string {
+export function formatRemaining(expiresAt: string | null): string {
     if (!expiresAt) return 'permanent';
     const remaining = new Date(expiresAt).getTime() - Date.now();
     if (remaining <= 0) return 'expired';
@@ -73,7 +73,6 @@ export async function syncDiscordMuteRole(
 
 /**
  * Try to find a Discord member by their Minecraft username (display name match).
- * Returns member ID or null.
  */
 export async function findDiscordMember(
     bridge: Bridge,
@@ -89,6 +88,24 @@ export async function findDiscordMember(
         ) ?? null;
     } catch {
         return null;
+    }
+}
+
+/**
+ * DM a Discord user about a mute or warn. Silently fails if user has DMs disabled.
+ */
+export async function dmUser(
+    bridge: Bridge,
+    discordId: string | null | undefined,
+    message: string
+): Promise<void> {
+    if (!discordId) return;
+    try {
+        const user = await bridge.discord.users.fetch(discordId).catch(() => null);
+        if (!user) return;
+        await user.send(message).catch(() => {});
+    } catch {
+        // DMs disabled or user not found — silently skip
     }
 }
 
@@ -120,89 +137,36 @@ export async function handleMuteSyncFromGame(
             expires_at: expiresAt,
         }).catch(() => {});
         await syncDiscordMuteRole(bridge, discordMember?.id, true);
+        await dmUser(bridge, discordMember?.id,
+            `🔇 You have been muted in the guild by **${muterName}**${duration ? ` for ${duration}` : ''}. You cannot use the bridge chat while muted.`
+        );
     } else {
-        // Unmute: deactivate record and remove Discord role
         const existing = await mutesRepo.getByUsername(targetName).catch(() => null);
         await mutesRepo.deactivateByUsername(targetName).catch(() => {});
         const discordId = existing?.discord_id ?? (await findDiscordMember(bridge, targetName))?.id;
         await syncDiscordMuteRole(bridge, discordId, false);
+        await dmUser(bridge, discordId,
+            `✅ You have been unmuted in the guild by **${muterName}**. You can use the bridge chat again.`
+        );
     }
 }
 
-// ── In-game commands ──────────────────────────────────────────────────────────
+// ── In-game commands (OC-only for moderation, GC for info) ────────────────────
 
 export function registerMuteWarnModule(commands: ModuleCommand[]): void {
 
-    // !mute <username> [duration] [reason]
-    commands.push({
-        commandId: 'mutewarn:mute',
-        pattern: /^!mute\s+(\S+)(?:\s+(\d+[mhd]))?(?:\s+(.+))?/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-            const duration = ctx.matches[2];
-            const reason = ctx.matches[3] ?? 'No reason provided';
-
-            // Execute Hypixel guild mute
-            bridge.bot.execute(`/g mute ${target}${duration ? ` ${duration}` : ''}`);
-
-            // Record in DB
-            const profile = await mojangService.getProfile(target).catch(() => null);
-            const discordMember = await findDiscordMember(bridge, target);
-            await mutesRepo.create({
-                uuid: profile?.id ?? '',
-                username: target,
-                discord_id: discordMember?.id ?? null,
-                reason,
-                muted_by: ctx.username,
-                expires_at: parseDuration(duration),
-            }).catch(() => {});
-
-            // Sync Discord role
-            await syncDiscordMuteRole(bridge, discordMember?.id, true);
-            await auditLogRepo.log(ctx.username, 'mute', target, { duration, reason }).catch(() => {});
-
-            bridge.bot.chat('oc', `🔇 ${ctx.username} muted ${target}${duration ? ` for ${duration}` : ''}: ${reason}`);
-        },
-    });
-
-    // !unmute <username>
-    commands.push({
-        commandId: 'mutewarn:unmute',
-        pattern: /^!unmute\s+(\S+)/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-
-            bridge.bot.execute(`/g unmute ${target}`);
-
-            const existing = await mutesRepo.getByUsername(target).catch(() => null);
-            await mutesRepo.deactivateByUsername(target).catch(() => {});
-
-            const discordId = existing?.discord_id ?? (await findDiscordMember(bridge, target))?.id;
-            await syncDiscordMuteRole(bridge, discordId, false);
-            await auditLogRepo.log(ctx.username, 'unmute', target).catch(() => {});
-
-            bridge.bot.chat('oc', `✅ ${ctx.username} unmuted ${target}`);
-        },
-    });
-
-    // !warn <username> <reason>
+    // !warn <username> <reason> — Officer Chat only
     commands.push({
         commandId: 'mutewarn:warn',
         pattern: /^!warn\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
+            if (ctx.channel !== 'Officer') {
+                bridge.bot.chat('gc', `${ctx.username}, !warn can only be used in Officer Chat.`);
+                return;
+            }
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat('oc', `${ctx.username}, you don't have permission.`);
                 return;
             }
             const target = ctx.matches[1]!;
@@ -221,37 +185,47 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
             const total = (await warnsRepo.getByUsername(target).catch(() => [])).length;
             await auditLogRepo.log(ctx.username, 'warn', target, { reason }).catch(() => {});
 
-            bridge.bot.chat('gc', `⚠️ ${target} has been warned: ${reason} (${total} total)`);
+            bridge.bot.chat('oc', `⚠️ ${target} has been warned: ${reason} (${total} total)`);
+
+            // DM the warned player on Discord
+            await dmUser(bridge, discordMember?.id,
+                `⚠️ You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`
+            );
         },
     });
 
-    // !warns <username>
+    // !warns <username> — viewable in both GC and OC
     commands.push({
         commandId: 'mutewarn:warns',
         pattern: /^!warns\s+(\S+)/i,
         async handler(ctx, bridge) {
             const target = ctx.matches[1]!;
+            const channel = ctx.channel === 'Officer' ? 'oc' : 'gc';
             const warns = await warnsRepo.getByUsername(target).catch(() => []);
             if (warns.length === 0) {
-                bridge.bot.chat('gc', `${target} has no warnings.`);
+                bridge.bot.chat(channel, `${target} has no warnings.`);
                 return;
             }
-            bridge.bot.chat('gc', `${target} has ${warns.length} warning(s):`);
+            bridge.bot.chat(channel, `${target} has ${warns.length} warning(s):`);
             for (const w of warns.slice(-5)) {
                 const date = new Date(w.warned_at).toLocaleDateString();
-                bridge.bot.chat('gc', `• ${date} by ${w.warned_by}: ${w.reason}`);
+                bridge.bot.chat(channel, `• ${date} by ${w.warned_by}: ${w.reason}`);
             }
         },
     });
 
-    // !clearwarns <username>
+    // !clearwarns <username> — Officer Chat only
     commands.push({
         commandId: 'mutewarn:clearwarns',
         pattern: /^!clearwarns\s+(\S+)/i,
         staffOnly: true,
         async handler(ctx, bridge) {
+            if (ctx.channel !== 'Officer') {
+                bridge.bot.chat('gc', `${ctx.username}, !clearwarns can only be used in Officer Chat.`);
+                return;
+            }
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat('oc', `${ctx.username}, you don't have permission.`);
                 return;
             }
             const target = ctx.matches[1]!;
@@ -261,18 +235,19 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
         },
     });
 
-    // !muteinfo <username> — check active mute
+    // !ismuted <username> — viewable in both GC and OC
     commands.push({
-        commandId: 'mutewarn:muteinfo',
-        pattern: /^!muteinfo\s+(\S+)/i,
+        commandId: 'mutewarn:ismuted',
+        pattern: /^!ismuted\s+(\S+)/i,
         async handler(ctx, bridge) {
             const target = ctx.matches[1]!;
+            const channel = ctx.channel === 'Officer' ? 'oc' : 'gc';
             const mute = await mutesRepo.getByUsername(target).catch(() => null);
             if (!mute) {
-                bridge.bot.chat('gc', `${target} is not muted.`);
+                bridge.bot.chat(channel, `${target} is not muted.`);
                 return;
             }
-            bridge.bot.chat('gc', `🔇 ${target} muted by ${mute.muted_by} | Remaining: ${formatRemaining(mute.expires_at)} | ${mute.reason}`);
+            bridge.bot.chat(channel, `🔇 ${target} muted by ${mute.muted_by} | Remaining: ${formatRemaining(mute.expires_at)} | ${mute.reason}`);
         },
     });
 }
