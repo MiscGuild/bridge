@@ -1,5 +1,4 @@
 import type Bridge from '@/bridge/bridge';
-import env from '@/config/env';
 
 export default {
     name: 'clientReady',

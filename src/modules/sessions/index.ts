@@ -96,12 +96,6 @@ function humanDuration(ms: number): string {
     return `${s}s`;
 }
 
-function isStaff(guildRank?: string): boolean {
-    if (!guildRank) return false;
-    const norm = guildRank.replace(/[\[\]]/g, '').toLowerCase();
-    return ['gm', 'leader', 'officer', 'moderator'].includes(norm);
-}
-
 async function handleStart(game: 'bw' | 'sw' | 'cvc', ctx: { username: string; guildRank?: string }, bridge: Bridge): Promise<void> {
     const profile = await mojangService.getProfile(ctx.username);
     if (!profile) {

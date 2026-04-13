@@ -1,6 +1,5 @@
 import { Message } from 'discord.js';
 import { DataSet, RegExpMatcher, englishDataset, englishRecommendedTransformers } from 'obscenity';
-import { consola } from 'consola';
 import type Bridge from '@/bridge/bridge';
 import emojis from '@/util/emojis';
 import env from '@/config/env';

@@ -1,4 +1,4 @@
-import { ActivityType, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import type Bridge from '@/bridge/bridge';
 import { formatDuration } from '@/util/formatting';
 

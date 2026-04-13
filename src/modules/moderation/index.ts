@@ -1,4 +1,3 @@
-import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand } from '@/modules/types';
 import { bansRepo } from '@/db/repositories/bans.repo';
 import { auditLogRepo } from '@/db/repositories/audit-log.repo';
@@ -6,7 +5,7 @@ import { mojangService } from '@/services/mojang';
 
 function isStaff(guildRank?: string): boolean {
     if (!guildRank) return false;
-    const norm = guildRank.replace(/[\[\]]/g, '').toLowerCase();
+    const norm = guildRank.replace(/[[\]]/g, '').toLowerCase();
     return ['gm', 'leader', 'officer', 'mod', 'moderator'].includes(norm);
 }
 

@@ -6,7 +6,7 @@ export interface FilterResult {
     reason?: string;
 }
 
-export function applyFilters(content: string, username: string): FilterResult {
+export function applyFilters(content: string, _username: string): FilterResult {
     // Bridge-ban check is done upstream in message-create event
 
     // Brainrot filter

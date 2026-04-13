@@ -1,5 +1,5 @@
 {
-    "name": "Miscellaneous-Bridge-v3",
+    "name": "miscellaneous-bridge-v3",
     "version": "3.0.0-alpha",
     "description": "A bot used to Bridge between Discord and Hypixel guild chats",
     "main": "dist/index.js",
@@ -58,15 +58,19 @@
         "winston": "^3.11.0",
         "zod": "^3.22.4"
     },
+    "overrides": {
+        "axios": "^1.15.0",
+        "minimatch": "^9.0.7"
+    },
     "devDependencies": {
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.6",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/node": "^20.10.0",
         "@types/node-cron": "^3.0.0",
-        "@typescript-eslint/eslint-plugin": "^6.0.0",
-        "@typescript-eslint/parser": "^6.0.0",
-        "eslint": "^8.0.0",
+        "@typescript-eslint/eslint-plugin": "^8.0.0",
+        "@typescript-eslint/parser": "^8.0.0",
+        "eslint": "^8.57.0",
         "prettier": "^3.0.0",
         "ts-node-dev": "^2.0.0",
         "tsc-alias": "^1.8.16",

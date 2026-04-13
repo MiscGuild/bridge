@@ -2,7 +2,6 @@ import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand } from '@/modules/types';
 import type { ParsedChatEvent } from '@/bot/chat-parser';
 import { analyticsRepo } from '@/db/repositories/analytics.repo';
-import { consola } from 'consola';
 
 /** In-memory daily stats (resets at midnight UTC) */
 interface DailyStats {
@@ -66,7 +65,7 @@ async function flushToSupabase(): Promise<void> {
 
 function isStaff(guildRank?: string): boolean {
     if (!guildRank) return false;
-    const norm = guildRank.replace(/[\[\]]/g, '').toLowerCase();
+    const norm = guildRank.replace(/[[\]]/g, '').toLowerCase();
     return ['gm', 'leader', 'officer', 'moderator', 'mod'].includes(norm);
 }
 

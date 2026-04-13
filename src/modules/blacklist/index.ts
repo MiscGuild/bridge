@@ -1,4 +1,3 @@
-import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand } from '@/modules/types';
 import { blacklistRepo } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
@@ -111,7 +110,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         pattern: /^!blacklist\s+add\s+(\S+)(?:\s+(\d+[mhdw]))?(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            const rank = ctx.guildRank?.replace(/[\[\]]/g, '').toLowerCase() ?? '';
+            const rank = ctx.guildRank?.replace(/[[\]]/g, '').toLowerCase() ?? '';
             if (!['gm', 'leader', 'officer', 'mod', 'moderator'].includes(rank)) {
                 bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
                 return;
@@ -150,7 +149,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         pattern: /^!blacklist\s+remove\s+(\S+)/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            const rank = ctx.guildRank?.replace(/[\[\]]/g, '').toLowerCase() ?? '';
+            const rank = ctx.guildRank?.replace(/[[\]]/g, '').toLowerCase() ?? '';
             if (!['gm', 'leader', 'officer', 'mod', 'moderator'].includes(rank)) {
                 bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
                 return;

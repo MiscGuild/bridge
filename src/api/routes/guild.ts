@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import type { AuthRequest } from '@/api/middleware/auth';
-import { hypixelService } from '@/services/hypixel';
 import env from '@/config/env';
 
 const router = Router();

@@ -1,5 +1,4 @@
 import type Bridge from '@/bridge/bridge';
-import type { ParsedChatEvent } from '@/bot/chat-parser';
 import { ModuleManager } from '@/modules/types';
 import { registerStatsModule } from '@/modules/stats/index';
 import { registerSessionsModule } from '@/modules/sessions/index';

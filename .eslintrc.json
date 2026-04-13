@@ -22,7 +22,7 @@
                 "ignoreRestSiblings": true
             }
         ],
-        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/no-require-imports": "off",
         "no-console": "off"
     },
     "ignorePatterns": ["dist", "pnpm-lock.yaml", "node_modules", "*.js"]

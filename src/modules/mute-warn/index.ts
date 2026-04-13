@@ -11,7 +11,7 @@ import env from '@/config/env';
 
 function isStaff(guildRank?: string): boolean {
     if (!guildRank) return false;
-    const norm = guildRank.replace(/[\[\]]/g, '').toLowerCase();
+    const norm = guildRank.replace(/[[\]]/g, '').toLowerCase();
     return ['gm', 'leader', 'officer', 'mod', 'moderator'].includes(norm);
 }
 

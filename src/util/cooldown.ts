@@ -32,7 +32,7 @@ export class CooldownManager {
 
     private normRank(raw?: string): string {
         if (!raw) return '';
-        return raw.replace(/[\[\]]/g, '').trim();
+        return raw.replace(/[[\]]/g, '').trim();
     }
 
     getCooldownSeconds(guildRank?: string): number {
