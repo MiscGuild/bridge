@@ -53,14 +53,14 @@ export function registerGexpHistoryModule(commands: ModuleCommand[]): void {
 
             const entries = await gexpHistoryRepo.getLeaderboard(startDate, endDate, 10);
             if (entries.length === 0) {
-                bridge.bot.chat('gc', 'No GEXP data available yet.');
+                bridge.bot.chat(ctx.replyChannel, 'No GEXP data available yet.');
                 return;
             }
 
             const lines = entries.slice(0, 5).map((e, i) =>
                 `${i + 1}. ${e.username}: ${fmt(e.total)}`
             );
-            bridge.bot.chat('gc', `[GEXP Top ${days}d] ${lines.join(' | ')}`);
+            bridge.bot.chat(ctx.replyChannel, `[GEXP Top ${days}d] ${lines.join(' | ')}`);
         },
     });
 }

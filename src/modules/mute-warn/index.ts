@@ -164,7 +164,7 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (ctx.channel !== 'Officer') {
-                bridge.bot.chat('gc', `${ctx.username}, !warn can only be used in Officer Chat.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, !warn can only be used in Officer Chat.`);
                 return;
             }
             if (!isStaff(ctx.guildRank)) {
@@ -223,7 +223,7 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (ctx.channel !== 'Officer') {
-                bridge.bot.chat('gc', `${ctx.username}, !clearwarns can only be used in Officer Chat.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, !clearwarns can only be used in Officer Chat.`);
                 return;
             }
             if (!isStaff(ctx.guildRank)) {

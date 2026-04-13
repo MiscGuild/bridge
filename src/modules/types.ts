@@ -18,6 +18,8 @@ export interface CommandContext {
     message: string;
     matches: RegExpMatchArray;
     channel: 'Guild' | 'Officer';
+    /** Chat mode to reply in — matches the channel the command was sent from */
+    replyChannel: 'gc' | 'oc';
 }
 
 export class ModuleManager {
@@ -44,10 +46,11 @@ export class ModuleManager {
                 message: event.message,
                 matches,
                 channel: event.channel,
+                replyChannel: event.channel === 'Officer' ? 'oc' : 'gc',
             };
 
             await cmd.handler(ctx, bridge).catch((err) => {
-                bridge.bot.chat('gc', `Error running command: ${err instanceof Error ? err.message : err}`);
+                bridge.bot.chat(ctx.replyChannel, `Error running command: ${err instanceof Error ? err.message : err}`);
             });
 
             return true;

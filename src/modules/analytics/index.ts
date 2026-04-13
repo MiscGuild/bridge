@@ -127,7 +127,7 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, this command is staff-only.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, this command is staff-only.`);
                 return;
             }
             const period = ctx.matches[1]?.toLowerCase() === 'weekly' || ctx.matches[1]?.toLowerCase() === 'week' ? 'week' : 'today';
@@ -142,7 +142,7 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, this command is staff-only.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, this command is staff-only.`);
                 return;
             }
             await flushToSupabase();

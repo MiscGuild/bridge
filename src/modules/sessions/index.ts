@@ -1,5 +1,5 @@
 import type Bridge from '@/bridge/bridge';
-import type { ModuleCommand } from '@/modules/types';
+import type { ModuleCommand, CommandContext } from '@/modules/types';
 import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
 import { sessionsRepo } from '@/db/repositories/sessions.repo';
@@ -96,16 +96,16 @@ function humanDuration(ms: number): string {
     return `${s}s`;
 }
 
-async function handleStart(game: 'bw' | 'sw' | 'cvc', ctx: { username: string; guildRank?: string }, bridge: Bridge): Promise<void> {
+async function handleStart(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge: Bridge): Promise<void> {
     const profile = await mojangService.getProfile(ctx.username);
     if (!profile) {
-        bridge.bot.chat('gc', `Could not find your Minecraft profile!`);
+        bridge.bot.chat(ctx.replyChannel, `Could not find your Minecraft profile!`);
         return;
     }
 
     const key = `${profile.id}:${game}`;
     if (activeSessions.has(key)) {
-        bridge.bot.chat('gc', `${ctx.username}, you already have an active ${game.toUpperCase()} session!`);
+        bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you already have an active ${game.toUpperCase()} session!`);
         return;
     }
 
@@ -113,32 +113,32 @@ async function handleStart(game: 'bw' | 'sw' | 'cvc', ctx: { username: string; g
     hypixelService.clearCache(profile.id);
     const startStats = await fetchStats(profile.id, game);
     if (!startStats) {
-        bridge.bot.chat('gc', `Could not fetch your stats. Try again?`);
+        bridge.bot.chat(ctx.replyChannel, `Could not fetch your stats. Try again?`);
         return;
     }
 
     activeSessions.set(key, { uuid: profile.id, username: ctx.username, game, startTime: Date.now(), startStats });
-    bridge.bot.chat('gc', `${ctx.username}, ${game.toUpperCase()} session started! Good luck!`);
+    bridge.bot.chat(ctx.replyChannel, `${ctx.username}, ${game.toUpperCase()} session started! Good luck!`);
 }
 
-async function handleStop(game: 'bw' | 'sw' | 'cvc', ctx: { username: string }, bridge: Bridge): Promise<void> {
+async function handleStop(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge: Bridge): Promise<void> {
     const profile = await mojangService.getProfile(ctx.username);
     if (!profile) {
-        bridge.bot.chat('gc', `Could not find your Minecraft profile!`);
+        bridge.bot.chat(ctx.replyChannel, `Could not find your Minecraft profile!`);
         return;
     }
 
     const key = `${profile.id}:${game}`;
     const session = activeSessions.get(key);
     if (!session) {
-        bridge.bot.chat('gc', `${ctx.username}, you don't have an active ${game.toUpperCase()} session.`);
+        bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have an active ${game.toUpperCase()} session.`);
         return;
     }
 
     hypixelService.clearCache(profile.id);
     const endStats = await fetchStats(profile.id, game);
     if (!endStats) {
-        bridge.bot.chat('gc', `Could not fetch your stats. Session not ended.`);
+        bridge.bot.chat(ctx.replyChannel, `Could not fetch your stats. Session not ended.`);
         return;
     }
 
@@ -146,7 +146,7 @@ async function handleStop(game: 'bw' | 'sw' | 'cvc', ctx: { username: string }, 
     const duration = humanDuration(Date.now() - session.startTime);
     const diff = formatDiff(session.startStats, endStats, game);
 
-    bridge.bot.chat('gc', `[Session] ${ctx.username} ${game.toUpperCase()} (${duration}): ${diff}`);
+    bridge.bot.chat(ctx.replyChannel, `[Session] ${ctx.username} ${game.toUpperCase()} (${duration}): ${diff}`);
 
     // Persist to Supabase
     sessionsRepo.create({
@@ -160,30 +160,30 @@ async function handleStop(game: 'bw' | 'sw' | 'cvc', ctx: { username: string }, 
     }).catch(() => {/* Supabase optional */});
 }
 
-async function handleShow(game: 'bw' | 'sw' | 'cvc', ctx: { username: string }, bridge: Bridge): Promise<void> {
+async function handleShow(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge: Bridge): Promise<void> {
     const profile = await mojangService.getProfile(ctx.username);
     if (!profile) {
-        bridge.bot.chat('gc', `Could not find your profile!`);
+        bridge.bot.chat(ctx.replyChannel, `Could not find your profile!`);
         return;
     }
 
     const key = `${profile.id}:${game}`;
     const session = activeSessions.get(key);
     if (!session) {
-        bridge.bot.chat('gc', `${ctx.username}, no active ${game.toUpperCase()} session.`);
+        bridge.bot.chat(ctx.replyChannel, `${ctx.username}, no active ${game.toUpperCase()} session.`);
         return;
     }
 
     hypixelService.clearCache(profile.id);
     const current = await fetchStats(profile.id, game);
     if (!current) {
-        bridge.bot.chat('gc', `Could not fetch current stats.`);
+        bridge.bot.chat(ctx.replyChannel, `Could not fetch current stats.`);
         return;
     }
 
     const elapsed = humanDuration(Date.now() - session.startTime);
     const diff = formatDiff(session.startStats, current, game);
-    bridge.bot.chat('gc', `[Session] ${ctx.username} ${game.toUpperCase()} (${elapsed}): ${diff}`);
+    bridge.bot.chat(ctx.replyChannel, `[Session] ${ctx.username} ${game.toUpperCase()} (${elapsed}): ${diff}`);
 }
 
 export function registerSessionsModule(commands: ModuleCommand[]): void {

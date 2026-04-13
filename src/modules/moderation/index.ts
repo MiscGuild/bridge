@@ -23,7 +23,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
             const target = ctx.matches[1]!;
@@ -55,7 +55,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
             const target = ctx.matches[1]!;
@@ -86,7 +86,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
             const target = ctx.matches[1]!;
@@ -116,7 +116,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
             const target = ctx.matches[1]!;
@@ -137,7 +137,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
 
@@ -162,11 +162,11 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
             await auditLogRepo.log(ctx.username, 'reboot', undefined).catch(() => {});
-            bridge.bot.chat('gc', `Rebooting... requested by ${ctx.username}`);
+            bridge.bot.chat(ctx.replyChannel, `Rebooting... requested by ${ctx.username}`);
             setTimeout(() => process.exit(0), 2000);
         },
     });
@@ -178,11 +178,11 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         staffOnly: true,
         async handler(ctx, bridge) {
             if (!isStaff(ctx.guildRank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
             await auditLogRepo.log(ctx.username, 'save', undefined).catch(() => {});
-            bridge.bot.chat('gc', `Data saved by ${ctx.username}.`);
+            bridge.bot.chat(ctx.replyChannel, `Data saved by ${ctx.username}.`);
         },
     });
 }

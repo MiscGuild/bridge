@@ -67,11 +67,11 @@ function sbSkillLevel(xp: number): number {
     return 0;
 }
 
-async function resolve(username: string, bridge: Bridge): Promise<{ uuid: string; name: string; player: any } | null> {
+async function resolve(username: string, bridge: Bridge, replyChannel: 'gc' | 'oc'): Promise<{ uuid: string; name: string; player: any } | null> {
     const profile = await mojangService.getProfile(username);
-    if (!profile) { bridge.bot.chat('gc', `Could not find player: ${username}`); return null; }
+    if (!profile) { bridge.bot.chat(replyChannel, `Could not find player: ${username}`); return null; }
     const player = await hypixelService.getPlayer(profile.id);
-    if (!player) { bridge.bot.chat('gc', `Could not fetch Hypixel data for ${username}`); return null; }
+    if (!player) { bridge.bot.chat(replyChannel, `Could not fetch Hypixel data for ${username}`); return null; }
     return { uuid: profile.id, name: profile.name, player };
 }
 
@@ -221,12 +221,15 @@ function buildPit(name: string, player: any): string {
 
 function buildGexp(name: string, player: any, guild: any): string {
     if (!guild) return `${name} is not in a guild.`;
-    const member = guild.members?.find((m: any) => m.uuid === player.uuid);
+    // Normalize UUIDs to no-dashes for comparison (Hypixel/Mojang format can vary)
+    const targetUuid = (player.uuid as string).replace(/-/g, '');
+    const member = guild.members?.find((m: any) => (m.uuid as string).replace(/-/g, '') === targetUuid);
     if (!member) return `${name} is not in your tracked guild.`;
     const history: Record<string, number> = member.expHistory ?? {};
     const entries = Object.entries(history).sort(([a], [b]) => b.localeCompare(a));
-    const weeklyTotal = entries.slice(0, 7).reduce((sum, [, v]) => sum + v, 0);
     const today = entries[0]?.[1] ?? 0;
+    // Sum all available history entries (Hypixel returns up to 7 days)
+    const weeklyTotal = entries.reduce((sum, [, v]) => sum + v, 0);
     return `[GEXP] ${name} | Today: ${fmt(today)} | Week: ${fmt(weeklyTotal)} | ${hex()}`;
 }
 
@@ -296,12 +299,12 @@ function makeStatCmd(
         async handler(ctx, bridge) {
             const target = ctx.matches[1]?.trim() ?? ctx.username;
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, cmdId);
-            if (remaining > 0) { bridge.bot.chat('gc', `${ctx.username}, cooldown: ${remaining}s`); return; }
-            const result = await resolve(target, bridge);
+            if (remaining > 0) { bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`); return; }
+            const result = await resolve(target, bridge, ctx.replyChannel);
             if (!result) return;
             const extra = extraFn ? await extraFn(result.uuid, bridge) : undefined;
             const msg = buildMsg(result.name, result.player, extra);
-            bridge.bot.chat('gc', msg);
+            bridge.bot.chat(ctx.replyChannel, msg);
             cooldowns.setCooldown(ctx.username, cmdId, ctx.guildRank);
         },
     };
@@ -364,7 +367,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         pattern: /^!guild(?:\s+(\S+))?/i,
         async handler(ctx, bridge) {
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'stats:guild');
-            if (remaining > 0) { bridge.bot.chat('gc', `${ctx.username}, cooldown: ${remaining}s`); return; }
+            if (remaining > 0) { bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`); return; }
 
             const target = ctx.matches[1]?.trim();
 
@@ -372,19 +375,19 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
             let uuid: string;
             if (target) {
                 const profile = await mojangService.getProfile(target).catch(() => null);
-                if (!profile) { bridge.bot.chat('gc', `Could not find player: ${target}`); return; }
+                if (!profile) { bridge.bot.chat(ctx.replyChannel, `Could not find player: ${target}`); return; }
                 uuid = profile.id;
             } else {
                 const botName = (process.env.MINECRAFT_BOT_NAME ?? process.env.MINECRAFT_EMAIL ?? '').split('@')[0];
-                if (!botName) { bridge.bot.chat('gc', 'Bot name not configured.'); return; }
+                if (!botName) { bridge.bot.chat(ctx.replyChannel, 'Bot name not configured.'); return; }
                 const botProfile = await mojangService.getProfile(botName).catch(() => null);
-                if (!botProfile) { bridge.bot.chat('gc', 'Could not resolve bot profile.'); return; }
+                if (!botProfile) { bridge.bot.chat(ctx.replyChannel, 'Could not resolve bot profile.'); return; }
                 uuid = botProfile.id;
             }
 
             const guild = await hypixelService.getGuild(uuid);
             if (!guild) {
-                bridge.bot.chat('gc', target ? `${target} is not in a guild.` : 'Could not fetch guild data.');
+                bridge.bot.chat(ctx.replyChannel, target ? `${target} is not in a guild.` : 'Could not fetch guild data.');
                 return;
             }
 
@@ -405,7 +408,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
 
             const created = new Date(guild.created).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
-            bridge.bot.chat('gc',
+            bridge.bot.chat(ctx.replyChannel,
                 `${guild.name}${tag} | Level: ${level} | Members: ${members.length}/125 | Today: ${fmt(todayGexp)} | Weekly: ${fmt(weeklyGexp)} | Created: ${created}`
             );
             cooldowns.setCooldown(ctx.username, 'stats:guild', ctx.guildRank);

@@ -62,14 +62,14 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         async handler(ctx, bridge) {
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'urchin');
             if (remaining > 0) {
-                bridge.bot.chat('gc', `${ctx.username}, cooldown: ${remaining}s | ${hex()}`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s | ${hex()}`);
                 return;
             }
 
             const target = ctx.matches[1]?.trim() ?? ctx.username;
             const profile = await mojangService.getProfile(target);
             if (!profile) {
-                bridge.bot.chat('gc', `[NOT-TAGGED] ${target} is not a valid Minecraft username. | ${hex()}`);
+                bridge.bot.chat(ctx.replyChannel, `[NOT-TAGGED] ${target} is not a valid Minecraft username. | ${hex()}`);
                 return;
             }
 
@@ -78,7 +78,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             // Internal blacklist check
             const internalEntry = await blacklistRepo.getByUuid(profile.id).catch(() => null);
             if (internalEntry) {
-                bridge.bot.chat('gc', `[INTERNAL] ${profile.name} - ${internalEntry.reason ?? 'No reason'} | ${hex()}`);
+                bridge.bot.chat(ctx.replyChannel, `[INTERNAL] ${profile.name} - ${internalEntry.reason ?? 'No reason'} | ${hex()}`);
             }
 
             // Urchin API check
@@ -86,14 +86,14 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
 
             if (!urchin) {
                 if (!internalEntry) {
-                    bridge.bot.chat('gc', `[ERROR] Failed to check blacklist for ${profile.name}. Try again later. | ${hex()}`);
+                    bridge.bot.chat(ctx.replyChannel, `[ERROR] Failed to check blacklist for ${profile.name}. Try again later. | ${hex()}`);
                 }
                 return;
             }
 
             if (!urchin.tags || urchin.tags.length === 0) {
                 if (!internalEntry) {
-                    bridge.bot.chat('gc', `[NOT-TAGGED] ${profile.name} has no tags in the blacklist. | ${hex()}`);
+                    bridge.bot.chat(ctx.replyChannel, `[NOT-TAGGED] ${profile.name} has no tags in the blacklist. | ${hex()}`);
                 }
                 return;
             }
@@ -104,7 +104,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
                 const reason = tag.reason || 'No reason given';
                 let msg = `[${tagType}] ${profile.name} - ${reason} | ${hex()}`;
                 if (msg.length > 200) msg = msg.slice(0, 197) + '...';
-                bridge.bot.chat('gc', msg);
+                bridge.bot.chat(ctx.replyChannel, msg);
             }
         },
     });
@@ -117,7 +117,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         async handler(ctx, bridge) {
             const rank = ctx.guildRank?.replace(/[[\]]/g, '').toLowerCase() ?? '';
             if (!['gm', 'leader', 'officer', 'mod', 'moderator'].includes(rank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
 
@@ -126,7 +126,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             const reason = ctx.matches[3] ?? 'No reason provided';
             const profile = await mojangService.getProfile(target);
             if (!profile) {
-                bridge.bot.chat('gc', `Player not found: ${target}`);
+                bridge.bot.chat(ctx.replyChannel, `Player not found: ${target}`);
                 return;
             }
 
@@ -156,14 +156,14 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         async handler(ctx, bridge) {
             const rank = ctx.guildRank?.replace(/[[\]]/g, '').toLowerCase() ?? '';
             if (!['gm', 'leader', 'officer', 'mod', 'moderator'].includes(rank)) {
-                bridge.bot.chat('gc', `${ctx.username}, you don't have permission.`);
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
 
             const target = ctx.matches[1]!;
             const profile = await mojangService.getProfile(target);
             if (!profile) {
-                bridge.bot.chat('gc', `Player not found: ${target}`);
+                bridge.bot.chat(ctx.replyChannel, `Player not found: ${target}`);
                 return;
             }
 
