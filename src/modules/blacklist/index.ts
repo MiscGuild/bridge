@@ -105,10 +105,10 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         },
     });
 
-    // !blacklist add <username> [reason] — add to internal blacklist (staff only)
+    // !blacklist add <username> [duration] [reason] — add to internal blacklist (staff only)
     commands.push({
         commandId: 'blacklist:add',
-        pattern: /^!blacklist\s+add\s+(\S+)(?:\s+(.+))?/i,
+        pattern: /^!blacklist\s+add\s+(\S+)(?:\s+(\d+[mhdw]))?(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
             const rank = ctx.guildRank?.replace(/[\[\]]/g, '').toLowerCase() ?? '';
@@ -118,16 +118,29 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             }
 
             const target = ctx.matches[1]!;
-            const reason = ctx.matches[2] ?? 'No reason provided';
+            const durationStr = ctx.matches[2];
+            const reason = ctx.matches[3] ?? 'No reason provided';
             const profile = await mojangService.getProfile(target);
             if (!profile) {
                 bridge.bot.chat('gc', `Player not found: ${target}`);
                 return;
             }
 
-            await blacklistRepo.add({ uuid: profile.id, username: profile.name, reason, added_by: ctx.username }).catch(() => {});
+            let expiresAt: string | null = null;
+            if (durationStr) {
+                const match = durationStr.match(/^(\d+)([mhdw])$/i);
+                if (match) {
+                    const num = parseInt(match[1]!, 10);
+                    const unit = match[2]!.toLowerCase();
+                    const ms = unit === 'm' ? num * 60_000 : unit === 'h' ? num * 3_600_000 : unit === 'd' ? num * 86_400_000 : num * 7 * 86_400_000;
+                    expiresAt = new Date(Date.now() + ms).toISOString();
+                }
+            }
+
+            await blacklistRepo.add({ uuid: profile.id, username: profile.name, reason, added_by: ctx.username, expires_at: expiresAt }).catch(() => {});
             bridge.blacklist.add(profile.id);
-            bridge.bot.chat('oc', `✅ ${profile.name} added to internal blacklist: ${reason}`);
+            const expiryMsg = expiresAt ? ` (expires in ${durationStr})` : ' (permanent)';
+            bridge.bot.chat('oc', `✅ ${profile.name} added to internal blacklist: ${reason}${expiryMsg}`);
         },
     });
 

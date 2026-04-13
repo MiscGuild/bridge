@@ -118,4 +118,50 @@ export class MinecraftBot {
             this.bot.chat(command);
         });
     }
+
+    /**
+     * Execute a command and collect multi-line output.
+     * Collects all messages received within the timeout window.
+     * Optionally stops early when `endPattern` matches (after `endCount` hits).
+     */
+    public collectLines(command: string, opts?: {
+        timeout?: number;
+        endPattern?: RegExp;
+        endCount?: number;
+    }): Promise<string[]> {
+        const timeout = opts?.timeout ?? 3000;
+        const endPattern = opts?.endPattern;
+        const endTarget = opts?.endCount ?? 2;
+
+        return new Promise((resolve) => {
+            const lines: string[] = [];
+            let endSeen = 0;
+
+            const listener = (jsonMsg: unknown) => {
+                const str = typeof jsonMsg === 'string' ? jsonMsg : String(jsonMsg);
+                lines.push(str);
+
+                if (endPattern && endPattern.test(str)) {
+                    endSeen++;
+                    if (endSeen >= endTarget) {
+                        cleanup();
+                        resolve(lines);
+                    }
+                }
+            };
+
+            const cleanup = () => {
+                this.bot.removeListener('message', listener);
+                clearTimeout(timer);
+            };
+
+            const timer = setTimeout(() => {
+                cleanup();
+                resolve(lines);
+            }, timeout);
+
+            this.bot.on('message', listener);
+            this.bot.chat(command);
+        });
+    }
 }

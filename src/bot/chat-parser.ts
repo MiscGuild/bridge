@@ -41,6 +41,10 @@ export const patterns = {
     memberKick:
         /^(\[.*?])?\s*(\w{2,17}).*? was kicked from the guild by (\[.*?])?\s*(\w{2,17}).*?!$/,
 
+    /** Player invited someone to the guild */
+    guildInvite:
+        /^(\[.*?])?\s*(\w{2,17}).*? invited (\[.*?])?\s*(\w{2,17}).*? to the guild!$/,
+
     /** Player was promoted or demoted */
     promoteDemote: /^(\[.*?])?\s*(\w{2,17}).*? was (promoted|demoted) from (.*) to (.*)$/,
 
@@ -84,6 +88,13 @@ export interface ParsedMemberKick {
     playerName: string;
     kickerRank?: string;
     kickerName: string;
+}
+export interface ParsedGuildInvite {
+    type: 'guildInvite';
+    inviterRank?: string;
+    inviterName: string;
+    inviteeRank?: string;
+    inviteeName: string;
 }
 export interface ParsedPromoteDemote {
     type: 'promoteDemote';
@@ -136,6 +147,7 @@ export type ParsedChatEvent =
     | ParsedJoinLeave
     | ParsedMemberJoinLeave
     | ParsedMemberKick
+    | ParsedGuildInvite
     | ParsedPromoteDemote
     | ParsedMuteUnmute
     | ParsedWhisper
@@ -175,6 +187,15 @@ export function parseChatMessage(message: string): ParsedChatEvent | null {
             playerName: m[2]!,
             kickerRank: m[3]?.trim() || undefined,
             kickerName: m[4]!,
+        };
+    }
+    if ((m = message.match(patterns.guildInvite))) {
+        return {
+            type: 'guildInvite',
+            inviterRank: m[1]?.trim() || undefined,
+            inviterName: m[2]!,
+            inviteeRank: m[3]?.trim() || undefined,
+            inviteeName: m[4]!,
         };
     }
     if ((m = message.match(patterns.promoteDemote))) {

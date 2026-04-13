@@ -45,18 +45,25 @@ export const blacklistRepo = {
         const db = getSupabaseClient();
         if (db) {
             const { data } = await db.from('blacklist').select('*').eq('is_active', true);
-            return (data as BlacklistRecord[]) ?? [];
+            return filterExpired((data as BlacklistRecord[]) ?? []);
         }
-        return (await jsonRead()).filter(r => r.is_active);
+        return filterExpired((await jsonRead()).filter(r => r.is_active));
     },
 
     async getByUuid(uuid: string): Promise<BlacklistRecord | null> {
         const db = getSupabaseClient();
+        let record: BlacklistRecord | null;
         if (db) {
             const { data } = await db.from('blacklist').select('*').eq('uuid', uuid).eq('is_active', true).maybeSingle();
-            return (data as BlacklistRecord | null) ?? null;
+            record = (data as BlacklistRecord | null) ?? null;
+        } else {
+            record = (await jsonRead()).find(r => r.uuid === uuid && r.is_active) ?? null;
         }
-        return (await jsonRead()).find(r => r.uuid === uuid && r.is_active) ?? null;
+        if (record && isExpired(record)) {
+            await blacklistRepo.deactivate(record.id).catch(() => {});
+            return null;
+        }
+        return record;
     },
 
     async isBlacklisted(uuid: string): Promise<boolean> {
@@ -108,4 +115,33 @@ export const blacklistRepo = {
         const rec = records.find(r => r.id === id);
         if (rec) { rec.is_active = false; await jsonWrite(records); }
     },
+
+    /** Deactivate all entries whose expires_at has passed */
+    async expireOverdue(): Promise<string[]> {
+        const all = await (async () => {
+            const db = getSupabaseClient();
+            if (db) {
+                const { data } = await db.from('blacklist').select('*').eq('is_active', true);
+                return (data as BlacklistRecord[]) ?? [];
+            }
+            return (await jsonRead()).filter(r => r.is_active);
+        })();
+
+        const expiredUuids: string[] = [];
+        for (const r of all) {
+            if (isExpired(r)) {
+                await blacklistRepo.deactivate(r.id).catch(() => {});
+                expiredUuids.push(r.uuid);
+            }
+        }
+        return expiredUuids;
+    },
 };
+
+function isExpired(r: BlacklistRecord): boolean {
+    return !!r.expires_at && new Date(r.expires_at).getTime() <= Date.now();
+}
+
+function filterExpired(records: BlacklistRecord[]): BlacklistRecord[] {
+    return records.filter(r => !isExpired(r));
+}

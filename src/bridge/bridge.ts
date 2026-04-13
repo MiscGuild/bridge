@@ -24,6 +24,7 @@ import {
     handleQuestTierComplete, handleSameMessageTwice, handleCommentBlocked,
     handleWhisper,
 } from '@/bot/handlers/misc';
+import { trackInviteOnJoin } from '@/modules/invite-tracker/index';
 
 export default class Bridge {
     public readonly bot: MinecraftBot;
@@ -75,6 +76,12 @@ export default class Bridge {
         // Periodic ban refresh
         setInterval(() => this.loadBans(), env.BAN_CHECK_INTERVAL * 60 * 1000);
 
+        // Periodic blacklist expiry sweep (every hour)
+        setInterval(async () => {
+            const expired = await blacklistRepo.expireOverdue().catch(() => [] as string[]);
+            for (const uuid of expired) this.blacklist.remove(uuid);
+        }, 60 * 60 * 1000);
+
         consola.success('Bridge started!');
     }
 
@@ -117,12 +124,18 @@ export default class Bridge {
                 case 'memberJoinLeave':
                     await handleMemberJoinLeave(this, event);
                     await trackGuildEvent(event, this);
+                    if (event.status === 'joined') {
+                        trackInviteOnJoin(this, event.playerName).catch(() => {});
+                    }
                     trackEvent(event);
                     break;
                 case 'memberKick':
                     await handleMemberKick(this, event);
                     await trackGuildEvent(event, this);
                     trackEvent(event);
+                    break;
+                case 'guildInvite':
+                    await this.discord.send('gc', `📨 **${event.inviterRank ? `${event.inviterRank} ` : ''}${event.inviterName}** invited **${event.inviteeRank ? `${event.inviteeRank} ` : ''}${event.inviteeName}** to the guild!`);
                     break;
                 case 'promoteDemote':
                     await handlePromoteDemote(this, event);
