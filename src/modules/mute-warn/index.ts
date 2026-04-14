@@ -107,28 +107,6 @@ export async function dmUser(
     }
 }
 
-/**
- * Send a Dyno warn command in the configured channel.
- * Format: {prefix}warn @user reason
- */
-async function sendDynoWarn(
-    bridge: Bridge,
-    discordMember: GuildMember | null,
-    reason: string,
-    targetName: string
-): Promise<void> {
-    const channelId = env.DYNO_CHANNEL_ID;
-    if (!channelId) return;
-    try {
-        const channel = await bridge.discord.channels.fetch(channelId).catch(() => null);
-        if (!channel || !channel.isTextBased()) return;
-        const mention = discordMember ? `<@${discordMember.id}>` : targetName;
-        await (channel as any).send(`${env.DYNO_PREFIX}warn ${mention} ${reason}`);
-    } catch (err) {
-        consola.warn('[Dyno] Failed to send warn command:', err);
-    }
-}
-
 // ── Handle in-game mute/unmute events (from chat parser) ──────────────────────
 
 /**
@@ -206,12 +184,13 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
             const total = (await warnsRepo.getByUsername(target).catch(() => [])).length;
             await auditLogRepo.log(ctx.username, 'warn', target, { reason }).catch(() => {});
 
+            // 1. Confirm in OC
             bridge.bot.chat('oc', `⚠️ ${target} has been warned: ${reason} (${total} total)`);
 
-            // Send Dyno warn command in Discord
-            await sendDynoWarn(bridge, discordMember, reason, target);
+            // 2. In-game /msg to the offender
+            bridge.bot.execute(`/msg ${target} You have been warned in the guild for: ${reason} (${total} total)`);
 
-            // DM the warned player; fall back to GC if DMs are off
+            // 3. Discord DM; fall back to GC if DMs are off
             const dmText = `⚠️ You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`;
             const dmSent = await dmUser(bridge, discordMember?.id, dmText);
             if (!dmSent) {
