@@ -1,7 +1,7 @@
 import { consola } from 'consola';
 import NodeCache from 'node-cache';
 import env from '@/config/env';
-import { HYPIXEL_API_BASE, STATS_CACHE_TTL_MS } from '@/config/constants';
+import { HYPIXEL_API_BASE, HYPIXEL_API_V2_BASE, STATS_CACHE_TTL_MS } from '@/config/constants';
 
 const cache = new NodeCache({ stdTTL: STATS_CACHE_TTL_MS / 1000 });
 const inFlight = new Map<string, Promise<unknown>>();
@@ -104,12 +104,17 @@ export const hypixelService = {
 
     async getSkyblockProfiles(uuid: string): Promise<unknown[]> {
         try {
-            const data = await cachedFetch<{ profiles: unknown[] }>(
+            const data = await cachedFetch<{ profiles: unknown[] | null }>(
                 `skyblock:${uuid}`,
-                `${HYPIXEL_API_BASE}/skyblock/profiles?uuid=${uuid}`
+                `${HYPIXEL_API_V2_BASE}/skyblock/profiles?uuid=${uuid}`
             );
-            return data.profiles ?? [];
-        } catch {
+            if (!data.profiles) {
+                consola.debug(`[SkyBlock] No profiles returned for UUID ${uuid}`);
+                return [];
+            }
+            return data.profiles;
+        } catch (err) {
+            consola.warn(`[SkyBlock] Failed to fetch profiles for UUID ${uuid}:`, err);
             return [];
         }
     },

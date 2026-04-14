@@ -3,6 +3,7 @@ import type { ModuleCommand } from '@/modules/types';
 import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
 import cooldowns from '@/util/cooldown';
+import { consola } from 'consola';
 
 // ── Utility helpers ───────────────────────────────────────────────────────────
 
@@ -268,15 +269,29 @@ async function fetchSkyblockData(uuid: string): Promise<any | null> {
         // Hypixel SkyBlock member keys use no-dash UUIDs
         const cleanUuid = uuid.replace(/-/g, '');
         const profiles = await hypixelService.getSkyblockProfiles(cleanUuid) as any[];
-        if (!profiles || profiles.length === 0) return null;
+        if (!profiles || profiles.length === 0) {
+            consola.debug(`[SkyBlock] No profiles found for UUID ${cleanUuid}`);
+            return null;
+        }
         const selected = profiles.find((p: any) => p.selected) ?? profiles[0];
-        if (!selected?.members?.[cleanUuid]) return null;
+        // Try both no-dash and dashed UUID as member key (Hypixel can vary by API version)
+        const memberData = selected?.members?.[cleanUuid]
+            ?? selected?.members?.[uuid]
+            ?? null;
+        if (!memberData) {
+            const memberKeys = Object.keys(selected?.members ?? {});
+            consola.debug(`[SkyBlock] Member key ${cleanUuid} not found. Available keys: ${memberKeys.join(', ')}`);
+            return null;
+        }
         return {
-            memberData: selected.members[cleanUuid],
+            memberData,
             bankBalance: selected.banking?.balance ?? 0,
             profileName: selected.cute_name ?? 'Unknown',
         };
-    } catch { return null; }
+    } catch (err) {
+        consola.warn('[SkyBlock] fetchSkyblockData error:', err);
+        return null;
+    }
 }
 
 function sbSkillXp(memberData: any): Record<string, number> {

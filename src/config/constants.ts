@@ -4,6 +4,7 @@ export const HYPIXEL_HOST = 'mc.hypixel.net';
 export const HYPIXEL_PORT = 25565;
 export const MINECRAFT_VERSION = '1.8.9';
 export const HYPIXEL_API_BASE = 'https://api.hypixel.net';
+export const HYPIXEL_API_V2_BASE = 'https://api.hypixel.net/v2';
 export const MOJANG_API_BASE = 'https://api.mojang.com';
 
 /** Hypixel rank color mapping (rank tag → hex color) */
