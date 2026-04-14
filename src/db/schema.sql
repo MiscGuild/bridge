@@ -191,6 +191,7 @@ CREATE TABLE IF NOT EXISTS warns (
     id          TEXT PRIMARY KEY,
     uuid        TEXT NOT NULL,
     username    TEXT NOT NULL,
+    discord_id  TEXT,
     reason      TEXT NOT NULL,
     warned_by   TEXT NOT NULL,
     warned_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()

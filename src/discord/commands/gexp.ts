@@ -7,6 +7,7 @@ import type Bridge from '@/bridge/bridge';
 import { gexpHistoryRepo } from '@/db/repositories/gexp-history.repo';
 import { mojangService } from '@/services/mojang';
 import { hypixelService } from '@/services/hypixel';
+import env from '@/config/env';
 import { renderPlayerGexpChart, renderLeaderboardChart } from '@/utils/gexp-chart';
 
 function daysAgo(n: number): string {
@@ -198,20 +199,14 @@ async function handleLeaderboard(interaction: any): Promise<void> {
 async function handleSync(bridge: Bridge, interaction: any): Promise<void> {
     await interaction.deferReply({ ephemeral: true });
 
-    // Look up bot UUID → guild → members → expHistory
-    const botName = (process.env.MINECRAFT_BOT_NAME ?? process.env.MINECRAFT_EMAIL ?? '').split('@')[0];
-    if (!botName) {
-        await interaction.editReply({ content: '❌ Bot MC name not configured.' });
+    // Fetch guild directly by name — no need to resolve the bot's Mojang profile
+    const guildName = env.HYPIXEL_GUILD_NAME;
+    if (!guildName) {
+        await interaction.editReply({ content: '❌ HYPIXEL_GUILD_NAME not configured.' });
         return;
     }
 
-    const botProfile = await mojangService.getProfile(botName).catch(() => null);
-    if (!botProfile) {
-        await interaction.editReply({ content: '❌ Could not resolve bot Mojang profile.' });
-        return;
-    }
-
-    const guild = await hypixelService.getGuild(botProfile.id);
+    const guild = await hypixelService.getGuildByName(guildName);
     if (!guild) {
         await interaction.editReply({ content: '❌ Could not fetch guild data.' });
         return;
