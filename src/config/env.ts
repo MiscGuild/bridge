@@ -86,6 +86,20 @@ const envSchema = z.object({
     COOLDOWN_RANK_5: z.coerce.number().int().min(0).default(10),
     COOLDOWN_LEADER: z.coerce.number().int().min(0).default(0),
     COOLDOWN_URCHIN: z.coerce.number().int().min(0).default(5),
+
+    // === RANK FALLBACKS (used when Hypixel API is unavailable) ===
+    // Format: "Name:Tag" or just "Name". Chat shows the tag, not the name.
+    RANK_1_NAME: z.string().default(''),
+    RANK_1_TAG: z.string().default(''),
+    RANK_2_NAME: z.string().default(''),
+    RANK_2_TAG: z.string().default(''),
+    RANK_3_NAME: z.string().default(''),
+    RANK_3_TAG: z.string().default(''),
+    RANK_4_NAME: z.string().default(''),
+    RANK_4_TAG: z.string().default(''),
+    RANK_5_NAME: z.string().default(''),
+    RANK_5_TAG: z.string().default(''),
+    RANK_LEADER_TAG: z.string().default('GM'),
 });
 
 config();
