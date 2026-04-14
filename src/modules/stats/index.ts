@@ -457,7 +457,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         },
     });
 
-    // Guild info command — !guild or !guild <player>
+    // Guild info command — !guild <player> or !guild (self)
     commands.push({
         commandId: 'stats:guild',
         pattern: /^!guild(?:\s+(\S+))?/i,
@@ -465,47 +465,37 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'stats:guild');
             if (remaining > 0) { bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`); return; }
 
-            const target = ctx.matches[1]?.trim();
+            const name = ctx.matches[1]?.trim() || ctx.username;
+            const profile = await mojangService.getProfile(name).catch(() => null);
+            if (!profile) { bridge.bot.chat(ctx.replyChannel, `Could not find player: ${name}`); return; }
 
-            // Resolve UUID: use target player, or fall back to bot itself
-            let uuid: string;
-            if (target) {
-                const profile = await mojangService.getProfile(target).catch(() => null);
-                if (!profile) { bridge.bot.chat(ctx.replyChannel, `Could not find player: ${target}`); return; }
-                uuid = profile.id;
-            } else {
-                const botName = (process.env.MINECRAFT_BOT_NAME ?? process.env.MINECRAFT_EMAIL ?? '').split('@')[0];
-                if (!botName) { bridge.bot.chat(ctx.replyChannel, 'Bot name not configured.'); return; }
-                const botProfile = await mojangService.getProfile(botName).catch(() => null);
-                if (!botProfile) { bridge.bot.chat(ctx.replyChannel, 'Could not resolve bot profile.'); return; }
-                uuid = botProfile.id;
-            }
-
-            const guild = await hypixelService.getGuild(uuid);
+            const guild = await hypixelService.getGuild(profile.id);
             if (!guild) {
-                bridge.bot.chat(ctx.replyChannel, target ? `${target} is not in a guild.` : 'Could not fetch guild data.');
+                bridge.bot.chat(ctx.replyChannel, `${profile.name} is not in a guild.`);
                 return;
             }
 
-            const members = guild.members ?? [];
-            const level = guildLevel(guild.exp ?? 0);
-            const tag = guild.tag ? ` [${guild.tag}]` : '';
-
-            // Aggregate today + weekly GEXP from all members
-            const todayStr = new Date().toISOString().slice(0, 10);
-            let todayGexp = 0;
-            let weeklyGexp = 0;
-            for (const m of members) {
-                const history = m.expHistory ?? {};
-                const entries = Object.entries(history).sort(([a], [b]) => b.localeCompare(a));
-                todayGexp += entries.find(([d]) => d === todayStr)?.[1] ?? entries[0]?.[1] ?? 0;
-                weeklyGexp += entries.slice(0, 7).reduce((sum, [, v]) => sum + v, 0);
+            const targetUuid = profile.id.replace(/-/g, '');
+            const member = guild.members?.find((m: any) => m.uuid.replace(/-/g, '') === targetUuid);
+            if (!member) {
+                bridge.bot.chat(ctx.replyChannel, `${profile.name} is not in a guild.`);
+                return;
             }
 
-            const created = new Date(guild.created).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            const guildTag = guild.tag ? `[${guild.tag}]` : '';
+            const rankName = member.rank === 'Guild Master' ? 'Guild Master' : member.rank;
+            const rankDef = guild.ranks?.find(r => r.name === member.rank);
+            const rankTag = member.rank === 'Guild Master' ? 'GM' : (rankDef?.tag ?? '');
+            const rankDisplay = rankTag ? `${rankName} [${rankTag}]` : rankName;
+
+            // Weekly GEXP from expHistory
+            const history = member.expHistory ?? {};
+            const weeklyGexp = Object.values(history).reduce((sum, v) => sum + v, 0);
+
+            const joined = new Date(member.joined).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
             bridge.bot.chat(ctx.replyChannel,
-                `${guild.name}${tag} | Level: ${level} | Members: ${members.length}/125 | Today: ${fmt(todayGexp)} | Weekly: ${fmt(weeklyGexp)} | Created: ${created}`
+                `${profile.name} | Guild: ${guild.name} ${guildTag} | Rank: ${rankDisplay} | Weekly GEXP: ${fmt(weeklyGexp)} | Joined: ${joined} | ${hex()}`
             );
             cooldowns.setCooldown(ctx.username, 'stats:guild', ctx.guildRank);
         },
