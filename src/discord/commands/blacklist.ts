@@ -71,6 +71,7 @@ async function sendBlacklistLog(
         const channel = await bridge.discord.channels.fetch(channelId).catch(() => null);
         if (!channel || !channel.isTextBased()) return;
 
+        const displayName = env.BLACKLIST_ANONYMOUS ? 'Miscellaneous Staff' : addedBy;
         const now = new Date();
         const embed = new EmbedBuilder()
             .setThumbnail(`https://mc-heads.net/avatar/${playerUuid}/64`)
@@ -81,7 +82,7 @@ async function sendBlacklistLog(
                 .setTitle('🚫 Player Blacklisted')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
-                    { name: 'Added by', value: addedBy, inline: true },
+                    { name: 'Added by', value: displayName, inline: true },
                     { name: 'Reason', value: reason ?? 'No reason provided' },
                     { name: 'Added', value: discordTs(now, 'f'), inline: true },
                     { name: 'Expires', value: expiresAt ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})` : 'Never (Permanent)', inline: true },
@@ -91,7 +92,7 @@ async function sendBlacklistLog(
                 .setTitle('✅ Player Removed from Blacklist')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
-                    { name: 'Removed by', value: addedBy, inline: true },
+                    { name: 'Removed by', value: displayName, inline: true },
                     { name: 'Removed', value: discordTs(now, 'f'), inline: true },
                 );
         }

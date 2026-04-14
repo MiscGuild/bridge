@@ -67,6 +67,7 @@ const envSchema = z.object({
     BAN_CHECK_INTERVAL: z.coerce.number().int().min(1).default(10),
     URCHIN_JOIN_CHECK: OPTIONAL_BOOLEAN,
     URCHIN_API_KEY: OPTIONAL_STRING,
+    BLACKLIST_ANONYMOUS: BOOLEAN.default('false'),  // Hide moderator name in blacklist embeds
 
 
     // === BRIDGE ACCESS ROLES ===
