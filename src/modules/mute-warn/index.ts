@@ -184,21 +184,21 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
             const total = (await warnsRepo.getByUsername(target).catch(() => [])).length;
             await auditLogRepo.log(ctx.username, 'warn', target, { reason }).catch(() => {});
 
-            // 1. In-game /msg to the offender
+            // 1. In-game /msg to the offender; fall back to GC if offline/blocked
             let igStatus = 'IG DM';
             try {
                 await bridge.bot.executeAndCapture(`/msg ${target} You have been warned in the guild for: ${reason} (${total} total)`);
             } catch {
                 igStatus = 'IG FAIL';
+                bridge.bot.chat('gc', `${target}, you have been warned by ${ctx.username}: ${reason} (${total} total)`);
             }
 
-            // 2. Discord DM; fall back to GC if DMs are off
+            // 2. Discord DM; silently fail if DMs are off
             let dcStatus = 'DC DM';
             const dmText = `⚠️ You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`;
             const dmSent = await dmUser(bridge, discordMember?.id, dmText);
             if (!dmSent) {
                 dcStatus = 'DC FAIL';
-                bridge.bot.chat('gc', `⚠️ ${target}, you have been warned by ${ctx.username}: ${reason} (${total} total)`);
             }
 
             // 3. Confirm in OC with delivery status
