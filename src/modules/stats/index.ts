@@ -4,6 +4,7 @@ import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
 import cooldowns from '@/util/cooldown';
 import { consola } from 'consola';
+import { ProfileNetworthCalculator } from 'skyhelper-networth';
 
 // ── Utility helpers ───────────────────────────────────────────────────────────
 
@@ -287,6 +288,7 @@ async function fetchSkyblockData(uuid: string): Promise<any | null> {
             memberData,
             bankBalance: selected.banking?.balance ?? 0,
             profileName: selected.cute_name ?? 'Unknown',
+            profileId: selected.profile_id as string ?? '',
         };
     } catch (err) {
         consola.warn('[SkyBlock] fetchSkyblockData error:', err);
@@ -410,6 +412,50 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         makeStatCmd('stats:sb:dungeons', /^!(?:sb\s+)?dungeons(?:\s+(\S+))?/i, buildSbDungeons, fetchSkyblockData),
         makeStatCmd('stats:sb', /^!sb(?:\s+(\S+))?/i, buildSbOverview, fetchSkyblockData),
     );
+
+    // !networth command
+    commands.push({
+        commandId: 'stats:sb:networth',
+        pattern: /^!(?:nw|networth)(?:\s+(\S+))?/i,
+        async handler(ctx, bridge) {
+            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'stats:sb:networth');
+            if (remaining > 0) { bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`); return; }
+
+            const target = ctx.matches[1]?.trim() ?? ctx.username;
+            const result = await resolve(target, bridge, ctx.replyChannel);
+            if (!result) return;
+
+            const sbData = await fetchSkyblockData(result.uuid);
+            if (!sbData) {
+                bridge.bot.chat(ctx.replyChannel, `No SkyBlock data found for ${result.name}. | ${hex()}`);
+                return;
+            }
+
+            try {
+                const museumData = sbData.profileId
+                    ? await hypixelService.getSkyblockMuseum(sbData.profileId, result.uuid).catch(() => null)
+                    : null;
+
+                const calc = new ProfileNetworthCalculator(sbData.memberData, museumData as object | undefined, sbData.bankBalance);
+                const nw = await calc.getNetworth({ onlyNetworth: true, cachePrices: true });
+
+                const total = fmt(Math.round(nw.networth));
+                const unsb = fmt(Math.round(nw.unsoulboundNetworth));
+                const purse = fmt(Math.round(nw.purse));
+                const bank = fmt(Math.round(nw.bank));
+
+                bridge.bot.chat(
+                    ctx.replyChannel,
+                    `[NW] ${result.name} (${sbData.profileName}) | Total: ${total} | Unsoulbound: ${unsb} | Purse: ${purse} | Bank: ${bank} | ${hex()}`
+                );
+            } catch (err) {
+                consola.warn('[Networth] Calculation error:', err);
+                bridge.bot.chat(ctx.replyChannel, `Failed to calculate networth for ${result.name}. | ${hex()}`);
+            }
+
+            cooldowns.setCooldown(ctx.username, 'stats:sb:networth', ctx.guildRank);
+        },
+    });
 
     // Guild info command — !guild or !guild <player>
     commands.push({

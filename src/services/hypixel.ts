@@ -119,6 +119,20 @@ export const hypixelService = {
         }
     },
 
+    async getSkyblockMuseum(profileId: string, uuid: string): Promise<unknown | null> {
+        try {
+            const data = await cachedFetch<{ members: Record<string, unknown> }>(
+                `museum:${profileId}`,
+                `${HYPIXEL_API_V2_BASE}/skyblock/museum?profile=${profileId}`
+            );
+            const cleanUuid = uuid.replace(/-/g, '');
+            return data.members?.[cleanUuid] ?? null;
+        } catch {
+            return null;
+        }
+    },
+
+
     clearCache(uuid?: string) {
         if (uuid) {
             cache.del(`player:${uuid}`);
