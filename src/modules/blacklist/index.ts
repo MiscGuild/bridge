@@ -3,6 +3,7 @@ import { blacklistRepo } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
 import cooldowns from '@/util/cooldown';
 import env from '@/config/env';
+import { guildRankService } from '@/services/guild-ranks';
 
 interface UrchinTag {
     type: string;
@@ -115,8 +116,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         pattern: /^!blacklist\s+add\s+(\S+)(?:\s+(\d+[mhdw]))?(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            const rank = ctx.guildRank?.replace(/[[\]]/g, '').toLowerCase() ?? '';
-            if (!['gm', 'leader', 'officer', 'mod', 'moderator'].includes(rank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -154,8 +154,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         pattern: /^!blacklist\s+remove\s+(\S+)/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            const rank = ctx.guildRank?.replace(/[[\]]/g, '').toLowerCase() ?? '';
-            if (!['gm', 'leader', 'officer', 'mod', 'moderator'].includes(rank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }

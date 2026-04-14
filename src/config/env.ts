@@ -78,6 +78,7 @@ const envSchema = z.object({
     ENABLE_TERMINAL: OPTIONAL_BOOLEAN,
 
     // === COOLDOWNS (seconds, 0 = no cooldown) ===
+    // Tier 1 = lowest/member rank, Tier 5 = highest non-GM rank. GM always gets 0.
     COOLDOWN_RANK_1: z.coerce.number().int().min(0).default(60),
     COOLDOWN_RANK_2: z.coerce.number().int().min(0).default(20),
     COOLDOWN_RANK_3: z.coerce.number().int().min(0).default(15),
@@ -85,14 +86,6 @@ const envSchema = z.object({
     COOLDOWN_RANK_5: z.coerce.number().int().min(0).default(10),
     COOLDOWN_LEADER: z.coerce.number().int().min(0).default(0),
     COOLDOWN_URCHIN: z.coerce.number().int().min(0).default(5),
-
-    // === RANK NAMES ===
-    RANK_1: z.string().default(''),
-    RANK_2: z.string().default(''),
-    RANK_3: z.string().default(''),
-    RANK_4: z.string().default(''),
-    RANK_5: z.string().default('Leader'),
-    RANK_LEADER: z.string().default('Guild Master'),
 });
 
 config();

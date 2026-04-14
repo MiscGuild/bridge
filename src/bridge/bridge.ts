@@ -11,6 +11,7 @@ import { bansRepo } from '@/db/repositories/bans.repo';
 import messageQueue from '@/queue/message-queue';
 import { moduleManager, initModules, trackEvent, trackGuildEvent } from '@/modules/index';
 import { startHealthMonitor, incrementMetric } from '@/monitoring/health';
+import { guildRankService } from '@/services/guild-ranks';
 
 // Handlers
 import { handleGuildChat } from '@/bot/handlers/guild-chat';
@@ -65,6 +66,13 @@ export default class Bridge {
 
         initModules(this);
         startHealthMonitor(this);
+
+        // Fetch guild ranks from Hypixel API (for dynamic cooldown/staff checks)
+        if (env.HYPIXEL_GUILD_NAME) {
+            guildRankService.init(env.HYPIXEL_GUILD_NAME).catch(err =>
+                consola.warn('[GuildRanks] Init failed:', err)
+            );
+        }
 
         if (env.REMINDER_ENABLED && env.REMINDER_MESSAGE) {
             setInterval(() => {

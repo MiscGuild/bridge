@@ -2,12 +2,7 @@ import type { ModuleCommand } from '@/modules/types';
 import { bansRepo } from '@/db/repositories/bans.repo';
 import { auditLogRepo } from '@/db/repositories/audit-log.repo';
 import { mojangService } from '@/services/mojang';
-
-function isStaff(guildRank?: string): boolean {
-    if (!guildRank) return false;
-    const norm = guildRank.replace(/[[\]]/g, '').toLowerCase();
-    return ['gm', 'leader', 'officer', 'mod', 'moderator'].includes(norm);
-}
+import { guildRankService } from '@/services/guild-ranks';
 
 async function resolveUuid(username: string): Promise<string | null> {
     const profile = await mojangService.getProfile(username);
@@ -22,7 +17,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         pattern: /^!gban\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -54,7 +49,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         pattern: /^!bridgeban\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -85,7 +80,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         pattern: /^!cmdban\s+(\S+)(?:\s+(.+))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -115,7 +110,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         pattern: /^!unban\s+(\S+)/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -136,7 +131,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         pattern: /^!banlist/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -161,7 +156,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         pattern: /^!reboot/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -177,7 +172,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
         pattern: /^!save/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
                 return;
             }

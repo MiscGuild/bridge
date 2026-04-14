@@ -2,6 +2,8 @@ import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand } from '@/modules/types';
 import type { ParsedChatEvent } from '@/bot/chat-parser';
 import { analyticsRepo } from '@/db/repositories/analytics.repo';
+import { guildRankService } from '@/services/guild-ranks';
+
 
 /** In-memory daily stats (resets at midnight UTC) */
 interface DailyStats {
@@ -63,11 +65,6 @@ async function flushToSupabase(): Promise<void> {
     }
 }
 
-function isStaff(guildRank?: string): boolean {
-    if (!guildRank) return false;
-    const norm = guildRank.replace(/[[\]]/g, '').toLowerCase();
-    return ['gm', 'leader', 'officer', 'moderator', 'mod'].includes(norm);
-}
 
 function buildReport(period: 'today' | 'week'): string {
     const s = stats;
@@ -126,7 +123,7 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
         pattern: /^!analytics(?:\s+(today|weekly|week))?/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, this command is staff-only.`);
                 return;
             }
@@ -141,7 +138,7 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
         pattern: /^!statsreport/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, this command is staff-only.`);
                 return;
             }

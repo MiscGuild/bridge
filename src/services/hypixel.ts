@@ -102,6 +102,18 @@ export const hypixelService = {
         }
     },
 
+    async getGuildByName(name: string): Promise<HypixelGuildResponse | null> {
+        try {
+            const data = await cachedFetch<{ guild: HypixelGuildResponse }>(
+                `guild:name:${name.toLowerCase()}`,
+                `${HYPIXEL_API_BASE}/guild?name=${encodeURIComponent(name)}`
+            );
+            return data.guild ?? null;
+        } catch {
+            return null;
+        }
+    },
+
     async getSkyblockProfiles(uuid: string): Promise<unknown[]> {
         try {
             const data = await cachedFetch<{ profiles: unknown[] | null }>(
@@ -166,11 +178,21 @@ export interface HypixelGuildResponse {
     coinsEver: number;
     created: number;
     members: HypixelGuildMember[];
+    ranks?: HypixelGuildRank[];
     tag?: string;
     tagColor?: string;
     exp?: number;
     guildExpByGameType?: Record<string, number>;
 }
+
+export interface HypixelGuildRank {
+    name: string;
+    default: boolean;
+    priority: number;
+    tag?: string;
+    created?: number;
+}
+
 
 export interface HypixelGuildMember {
     uuid: string;

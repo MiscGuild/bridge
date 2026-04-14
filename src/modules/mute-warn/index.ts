@@ -6,14 +6,9 @@ import { mutesRepo, warnsRepo } from '@/db/repositories/mutes.repo';
 import { auditLogRepo } from '@/db/repositories/audit-log.repo';
 import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
+import { guildRankService } from '@/services/guild-ranks';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-function isStaff(guildRank?: string): boolean {
-    if (!guildRank) return false;
-    const norm = guildRank.replace(/[[\]]/g, '').toLowerCase();
-    return ['gm', 'leader', 'officer', 'mod', 'moderator'].includes(norm);
-}
 
 /**
  * Parse duration string like "1d", "2h", "30m" into an ISO expiry timestamp.
@@ -167,7 +162,7 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, !warn can only be used in Officer Chat.`);
                 return;
             }
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat('oc', `${ctx.username}, you don't have permission.`);
                 return;
             }
@@ -226,7 +221,7 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, !clearwarns can only be used in Officer Chat.`);
                 return;
             }
-            if (!isStaff(ctx.guildRank)) {
+            if (!guildRankService.isStaffRank(ctx.guildRank)) {
                 bridge.bot.chat('oc', `${ctx.username}, you don't have permission.`);
                 return;
             }
