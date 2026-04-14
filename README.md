@@ -44,14 +44,17 @@
 - **Dual blacklist system**
   - *Guild Blacklist* — blocks players from the guild, supports expiry
   - *Urchin Blacklist* — real-time cheater tag checks on join
-- **Mute/warn system** — syncs in-game guild mutes to a Discord Muted role (auto-expires)
+- **Warning system** — warns players via in-game `/msg`, Discord DM (falls back to GC), tracks in DB with audit log
+- **Mute system** — syncs in-game guild mutes to a Discord Muted role (auto-expires)
+- **Networth** — SkyBlock profile net worth calculation via skyhelper-networth
 - **GEXP history** — tracks daily guild experience, leaderboard with bar chart, player graphs
-- **28+ stat commands** — BedWars, SkyWars, Duels, UHC, Pit, SkyBlock, and more
+- **30+ stat commands** — BedWars, SkyWars, Duels, UHC, Pit, SkyBlock, Networth, and more
 - **Session tracking** — track stat gains during a play session
+- **Dynamic guild ranks** — fetches rank names and tags from Hypixel API with .env fallback
 - **Analytics** — daily message counts, top chatters, guild event tracking
 - **REST API** — protected endpoints for guild data, stats, analytics, GEXP, moderation
 - **Health monitoring** — periodic snapshots and uptime tracking
-- **Configurable cooldowns** per guild rank
+- **Configurable cooldowns** per guild rank tier
 - **Filters** — profanity filter, brainrot filter
 - **Reminders** — periodic in-game announcements
 - **Supabase or JSON fallback** for all persistent storage
@@ -79,18 +82,19 @@
 | `!tnt [player]` | TNT Games stats |
 | `!cvc [player]` | Cops and Crims stats |
 | `!mw [player]` | Mega Walls stats |
-| `!pit [player]` | Pit stats |
+| `!pit [player]` | Pit stats (prestige, level, kills, KDR, gold) |
 | `!gexp [player]` | Guild EXP — today and weekly total |
-| `!guild [player]` | Guild info (name, level, members, GEXP) — omit player for bot's guild |
+| `!guild [player]` | Player guild info — guild name, rank + tag, weekly GEXP, join date |
 | `!sb [player]` | SkyBlock overview |
 | `!skills / !slayers / !dungeons [player]` | SkyBlock sub-stats |
+| `!nw / !networth [player]` | SkyBlock net worth (total, unsoulbound, purse, bank) |
 
 #### Sessions
 | Command | Description |
 |---|---|
 | `!bwsession / !swsession / !cvcsession` | Start a stat tracking session |
-| `!endbwsession` / `!endswsession` / `!endcvcsession` | End session and show gains |
-| `!showbwsession` / `!showswsession` / `!showcvcsession` | Show current session progress |
+| `!endbwsession / !endswsession / !endcvcsession` | End session and show gains |
+| `!showbwsession / !showswsession / !showcvcsession` | Show current session progress |
 
 #### GEXP Leaderboard
 | Command | Description |
@@ -103,16 +107,15 @@
 | `!invites [player]` | View invite history for a player |
 | `!inviteleaderboard` | Top 5 inviters |
 
-#### Moderation (Staff Only)
+#### Moderation (Staff Only — Officer Chat)
 | Command | Description |
 |---|---|
 | `!ban <player> <reason>` | Bridge-ban a player |
 | `!unban <player>` | Remove bridge-ban |
-| `!mute / !unmute` | Toggle in-game guild mute tracking |
-| `!warn <player> <reason>` | Warn a player (OC only) |
-| `!warns <player>` | View warnings |
-| `!clearwarns <player>` | Clear warnings (OC only) |
-| `!ismuted <player>` | Check mute status |
+| `!warn <player> <reason>` | Warn a player — sends in-game `/msg`, Discord DM, falls back to GC |
+| `!warns <player>` | View warnings (works in GC and OC) |
+| `!clearwarns <player>` | Clear all warnings |
+| `!ismuted <player>` | Check mute status (works in GC and OC) |
 | `!blacklist view <player>` | Check Urchin blacklist tags |
 | `!blacklist add <player> <reason> [duration]` | Add to guild blacklist |
 | `!blacklist remove <player>` | Remove from guild blacklist |
@@ -186,40 +189,82 @@ npm start
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|---|---|---|
-| `MINECRAFT_EMAIL` | ✅ | Minecraft account email |
-| `MINECRAFT_PASSWORD` | — | Password (omit for Microsoft auth) |
-| `HYPIXEL_API_KEY` | ✅ | Hypixel API key |
-| `FALLBACK_HYPIXEL_API_KEY` | — | Secondary API key for rate limit fallback |
-| `HYPIXEL_GUILD_NAME` | ✅ | Your guild name |
-| `DISCORD_TOKEN` | ✅ | Discord bot token |
-| `DISCORD_SERVER_ID` | ✅ | Your Discord server ID |
-| `DISCORD_INVITE_LINK` | ✅ | e.g. `discord.gg/yourcode` |
-| `MEMBER_CHANNEL_ID` | ✅ | Guild chat bridge channel |
-| `OFFICER_CHANNEL_ID` | ✅ | Officer chat bridge channel |
-| `BLACKLIST_CHANNEL_ID` | ✅ | Blacklist log channel |
-| `BOT_OWNER_ID` | ✅ | Your Discord user ID |
-| `STAFF_ROLE_ID` | ✅ | Staff role ID for command gating |
-| `BRIDGE_MUTED_ROLE_ID` | — | Role that blocks bridge chat access |
-| `MUTED_ROLE_ID` | — | Role for full server mute (synced with `/g mute`) |
-| `BRIDGE_ACCESS_ROLE_ID` | — | Role granting bridge access to non-members |
-| `GUILD_MEMBER_ROLE_IDS` | — | Comma-separated member role IDs |
-| `URCHIN_API_KEY` | — | Urchin cheater database API key |
-| `SUPABASE_URL` | — | Supabase project URL (uses JSON files if omitted) |
-| `SUPABASE_SERVICE_KEY` | — | Supabase service role key |
-| `API_PORT` | — | REST API port (default: `3001`) |
-| `API_KEY` | — | API key for protected endpoints |
-| `JWT_SECRET` | — | JWT secret for dashboard auth |
-| `USE_PROFANITY_FILTER` | — | Enable profanity filter (default: `true`) |
-| `USE_BRAINROT_FILTER` | — | Enable brainrot term filter (default: `true`) |
-| `MINIMUM_NETWORK_LEVEL` | — | Minimum Hypixel network level to use bridge |
-| `REMINDER_ENABLED` | — | Enable periodic in-game reminders |
-| `REMINDER_MESSAGE` | — | Reminder message text |
-| `REMINDER_FREQUENCY` | — | Reminder interval in minutes |
-| `COOLDOWN_RANK_1` – `RANK_5` | — | Command cooldowns per rank in seconds |
-| `RANK_1` – `RANK_LEADER` | — | Guild rank names matching Hypixel |
-| `ENABLE_TERMINAL` | — | Enable interactive terminal REPL |
+#### Required
+| Variable | Description |
+|---|---|
+| `MINECRAFT_EMAIL` | Minecraft account email |
+| `HYPIXEL_API_KEY` | Hypixel API key |
+| `HYPIXEL_GUILD_NAME` | Your guild name (used for rank fetching, GEXP sync) |
+| `DISCORD_TOKEN` | Discord bot token |
+| `DISCORD_SERVER_ID` | Your Discord server ID |
+| `DISCORD_INVITE_LINK` | e.g. `discord.gg/yourcode` |
+| `MEMBER_CHANNEL_ID` | Guild chat bridge channel |
+| `OFFICER_CHANNEL_ID` | Officer chat bridge channel |
+| `BLACKLIST_CHANNEL_ID` | Blacklist log channel |
+| `BOT_OWNER_ID` | Your Discord user ID |
+| `STAFF_ROLE_ID` | Staff role ID for command gating |
+
+#### Optional — Minecraft & API
+| Variable | Description |
+|---|---|
+| `MINECRAFT_PASSWORD` | Password (omit for Microsoft auth) |
+| `FALLBACK_HYPIXEL_API_KEY` | Secondary API key for rate limit fallback |
+| `2ND_FALLBACK_HYPIXEL_API_KEY` | Tertiary API key |
+
+#### Optional — Discord Roles
+| Variable | Description |
+|---|---|
+| `BRIDGE_MUTED_ROLE_ID` | Role that blocks bridge chat access |
+| `MUTED_ROLE_ID` | Role for full server mute (synced with `/g mute`) |
+| `BRIDGE_ACCESS_ROLE_ID` | Role granting bridge access to non-members |
+| `GUILD_MEMBER_ROLE_IDS` | Comma-separated member role IDs |
+
+#### Optional — Supabase
+| Variable | Description |
+|---|---|
+| `SUPABASE_URL` | Supabase project URL (uses JSON files if omitted) |
+| `SUPABASE_ANON_KEY` | Supabase anon key |
+| `SUPABASE_SERVICE_KEY` | Supabase service role key |
+
+#### Optional — REST API / Dashboard
+| Variable | Description |
+|---|---|
+| `API_PORT` | REST API port (default: `3001`) |
+| `API_KEY` | API key for protected endpoints |
+| `JWT_SECRET` | JWT secret for dashboard auth |
+| `DISCORD_CLIENT_ID` | Discord OAuth client ID |
+| `DISCORD_CLIENT_SECRET` | Discord OAuth client secret |
+| `DISCORD_REDIRECT_URI` | Discord OAuth redirect URI |
+
+#### Optional — Filters & Reminders
+| Variable | Description |
+|---|---|
+| `USE_PROFANITY_FILTER` | Enable profanity filter (default: `true`) |
+| `USE_BRAINROT_FILTER` | Enable brainrot term filter (default: `true`) |
+| `MINIMUM_NETWORK_LEVEL` | Minimum Hypixel network level to use bridge |
+| `REMINDER_ENABLED` | Enable periodic in-game reminders |
+| `REMINDER_MESSAGE` | Reminder message text |
+| `REMINDER_FREQUENCY` | Reminder interval in minutes |
+
+#### Optional — Moderation
+| Variable | Description |
+|---|---|
+| `BAN_ALLOWED_RANKS` | Ranks allowed to use ban commands |
+| `URCHIN_JOIN_CHECK` | Auto-check new joins against Urchin DB |
+| `URCHIN_API_KEY` | Urchin cheater database API key |
+
+#### Optional — Cooldowns & Rank Fallbacks
+| Variable | Description |
+|---|---|
+| `COOLDOWN_RANK_1` – `COOLDOWN_RANK_5` | Command cooldowns per rank tier in seconds |
+| `COOLDOWN_LEADER` | Guild master cooldown (default: `0`) |
+| `RANK_1_NAME` / `RANK_1_TAG` – `RANK_5_NAME` / `RANK_5_TAG` | Fallback rank names and tags (used when API is unavailable) |
+| `RANK_LEADER_TAG` | Guild master tag (default: `GM`) |
+
+#### Optional — Misc
+| Variable | Description |
+|---|---|
+| `ENABLE_TERMINAL` | Enable interactive terminal REPL |
 
 ---
 
@@ -231,7 +276,7 @@ All data defaults to local JSON files in `data/`. To use Supabase, set `SUPABASE
 -- Run src/db/schema.sql in your Supabase SQL editor
 ```
 
-Tables: `guild_members`, `chat_messages`, `analytics_daily`, `analytics_chatters`, `sessions`, `bans`, `blacklist`, `mutes`, `warns`, `invites`, `gexp_daily`, `audit_log`, `webhooks`, `bot_health`.
+Tables: `guild_members`, `chat_messages`, `analytics_daily`, `analytics_chatters`, `sessions`, `bans`, `blacklist`, `mutes`, `warns`, `guild_invites`, `gexp_daily`, `audit_log`, `webhooks`, `bot_health`.
 
 ---
 
@@ -251,4 +296,3 @@ npm run pm2:logs     # View logs
 ## License
 
 This is an open-source project licensed under the [MIT License](LICENSE).
-
