@@ -167,6 +167,53 @@ CREATE TABLE IF NOT EXISTS bot_health (
 CREATE INDEX IF NOT EXISTS idx_bot_health_timestamp ON bot_health (timestamp DESC);
 
 -- =====================================================
+-- mutes
+-- =====================================================
+CREATE TABLE IF NOT EXISTS mutes (
+    id          TEXT PRIMARY KEY,
+    uuid        TEXT NOT NULL,
+    username    TEXT NOT NULL,
+    discord_id  TEXT,
+    reason      TEXT NOT NULL,
+    muted_by    TEXT NOT NULL,
+    muted_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expires_at  TIMESTAMPTZ,
+    is_active   BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE INDEX IF NOT EXISTS idx_mutes_uuid ON mutes (uuid, is_active);
+CREATE INDEX IF NOT EXISTS idx_mutes_active ON mutes (is_active) WHERE is_active = TRUE;
+
+-- =====================================================
+-- warns
+-- =====================================================
+CREATE TABLE IF NOT EXISTS warns (
+    id          TEXT PRIMARY KEY,
+    uuid        TEXT NOT NULL,
+    username    TEXT NOT NULL,
+    reason      TEXT NOT NULL,
+    warned_by   TEXT NOT NULL,
+    warned_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_warns_uuid ON warns (uuid);
+CREATE INDEX IF NOT EXISTS idx_warns_username ON warns (username);
+
+-- =====================================================
+-- guild_invites
+-- =====================================================
+CREATE TABLE IF NOT EXISTS guild_invites (
+    id          TEXT PRIMARY KEY,
+    uuid        TEXT NOT NULL,
+    username    TEXT NOT NULL,
+    invited_by  TEXT NOT NULL,
+    invited_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_invites_uuid ON guild_invites (uuid);
+CREATE INDEX IF NOT EXISTS idx_invites_invited_by ON guild_invites (invited_by);
+
+-- =====================================================
 -- gexp_daily (Guild Experience history per member)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS gexp_daily (
