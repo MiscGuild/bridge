@@ -50,7 +50,7 @@ async function sendBlacklistLog(
 
         if (action === 'added') {
             embed.setColor('Red')
-                .setTitle('🚫 Player Blacklisted')
+                .setTitle('Player Blacklisted')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Added by', value: displayName, inline: true },
@@ -60,7 +60,7 @@ async function sendBlacklistLog(
                 );
         } else {
             embed.setColor('Green')
-                .setTitle('✅ Player Removed from Blacklist')
+                .setTitle('Player Removed from Blacklist')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Removed by', value: displayName, inline: true },
@@ -200,7 +200,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             await blacklistRepo.add({ uuid: profile.id, username: profile.name, reason, added_by: ctx.username, expires_at: expiresAt }).catch(() => {});
             bridge.blacklist.add(profile.id);
             const expiryMsg = expiresAt ? ` (expires in ${durationStr})` : ' (permanent)';
-            bridge.bot.chat('oc', `✅ ${profile.name} added to internal blacklist: ${reason}${expiryMsg}`);
+            bridge.bot.chat('oc', `${profile.name} added to internal blacklist: ${reason}${expiryMsg}`);
 
             // Log to blacklist channel
             await sendBlacklistLog(bridge, 'added', profile.name, profile.id, ctx.username, reason, expiresAt);
@@ -227,7 +227,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
 
             await blacklistRepo.remove(profile.id).catch(() => {});
             bridge.blacklist.remove(profile.id);
-            bridge.bot.chat('oc', `✅ ${profile.name} removed from internal blacklist.`);
+            bridge.bot.chat('oc', `${profile.name} removed from internal blacklist.`);
 
             // Log to blacklist channel
             await sendBlacklistLog(bridge, 'removed', profile.name, profile.id, ctx.username);

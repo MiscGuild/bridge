@@ -21,7 +21,7 @@ export async function handleMemberJoinLeave(
                 );
                 const kickEmbed = new EmbedBuilder()
                     .setColor(0xed4245)
-                    .setTitle('🚫 Auto-Kicked: Blacklisted')
+                    .setTitle('Auto-Kicked: Blacklisted')
                     .setThumbnail(`https://mc-heads.net/avatar/${profile.id}/64`)
                     .addFields({ name: 'Player', value: escapeMarkdown(event.playerName), inline: true })
                     .setTimestamp();
@@ -34,7 +34,7 @@ export async function handleMemberJoinLeave(
                 if (tags.length > 0) {
                     const urchinEmbed = new EmbedBuilder()
                         .setColor(0xff5555)
-                        .setTitle('⚠️ Urchin Tags Detected')
+                        .setTitle('Urchin Tags Detected')
                         .setThumbnail(`https://mc-heads.net/avatar/${profile.id}/64`)
                         .addFields(
                             { name: 'Player', value: escapeMarkdown(event.playerName), inline: true },

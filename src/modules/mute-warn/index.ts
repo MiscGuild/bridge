@@ -137,7 +137,7 @@ export async function handleMuteSyncFromGame(
         }).catch(() => {});
         await syncDiscordMuteRole(bridge, discordMember?.id, true);
         await dmUser(bridge, discordMember?.id,
-            `🔇 You have been muted in the guild by **${muterName}**${duration ? ` for ${duration}` : ''}. You cannot use the bridge chat while muted.`
+            `You have been muted in the guild by **${muterName}**${duration ? ` for ${duration}` : ''}. You cannot use the bridge chat while muted.`
         );
     } else {
         const existing = await mutesRepo.getByUsername(targetName).catch(() => null);
@@ -145,7 +145,7 @@ export async function handleMuteSyncFromGame(
         const discordId = existing?.discord_id ?? (await findDiscordMember(bridge, targetName))?.id;
         await syncDiscordMuteRole(bridge, discordId, false);
         await dmUser(bridge, discordId,
-            `✅ You have been unmuted in the guild by **${muterName}**. You can use the bridge chat again.`
+            `You have been unmuted in the guild by **${muterName}**. You can use the bridge chat again.`
         );
     }
 }
@@ -195,7 +195,7 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
 
             // 2. Discord DM; silently fail if DMs are off
             let dcStatus = 'DC DM';
-            const dmText = `⚠️ You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`;
+            const dmText = `You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`;
             const dmSent = await dmUser(bridge, discordMember?.id, dmText);
             if (!dmSent) {
                 dcStatus = 'DC FAIL';
@@ -243,7 +243,7 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
             const target = ctx.matches[1]!;
             const count = await warnsRepo.clearByUsername(target).catch(() => 0);
             await auditLogRepo.log(ctx.username, 'clearwarns', target).catch(() => {});
-            bridge.bot.chat('oc', `✅ Cleared ${count} warning(s) for ${target}`);
+            bridge.bot.chat('oc', `Cleared ${count} warning(s) for ${target}`);
         },
     });
 
@@ -259,7 +259,7 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
                 bridge.bot.chat(channel, `${target} is not muted.`);
                 return;
             }
-            bridge.bot.chat(channel, `🔇 ${target} muted by ${mute.muted_by} | Remaining: ${formatRemaining(mute.expires_at)} | ${mute.reason}`);
+            bridge.bot.chat(channel, `${target} muted by ${mute.muted_by} | Remaining: ${formatRemaining(mute.expires_at)} | ${mute.reason}`);
         },
     });
 }

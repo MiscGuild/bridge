@@ -141,7 +141,7 @@ async function handlePlayer(_bridge: Bridge, interaction: any): Promise<void> {
 
     const embed = new EmbedBuilder()
         .setColor('#5865f2')
-        .setTitle(`📊 GEXP History — ${profile.name}`)
+        .setTitle(`GEXP History — ${profile.name}`)
         .setThumbnail(`https://mc-heads.net/avatar/${profile.id}/64`)
         .addFields(
             { name: 'Period', value: `${history.length} days`, inline: true },
@@ -179,7 +179,7 @@ async function handleLeaderboard(interaction: any): Promise<void> {
     const attachment = new AttachmentBuilder(chartBuffer, { name: 'leaderboard.png' });
 
     const lines = entries.map((e, i) => {
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `\`${i + 1}.\``;
+        const medal = `\`${i + 1}.\``;
         return `${medal} **${e.username}** — ${fmtNum(e.total)}`;
     });
 
@@ -187,7 +187,7 @@ async function handleLeaderboard(interaction: any): Promise<void> {
 
     const embed = new EmbedBuilder()
         .setColor('#5865f2')
-        .setTitle(`🏆 ${title}`)
+        .setTitle(title)
         .setDescription(lines.join('\n'))
         .addFields({ name: 'Guild Total', value: fmtNum(guildTotal), inline: true })
         .setImage('attachment://leaderboard.png')
@@ -202,17 +202,17 @@ async function handleSync(bridge: Bridge, interaction: any): Promise<void> {
     // Fetch guild directly by name — no need to resolve the bot's Mojang profile
     const guildName = env.HYPIXEL_GUILD_NAME;
     if (!guildName) {
-        await interaction.editReply({ content: '❌ HYPIXEL_GUILD_NAME not configured.' });
+        await interaction.editReply({ content: 'HYPIXEL_GUILD_NAME not configured.' });
         return;
     }
 
     const guild = await hypixelService.getGuildByName(guildName);
     if (!guild) {
-        await interaction.editReply({ content: '❌ Could not fetch guild data.' });
+        await interaction.editReply({ content: 'Could not fetch guild data.' });
         return;
     }
 
     const { syncGexpFromGuild } = await import('@/modules/gexp-history/index');
     const count = await syncGexpFromGuild(guild, bridge);
-    await interaction.editReply({ content: `✅ Synced GEXP for **${count}** members.` });
+    await interaction.editReply({ content: `Synced GEXP for **${count}** members.` });
 }

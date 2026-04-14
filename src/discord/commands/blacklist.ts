@@ -79,7 +79,7 @@ async function sendBlacklistLog(
 
         if (action === 'added') {
             embed.setColor('Red')
-                .setTitle('🚫 Player Blacklisted')
+                .setTitle('Player Blacklisted')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Added by', value: displayName, inline: true },
@@ -89,7 +89,7 @@ async function sendBlacklistLog(
                 );
         } else {
             embed.setColor('Green')
-                .setTitle('✅ Player Removed from Blacklist')
+                .setTitle('Player Removed from Blacklist')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Removed by', value: displayName, inline: true },
@@ -176,24 +176,24 @@ export default {
                 const guildEntry = await blacklistRepo.getByUuid(profile.id).catch(() => null);
                 if (guildEntry) {
                     fields.push({
-                        name: '🚫 Guild Blacklist',
+                        name: 'Guild Blacklist',
                         value: `**Reason:** ${guildEntry.reason}\n**Added by:** ${guildEntry.added_by}\n**Date:** ${new Date(guildEntry.added_at).toLocaleDateString()}\n**Expiry:** ${formatExpiry(guildEntry.expires_at)}`,
                     });
                 } else {
-                    fields.push({ name: '✅ Guild Blacklist', value: 'Not blacklisted' });
+                    fields.push({ name: 'Guild Blacklist', value: 'Not blacklisted' });
                 }
 
                 const urchin = await queryUrchin(profile.id);
                 if (!urchin) {
-                    fields.push({ name: '⚠️ Urchin Blacklist', value: 'Could not check (no API key or error)' });
+                    fields.push({ name: 'Urchin Blacklist', value: 'Could not check (no API key or error)' });
                 } else if (!urchin.tags || urchin.tags.length === 0) {
-                    fields.push({ name: '✅ Urchin Blacklist', value: 'No cheater tags' });
+                    fields.push({ name: 'Urchin Blacklist', value: 'No cheater tags' });
                 } else {
                     const tagLines = urchin.tags.map(t =>
                         `**[${(t.type || 'UNKNOWN').toUpperCase()}]** ${t.reason || 'No reason'}`
                     );
                     fields.push({
-                        name: `🚨 Urchin Blacklist (${urchin.tags.length} tag${urchin.tags.length > 1 ? 's' : ''})`,
+                        name: `Urchin Blacklist (${urchin.tags.length} tag${urchin.tags.length > 1 ? 's' : ''})`,
                         value: tagLines.join('\n'),
                     });
                 }
@@ -219,7 +219,7 @@ export default {
                 await blacklistRepo.add({ uuid: profile.id, username: profile.name, reason, added_by: interaction.user.username, expires_at: expiresAt });
                 bridge.blacklist.add(profile.id);
 
-                embed.setColor('Red').setTitle('🚫 Player Blacklisted')
+                embed.setColor('Red').setTitle('Player Blacklisted')
                     .setDescription(`**${profile.name}** added to guild blacklist.`)
                     .addFields(
                         { name: 'Reason', value: reason },
@@ -233,7 +233,7 @@ export default {
             } else if (sub === 'remove') {
                 await blacklistRepo.remove(profile.id);
                 bridge.blacklist.remove(profile.id);
-                embed.setColor('Green').setTitle('✅ Player Removed')
+                embed.setColor('Green').setTitle('Player Removed')
                     .setDescription(`**${profile.name}** removed from guild blacklist.`);
                 await interaction.reply({ embeds: [embed] });
 

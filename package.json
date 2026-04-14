@@ -5,20 +5,7 @@
     "main": "dist/index.js",
     "scripts": {
         "start": "node dist/index.js",
-        "build": "tsc && tsc-alias",
-        "build:extensions": "node scripts/build-extensions.js",
-        "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-        "setup-files": "node scripts/setup-files.js",
-        "clean": "node scripts/clean-dist.js",
-        "clean:dist": "node scripts/clean-dist.js",
-        "lint": "eslint . --ext .ts,.js",
-        "lint:fix": "eslint . --ext .ts,.js --fix",
-        "format": "prettier --write \"**/*.{ts,js,json,md}\"",
-        "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
-        "pm2:start": "pm2 start ecosystem.config.js",
-        "pm2:kill": "pm2 delete bridge",
-        "pm2:logs": "pm2 logs bridge",
-        "pm2:restart": "pm2 restart bridge"
+        "build": "tsc && tsc-alias"
     },
     "keywords": [
         "minecraft",

@@ -39,7 +39,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
                 await auditLogRepo.log(ctx.username, 'guild_ban', target, { reason }).catch(() => {});
             }
 
-            bridge.bot.chat('oc', `🔨 ${ctx.username} guild-banned ${target}: ${reason}`);
+            bridge.bot.chat('oc', `${ctx.username} guild-banned ${target}: ${reason}`);
         },
     });
 
@@ -70,7 +70,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
 
             await auditLogRepo.log(ctx.username, 'bridge_ban', target, { reason }).catch(() => {});
 
-            bridge.bot.chat('oc', `🔇 ${ctx.username} bridge-banned ${target}: ${reason}`);
+            bridge.bot.chat('oc', `${ctx.username} bridge-banned ${target}: ${reason}`);
         },
     });
 
@@ -100,7 +100,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
 
             await auditLogRepo.log(ctx.username, 'command_ban', target, { reason }).catch(() => {});
 
-            bridge.bot.chat('oc', `🚫 ${ctx.username} command-banned ${target}: ${reason}`);
+            bridge.bot.chat('oc', `${ctx.username} command-banned ${target}: ${reason}`);
         },
     });
 
@@ -121,7 +121,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
 
             await auditLogRepo.log(ctx.username, 'unban', target).catch(() => {});
 
-            bridge.bot.chat('oc', `✅ ${ctx.username} unbanned ${target}`);
+            bridge.bot.chat('oc', `${ctx.username} unbanned ${target}`);
         },
     });
 

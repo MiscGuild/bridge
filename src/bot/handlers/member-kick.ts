@@ -9,14 +9,14 @@ export async function handleMemberKick(bridge: Bridge, event: ParsedMemberKick):
 
     // GC notification (compact)
     await bridge.discord.send('gc',
-        `👢 **${playerStr}** was kicked by **${kickerStr}**`,
+        `**${playerStr}** was kicked by **${kickerStr}**`,
         0xed4245, true
     );
 
     // OC rich embed
     const embed = new EmbedBuilder()
         .setColor(0xed4245)
-        .setTitle('👢 Player Kicked')
+        .setTitle('Player Kicked')
         .setThumbnail(`https://mc-heads.net/avatar/${event.playerName}/64`)
         .addFields(
             { name: 'Player', value: playerStr, inline: true },

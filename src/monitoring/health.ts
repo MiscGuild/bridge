@@ -107,7 +107,7 @@ export function startHealthMonitor(bridge: Bridge): void {
             alertedAt = Date.now();
             await bridge.discord.send(
                 'gc',
-                `⚠️ **Health Alert** — status: **${h.status}** | bot: \`${h.bot.state}\` | discord: \`${h.discord.ready}\``
+                `**Health Alert** — status: **${h.status}** | bot: \`${h.bot.state}\` | discord: \`${h.discord.ready}\``
             ).catch(() => {});
         }
     }, 2 * 60 * 1000);

@@ -185,7 +185,7 @@ export default class Bridge {
             this.bot.state = 'connected';
             this.bot.limboAttempts = 0;
             consola.success('Logged in to Hypixel!');
-            await this.discord.send('gc', '✅ **The bot has logged in and is now ready!**');
+            await this.discord.send('gc', '**The bot has logged in and is now ready!**');
             setTimeout(() => {
                 this.bot.execute('/g online');
                 this.bot.sendToLimbo();
@@ -196,14 +196,14 @@ export default class Bridge {
         this.bot.bot.on('end', (reason) => {
             consola.error(`Disconnected: ${reason}`);
             this.bot.state = 'disconnected';
-            this.discord.send('gc', `❌ Disconnected: ${reason}`).catch(() => {});
+            this.discord.send('gc', `Disconnected: ${reason}`).catch(() => {});
             this.bot.scheduleReconnect();
         });
 
         this.bot.bot.on('kicked', async (reason, loggedIn) => {
             consola.error(`Kicked: ${reason} (loggedIn=${loggedIn})`);
             this.bot.state = 'disconnected';
-            await this.discord.send('gc', `❌ Bot was kicked: ${reason}`).catch(() => {});
+            await this.discord.send('gc', `Bot was kicked: ${reason}`).catch(() => {});
             this.bot.scheduleReconnect();
         });
 

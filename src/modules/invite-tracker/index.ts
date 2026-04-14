@@ -77,7 +77,7 @@ export async function trackInviteOnJoin(bridge: Bridge, playerName: string): Pro
     } else {
         const embed = new EmbedBuilder()
             .setColor(0xfee75c)
-            .setTitle('📥 Player Joined — No Invite')
+            .setTitle('Player Joined — No Invite')
             .setThumbnail(`https://mc-heads.net/avatar/${profile?.id ?? playerName}/64`)
             .addFields({ name: 'Player', value: playerName, inline: true })
             .setTimestamp();
@@ -101,7 +101,7 @@ export function registerInviteTrackerModule(commands: ModuleCommand[]): void {
             const accepted = invites.filter(i => i.status === 'accepted').length;
             bridge.bot.chat('gc', `${target}'s invites (${accepted}/${invites.length} accepted):`);
             for (const inv of invites.slice(0, 5)) {
-                const status = inv.status === 'accepted' ? '✅' : inv.status === 'pending' ? '⏳' : '❌';
+                const status = inv.status === 'accepted' ? '[OK]' : inv.status === 'pending' ? '[PENDING]' : '[FAIL]';
                 const date = new Date(inv.invited_at).toLocaleDateString();
                 bridge.bot.chat('gc', `${status} ${inv.invitee} — ${date}`);
             }

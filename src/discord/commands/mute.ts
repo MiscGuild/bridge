@@ -48,7 +48,7 @@ export default {
                 if (!mute) {
                     embed.setColor('Green').setTitle('Not Muted').setDescription(`**${user}** is not currently muted.`);
                 } else {
-                    embed.setColor('Orange').setTitle('🔇 Muted')
+                    embed.setColor('Orange').setTitle('Muted')
                         .setDescription(`**${user}** is muted by **${mute.muted_by}**\nRemaining: ${formatRemaining(mute.expires_at)}\nReason: ${mute.reason}`);
                 }
                 await interaction.reply({ embeds: [embed] });
@@ -74,22 +74,22 @@ export default {
                     expires_at: expiresAt,
                 }).catch(() => {});
                 await syncDiscordMuteRole(bridge, discordMember?.id, true);
-                embed.setColor('Red').setTitle('🔇 Muted!')
+                embed.setColor('Red').setTitle('Muted!')
                     .setDescription(`**${user}** muted for ${duration}\nReason: ${reason}`);
 
                 await dmUser(bridge, discordMember?.id,
-                    `🔇 You have been muted in the guild by **${interaction.user.username}** for ${duration}.\nReason: ${reason}\nYou cannot use the bridge chat while muted.`
+                    `You have been muted in the guild by **${interaction.user.username}** for ${duration}.\nReason: ${reason}\nYou cannot use the bridge chat while muted.`
                 );
             } else {
                 const existing = await mutesRepo.getByUsername(user).catch(() => null);
                 await mutesRepo.deactivateByUsername(user).catch(() => {});
                 const discordId = existing?.discord_id ?? discordMember?.id;
                 await syncDiscordMuteRole(bridge, discordId, false);
-                embed.setColor('Green').setTitle('✅ Unmuted!')
+                embed.setColor('Green').setTitle('Unmuted!')
                     .setDescription(`**${user}** has been unmuted.`);
 
                 await dmUser(bridge, discordId,
-                    `✅ You have been unmuted in the guild by **${interaction.user.username}**. You can use the bridge chat again.`
+                    `You have been unmuted in the guild by **${interaction.user.username}**. You can use the bridge chat again.`
                 );
             }
         } catch (e) {

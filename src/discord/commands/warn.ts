@@ -59,11 +59,11 @@ export default {
                 const total = (await warnsRepo.getByUsername(user).catch(() => [])).length;
                 await auditLogRepo.log(interaction.user.username, 'warn', user, { reason }).catch(() => {});
 
-                embed.setColor('Yellow').setTitle('⚠️ Warning Issued')
+                embed.setColor('Yellow').setTitle('Warning Issued')
                     .setDescription(`**${user}** has been warned.\nReason: ${reason}\nTotal warnings: ${total}`);
 
                 await dmUser(bridge, discordMember?.id,
-                    `⚠️ You have received a warning from **${interaction.user.username}**.\nReason: ${reason}\nTotal warnings: ${total}`
+                    `You have received a warning from **${interaction.user.username}**.\nReason: ${reason}\nTotal warnings: ${total}`
                 );
             } else if (sub === 'list') {
                 const warns = await warnsRepo.getByUsername(user).catch(() => []);
@@ -75,13 +75,13 @@ export default {
                         const date = new Date(w.warned_at).toLocaleDateString();
                         return `• **${date}** by ${w.warned_by}: ${w.reason}`;
                     });
-                    embed.setColor('Yellow').setTitle(`⚠️ Warnings for ${user} (${warns.length})`)
+                    embed.setColor('Yellow').setTitle(`Warnings for ${user} (${warns.length})`)
                         .setDescription(lines.join('\n'));
                 }
             } else {
                 const count = await warnsRepo.clearByUsername(user).catch(() => 0);
                 await auditLogRepo.log(interaction.user.username, 'clearwarns', user).catch(() => {});
-                embed.setColor('Green').setTitle('✅ Warnings Cleared')
+                embed.setColor('Green').setTitle('Warnings Cleared')
                     .setDescription(`Cleared ${count} warning(s) for **${user}**.`);
             }
         } catch (e) {

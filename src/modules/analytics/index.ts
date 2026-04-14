@@ -112,7 +112,7 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
         setTimeout(async () => {
             await flushToSupabase();
             const report = buildReport('today');
-            bridge.bot.chat('oc', `📊 Daily Report: ${report}`);
+            bridge.bot.chat('oc', `Daily Report: ${report}`);
             scheduleReport(bridge); // Schedule next
         }, delay);
     };
