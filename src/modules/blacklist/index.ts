@@ -1,6 +1,7 @@
 import type { ModuleCommand } from '@/modules/types';
 import { blacklistRepo } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
+import { EmbedBuilder, TextChannel } from 'discord.js';
 import cooldowns from '@/util/cooldown';
 import env from '@/config/env';
 import { guildRankService } from '@/services/guild-ranks';
@@ -16,6 +17,60 @@ interface UrchinResponse {
 
 function hex(): string {
     return `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0')}`;
+}
+
+/** Discord timestamp: <t:UNIX:style> */
+function discordTs(date: Date | string | null, style: 'f' | 'R' | 'F' | 'd' | 'D' | 'T' | 't' = 'f'): string {
+    if (!date) return 'Never';
+    const unix = Math.floor(new Date(date).getTime() / 1000);
+    return `<t:${unix}:${style}>`;
+}
+
+/** Send a blacklist action embed to the configured log channel */
+async function sendBlacklistLog(
+    bridge: any,
+    action: 'added' | 'removed',
+    playerName: string,
+    playerUuid: string,
+    addedBy: string,
+    reason?: string,
+    expiresAt?: string | null
+): Promise<void> {
+    const channelId = env.BLACKLIST_CHANNEL_ID;
+    if (!channelId) return;
+    try {
+        const channel = await bridge.discord.channels.fetch(channelId).catch(() => null);
+        if (!channel || !channel.isTextBased()) return;
+
+        const now = new Date();
+        const embed = new EmbedBuilder()
+            .setThumbnail(`https://mc-heads.net/avatar/${playerUuid}/64`)
+            .setTimestamp(now);
+
+        if (action === 'added') {
+            embed.setColor('Red')
+                .setTitle('🚫 Player Blacklisted')
+                .addFields(
+                    { name: 'Player', value: `**${playerName}**`, inline: true },
+                    { name: 'Added by', value: addedBy, inline: true },
+                    { name: 'Reason', value: reason ?? 'No reason provided' },
+                    { name: 'Added', value: discordTs(now, 'f'), inline: true },
+                    { name: 'Expires', value: expiresAt ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})` : 'Never (Permanent)', inline: true },
+                );
+        } else {
+            embed.setColor('Green')
+                .setTitle('✅ Player Removed from Blacklist')
+                .addFields(
+                    { name: 'Player', value: `**${playerName}**`, inline: true },
+                    { name: 'Removed by', value: addedBy, inline: true },
+                    { name: 'Removed', value: discordTs(now, 'f'), inline: true },
+                );
+        }
+
+        await (channel as TextChannel).send({ embeds: [embed] });
+    } catch {
+        // Silently fail
+    }
 }
 
 /**
@@ -145,6 +200,9 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             bridge.blacklist.add(profile.id);
             const expiryMsg = expiresAt ? ` (expires in ${durationStr})` : ' (permanent)';
             bridge.bot.chat('oc', `✅ ${profile.name} added to internal blacklist: ${reason}${expiryMsg}`);
+
+            // Log to blacklist channel
+            await sendBlacklistLog(bridge, 'added', profile.name, profile.id, ctx.username, reason, expiresAt);
         },
     });
 
@@ -169,6 +227,9 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             await blacklistRepo.remove(profile.id).catch(() => {});
             bridge.blacklist.remove(profile.id);
             bridge.bot.chat('oc', `✅ ${profile.name} removed from internal blacklist.`);
+
+            // Log to blacklist channel
+            await sendBlacklistLog(bridge, 'removed', profile.name, profile.id, ctx.username);
         },
     });
 }
