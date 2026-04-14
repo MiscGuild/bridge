@@ -98,6 +98,10 @@ export class MinecraftBot {
                     cleanup();
                     reject(str);
                 }
+                if (/You cannot message this player/i.test(str)) {
+                    cleanup();
+                    reject(str.replace(/§./g, ''));
+                }
                 if (/§c/.test(str)) {
                     cleanup();
                     reject(str.replace(/§./g, ''));
