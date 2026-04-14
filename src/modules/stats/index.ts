@@ -61,10 +61,38 @@ function swStar(level: number): string {
     return level >= 5 ? `[${level}✪]` : `[${level}]`;
 }
 
-function sbSkillLevel(xp: number): number {
-    const table = [0,50,175,375,675,1175,1925,2925,4425,6425,9925,14925,22425,32425,47425,67425,97425,147425,222425,322425,522425,822425,1222425,1722425,2322425,3022425,3822425,4722425,5722425,6822425,8022425,9322425,10722425,13822425,15522425,17322425,19222425,21222425,23322425,25522425,27822425,30222425,32722425,35322425,38072425,40972425,44072425,47472425,51172425,55172425,59472425,64072425,68972425,74172425,79672425,85472425,91572425,97972425,104672425,111672425];
+/**
+ * XP thresholds sourced from https://api.hypixel.net/v2/resources/skyblock/skills
+ * Each entry is the cumulative XP required to reach that level.
+ * Index 0 = level 0 (0 XP), index N = level N.
+ *
+ * Standard skills (FARMING/MINING/COMBAT/ENCHANTING/TAMING): max L60
+ * FORAGING: max L54  |  FISHING/ALCHEMY: max L50
+ * Catacombs: completely separate table, max L50
+ */
+const SKILL_XP_60 = [0,50,175,375,675,1175,1925,2925,4425,6425,9925,14925,22425,32425,47425,67425,97425,147425,222425,322425,522425,822425,1222425,1722425,2322425,3022425,3822425,4722425,5722425,6822425,8022425,9322425,10722425,12222425,13822425,15522425,17322425,19222425,21222425,23322425,25522425,27822425,30222425,32722425,35322425,38072425,40972425,44072425,47472425,51172425,55172425,59472425,64072425,68972425,74172425,79672425,85472425,91572425,97972425,104672425,111672425];
+const SKILL_XP_54 = SKILL_XP_60.slice(0, 55); // FORAGING caps at L54
+const SKILL_XP_50 = SKILL_XP_60.slice(0, 51); // FISHING, ALCHEMY cap at L50
+const CATA_XP = [0,50,125,235,395,625,955,1425,2095,3045,4385,6275,8940,12700,17960,25340,35640,50040,70040,98040,138040,194040,272040,380040,532040,744040,1039040,1451040,2026040,2826040,3951040,5521040,7716040,10781040,15061040,21046040,29406040,41086040,57396040,80176040,112176040,156576040,218576040,304576040,424576040,592576040,826576040,1152576040,1606576040,2240576040,3125576040];
+
+function skillLevel(xp: number, table: number[]): number {
     for (let i = table.length - 1; i >= 0; i--) { if (xp >= table[i]!) return i; }
     return 0;
+}
+
+const SKILL_TABLES: Record<string, number[]> = {
+    SKILL_FARMING: SKILL_XP_60,
+    SKILL_MINING: SKILL_XP_60,
+    SKILL_COMBAT: SKILL_XP_60,
+    SKILL_ENCHANTING: SKILL_XP_60,
+    SKILL_TAMING: SKILL_XP_60,
+    SKILL_FORAGING: SKILL_XP_54,
+    SKILL_FISHING: SKILL_XP_50,
+    SKILL_ALCHEMY: SKILL_XP_50,
+};
+
+function sbSkillLevel(xp: number, skillKey = 'SKILL_FARMING'): number {
+    return skillLevel(xp, SKILL_TABLES[skillKey] ?? SKILL_XP_60);
 }
 
 async function resolve(username: string, bridge: Bridge, replyChannel: 'gc' | 'oc'): Promise<{ uuid: string; name: string; player: any } | null> {
@@ -237,50 +265,57 @@ function buildGexp(name: string, player: any, guild: any): string {
 
 async function fetchSkyblockData(uuid: string): Promise<any | null> {
     try {
-        const profiles = await hypixelService.getSkyblockProfiles(uuid) as any[];
+        // Hypixel SkyBlock member keys use no-dash UUIDs
+        const cleanUuid = uuid.replace(/-/g, '');
+        const profiles = await hypixelService.getSkyblockProfiles(cleanUuid) as any[];
         if (!profiles || profiles.length === 0) return null;
         const selected = profiles.find((p: any) => p.selected) ?? profiles[0];
-        if (!selected?.members?.[uuid]) return null;
+        if (!selected?.members?.[cleanUuid]) return null;
         return {
-            memberData: selected.members[uuid],
+            memberData: selected.members[cleanUuid],
             bankBalance: selected.banking?.balance ?? 0,
             profileName: selected.cute_name ?? 'Unknown',
         };
     } catch { return null; }
 }
 
+function sbSkillXp(memberData: any): Record<string, number> {
+    // Skills XP lives in player_data.experience (keys: SKILL_FARMING, SKILL_MINING, …)
+    // leveling.experience is the SkyBlock level XP (a plain number) — do NOT use it here
+    return (memberData?.player_data?.experience as Record<string, number>) ?? {};
+}
+
 function buildSbOverview(name: string, _player: any, sbData: any): string {
     if (!sbData) return `No SkyBlock data found for ${name}. | ${hex()}`;
     const m = sbData.memberData;
-    const skillData = m?.leveling?.experience ?? m?.player_data?.experience ?? {};
+    const skillData = sbSkillXp(m);
     const skills = ['SKILL_FARMING','SKILL_MINING','SKILL_COMBAT','SKILL_FORAGING','SKILL_FISHING','SKILL_ENCHANTING','SKILL_ALCHEMY','SKILL_TAMING'];
-    const levels = skills.map(sk => sbSkillLevel(skillData[sk] ?? 0));
+    const levels = skills.map(sk => sbSkillLevel(skillData[sk] ?? 0, sk));
     const avg = levels.reduce((a: number, b: number) => a + b, 0) / levels.length;
     const purse = m?.currencies?.coin_purse ?? 0;
-    const sbLvl = Math.floor((m?.leveling?.experience ?? 0) / 100);
+    const sbLvl = Math.floor(((m?.leveling?.experience as number) ?? 0) / 100);
     return `[SB] ${name} | Lvl: ${sbLvl} | Avg Skill: ${avg.toFixed(1)} | Purse: ${fmt(Math.floor(purse))} | Bank: ${fmt(Math.floor(sbData.bankBalance))} | ${hex()}`;
 }
 
 function buildSbSkills(name: string, _player: any, sbData: any): string {
     if (!sbData) return `No SkyBlock data for ${name}. | ${hex()}`;
-    const m = sbData.memberData;
-    const sd = m?.leveling?.experience ?? m?.player_data?.experience ?? {};
-    const sk = (key: string) => sbSkillLevel(sd[key] ?? 0);
-    return `[SB Skills] ${name} | Farm: ${sk('SKILL_FARMING')} | Mine: ${sk('SKILL_MINING')} | Combat: ${sk('SKILL_COMBAT')} | Fish: ${sk('SKILL_FISHING')} | Ench: ${sk('SKILL_ENCHANTING')} | Alch: ${sk('SKILL_ALCHEMY')} | ${hex()}`;
+    const sd = sbSkillXp(sbData.memberData);
+    const sk = (key: string) => sbSkillLevel(sd[key] ?? 0, key);
+    return `[SB Skills] ${name} | Farm: ${sk('SKILL_FARMING')} | Mine: ${sk('SKILL_MINING')} | Combat: ${sk('SKILL_COMBAT')} | Forge: ${sk('SKILL_FORAGING')} | Fish: ${sk('SKILL_FISHING')} | Ench: ${sk('SKILL_ENCHANTING')} | Alch: ${sk('SKILL_ALCHEMY')} | ${hex()}`;
 }
 
 function buildSbSlayers(name: string, _player: any, sbData: any): string {
     if (!sbData) return `No SkyBlock data for ${name}. | ${hex()}`;
     const slayers = sbData.memberData?.slayer?.slayer_bosses ?? {};
-    const xp = (boss: string) => slayers[boss]?.xp ?? 0;
-    return `[SB Slayers] ${name} | Rev: ${fmt(xp('zombie'))} | Tara: ${fmt(xp('spider'))} | Sven: ${fmt(xp('wolf'))} | Eman: ${fmt(xp('enderman'))} | Blaze: ${fmt(xp('blaze'))} | ${hex()}`;
+    const xp = (boss: string) => (slayers[boss]?.xp ?? 0) as number;
+    return `[SB Slayers] ${name} | Rev: ${fmt(xp('zombie'))} | Tara: ${fmt(xp('spider'))} | Sven: ${fmt(xp('wolf'))} | Eman: ${fmt(xp('enderman'))} | Blaze: ${fmt(xp('blaze'))} | Inf: ${fmt(xp('vampire'))} | ${hex()}`;
 }
 
 function buildSbDungeons(name: string, _player: any, sbData: any): string {
     if (!sbData) return `No SkyBlock data for ${name}. | ${hex()}`;
     const d = sbData.memberData?.dungeons?.dungeon_types?.catacombs ?? {};
     const catXp = d.experience ?? 0;
-    const catLvl = sbSkillLevel(catXp);
+    const catLvl = skillLevel(catXp, CATA_XP);
     const completions = Object.values(d.tier_completions ?? {} as Record<string, number>).reduce((a: number, b: any) => a + Number(b), 0);
     return `[SB Dungeons] ${name} | Cata Lvl: ${catLvl} | Completions: ${completions} | ${hex()}`;
 }
