@@ -34,10 +34,12 @@ export const mojangService = {
         if (cached) return cached;
 
         try {
-            const res = await fetch(`${MOJANG_API_BASE}/users/profiles/minecraft/${uuid}`);
+            const cleanUuid = uuid.replace(/-/g, '');
+            const res = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${cleanUuid}`);
             if (res.status === 200) {
                 const data = (await res.json()) as MojangProfile;
                 cache.set(key, data);
+                cache.set(`profile:${data.name.toLowerCase()}`, data);
                 return data;
             }
             return null;

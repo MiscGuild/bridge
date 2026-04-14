@@ -18,14 +18,17 @@ export async function syncGexpFromGuild(guild: HypixelGuildResponse, _bridge: Br
         const history = member.expHistory;
         if (!history || Object.keys(history).length === 0) continue;
 
-        // Resolve username from Mojang
+        // Resolve username from Mojang (session server, UUID→name)
         const profile = await mojangService.getByUuid(member.uuid).catch(() => null);
-        const username = profile?.name ?? member.uuid.slice(0, 8);
+        const username = profile?.name ?? `Unknown-${member.uuid.slice(0, 8)}`;
 
         for (const [date, gexp] of Object.entries(history)) {
             batch.push({ date, uuid: member.uuid, username, gexp_earned: gexp });
         }
         memberCount++;
+
+        // Small delay to avoid Mojang rate limits (200 req/min)
+        await new Promise(r => setTimeout(r, 100));
     }
 
     if (batch.length > 0) {
