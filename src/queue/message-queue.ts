@@ -8,10 +8,15 @@ interface QueueItem {
     resolve: () => void;
 }
 
+/** Unicode zero-width spaces used to salt duplicate messages */
+const SALTS = ['\u200b', '\u200c', '\u200d', '\ufeff'];
+
 export class MessageQueue {
     private queue: QueueItem[] = [];
     private processing = false;
     private lastSent = 0;
+    private lastSentMessage = '';
+    private saltIndex = 0;
     private sendFn: SendFn | null = null;
 
     setSendFn(fn: SendFn) {
@@ -44,9 +49,20 @@ export class MessageQueue {
             const item = this.queue.shift();
             if (!item) break;
 
+            // Auto-salt consecutive identical messages so Hypixel never blocks them
+            let outgoing = item.message;
+            if (outgoing === this.lastSentMessage) {
+                const salt = SALTS[this.saltIndex % SALTS.length]!;
+                this.saltIndex = (this.saltIndex + 1) % SALTS.length;
+                outgoing = outgoing + salt;
+            } else {
+                this.saltIndex = 0;
+            }
+
             try {
-                this.sendFn(item.message);
+                this.sendFn(outgoing);
                 this.lastSent = Date.now();
+                this.lastSentMessage = outgoing;
             } catch (err) {
                 consola.error('MessageQueue send error:', err);
             }
@@ -63,6 +79,7 @@ export class MessageQueue {
 
     clear(): void {
         this.queue = [];
+        this.lastSentMessage = '';
     }
 }
 
