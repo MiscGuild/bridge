@@ -241,10 +241,45 @@ function buildMW(name: string, player: any): string {
 // ── Pit ───────────────────────────────────────────────────────────────────────
 
 function buildPit(name: string, player: any): string {
-    const s = (player.stats?.Pit as Record<string, any>) ?? {};
-    const p = s.profile ?? {};
-    const k = p.kills ?? 0, d = p.deaths ?? 0;
-    return `[Pit] ${name} | Prestige: ${p.prestige ?? 0} | Lvl: ${p.level ?? 0} | K: ${fmt(k)} | KDR: ${ratio(k, d)} | Gold: ${fmt(p.cash ?? 0)} | ${hex()}`;
+    const pit = (player.stats?.Pit as Record<string, any>) ?? {};
+    const profile = pit.profile ?? {};
+    const stats = pit.pit_stats_ptl ?? {};
+
+    const prestige = profile.prestiges?.length ?? 0;
+
+    // Pit level is derived from XP. Each prestige resets XP.
+    // Simplified: XP thresholds per level (10 levels per prestige, 120 XP per level base)
+    const xp = profile.xp ?? 0;
+    const xpTable = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500,
+        2000, 2500, 3000, 4000, 5000, 7500, 10000, 15000, 20000, 30000, 40000,
+        50000, 75000, 100000, 125000, 150000, 175000, 200000, 250000, 300000,
+        400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1200000,
+        1400000, 1600000, 1800000, 2000000, 2400000, 2800000, 3200000, 3600000,
+        4000000, 4500000, 5000000, 7500000, 10000000, 12500000, 15000000,
+        17500000, 20000000, 25000000, 30000000, 35000000, 40000000,
+        45000000, 50000000, 75000000, 100000000, 150000000, 200000000,
+        300000000, 500000000, 750000000, 1000000000, 1250000000, 1500000000,
+        1750000000, 2000000000, 2500000000, 3000000000, 4000000000, 5000000000,
+        7500000000, 10000000000, 50000000000, 100000000000, 250000000000,
+        500000000000, 750000000000, 1000000000000, 2500000000000, 5000000000000,
+        10000000000000, 25000000000000, 50000000000000, 100000000000000,
+        200000000000000, 300000000000000, 400000000000000, 500000000000000,
+        600000000000000, 700000000000000, 800000000000000, 900000000000000,
+        1000000000000000, 2000000000000000, 3000000000000000, 4000000000000000,
+        5000000000000000, 10000000000000000, 20000000000000000, 30000000000000000,
+        40000000000000000, 50000000000000000, 100000000000000000];
+    let level = 0;
+    let remaining = xp;
+    for (const threshold of xpTable) {
+        if (remaining >= threshold) { remaining -= threshold; level++; } else break;
+    }
+
+    const kills = stats.kills ?? 0;
+    const deaths = stats.deaths ?? 0;
+    const assists = stats.assists ?? 0;
+    const gold = profile.cash ?? 0;
+
+    return `[Pit] ${name} | Prestige: ${prestige} | Lvl: ${level} | K: ${fmt(kills)} | D: ${fmt(deaths)} | KDR: ${ratio(kills, deaths)} | A: ${fmt(assists)} | Gold: ${fmt(gold)} | ${hex()}`;
 }
 
 // ── GEXP ──────────────────────────────────────────────────────────────────────
