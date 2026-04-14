@@ -68,6 +68,11 @@ const envSchema = z.object({
     URCHIN_JOIN_CHECK: OPTIONAL_BOOLEAN,
     URCHIN_API_KEY: OPTIONAL_STRING,
 
+    // === DYNO INTEGRATION ===
+    DYNO_CHANNEL_ID: OPTIONAL_STRING,  // Channel to send Dyno warn commands in
+    DYNO_PREFIX: z.string().default('?'),  // Dyno bot prefix (default: ?)
+
+
     // === BRIDGE ACCESS ROLES ===
     BRIDGE_MUTED_ROLE_ID: OPTIONAL_STRING,    // Discord role that blocks bridge usage only
     BRIDGE_ACCESS_ROLE_ID: OPTIONAL_STRING,   // Discord role for non-guild bridge access

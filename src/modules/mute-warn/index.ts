@@ -88,20 +88,44 @@ export async function findDiscordMember(
 }
 
 /**
- * DM a Discord user about a mute or warn. Silently fails if user has DMs disabled.
+ * DM a Discord user about a mute or warn.
+ * Returns true if the DM was sent successfully, false if DMs are disabled.
  */
 export async function dmUser(
     bridge: Bridge,
     discordId: string | null | undefined,
     message: string
-): Promise<void> {
-    if (!discordId) return;
+): Promise<boolean> {
+    if (!discordId) return false;
     try {
         const user = await bridge.discord.users.fetch(discordId).catch(() => null);
-        if (!user) return;
-        await user.send(message).catch(() => {});
+        if (!user) return false;
+        await user.send(message);
+        return true;
     } catch {
-        // DMs disabled or user not found — silently skip
+        return false;
+    }
+}
+
+/**
+ * Send a Dyno warn command in the configured channel.
+ * Format: {prefix}warn @user reason
+ */
+async function sendDynoWarn(
+    bridge: Bridge,
+    discordMember: GuildMember | null,
+    reason: string,
+    targetName: string
+): Promise<void> {
+    const channelId = env.DYNO_CHANNEL_ID;
+    if (!channelId) return;
+    try {
+        const channel = await bridge.discord.channels.fetch(channelId).catch(() => null);
+        if (!channel || !channel.isTextBased()) return;
+        const mention = discordMember ? `<@${discordMember.id}>` : targetName;
+        await (channel as any).send(`${env.DYNO_PREFIX}warn ${mention} ${reason}`);
+    } catch (err) {
+        consola.warn('[Dyno] Failed to send warn command:', err);
     }
 }
 
@@ -184,10 +208,15 @@ export function registerMuteWarnModule(commands: ModuleCommand[]): void {
 
             bridge.bot.chat('oc', `⚠️ ${target} has been warned: ${reason} (${total} total)`);
 
-            // DM the warned player on Discord
-            await dmUser(bridge, discordMember?.id,
-                `⚠️ You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`
-            );
+            // Send Dyno warn command in Discord
+            await sendDynoWarn(bridge, discordMember, reason, target);
+
+            // DM the warned player; fall back to GC if DMs are off
+            const dmText = `⚠️ You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`;
+            const dmSent = await dmUser(bridge, discordMember?.id, dmText);
+            if (!dmSent) {
+                bridge.bot.chat('gc', `⚠️ ${target}, you have been warned by ${ctx.username}: ${reason} (${total} total)`);
+            }
         },
     });
 
