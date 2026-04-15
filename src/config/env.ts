@@ -67,14 +67,13 @@ const envSchema = z.object({
     BAN_CHECK_INTERVAL: z.coerce.number().int().min(1).default(10),
     URCHIN_JOIN_CHECK: OPTIONAL_BOOLEAN,
     URCHIN_API_KEY: OPTIONAL_STRING,
-    BLACKLIST_ANONYMOUS: BOOLEAN.default('false'),  // Hide moderator name in blacklist embeds
-
+    BLACKLIST_ANONYMOUS: BOOLEAN.default('false'), // Hide moderator name in blacklist embeds
 
     // === BRIDGE ACCESS ROLES ===
-    BRIDGE_MUTED_ROLE_ID: OPTIONAL_STRING,    // Discord role that blocks bridge usage only
-    BRIDGE_ACCESS_ROLE_ID: OPTIONAL_STRING,   // Discord role for non-guild bridge access
-    GUILD_MEMBER_ROLE_IDS: OPTIONAL_STRING,   // Comma-separated role IDs that indicate guild membership
-    MUTED_ROLE_ID: OPTIONAL_STRING,           // Discord role for full server mute (synced with /g mute)
+    BRIDGE_MUTED_ROLE_ID: OPTIONAL_STRING, // Discord role that blocks bridge usage only
+    BRIDGE_ACCESS_ROLE_ID: OPTIONAL_STRING, // Discord role for non-guild bridge access
+    GUILD_MEMBER_ROLE_IDS: OPTIONAL_STRING, // Comma-separated role IDs that indicate guild membership
+    MUTED_ROLE_ID: OPTIONAL_STRING, // Discord role for full server mute (synced with /g mute)
 
     // === TERMINAL REPL ===
     ENABLE_TERMINAL: OPTIONAL_BOOLEAN,

@@ -31,7 +31,10 @@ export function startTerminalRepl(bridge: Bridge): void {
 
     rl.on('line', (line) => {
         const input = line.trim();
-        if (!input) { rl.prompt(); return; }
+        if (!input) {
+            rl.prompt();
+            return;
+        }
 
         // Built-in terminal commands
         if (input.startsWith('/')) {
@@ -40,34 +43,45 @@ export function startTerminalRepl(bridge: Bridge): void {
 
             switch (cmd!.toLowerCase()) {
                 case '/help':
-                    console.log([
-                        '',
-                        '  /gc <msg>       Send to guild chat',
-                        '  /oc <msg>       Send to officer chat',
-                        '  /cmd <raw>      Send raw command to Minecraft',
-                        '  /online         Show online member count',
-                        '  /status         Show bot connection state',
-                        '  /reconnect      Force reconnect',
-                        '  /stop, /exit    Graceful shutdown',
-                        '  /help           Show this help',
-                        '',
-                    ].join('\n'));
+                    console.log(
+                        [
+                            '',
+                            '  /gc <msg>       Send to guild chat',
+                            '  /oc <msg>       Send to officer chat',
+                            '  /cmd <raw>      Send raw command to Minecraft',
+                            '  /online         Show online member count',
+                            '  /status         Show bot connection state',
+                            '  /reconnect      Force reconnect',
+                            '  /stop, /exit    Graceful shutdown',
+                            '  /help           Show this help',
+                            '',
+                        ].join('\n')
+                    );
                     break;
 
                 case '/gc':
-                    if (!args) { consola.warn('Usage: /gc <message>'); break; }
+                    if (!args) {
+                        consola.warn('Usage: /gc <message>');
+                        break;
+                    }
                     bridge.bot.chat('gc', args);
                     consola.info(`[GC] → ${args}`);
                     break;
 
                 case '/oc':
-                    if (!args) { consola.warn('Usage: /oc <message>'); break; }
+                    if (!args) {
+                        consola.warn('Usage: /oc <message>');
+                        break;
+                    }
                     bridge.bot.chat('oc', args);
                     consola.info(`[OC] → ${args}`);
                     break;
 
                 case '/cmd':
-                    if (!args) { consola.warn('Usage: /cmd <raw command>'); break; }
+                    if (!args) {
+                        consola.warn('Usage: /cmd <raw command>');
+                        break;
+                    }
                     bridge.bot.execute(args.startsWith('/') ? args : `/${args}`);
                     consola.info(`[CMD] → ${args}`);
                     break;

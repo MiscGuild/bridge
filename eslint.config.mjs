@@ -28,5 +28,5 @@ export default tseslint.config(
             '@typescript-eslint/no-require-imports': 'off',
             'no-console': 'off',
         },
-    },
+    }
 );

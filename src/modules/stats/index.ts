@@ -14,7 +14,9 @@ function ratio(a: number, b: number): string {
 }
 
 function hex(): string {
-    return `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0')}`;
+    return `#${Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
 function fmt(n: number): string {
@@ -51,11 +53,13 @@ function bwStar(level: number): string {
 function swLevel(exp: number): number {
     // Cumulative XP thresholds for levels 1-20 (from Hypixel wiki, Apr 2025)
     const thresholds = [
-        0, 10, 35, 75, 125, 250, 500, 1000, 1750, 2750,
-        4000, 5550, 7300, 9300, 11800, 14800, 18300, 22300, 26800, 31800,
+        0, 10, 35, 75, 125, 250, 500, 1000, 1750, 2750, 4000, 5550, 7300, 9300, 11800, 14800, 18300,
+        22300, 26800, 31800,
     ];
     if (exp >= 31800) return 20 + Math.floor((exp - 31800) / 5000);
-    for (let i = thresholds.length - 1; i >= 0; i--) { if (exp >= thresholds[i]!) return i + 1; }
+    for (let i = thresholds.length - 1; i >= 0; i--) {
+        if (exp >= thresholds[i]!) return i + 1;
+    }
     return 1;
 }
 
@@ -72,13 +76,28 @@ function swStar(level: number): string {
  * FORAGING: max L54  |  FISHING/ALCHEMY: max L50
  * Catacombs: completely separate table, max L50
  */
-const SKILL_XP_60 = [0,50,175,375,675,1175,1925,2925,4425,6425,9925,14925,22425,32425,47425,67425,97425,147425,222425,322425,522425,822425,1222425,1722425,2322425,3022425,3822425,4722425,5722425,6822425,8022425,9322425,10722425,12222425,13822425,15522425,17322425,19222425,21222425,23322425,25522425,27822425,30222425,32722425,35322425,38072425,40972425,44072425,47472425,51172425,55172425,59472425,64072425,68972425,74172425,79672425,85472425,91572425,97972425,104672425,111672425];
+const SKILL_XP_60 = [
+    0, 50, 175, 375, 675, 1175, 1925, 2925, 4425, 6425, 9925, 14925, 22425, 32425, 47425, 67425,
+    97425, 147425, 222425, 322425, 522425, 822425, 1222425, 1722425, 2322425, 3022425, 3822425,
+    4722425, 5722425, 6822425, 8022425, 9322425, 10722425, 12222425, 13822425, 15522425, 17322425,
+    19222425, 21222425, 23322425, 25522425, 27822425, 30222425, 32722425, 35322425, 38072425,
+    40972425, 44072425, 47472425, 51172425, 55172425, 59472425, 64072425, 68972425, 74172425,
+    79672425, 85472425, 91572425, 97972425, 104672425, 111672425,
+];
 const SKILL_XP_54 = SKILL_XP_60.slice(0, 55); // FORAGING caps at L54
 const SKILL_XP_50 = SKILL_XP_60.slice(0, 51); // FISHING, ALCHEMY cap at L50
-const CATA_XP = [0,50,125,235,395,625,955,1425,2095,3045,4385,6275,8940,12700,17960,25340,35640,50040,70040,98040,138040,194040,272040,380040,532040,744040,1039040,1451040,2026040,2826040,3951040,5521040,7716040,10781040,15061040,21046040,29406040,41086040,57396040,80176040,112176040,156576040,218576040,304576040,424576040,592576040,826576040,1152576040,1606576040,2240576040,3125576040];
+const CATA_XP = [
+    0, 50, 125, 235, 395, 625, 955, 1425, 2095, 3045, 4385, 6275, 8940, 12700, 17960, 25340, 35640,
+    50040, 70040, 98040, 138040, 194040, 272040, 380040, 532040, 744040, 1039040, 1451040, 2026040,
+    2826040, 3951040, 5521040, 7716040, 10781040, 15061040, 21046040, 29406040, 41086040, 57396040,
+    80176040, 112176040, 156576040, 218576040, 304576040, 424576040, 592576040, 826576040,
+    1152576040, 1606576040, 2240576040, 3125576040,
+];
 
 function skillLevel(xp: number, table: number[]): number {
-    for (let i = table.length - 1; i >= 0; i--) { if (xp >= table[i]!) return i; }
+    for (let i = table.length - 1; i >= 0; i--) {
+        if (xp >= table[i]!) return i;
+    }
     return 0;
 }
 
@@ -97,11 +116,21 @@ function sbSkillLevel(xp: number, skillKey = 'SKILL_FARMING'): number {
     return skillLevel(xp, SKILL_TABLES[skillKey] ?? SKILL_XP_60);
 }
 
-async function resolve(username: string, bridge: Bridge, replyChannel: 'gc' | 'oc'): Promise<{ uuid: string; name: string; player: any } | null> {
+async function resolve(
+    username: string,
+    bridge: Bridge,
+    replyChannel: 'gc' | 'oc'
+): Promise<{ uuid: string; name: string; player: any } | null> {
     const profile = await mojangService.getProfile(username);
-    if (!profile) { bridge.bot.chat(replyChannel, `Could not find player: ${username}`); return null; }
+    if (!profile) {
+        bridge.bot.chat(replyChannel, `Could not find player: ${username}`);
+        return null;
+    }
     const player = await hypixelService.getPlayer(profile.id);
-    if (!player) { bridge.bot.chat(replyChannel, `Could not fetch Hypixel data for ${username}`); return null; }
+    if (!player) {
+        bridge.bot.chat(replyChannel, `Could not fetch Hypixel data for ${username}`);
+        return null;
+    }
     return { uuid: profile.id, name: profile.name, player };
 }
 
@@ -145,17 +174,27 @@ function buildSkywars(name: string, player: any): string {
     const s = (player.stats?.SkyWars as Record<string, number | string>) ?? {};
     const exp = Number(s.skywars_experience ?? s.experience ?? 0);
     const lvl = exp > 0 ? swLevel(exp) : Number(s.level ?? player.achievements?.skywars_level ?? 0);
-    const w = Number(s.wins ?? 0), l = Number(s.losses ?? 0);
-    const k = Number(s.kills ?? 0), d = Number(s.deaths ?? 0);
+    const w = Number(s.wins ?? 0),
+        l = Number(s.losses ?? 0);
+    const k = Number(s.kills ?? 0),
+        d = Number(s.deaths ?? 0);
     const souls = Number(s.souls ?? 0);
     return `[SW] ${swStar(lvl)} ${name} | W: ${w} | K: ${fmt(k)} | KDR: ${ratio(k, d)} | WLR: ${ratio(w, l)} | Souls: ${fmt(souls)} | ${hex()}`;
 }
 
 // ── Duels ─────────────────────────────────────────────────────────────────────
 
-function duelsMsg(label: string, name: string, s: Record<string, number>, wKey: string, lKey: string): string {
-    const w = s[wKey] ?? 0, l = s[lKey] ?? 0;
-    const k = s.kills ?? 0, d = s.deaths ?? 0;
+function duelsMsg(
+    label: string,
+    name: string,
+    s: Record<string, number>,
+    wKey: string,
+    lKey: string
+): string {
+    const w = s[wKey] ?? 0,
+        l = s[lKey] ?? 0;
+    const k = s.kills ?? 0,
+        d = s.deaths ?? 0;
     return `[${label}] ${name} | W: ${w} | K: ${fmt(k)} | KDR: ${ratio(k, d)} | WLR: ${ratio(w, l)} | ${hex()}`;
 }
 
@@ -164,25 +203,67 @@ function buildDuels(name: string, player: any): string {
     return duelsMsg('Duels', name, s, 'wins', 'losses');
 }
 function buildUhcDuels(name: string, player: any): string {
-    return duelsMsg('UHC Duels', name, (player.stats?.Duels ?? {}) as any, 'uhc_duel_wins', 'uhc_duel_losses');
+    return duelsMsg(
+        'UHC Duels',
+        name,
+        (player.stats?.Duels ?? {}) as any,
+        'uhc_duel_wins',
+        'uhc_duel_losses'
+    );
 }
 function buildSwDuels(name: string, player: any): string {
-    return duelsMsg('SW Duels', name, (player.stats?.Duels ?? {}) as any, 'sw_duel_wins', 'sw_duel_losses');
+    return duelsMsg(
+        'SW Duels',
+        name,
+        (player.stats?.Duels ?? {}) as any,
+        'sw_duel_wins',
+        'sw_duel_losses'
+    );
 }
 function buildClassicDuels(name: string, player: any): string {
-    return duelsMsg('Classic Duels', name, (player.stats?.Duels ?? {}) as any, 'classic_duel_wins', 'classic_duel_losses');
+    return duelsMsg(
+        'Classic Duels',
+        name,
+        (player.stats?.Duels ?? {}) as any,
+        'classic_duel_wins',
+        'classic_duel_losses'
+    );
 }
 function buildBowDuels(name: string, player: any): string {
-    return duelsMsg('Bow Duels', name, (player.stats?.Duels ?? {}) as any, 'bow_wins', 'bow_losses');
+    return duelsMsg(
+        'Bow Duels',
+        name,
+        (player.stats?.Duels ?? {}) as any,
+        'bow_wins',
+        'bow_losses'
+    );
 }
 function buildOpDuels(name: string, player: any): string {
-    return duelsMsg('OP Duels', name, (player.stats?.Duels ?? {}) as any, 'op_duel_wins', 'op_duel_losses');
+    return duelsMsg(
+        'OP Duels',
+        name,
+        (player.stats?.Duels ?? {}) as any,
+        'op_duel_wins',
+        'op_duel_losses'
+    );
 }
 function buildComboDuels(name: string, player: any): string {
-    return duelsMsg('Combo Duels', name, (player.stats?.Duels ?? {}) as any, 'combo_duel_wins', 'combo_duel_losses');
+    return duelsMsg(
+        'Combo Duels',
+        name,
+        (player.stats?.Duels ?? {}) as any,
+        'combo_duel_wins',
+        'combo_duel_losses'
+    );
 }
 function buildPotionDuels(name: string, player: any): string {
-    return duelsMsg('Potion Duels', name, (player.stats?.Duels ?? {}) as any, 'potion_duel_wins', 'potion_duel_losses');
+    return duelsMsg(
+        'Potion Duels',
+        name,
+        (player.stats?.Duels ?? {}) as any,
+        'potion_duel_wins',
+        'potion_duel_losses'
+    );
 }
 
 // ── UHC Champions ─────────────────────────────────────────────────────────────
@@ -225,7 +306,9 @@ function buildTnt(name: string, player: any): string {
 
 function buildCvc(name: string, player: any): string {
     const s = (player.stats?.MCGO as Record<string, number>) ?? {};
-    const k = s.kills ?? 0, d = s.deaths ?? 0, w = s.game_wins ?? 0;
+    const k = s.kills ?? 0,
+        d = s.deaths ?? 0,
+        w = s.game_wins ?? 0;
     return `[CvC] ${name} | W: ${w} | K: ${fmt(k)} | KDR: ${ratio(k, d)} | Rounds: ${s.round_wins ?? 0} | ${hex()}`;
 }
 
@@ -233,8 +316,12 @@ function buildCvc(name: string, player: any): string {
 
 function buildMW(name: string, player: any): string {
     const s = (player.stats?.Walls3 as Record<string, any>) ?? {};
-    const k = s.kills ?? 0, d = s.deaths ?? 0, fk = s.final_kills ?? 0, fd = s.final_deaths ?? 0;
-    const w = s.wins ?? 0, l = s.losses ?? 0;
+    const k = s.kills ?? 0,
+        d = s.deaths ?? 0,
+        fk = s.final_kills ?? 0,
+        fd = s.final_deaths ?? 0;
+    const w = s.wins ?? 0,
+        l = s.losses ?? 0;
     return `[MW] ${name} | W: ${w} | KDR: ${ratio(k, d)} | FKDR: ${ratio(fk, fd)} | FK: ${fk} | Class: ${s.chosen_class ?? '?'} | WLR: ${ratio(w, l)} | ${hex()}`;
 }
 
@@ -250,28 +337,29 @@ function buildPit(name: string, player: any): string {
     // Pit level is derived from XP. Each prestige resets XP.
     // Simplified: XP thresholds per level (10 levels per prestige, 120 XP per level base)
     const xp = profile.xp ?? 0;
-    const xpTable = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500,
-        2000, 2500, 3000, 4000, 5000, 7500, 10000, 15000, 20000, 30000, 40000,
-        50000, 75000, 100000, 125000, 150000, 175000, 200000, 250000, 300000,
-        400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1200000,
-        1400000, 1600000, 1800000, 2000000, 2400000, 2800000, 3200000, 3600000,
-        4000000, 4500000, 5000000, 7500000, 10000000, 12500000, 15000000,
-        17500000, 20000000, 25000000, 30000000, 35000000, 40000000,
-        45000000, 50000000, 75000000, 100000000, 150000000, 200000000,
-        300000000, 500000000, 750000000, 1000000000, 1250000000, 1500000000,
-        1750000000, 2000000000, 2500000000, 3000000000, 4000000000, 5000000000,
-        7500000000, 10000000000, 50000000000, 100000000000, 250000000000,
-        500000000000, 750000000000, 1000000000000, 2500000000000, 5000000000000,
-        10000000000000, 25000000000000, 50000000000000, 100000000000000,
-        200000000000000, 300000000000000, 400000000000000, 500000000000000,
-        600000000000000, 700000000000000, 800000000000000, 900000000000000,
-        1000000000000000, 2000000000000000, 3000000000000000, 4000000000000000,
-        5000000000000000, 10000000000000000, 20000000000000000, 30000000000000000,
-        40000000000000000, 50000000000000000, 100000000000000000];
+    const xpTable = [
+        15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000,
+        7500, 10000, 15000, 20000, 30000, 40000, 50000, 75000, 100000, 125000, 150000, 175000,
+        200000, 250000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1200000,
+        1400000, 1600000, 1800000, 2000000, 2400000, 2800000, 3200000, 3600000, 4000000, 4500000,
+        5000000, 7500000, 10000000, 12500000, 15000000, 17500000, 20000000, 25000000, 30000000,
+        35000000, 40000000, 45000000, 50000000, 75000000, 100000000, 150000000, 200000000,
+        300000000, 500000000, 750000000, 1000000000, 1250000000, 1500000000, 1750000000, 2000000000,
+        2500000000, 3000000000, 4000000000, 5000000000, 7500000000, 10000000000, 50000000000,
+        100000000000, 250000000000, 500000000000, 750000000000, 1000000000000, 2500000000000,
+        5000000000000, 10000000000000, 25000000000000, 50000000000000, 100000000000000,
+        200000000000000, 300000000000000, 400000000000000, 500000000000000, 600000000000000,
+        700000000000000, 800000000000000, 900000000000000, 1000000000000000, 2000000000000000,
+        3000000000000000, 4000000000000000, 5000000000000000, 10000000000000000, 20000000000000000,
+        30000000000000000, 40000000000000000, 50000000000000000, 100000000000000000,
+    ];
     let level = 0;
     let remaining = xp;
     for (const threshold of xpTable) {
-        if (remaining >= threshold) { remaining -= threshold; level++; } else break;
+        if (remaining >= threshold) {
+            remaining -= threshold;
+            level++;
+        } else break;
     }
 
     const kills = stats.kills ?? 0;
@@ -288,7 +376,9 @@ function buildGexp(name: string, player: any, guild: any): string {
     if (!guild) return `${name} is not in a guild.`;
     // Normalize UUIDs to no-dashes for comparison (Hypixel/Mojang format can vary)
     const targetUuid = (player.uuid as string).replace(/-/g, '');
-    const member = guild.members?.find((m: any) => (m.uuid as string).replace(/-/g, '') === targetUuid);
+    const member = guild.members?.find(
+        (m: any) => (m.uuid as string).replace(/-/g, '') === targetUuid
+    );
     if (!member) return `${name} is not in your tracked guild.`;
     const history: Record<string, number> = member.expHistory ?? {};
     const entries = Object.entries(history).sort(([a], [b]) => b.localeCompare(a));
@@ -304,26 +394,26 @@ async function fetchSkyblockData(uuid: string): Promise<any | null> {
     try {
         // Hypixel SkyBlock member keys use no-dash UUIDs
         const cleanUuid = uuid.replace(/-/g, '');
-        const profiles = await hypixelService.getSkyblockProfiles(cleanUuid) as any[];
+        const profiles = (await hypixelService.getSkyblockProfiles(cleanUuid)) as any[];
         if (!profiles || profiles.length === 0) {
             consola.debug(`[SkyBlock] No profiles found for UUID ${cleanUuid}`);
             return null;
         }
         const selected = profiles.find((p: any) => p.selected) ?? profiles[0];
         // Try both no-dash and dashed UUID as member key (Hypixel can vary by API version)
-        const memberData = selected?.members?.[cleanUuid]
-            ?? selected?.members?.[uuid]
-            ?? null;
+        const memberData = selected?.members?.[cleanUuid] ?? selected?.members?.[uuid] ?? null;
         if (!memberData) {
             const memberKeys = Object.keys(selected?.members ?? {});
-            consola.debug(`[SkyBlock] Member key ${cleanUuid} not found. Available keys: ${memberKeys.join(', ')}`);
+            consola.debug(
+                `[SkyBlock] Member key ${cleanUuid} not found. Available keys: ${memberKeys.join(', ')}`
+            );
             return null;
         }
         return {
             memberData,
             bankBalance: selected.banking?.balance ?? 0,
             profileName: selected.cute_name ?? 'Unknown',
-            profileId: selected.profile_id as string ?? '',
+            profileId: (selected.profile_id as string) ?? '',
         };
     } catch (err) {
         consola.warn('[SkyBlock] fetchSkyblockData error:', err);
@@ -341,8 +431,17 @@ function buildSbOverview(name: string, _player: any, sbData: any): string {
     if (!sbData) return `No SkyBlock data found for ${name}. | ${hex()}`;
     const m = sbData.memberData;
     const skillData = sbSkillXp(m);
-    const skills = ['SKILL_FARMING','SKILL_MINING','SKILL_COMBAT','SKILL_FORAGING','SKILL_FISHING','SKILL_ENCHANTING','SKILL_ALCHEMY','SKILL_TAMING'];
-    const levels = skills.map(sk => sbSkillLevel(skillData[sk] ?? 0, sk));
+    const skills = [
+        'SKILL_FARMING',
+        'SKILL_MINING',
+        'SKILL_COMBAT',
+        'SKILL_FORAGING',
+        'SKILL_FISHING',
+        'SKILL_ENCHANTING',
+        'SKILL_ALCHEMY',
+        'SKILL_TAMING',
+    ];
+    const levels = skills.map((sk) => sbSkillLevel(skillData[sk] ?? 0, sk));
     const avg = levels.reduce((a: number, b: number) => a + b, 0) / levels.length;
     const purse = m?.currencies?.coin_purse ?? 0;
     const sbLvl = Math.floor(((m?.leveling?.experience as number) ?? 0) / 100);
@@ -368,7 +467,10 @@ function buildSbDungeons(name: string, _player: any, sbData: any): string {
     const d = sbData.memberData?.dungeons?.dungeon_types?.catacombs ?? {};
     const catXp = d.experience ?? 0;
     const catLvl = skillLevel(catXp, CATA_XP);
-    const completions = Object.values(d.tier_completions ?? {} as Record<string, number>).reduce((a: number, b: any) => a + Number(b), 0);
+    const completions = Object.values(d.tier_completions ?? ({} as Record<string, number>)).reduce(
+        (a: number, b: any) => a + Number(b),
+        0
+    );
     return `[SB Dungeons] ${name} | Cata Lvl: ${catLvl} | Completions: ${completions} | ${hex()}`;
 }
 
@@ -386,7 +488,10 @@ function makeStatCmd(
         async handler(ctx, bridge) {
             const target = ctx.matches[1]?.trim() ?? ctx.username;
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, cmdId);
-            if (remaining > 0) { bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`); return; }
+            if (remaining > 0) {
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
+                return;
+            }
             const result = await resolve(target, bridge, ctx.replyChannel);
             if (!result) return;
             const extra = extraFn ? await extraFn(result.uuid, bridge) : undefined;
@@ -405,7 +510,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         makeStatCmd('stats:bw:threes', /^!bw\s+(?:threes|3s|3v3|trios)\s*(\S+)?/i, buildBwThrees),
         makeStatCmd('stats:bw:fours', /^!bw\s+(?:fours|4s|4v4v4v4|quads)\s*(\S+)?/i, buildBwFours),
         makeStatCmd('stats:bw:4v4', /^!bw\s+4v4\s*(\S+)?/i, buildBw4v4),
-        makeStatCmd('stats:bw', /^!bw(?:\s+(\S+))?/i, buildBwOverall),
+        makeStatCmd('stats:bw', /^!bw(?:\s+(\S+))?/i, buildBwOverall)
     );
 
     // SkyWars
@@ -420,7 +525,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         makeStatCmd('stats:bowduels', /^!bowduels(?:\s+(\S+))?/i, buildBowDuels),
         makeStatCmd('stats:opduels', /^!opduels(?:\s+(\S+))?/i, buildOpDuels),
         makeStatCmd('stats:comboduels', /^!comboduels(?:\s+(\S+))?/i, buildComboDuels),
-        makeStatCmd('stats:potionduels', /^!potionduels(?:\s+(\S+))?/i, buildPotionDuels),
+        makeStatCmd('stats:potionduels', /^!potionduels(?:\s+(\S+))?/i, buildPotionDuels)
     );
 
     // Other game modes
@@ -432,20 +537,37 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         makeStatCmd('stats:tnt', /^!tnt(?:\s+(\S+))?/i, buildTnt),
         makeStatCmd('stats:cvc', /^!cvc(?:\s+(\S+))?/i, buildCvc),
         makeStatCmd('stats:mw', /^!mw(?:\s+(\S+))?/i, buildMW),
-        makeStatCmd('stats:pit', /^!pit(?:\s+(\S+))?/i, buildPit),
+        makeStatCmd('stats:pit', /^!pit(?:\s+(\S+))?/i, buildPit)
     );
 
     // GEXP
     commands.push(
-        makeStatCmd('stats:gexp', /^!gexp(?:\s+(\S+))?/i, buildGexp as any, async (uuid) => hypixelService.getGuild(uuid)),
+        makeStatCmd('stats:gexp', /^!gexp(?:\s+(\S+))?/i, buildGexp as any, async (uuid) =>
+            hypixelService.getGuild(uuid)
+        )
     );
 
     // SkyBlock commands
     commands.push(
-        makeStatCmd('stats:sb:skills', /^!(?:sb\s+)?skills(?:\s+(\S+))?/i, buildSbSkills, fetchSkyblockData),
-        makeStatCmd('stats:sb:slayers', /^!(?:sb\s+)?slayers(?:\s+(\S+))?/i, buildSbSlayers, fetchSkyblockData),
-        makeStatCmd('stats:sb:dungeons', /^!(?:sb\s+)?dungeons(?:\s+(\S+))?/i, buildSbDungeons, fetchSkyblockData),
-        makeStatCmd('stats:sb', /^!sb(?:\s+(\S+))?/i, buildSbOverview, fetchSkyblockData),
+        makeStatCmd(
+            'stats:sb:skills',
+            /^!(?:sb\s+)?skills(?:\s+(\S+))?/i,
+            buildSbSkills,
+            fetchSkyblockData
+        ),
+        makeStatCmd(
+            'stats:sb:slayers',
+            /^!(?:sb\s+)?slayers(?:\s+(\S+))?/i,
+            buildSbSlayers,
+            fetchSkyblockData
+        ),
+        makeStatCmd(
+            'stats:sb:dungeons',
+            /^!(?:sb\s+)?dungeons(?:\s+(\S+))?/i,
+            buildSbDungeons,
+            fetchSkyblockData
+        ),
+        makeStatCmd('stats:sb', /^!sb(?:\s+(\S+))?/i, buildSbOverview, fetchSkyblockData)
     );
 
     // !networth command
@@ -453,8 +575,15 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         commandId: 'stats:sb:networth',
         pattern: /^!(?:nw|networth)(?:\s+(\S+))?/i,
         async handler(ctx, bridge) {
-            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'stats:sb:networth');
-            if (remaining > 0) { bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`); return; }
+            const remaining = cooldowns.isOnCooldown(
+                ctx.username,
+                ctx.guildRank,
+                'stats:sb:networth'
+            );
+            if (remaining > 0) {
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
+                return;
+            }
 
             const target = ctx.matches[1]?.trim() ?? ctx.username;
             const result = await resolve(target, bridge, ctx.replyChannel);
@@ -462,16 +591,25 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
 
             const sbData = await fetchSkyblockData(result.uuid);
             if (!sbData) {
-                bridge.bot.chat(ctx.replyChannel, `No SkyBlock data found for ${result.name}. | ${hex()}`);
+                bridge.bot.chat(
+                    ctx.replyChannel,
+                    `No SkyBlock data found for ${result.name}. | ${hex()}`
+                );
                 return;
             }
 
             try {
                 const museumData = sbData.profileId
-                    ? await hypixelService.getSkyblockMuseum(sbData.profileId, result.uuid).catch(() => null)
+                    ? await hypixelService
+                          .getSkyblockMuseum(sbData.profileId, result.uuid)
+                          .catch(() => null)
                     : null;
 
-                const calc = new ProfileNetworthCalculator(sbData.memberData, museumData as object | undefined, sbData.bankBalance);
+                const calc = new ProfileNetworthCalculator(
+                    sbData.memberData,
+                    museumData as object | undefined,
+                    sbData.bankBalance
+                );
                 const nw = await calc.getNetworth({ onlyNetworth: true, cachePrices: true });
 
                 const total = fmt(Math.round(nw.networth));
@@ -485,7 +623,10 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
                 );
             } catch (err) {
                 consola.warn('[Networth] Calculation error:', err);
-                bridge.bot.chat(ctx.replyChannel, `Failed to calculate networth for ${result.name}. | ${hex()}`);
+                bridge.bot.chat(
+                    ctx.replyChannel,
+                    `Failed to calculate networth for ${result.name}. | ${hex()}`
+                );
             }
 
             cooldowns.setCooldown(ctx.username, 'stats:sb:networth', ctx.guildRank);
@@ -498,11 +639,17 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         pattern: /^!guild(?:\s+(\S+))?/i,
         async handler(ctx, bridge) {
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'stats:guild');
-            if (remaining > 0) { bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`); return; }
+            if (remaining > 0) {
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
+                return;
+            }
 
             const name = ctx.matches[1]?.trim() || ctx.username;
             const profile = await mojangService.getProfile(name).catch(() => null);
-            if (!profile) { bridge.bot.chat(ctx.replyChannel, `Could not find player: ${name}`); return; }
+            if (!profile) {
+                bridge.bot.chat(ctx.replyChannel, `Could not find player: ${name}`);
+                return;
+            }
 
             const guild = await hypixelService.getGuild(profile.id);
             if (!guild) {
@@ -519,7 +666,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
 
             const guildTag = guild.tag ? `[${guild.tag}]` : '';
             const rankName = member.rank === 'Guild Master' ? 'Guild Master' : member.rank;
-            const rankDef = guild.ranks?.find(r => r.name === member.rank);
+            const rankDef = guild.ranks?.find((r) => r.name === member.rank);
             const rankTag = member.rank === 'Guild Master' ? 'GM' : (rankDef?.tag ?? '');
             const rankDisplay = rankTag ? `${rankName} [${rankTag}]` : rankName;
 
@@ -527,9 +674,14 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
             const history = member.expHistory ?? {};
             const weeklyGexp = Object.values(history).reduce((sum, v) => sum + v, 0);
 
-            const joined = new Date(member.joined).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            const joined = new Date(member.joined).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+            });
 
-            bridge.bot.chat(ctx.replyChannel,
+            bridge.bot.chat(
+                ctx.replyChannel,
                 `${profile.name} | Guild: ${guild.name} ${guildTag} | Rank: ${rankDisplay} | Weekly GEXP: ${fmt(weeklyGexp)} | Joined: ${joined} | ${hex()}`
             );
             cooldowns.setCooldown(ctx.username, 'stats:guild', ctx.guildRank);

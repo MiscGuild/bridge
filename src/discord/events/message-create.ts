@@ -14,7 +14,9 @@ const profanityMatcher = env.USE_PROFANITY_FILTER
     : null;
 
 const guildMemberRoleIds = env.GUILD_MEMBER_ROLE_IDS
-    ? env.GUILD_MEMBER_ROLE_IDS.split(',').map(id => id.trim()).filter(Boolean)
+    ? env.GUILD_MEMBER_ROLE_IDS.split(',')
+          .map((id) => id.trim())
+          .filter(Boolean)
     : [];
 
 /** Check if a member has permission to use the bridge */
@@ -26,7 +28,7 @@ function hasBridgeAccess(member: Message['member']): boolean {
     if (env.STAFF_ROLE_ID && roles.has(env.STAFF_ROLE_ID)) return true;
 
     // Guild member roles grant access
-    if (guildMemberRoleIds.some(id => roles.has(id))) return true;
+    if (guildMemberRoleIds.some((id) => roles.has(id))) return true;
 
     // Bridge-Access role grants access to non-guild members
     if (env.BRIDGE_ACCESS_ROLE_ID && roles.has(env.BRIDGE_ACCESS_ROLE_ID)) return true;
@@ -54,14 +56,17 @@ export default {
             message.member === null ||
             (message.channel !== bridge.discord.memberChannel &&
                 message.channel !== bridge.discord.officerChannel)
-        ) return;
+        )
+            return;
 
         // Bridge-Muted role blocks bridge access
         if (isBridgeMuted(message.member)) {
             await message.delete().catch(() => {});
-            await message.channel.send(
-                `${emojis.warning} ${message.author.username}, you are muted from the bridge.`
-            ).then(m => setTimeout(() => m.delete().catch(() => {}), 5_000));
+            await message.channel
+                .send(
+                    `${emojis.warning} ${message.author.username}, you are muted from the bridge.`
+                )
+                .then((m) => setTimeout(() => m.delete().catch(() => {}), 5_000));
             return;
         }
 
@@ -79,9 +84,7 @@ export default {
 
         if (!allowed) {
             await message.delete().catch(() => {});
-            await message.channel.send(
-                `${emojis.warning} ${message.author.username}, ${reason}`
-            );
+            await message.channel.send(`${emojis.warning} ${message.author.username}, ${reason}`);
             return;
         }
 
@@ -98,7 +101,10 @@ export default {
             await message.channel.send(
                 `${emojis.warning} ${message.author.username}, you may not use profane language!`
             );
-            bridge.discord.send('oc', `${emojis.warning} <@${message.author.id}> tried to say "${message.content}" — blocked by profanity filter.`);
+            bridge.discord.send(
+                'oc',
+                `${emojis.warning} <@${message.author.id}> tried to say "${message.content}" — blocked by profanity filter.`
+            );
             return;
         }
 

@@ -19,13 +19,19 @@ export function getSupabaseClient(): SupabaseClient | null {
     // One-time connectivity test on first init
     if (!_connectionTested) {
         _connectionTested = true;
-        _client.from('mutes').select('id').limit(1).then(({ error }) => {
-            if (error) {
-                consola.error(`[Supabase] Connection test FAILED: ${error.message} (${error.code}). Run schema.sql in the Supabase SQL editor.`);
-            } else {
-                consola.success('[Supabase] Connected and tables accessible.');
-            }
-        });
+        _client
+            .from('mutes')
+            .select('id')
+            .limit(1)
+            .then(({ error }) => {
+                if (error) {
+                    consola.error(
+                        `[Supabase] Connection test FAILED: ${error.message} (${error.code}). Run schema.sql in the Supabase SQL editor.`
+                    );
+                } else {
+                    consola.success('[Supabase] Connected and tables accessible.');
+                }
+            });
     }
 
     return _client;

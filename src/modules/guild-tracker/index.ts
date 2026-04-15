@@ -30,7 +30,8 @@ export async function trackGuildEvent(event: ParsedChatEvent, _bridge: Bridge): 
         }
         case 'promoteDemote': {
             const profile = await mojangService.getProfile(event.playerName).catch(() => null);
-            if (profile) await guildMembersRepo.updateRank(profile.id, event.toRank ?? '').catch(() => {});
+            if (profile)
+                await guildMembersRepo.updateRank(profile.id, event.toRank ?? '').catch(() => {});
             break;
         }
     }
@@ -41,7 +42,9 @@ export async function syncGuildMembers(_bridge: Bridge): Promise<void> {
     try {
         // Use bot's own in-game name to find the guild
         // The bot's MC username is stored in env; we need to get the UUID via Mojang
-        const botName = (process.env.MINECRAFT_BOT_NAME ?? process.env.MINECRAFT_EMAIL ?? '').split('@')[0];
+        const botName = (process.env.MINECRAFT_BOT_NAME ?? process.env.MINECRAFT_EMAIL ?? '').split(
+            '@'
+        )[0];
         if (!botName) return;
 
         const botProfile = await mojangService.getProfile(botName).catch(() => null);

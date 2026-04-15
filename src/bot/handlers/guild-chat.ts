@@ -7,5 +7,9 @@ export async function handleGuildChat(bridge: Bridge, event: ParsedGuildChat): P
         event.guildRank ? ` ${event.guildRank}` : ''
     }:** ${escapeMarkdown(event.message)}`;
 
-    await bridge.discord.send(event.channel === 'Guild' ? 'gc' : 'oc', content, getRankColor(event.rank));
+    await bridge.discord.send(
+        event.channel === 'Guild' ? 'gc' : 'oc',
+        content,
+        getRankColor(event.rank)
+    );
 }

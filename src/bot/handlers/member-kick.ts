@@ -8,9 +8,11 @@ export async function handleMemberKick(bridge: Bridge, event: ParsedMemberKick):
     const kickerStr = `${event.kickerRank ? `${event.kickerRank} ` : ''}${escapeMarkdown(event.kickerName)}`;
 
     // GC notification (compact)
-    await bridge.discord.send('gc',
+    await bridge.discord.send(
+        'gc',
         `**${playerStr}** was kicked by **${kickerStr}**`,
-        0xed4245, true
+        0xed4245,
+        true
     );
 
     // OC rich embed
@@ -20,7 +22,7 @@ export async function handleMemberKick(bridge: Bridge, event: ParsedMemberKick):
         .setThumbnail(`https://mc-heads.net/avatar/${event.playerName}/64`)
         .addFields(
             { name: 'Player', value: playerStr, inline: true },
-            { name: 'Kicked by', value: kickerStr, inline: true },
+            { name: 'Kicked by', value: kickerStr, inline: true }
         )
         .setTimestamp();
     await bridge.discord.sendEmbed('oc', embed);

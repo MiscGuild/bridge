@@ -30,7 +30,10 @@ export function createApiServer(bridge: import('@/bridge/bridge').default) {
     app.use(rateLimit({ windowMs: 60_000, max: 120, standardHeaders: true, legacyHeaders: false }));
 
     // Attach bridge to req
-    app.use((req: any, _res, next) => { req.bridge = bridge; next(); });
+    app.use((req: any, _res, next) => {
+        req.bridge = bridge;
+        next();
+    });
 
     // Public routes
     app.use(`${API_PREFIX}/health`, healthRouter);

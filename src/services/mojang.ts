@@ -35,7 +35,9 @@ export const mojangService = {
 
         try {
             const cleanUuid = uuid.replace(/-/g, '');
-            const res = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${cleanUuid}`);
+            const res = await fetch(
+                `https://sessionserver.mojang.com/session/minecraft/profile/${cleanUuid}`
+            );
             if (res.status === 200) {
                 const data = (await res.json()) as MojangProfile;
                 cache.set(key, data);

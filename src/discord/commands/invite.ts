@@ -19,9 +19,15 @@ export default {
         const embed = new EmbedBuilder();
         try {
             await bridge.bot.executeAndCapture(`/g invite ${user}`);
-            embed.setColor('Green').setTitle('Invited!').setDescription(`\`${user}\` has been invited to the guild!`);
+            embed
+                .setColor('Green')
+                .setTitle('Invited!')
+                .setDescription(`\`${user}\` has been invited to the guild!`);
         } catch (e) {
-            embed.setColor('Red').setTitle('Error').setDescription(e as string);
+            embed
+                .setColor('Red')
+                .setTitle('Error')
+                .setDescription(e as string);
         }
         await interaction.reply({ embeds: [embed] });
     },

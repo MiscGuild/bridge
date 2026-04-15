@@ -47,17 +47,22 @@ export const blacklistRepo = {
             const { data } = await db.from('blacklist').select('*').eq('is_active', true);
             return filterExpired((data as BlacklistRecord[]) ?? []);
         }
-        return filterExpired((await jsonRead()).filter(r => r.is_active));
+        return filterExpired((await jsonRead()).filter((r) => r.is_active));
     },
 
     async getByUuid(uuid: string): Promise<BlacklistRecord | null> {
         const db = getSupabaseClient();
         let record: BlacklistRecord | null;
         if (db) {
-            const { data } = await db.from('blacklist').select('*').eq('uuid', uuid).eq('is_active', true).maybeSingle();
+            const { data } = await db
+                .from('blacklist')
+                .select('*')
+                .eq('uuid', uuid)
+                .eq('is_active', true)
+                .maybeSingle();
             record = (data as BlacklistRecord | null) ?? null;
         } else {
-            record = (await jsonRead()).find(r => r.uuid === uuid && r.is_active) ?? null;
+            record = (await jsonRead()).find((r) => r.uuid === uuid && r.is_active) ?? null;
         }
         if (record && isExpired(record)) {
             await blacklistRepo.deactivate(record.id).catch(() => {});
@@ -101,8 +106,11 @@ export const blacklistRepo = {
             return;
         }
         const records = await jsonRead();
-        const rec = records.find(r => r.uuid === uuid && r.is_active);
-        if (rec) { rec.is_active = false; await jsonWrite(records); }
+        const rec = records.find((r) => r.uuid === uuid && r.is_active);
+        if (rec) {
+            rec.is_active = false;
+            await jsonWrite(records);
+        }
     },
 
     async deactivate(id: string): Promise<void> {
@@ -112,8 +120,11 @@ export const blacklistRepo = {
             return;
         }
         const records = await jsonRead();
-        const rec = records.find(r => r.id === id);
-        if (rec) { rec.is_active = false; await jsonWrite(records); }
+        const rec = records.find((r) => r.id === id);
+        if (rec) {
+            rec.is_active = false;
+            await jsonWrite(records);
+        }
     },
 
     /** Deactivate all entries whose expires_at has passed */
@@ -124,7 +135,7 @@ export const blacklistRepo = {
                 const { data } = await db.from('blacklist').select('*').eq('is_active', true);
                 return (data as BlacklistRecord[]) ?? [];
             }
-            return (await jsonRead()).filter(r => r.is_active);
+            return (await jsonRead()).filter((r) => r.is_active);
         })();
 
         const expiredUuids: string[] = [];
@@ -143,5 +154,5 @@ function isExpired(r: BlacklistRecord): boolean {
 }
 
 function filterExpired(records: BlacklistRecord[]): BlacklistRecord[] {
-    return records.filter(r => !isExpired(r));
+    return records.filter((r) => !isExpired(r));
 }

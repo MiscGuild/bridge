@@ -19,7 +19,11 @@ export default {
                 { name: 'Uptime', value: uptime, inline: true },
                 { name: 'Minecraft', value: mcState, inline: true },
                 { name: 'Discord', value: dcState, inline: true },
-                { name: 'Online', value: `${bridge.onlineCount - 1}/${bridge.totalCount}`, inline: true },
+                {
+                    name: 'Online',
+                    value: `${bridge.onlineCount - 1}/${bridge.totalCount}`,
+                    inline: true,
+                },
                 { name: 'Queue', value: '—', inline: true }
             )
             .setTimestamp();

@@ -96,7 +96,11 @@ function humanDuration(ms: number): string {
     return `${s}s`;
 }
 
-async function handleStart(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge: Bridge): Promise<void> {
+async function handleStart(
+    game: 'bw' | 'sw' | 'cvc',
+    ctx: CommandContext,
+    bridge: Bridge
+): Promise<void> {
     const profile = await mojangService.getProfile(ctx.username);
     if (!profile) {
         bridge.bot.chat(ctx.replyChannel, `Could not find your Minecraft profile!`);
@@ -105,7 +109,10 @@ async function handleStart(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridg
 
     const key = `${profile.id}:${game}`;
     if (activeSessions.has(key)) {
-        bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you already have an active ${game.toUpperCase()} session!`);
+        bridge.bot.chat(
+            ctx.replyChannel,
+            `${ctx.username}, you already have an active ${game.toUpperCase()} session!`
+        );
         return;
     }
 
@@ -117,11 +124,24 @@ async function handleStart(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridg
         return;
     }
 
-    activeSessions.set(key, { uuid: profile.id, username: ctx.username, game, startTime: Date.now(), startStats });
-    bridge.bot.chat(ctx.replyChannel, `${ctx.username}, ${game.toUpperCase()} session started! Good luck!`);
+    activeSessions.set(key, {
+        uuid: profile.id,
+        username: ctx.username,
+        game,
+        startTime: Date.now(),
+        startStats,
+    });
+    bridge.bot.chat(
+        ctx.replyChannel,
+        `${ctx.username}, ${game.toUpperCase()} session started! Good luck!`
+    );
 }
 
-async function handleStop(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge: Bridge): Promise<void> {
+async function handleStop(
+    game: 'bw' | 'sw' | 'cvc',
+    ctx: CommandContext,
+    bridge: Bridge
+): Promise<void> {
     const profile = await mojangService.getProfile(ctx.username);
     if (!profile) {
         bridge.bot.chat(ctx.replyChannel, `Could not find your Minecraft profile!`);
@@ -131,7 +151,10 @@ async function handleStop(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge
     const key = `${profile.id}:${game}`;
     const session = activeSessions.get(key);
     if (!session) {
-        bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have an active ${game.toUpperCase()} session.`);
+        bridge.bot.chat(
+            ctx.replyChannel,
+            `${ctx.username}, you don't have an active ${game.toUpperCase()} session.`
+        );
         return;
     }
 
@@ -146,21 +169,33 @@ async function handleStop(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge
     const duration = humanDuration(Date.now() - session.startTime);
     const diff = formatDiff(session.startStats, endStats, game);
 
-    bridge.bot.chat(ctx.replyChannel, `[Session] ${ctx.username} ${game.toUpperCase()} (${duration}): ${diff}`);
+    bridge.bot.chat(
+        ctx.replyChannel,
+        `[Session] ${ctx.username} ${game.toUpperCase()} (${duration}): ${diff}`
+    );
 
     // Persist to Supabase
-    sessionsRepo.create({
-        user_uuid: profile.id,
-        username: ctx.username,
-        game_mode: game,
-        start_stats: session.startStats as Record<string, unknown>,
-    }).then((record) => {
-        if (!record) return;
-        return sessionsRepo.complete(record.id, endStats as Record<string, unknown>, {});
-    }).catch(() => {/* Supabase optional */});
+    sessionsRepo
+        .create({
+            user_uuid: profile.id,
+            username: ctx.username,
+            game_mode: game,
+            start_stats: session.startStats as Record<string, unknown>,
+        })
+        .then((record) => {
+            if (!record) return;
+            return sessionsRepo.complete(record.id, endStats as Record<string, unknown>, {});
+        })
+        .catch(() => {
+            /* Supabase optional */
+        });
 }
 
-async function handleShow(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge: Bridge): Promise<void> {
+async function handleShow(
+    game: 'bw' | 'sw' | 'cvc',
+    ctx: CommandContext,
+    bridge: Bridge
+): Promise<void> {
     const profile = await mojangService.getProfile(ctx.username);
     if (!profile) {
         bridge.bot.chat(ctx.replyChannel, `Could not find your profile!`);
@@ -170,7 +205,10 @@ async function handleShow(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge
     const key = `${profile.id}:${game}`;
     const session = activeSessions.get(key);
     if (!session) {
-        bridge.bot.chat(ctx.replyChannel, `${ctx.username}, no active ${game.toUpperCase()} session.`);
+        bridge.bot.chat(
+            ctx.replyChannel,
+            `${ctx.username}, no active ${game.toUpperCase()} session.`
+        );
         return;
     }
 
@@ -183,7 +221,10 @@ async function handleShow(game: 'bw' | 'sw' | 'cvc', ctx: CommandContext, bridge
 
     const elapsed = humanDuration(Date.now() - session.startTime);
     const diff = formatDiff(session.startStats, current, game);
-    bridge.bot.chat(ctx.replyChannel, `[Session] ${ctx.username} ${game.toUpperCase()} (${elapsed}): ${diff}`);
+    bridge.bot.chat(
+        ctx.replyChannel,
+        `[Session] ${ctx.username} ${game.toUpperCase()} (${elapsed}): ${diff}`
+    );
 }
 
 export function registerSessionsModule(commands: ModuleCommand[]): void {

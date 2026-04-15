@@ -1,8 +1,4 @@
-import {
-    ApplicationCommandOptionType,
-    EmbedBuilder,
-    AttachmentBuilder,
-} from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import type Bridge from '@/bridge/bridge';
 import { gexpHistoryRepo } from '@/db/repositories/gexp-history.repo';
 import { mojangService } from '@/services/mojang';
@@ -29,7 +25,7 @@ export default {
         options: [
             {
                 name: 'player',
-                description: 'View a player\'s GEXP history graph',
+                description: "View a player's GEXP history graph",
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
                     {
@@ -113,7 +109,11 @@ async function handlePlayer(_bridge: Bridge, interaction: any): Promise<void> {
     const profile = await mojangService.getProfile(username);
     if (!profile) {
         await interaction.editReply({
-            embeds: [new EmbedBuilder().setColor('Red').setDescription(`Player not found: **${username}**`)],
+            embeds: [
+                new EmbedBuilder()
+                    .setColor('Red')
+                    .setDescription(`Player not found: **${username}**`),
+            ],
         });
         return;
     }
@@ -124,18 +124,25 @@ async function handlePlayer(_bridge: Bridge, interaction: any): Promise<void> {
 
     if (history.length === 0) {
         await interaction.editReply({
-            embeds: [new EmbedBuilder().setColor('Yellow').setDescription(
-                `No GEXP data found for **${profile.name}** in the last ${days} days.\nRun \`/gexp sync\` to fetch fresh data.`,
-            )],
+            embeds: [
+                new EmbedBuilder()
+                    .setColor('Yellow')
+                    .setDescription(
+                        `No GEXP data found for **${profile.name}** in the last ${days} days.\nRun \`/gexp sync\` to fetch fresh data.`
+                    ),
+            ],
         });
         return;
     }
 
     const totalGexp = history.reduce((sum, r) => sum + r.gexp_earned, 0);
     const avgGexp = Math.round(totalGexp / history.length);
-    const maxDay = history.reduce((best, r) => r.gexp_earned > best.gexp_earned ? r : best, history[0]!);
+    const maxDay = history.reduce(
+        (best, r) => (r.gexp_earned > best.gexp_earned ? r : best),
+        history[0]!
+    );
 
-    const chartData = history.map(r => ({ date: r.date, gexp: r.gexp_earned }));
+    const chartData = history.map((r) => ({ date: r.date, gexp: r.gexp_earned }));
     const chartBuffer = await renderPlayerGexpChart(profile.name, chartData);
     const attachment = new AttachmentBuilder(chartBuffer, { name: 'gexp.png' });
 
@@ -147,7 +154,11 @@ async function handlePlayer(_bridge: Bridge, interaction: any): Promise<void> {
             { name: 'Period', value: `${history.length} days`, inline: true },
             { name: 'Total', value: fmtNum(totalGexp), inline: true },
             { name: 'Daily Avg', value: fmtNum(avgGexp), inline: true },
-            { name: 'Best Day', value: `${maxDay.date} (${fmtNum(maxDay.gexp_earned)})`, inline: true },
+            {
+                name: 'Best Day',
+                value: `${maxDay.date} (${fmtNum(maxDay.gexp_earned)})`,
+                inline: true,
+            }
         )
         .setImage('attachment://gexp.png')
         .setFooter({ text: 'Data from Hypixel API • synced periodically' });
@@ -167,9 +178,11 @@ async function handleLeaderboard(interaction: any): Promise<void> {
 
     if (entries.length === 0) {
         await interaction.editReply({
-            embeds: [new EmbedBuilder().setColor('Yellow').setDescription(
-                'No GEXP data available. Run `/gexp sync` to fetch data.',
-            )],
+            embeds: [
+                new EmbedBuilder()
+                    .setColor('Yellow')
+                    .setDescription('No GEXP data available. Run `/gexp sync` to fetch data.'),
+            ],
         });
         return;
     }

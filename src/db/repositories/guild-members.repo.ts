@@ -27,20 +27,26 @@ export const guildMembersRepo = {
     async markLeft(uuid: string): Promise<void> {
         const db = getSupabaseClient();
         if (!db) return;
-        await db.from('guild_members').update({
-            is_active: false,
-            left_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        }).eq('uuid', uuid);
+        await db
+            .from('guild_members')
+            .update({
+                is_active: false,
+                left_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            })
+            .eq('uuid', uuid);
     },
 
     async updateRank(uuid: string, rank: string): Promise<void> {
         const db = getSupabaseClient();
         if (!db) return;
-        await db.from('guild_members').update({
-            rank,
-            updated_at: new Date().toISOString(),
-        }).eq('uuid', uuid);
+        await db
+            .from('guild_members')
+            .update({
+                rank,
+                updated_at: new Date().toISOString(),
+            })
+            .eq('uuid', uuid);
     },
 
     async getActive(): Promise<GuildMember[]> {
@@ -53,11 +59,7 @@ export const guildMembersRepo = {
     async getByUuid(uuid: string): Promise<GuildMember | null> {
         const db = getSupabaseClient();
         if (!db) return null;
-        const { data } = await db
-            .from('guild_members')
-            .select('*')
-            .eq('uuid', uuid)
-            .maybeSingle();
+        const { data } = await db.from('guild_members').select('*').eq('uuid', uuid).maybeSingle();
         return (data as GuildMember | null) ?? null;
     },
 };

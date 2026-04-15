@@ -49,14 +49,17 @@ export const inviteRepo = {
     async markAccepted(invitee: string): Promise<void> {
         const db = getSupabaseClient();
         if (db) {
-            await db.from('guild_invites')
+            await db
+                .from('guild_invites')
                 .update({ status: 'accepted', accepted_at: new Date().toISOString() })
                 .eq('invitee', invitee)
                 .eq('status', 'pending');
             return;
         }
         const records = await jsonRead();
-        const rec = records.find(r => r.invitee.toLowerCase() === invitee.toLowerCase() && r.status === 'pending');
+        const rec = records.find(
+            (r) => r.invitee.toLowerCase() === invitee.toLowerCase() && r.status === 'pending'
+        );
         if (rec) {
             rec.status = 'accepted';
             rec.accepted_at = new Date().toISOString();
@@ -67,7 +70,8 @@ export const inviteRepo = {
     async getByInviter(inviter: string, limit = 25): Promise<InviteRecord[]> {
         const db = getSupabaseClient();
         if (db) {
-            const { data } = await db.from('guild_invites')
+            const { data } = await db
+                .from('guild_invites')
                 .select('*')
                 .ilike('inviter', inviter)
                 .order('invited_at', { ascending: false })
@@ -75,7 +79,7 @@ export const inviteRepo = {
             return (data as InviteRecord[]) ?? [];
         }
         return (await jsonRead())
-            .filter(r => r.inviter.toLowerCase() === inviter.toLowerCase())
+            .filter((r) => r.inviter.toLowerCase() === inviter.toLowerCase())
             .sort((a, b) => new Date(b.invited_at).getTime() - new Date(a.invited_at).getTime())
             .slice(0, limit);
     },
@@ -83,7 +87,8 @@ export const inviteRepo = {
     async getRecent(limit = 25): Promise<InviteRecord[]> {
         const db = getSupabaseClient();
         if (db) {
-            const { data } = await db.from('guild_invites')
+            const { data } = await db
+                .from('guild_invites')
                 .select('*')
                 .order('invited_at', { ascending: false })
                 .limit(limit);

@@ -49,7 +49,7 @@ class GuildRankService {
             { name: env.RANK_3_NAME, tag: env.RANK_3_TAG, tier: 2 },
             { name: env.RANK_4_NAME, tag: env.RANK_4_TAG, tier: 3 },
             { name: env.RANK_5_NAME, tag: env.RANK_5_TAG, tier: 4 },
-        ].filter(r => r.name || r.tag);
+        ].filter((r) => r.name || r.tag);
     }
 
     async init(guildName: string): Promise<void> {
@@ -71,9 +71,11 @@ class GuildRankService {
             this.maxPriority = sorted[sorted.length - 1]!.priority;
             this.apiLoaded = true;
 
-            consola.info(`[GuildRanks] Loaded ${sorted.length} ranks: ${sorted.map(r =>
-                `${r.name}${r.tag ? `[${r.tag}]` : ''}(${r.priority})`
-            ).join(', ')}`);
+            consola.info(
+                `[GuildRanks] Loaded ${sorted.length} ranks: ${sorted
+                    .map((r) => `${r.name}${r.tag ? `[${r.tag}]` : ''}(${r.priority})`)
+                    .join(', ')}`
+            );
         } catch (err) {
             consola.warn('[GuildRanks] Failed to fetch guild ranks:', err);
         }
@@ -91,17 +93,17 @@ class GuildRankService {
      */
     private findApiRank(normalized: string): GuildRankDefinition | undefined {
         const lower = normalized.toLowerCase();
-        return this.ranks.find(r =>
-            r.name.toLowerCase() === lower ||
-            (r.tag && r.tag.toLowerCase() === lower)
+        return this.ranks.find(
+            (r) => r.name.toLowerCase() === lower || (r.tag && r.tag.toLowerCase() === lower)
         );
     }
 
     private findEnvRank(normalized: string): { tier: number } | undefined {
         const lower = normalized.toLowerCase();
-        return this.envRanks.find(r =>
-            (r.name && r.name.toLowerCase() === lower) ||
-            (r.tag && r.tag.toLowerCase() === lower)
+        return this.envRanks.find(
+            (r) =>
+                (r.name && r.name.toLowerCase() === lower) ||
+                (r.tag && r.tag.toLowerCase() === lower)
         );
     }
 
@@ -111,7 +113,11 @@ class GuildRankService {
         if (!name) return false;
 
         const lower = name.toLowerCase();
-        if (lower === 'guild master' || lower === 'gm' || lower === env.RANK_LEADER_TAG.toLowerCase()) {
+        if (
+            lower === 'guild master' ||
+            lower === 'gm' ||
+            lower === env.RANK_LEADER_TAG.toLowerCase()
+        ) {
             return true;
         }
 
@@ -134,7 +140,11 @@ class GuildRankService {
         if (!name) return env.COOLDOWN_RANK_1;
 
         const lower = name.toLowerCase();
-        if (lower === 'guild master' || lower === 'gm' || lower === env.RANK_LEADER_TAG.toLowerCase()) {
+        if (
+            lower === 'guild master' ||
+            lower === 'gm' ||
+            lower === env.RANK_LEADER_TAG.toLowerCase()
+        ) {
             return env.COOLDOWN_LEADER;
         }
 
@@ -147,7 +157,9 @@ class GuildRankService {
 
         // Env fallback
         const envRank = this.findEnvRank(name);
-        return envRank ? (this.tierCooldowns[envRank.tier] ?? env.COOLDOWN_RANK_1) : env.COOLDOWN_RANK_1;
+        return envRank
+            ? (this.tierCooldowns[envRank.tier] ?? env.COOLDOWN_RANK_1)
+            : env.COOLDOWN_RANK_1;
     }
 
     /** Maps a priority value to a 0-based tier index (0 = lowest, 4 = highest). */

@@ -23,7 +23,11 @@ export async function handleMemberJoinLeave(
                     .setColor(0xed4245)
                     .setTitle('Auto-Kicked: Blacklisted')
                     .setThumbnail(`https://mc-heads.net/avatar/${profile.id}/64`)
-                    .addFields({ name: 'Player', value: escapeMarkdown(event.playerName), inline: true })
+                    .addFields({
+                        name: 'Player',
+                        value: escapeMarkdown(event.playerName),
+                        inline: true,
+                    })
                     .setTimestamp();
                 await bridge.discord.sendEmbed('oc', kickEmbed);
             }
@@ -37,8 +41,12 @@ export async function handleMemberJoinLeave(
                         .setTitle('Urchin Tags Detected')
                         .setThumbnail(`https://mc-heads.net/avatar/${profile.id}/64`)
                         .addFields(
-                            { name: 'Player', value: escapeMarkdown(event.playerName), inline: true },
-                            { name: 'Tags', value: tags.join(', '), inline: true },
+                            {
+                                name: 'Player',
+                                value: escapeMarkdown(event.playerName),
+                                inline: true,
+                            },
+                            { name: 'Tags', value: tags.join(', '), inline: true }
                         )
                         .setTimestamp();
                     await bridge.discord.sendEmbed('oc', urchinEmbed);

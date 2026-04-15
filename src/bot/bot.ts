@@ -1,7 +1,13 @@
 import { createBot, Bot } from 'mineflayer';
 import { consola } from 'consola';
 import env from '@/config/env';
-import { BOT_STATES, BotState, HYPIXEL_HOST, HYPIXEL_PORT, MINECRAFT_VERSION } from '@/config/constants';
+import {
+    BOT_STATES,
+    BotState,
+    HYPIXEL_HOST,
+    HYPIXEL_PORT,
+    MINECRAFT_VERSION,
+} from '@/config/constants';
 import messageQueue from '@/queue/message-queue';
 
 export type { BotState };
@@ -40,7 +46,11 @@ export class MinecraftBot {
             clearTimeout(this.reconnectTimer);
             this.reconnectTimer = null;
         }
-        try { this.bot.end(); } catch { /* ignore */ }
+        try {
+            this.bot.end();
+        } catch {
+            /* ignore */
+        }
         this.state = BOT_STATES.DISCONNECTED;
     }
 
@@ -128,11 +138,14 @@ export class MinecraftBot {
      * Collects all messages received within the timeout window.
      * Optionally stops early when `endPattern` matches (after `endCount` hits).
      */
-    public collectLines(command: string, opts?: {
-        timeout?: number;
-        endPattern?: RegExp;
-        endCount?: number;
-    }): Promise<string[]> {
+    public collectLines(
+        command: string,
+        opts?: {
+            timeout?: number;
+            endPattern?: RegExp;
+            endCount?: number;
+        }
+    ): Promise<string[]> {
         const timeout = opts?.timeout ?? 3000;
         const endPattern = opts?.endPattern;
         const endTarget = opts?.endCount ?? 2;

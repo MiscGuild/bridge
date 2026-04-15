@@ -69,11 +69,19 @@ export const sessionsRepo = {
     ): Promise<void> {
         const db = getSupabaseClient();
         if (db) {
-            await db.from('sessions').update({ end_stats, gained_stats, ended_at: new Date().toISOString(), status: 'completed' }).eq('id', id);
+            await db
+                .from('sessions')
+                .update({
+                    end_stats,
+                    gained_stats,
+                    ended_at: new Date().toISOString(),
+                    status: 'completed',
+                })
+                .eq('id', id);
             return;
         }
         const records = await jsonRead();
-        const rec = records.find(r => r.id === id);
+        const rec = records.find((r) => r.id === id);
         if (rec) {
             rec.end_stats = end_stats;
             rec.gained_stats = gained_stats;
@@ -86,20 +94,38 @@ export const sessionsRepo = {
     async getActive(username: string): Promise<SessionRecord | null> {
         const db = getSupabaseClient();
         if (db) {
-            const { data } = await db.from('sessions').select('*').ilike('username', username).eq('status', 'active').maybeSingle();
+            const { data } = await db
+                .from('sessions')
+                .select('*')
+                .ilike('username', username)
+                .eq('status', 'active')
+                .maybeSingle();
             return (data as SessionRecord | null) ?? null;
         }
-        return (await jsonRead()).find(r => r.username.toLowerCase() === username.toLowerCase() && r.status === 'active') ?? null;
+        return (
+            (await jsonRead()).find(
+                (r) => r.username.toLowerCase() === username.toLowerCase() && r.status === 'active'
+            ) ?? null
+        );
     },
 
     async getHistory(username: string, limit = 10): Promise<SessionRecord[]> {
         const db = getSupabaseClient();
         if (db) {
-            const { data } = await db.from('sessions').select('*').ilike('username', username).eq('status', 'completed').order('started_at', { ascending: false }).limit(limit);
+            const { data } = await db
+                .from('sessions')
+                .select('*')
+                .ilike('username', username)
+                .eq('status', 'completed')
+                .order('started_at', { ascending: false })
+                .limit(limit);
             return (data as SessionRecord[]) ?? [];
         }
         return (await jsonRead())
-            .filter(r => r.username.toLowerCase() === username.toLowerCase() && r.status === 'completed')
+            .filter(
+                (r) =>
+                    r.username.toLowerCase() === username.toLowerCase() && r.status === 'completed'
+            )
             .sort((a, b) => b.started_at.localeCompare(a.started_at))
             .slice(0, limit);
     },
@@ -108,7 +134,11 @@ export const sessionsRepo = {
         const db = getSupabaseClient();
         const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
         if (db) {
-            await db.from('sessions').update({ status: 'expired', ended_at: new Date().toISOString() }).eq('status', 'active').lt('started_at', cutoff);
+            await db
+                .from('sessions')
+                .update({ status: 'expired', ended_at: new Date().toISOString() })
+                .eq('status', 'active')
+                .lt('started_at', cutoff);
             return;
         }
         const records = await jsonRead();

@@ -47,7 +47,10 @@ export default {
             await command.run(bridge, interaction, args);
         } catch (err) {
             consola.error(`Error in command ${interaction.commandName}:`, err);
-            const reply = { content: 'An error occurred while running this command.', ephemeral: true };
+            const reply = {
+                content: 'An error occurred while running this command.',
+                ephemeral: true,
+            };
             if (interaction.replied || interaction.deferred) {
                 await interaction.followUp(reply);
             } else {

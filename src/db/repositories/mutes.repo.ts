@@ -45,10 +45,18 @@ export interface CreateWarnInput {
 const MUTES_FILE = 'mutes.json';
 const WARNS_FILE = 'warns.json';
 
-async function readMutes(): Promise<MuteRecord[]> { return readJson<MuteRecord[]>(MUTES_FILE, []); }
-async function writeMutes(r: MuteRecord[]): Promise<void> { return writeJson(MUTES_FILE, r); }
-async function readWarns(): Promise<WarnRecord[]> { return readJson<WarnRecord[]>(WARNS_FILE, []); }
-async function writeWarns(r: WarnRecord[]): Promise<void> { return writeJson(WARNS_FILE, r); }
+async function readMutes(): Promise<MuteRecord[]> {
+    return readJson<MuteRecord[]>(MUTES_FILE, []);
+}
+async function writeMutes(r: MuteRecord[]): Promise<void> {
+    return writeJson(MUTES_FILE, r);
+}
+async function readWarns(): Promise<WarnRecord[]> {
+    return readJson<WarnRecord[]>(WARNS_FILE, []);
+}
+async function writeWarns(r: WarnRecord[]): Promise<void> {
+    return writeJson(WARNS_FILE, r);
+}
 
 function newId(): string {
     return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -65,12 +73,12 @@ export const mutesRepo = {
         }
         const all = await readMutes();
         const now = new Date().toISOString();
-        return all.filter(m => m.is_active && (!m.expires_at || m.expires_at > now));
+        return all.filter((m) => m.is_active && (!m.expires_at || m.expires_at > now));
     },
 
     async getByUsername(username: string): Promise<MuteRecord | null> {
         const active = await this.getActive();
-        return active.find(m => m.username.toLowerCase() === username.toLowerCase()) ?? null;
+        return active.find((m) => m.username.toLowerCase() === username.toLowerCase()) ?? null;
     },
 
     async create(input: CreateMuteInput): Promise<MuteRecord | null> {
@@ -100,7 +108,9 @@ export const mutesRepo = {
     async deactivateByUsername(username: string): Promise<void> {
         const db = getSupabaseClient();
         if (db) {
-            await db.from('mutes').update({ is_active: false })
+            await db
+                .from('mutes')
+                .update({ is_active: false })
                 .eq('is_active', true)
                 .ilike('username', username);
             return;
@@ -121,13 +131,17 @@ export const mutesRepo = {
         const db = getSupabaseClient();
         if (db) {
             // Fetch expired records before deactivating so we can return them
-            const { data: expiredData } = await db.from('mutes').select('*')
+            const { data: expiredData } = await db
+                .from('mutes')
+                .select('*')
                 .eq('is_active', true)
                 .not('expires_at', 'is', null)
                 .lt('expires_at', now);
             if (expiredData && expiredData.length > 0) {
                 expired.push(...(expiredData as MuteRecord[]));
-                await db.from('mutes').update({ is_active: false })
+                await db
+                    .from('mutes')
+                    .update({ is_active: false })
                     .eq('is_active', true)
                     .not('expires_at', 'is', null)
                     .lt('expires_at', now);
@@ -159,7 +173,7 @@ export const warnsRepo = {
             return (data as WarnRecord[]) ?? [];
         }
         const all = await readWarns();
-        return all.filter(w => w.username.toLowerCase() === username.toLowerCase());
+        return all.filter((w) => w.username.toLowerCase() === username.toLowerCase());
     },
 
     async create(input: CreateWarnInput): Promise<WarnRecord | null> {
@@ -187,13 +201,16 @@ export const warnsRepo = {
     async clearByUsername(username: string): Promise<number> {
         const db = getSupabaseClient();
         if (db) {
-            const { data } = await db.from('warns').delete()
-                .ilike('username', username).select('id');
+            const { data } = await db
+                .from('warns')
+                .delete()
+                .ilike('username', username)
+                .select('id');
             return data?.length ?? 0;
         }
         const all = await readWarns();
         const before = all.length;
-        const filtered = all.filter(w => w.username.toLowerCase() !== username.toLowerCase());
+        const filtered = all.filter((w) => w.username.toLowerCase() !== username.toLowerCase());
         await writeWarns(filtered);
         return before - filtered.length;
     },

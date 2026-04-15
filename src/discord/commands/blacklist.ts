@@ -23,7 +23,7 @@ async function queryUrchin(uuid: string): Promise<UrchinResponse | null> {
         });
         if (res.status === 404) return { tags: [] };
         if (!res.ok) return null;
-        return await res.json() as UrchinResponse;
+        return (await res.json()) as UrchinResponse;
     } catch {
         return null;
     }
@@ -34,7 +34,14 @@ function parseDuration(dur: string): string | null {
     if (!match) return null;
     const num = parseInt(match[1]!, 10);
     const unit = match[2]!.toLowerCase();
-    const ms = unit === 'm' ? num * 60_000 : unit === 'h' ? num * 3_600_000 : unit === 'd' ? num * 86_400_000 : num * 7 * 86_400_000;
+    const ms =
+        unit === 'm'
+            ? num * 60_000
+            : unit === 'h'
+              ? num * 3_600_000
+              : unit === 'd'
+                ? num * 86_400_000
+                : num * 7 * 86_400_000;
     return new Date(Date.now() + ms).toISOString();
 }
 
@@ -49,7 +56,10 @@ function formatExpiry(expiresAt: string | null): string {
 }
 
 /** Discord timestamp: <t:UNIX:style> */
-function discordTs(date: Date | string | null, style: 'f' | 'R' | 'F' | 'd' | 'D' | 'T' | 't' = 'f'): string {
+function discordTs(
+    date: Date | string | null,
+    style: 'f' | 'R' | 'F' | 'd' | 'D' | 'T' | 't' = 'f'
+): string {
     if (!date) return 'Never';
     const unix = Math.floor(new Date(date).getTime() / 1000);
     return `<t:${unix}:${style}>`;
@@ -78,22 +88,30 @@ async function sendBlacklistLog(
             .setTimestamp(now);
 
         if (action === 'added') {
-            embed.setColor('Red')
+            embed
+                .setColor('Red')
                 .setTitle('Player Blacklisted')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Added by', value: displayName, inline: true },
                     { name: 'Reason', value: reason ?? 'No reason provided' },
                     { name: 'Added', value: discordTs(now, 'f'), inline: true },
-                    { name: 'Expires', value: expiresAt ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})` : 'Never (Permanent)', inline: true },
+                    {
+                        name: 'Expires',
+                        value: expiresAt
+                            ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})`
+                            : 'Never (Permanent)',
+                        inline: true,
+                    }
                 );
         } else {
-            embed.setColor('Green')
+            embed
+                .setColor('Green')
                 .setTitle('Player Removed from Blacklist')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Removed by', value: displayName, inline: true },
-                    { name: 'Removed', value: discordTs(now, 'f'), inline: true },
+                    { name: 'Removed', value: discordTs(now, 'f'), inline: true }
                 );
         }
 
@@ -113,7 +131,12 @@ export default {
                 description: 'Check a player against both Urchin and Guild blacklists',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
-                    { name: 'user', description: 'Minecraft username', type: ApplicationCommandOptionType.String, required: true },
+                    {
+                        name: 'user',
+                        description: 'Minecraft username',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
                 ],
             },
             {
@@ -121,9 +144,24 @@ export default {
                 description: 'Add a player to the guild blacklist',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
-                    { name: 'user', description: 'Minecraft username', type: ApplicationCommandOptionType.String, required: true },
-                    { name: 'reason', description: 'Reason for blacklisting', type: ApplicationCommandOptionType.String, required: true },
-                    { name: 'duration', description: 'Duration (e.g. 7d, 2w, 30d) — omit for permanent', type: ApplicationCommandOptionType.String, required: false },
+                    {
+                        name: 'user',
+                        description: 'Minecraft username',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
+                    {
+                        name: 'reason',
+                        description: 'Reason for blacklisting',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
+                    {
+                        name: 'duration',
+                        description: 'Duration (e.g. 7d, 2w, 30d) — omit for permanent',
+                        type: ApplicationCommandOptionType.String,
+                        required: false,
+                    },
                 ],
             },
             {
@@ -131,7 +169,12 @@ export default {
                 description: 'Remove a player from the guild blacklist',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
-                    { name: 'user', description: 'Minecraft username', type: ApplicationCommandOptionType.String, required: true },
+                    {
+                        name: 'user',
+                        description: 'Minecraft username',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
                 ],
             },
             {
@@ -149,14 +192,20 @@ export default {
             if (sub === 'list') {
                 const entries = await blacklistRepo.getAll().catch(() => [] as BlacklistRecord[]);
                 if (entries.length === 0) {
-                    embed.setColor('Green').setTitle('Guild Blacklist').setDescription('No players on the guild blacklist.');
+                    embed
+                        .setColor('Green')
+                        .setTitle('Guild Blacklist')
+                        .setDescription('No players on the guild blacklist.');
                 } else {
-                    const lines = entries.slice(0, 25).map(e => {
+                    const lines = entries.slice(0, 25).map((e) => {
                         const expiry = formatExpiry(e.expires_at);
                         return `• **${e.username}** — ${e.reason} (by ${e.added_by} | ${expiry})`;
                     });
                     if (entries.length > 25) lines.push(`*...and ${entries.length - 25} more*`);
-                    embed.setColor('Red').setTitle(`Guild Blacklist (${entries.length})`).setDescription(lines.join('\n'));
+                    embed
+                        .setColor('Red')
+                        .setTitle(`Guild Blacklist (${entries.length})`)
+                        .setDescription(lines.join('\n'));
                 }
                 await interaction.reply({ embeds: [embed] });
                 return;
@@ -165,7 +214,10 @@ export default {
             const user = interaction.options.getString('user', true);
             const profile = await mojangService.getProfile(user);
             if (!profile) {
-                embed.setColor('Red').setTitle('Error').setDescription(`Player not found: **${user}**`);
+                embed
+                    .setColor('Red')
+                    .setTitle('Error')
+                    .setDescription(`Player not found: **${user}**`);
                 await interaction.reply({ embeds: [embed], ephemeral: true });
                 return;
             }
@@ -185,12 +237,16 @@ export default {
 
                 const urchin = await queryUrchin(profile.id);
                 if (!urchin) {
-                    fields.push({ name: 'Urchin Blacklist', value: 'Could not check (no API key or error)' });
+                    fields.push({
+                        name: 'Urchin Blacklist',
+                        value: 'Could not check (no API key or error)',
+                    });
                 } else if (!urchin.tags || urchin.tags.length === 0) {
                     fields.push({ name: 'Urchin Blacklist', value: 'No cheater tags' });
                 } else {
-                    const tagLines = urchin.tags.map(t =>
-                        `**[${(t.type || 'UNKNOWN').toUpperCase()}]** ${t.reason || 'No reason'}`
+                    const tagLines = urchin.tags.map(
+                        (t) =>
+                            `**[${(t.type || 'UNKNOWN').toUpperCase()}]** ${t.reason || 'No reason'}`
                     );
                     fields.push({
                         name: `Urchin Blacklist (${urchin.tags.length} tag${urchin.tags.length > 1 ? 's' : ''})`,
@@ -199,7 +255,8 @@ export default {
                 }
 
                 const isClean = !guildEntry && (!urchin?.tags || urchin.tags.length === 0);
-                embed.setColor(isClean ? 'Green' : 'Red')
+                embed
+                    .setColor(isClean ? 'Green' : 'Red')
                     .setTitle(`Blacklist Check: ${profile.name}`)
                     .setThumbnail(`https://mc-heads.net/avatar/${profile.id}/64`)
                     .addFields(fields);
@@ -211,34 +268,67 @@ export default {
                 const expiresAt = durationStr ? parseDuration(durationStr) : null;
 
                 if (durationStr && !expiresAt) {
-                    embed.setColor('Red').setTitle('Error').setDescription('Invalid duration format. Use e.g. `7d`, `2w`, `30d`.');
+                    embed
+                        .setColor('Red')
+                        .setTitle('Error')
+                        .setDescription('Invalid duration format. Use e.g. `7d`, `2w`, `30d`.');
                     await interaction.reply({ embeds: [embed], ephemeral: true });
                     return;
                 }
 
-                await blacklistRepo.add({ uuid: profile.id, username: profile.name, reason, added_by: interaction.user.username, expires_at: expiresAt });
+                await blacklistRepo.add({
+                    uuid: profile.id,
+                    username: profile.name,
+                    reason,
+                    added_by: interaction.user.username,
+                    expires_at: expiresAt,
+                });
                 bridge.blacklist.add(profile.id);
 
-                embed.setColor('Red').setTitle('Player Blacklisted')
+                embed
+                    .setColor('Red')
+                    .setTitle('Player Blacklisted')
                     .setDescription(`**${profile.name}** added to guild blacklist.`)
                     .addFields(
                         { name: 'Reason', value: reason },
                         { name: 'Added', value: discordTs(new Date(), 'f'), inline: true },
-                        { name: 'Expires', value: expiresAt ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})` : 'Never (Permanent)', inline: true },
+                        {
+                            name: 'Expires',
+                            value: expiresAt
+                                ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})`
+                                : 'Never (Permanent)',
+                            inline: true,
+                        }
                     );
                 await interaction.reply({ embeds: [embed] });
 
                 // Log to blacklist channel
-                await sendBlacklistLog(bridge, 'added', profile.name, profile.id, interaction.user.username, reason, expiresAt);
+                await sendBlacklistLog(
+                    bridge,
+                    'added',
+                    profile.name,
+                    profile.id,
+                    interaction.user.username,
+                    reason,
+                    expiresAt
+                );
             } else if (sub === 'remove') {
                 await blacklistRepo.remove(profile.id);
                 bridge.blacklist.remove(profile.id);
-                embed.setColor('Green').setTitle('Player Removed')
+                embed
+                    .setColor('Green')
+                    .setTitle('Player Removed')
                     .setDescription(`**${profile.name}** removed from guild blacklist.`);
                 await interaction.reply({ embeds: [embed] });
 
                 // Log to blacklist channel
-                await sendBlacklistLog(bridge, 'removed', profile.name, profile.id, interaction.user.username);
+                await sendBlacklistLog(
+                    bridge,
+                    'removed',
+                    profile.name,
+                    profile.id,
+                    interaction.user.username
+                );
             }
         } catch (e) {
             embed.setColor('Red').setTitle('Error').setDescription(`${e}`);

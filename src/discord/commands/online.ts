@@ -10,7 +10,9 @@ export default {
         const embed = new EmbedBuilder()
             .setColor('Green')
             .setTitle('Online Members')
-            .setDescription(`**${bridge.onlineCount - 1}** / **${bridge.totalCount}** guild members online`)
+            .setDescription(
+                `**${bridge.onlineCount - 1}** / **${bridge.totalCount}** guild members online`
+            )
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });

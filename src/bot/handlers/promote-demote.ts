@@ -3,7 +3,10 @@ import type { ParsedPromoteDemote } from '@/bot/chat-parser';
 import { escapeMarkdown, getRankColor } from '@/util/formatting';
 import emojis from '@/util/emojis';
 
-export async function handlePromoteDemote(bridge: Bridge, event: ParsedPromoteDemote): Promise<void> {
+export async function handlePromoteDemote(
+    bridge: Bridge,
+    event: ParsedPromoteDemote
+): Promise<void> {
     const emoji = event.action === 'promoted' ? emojis.promote : emojis.demote;
     await bridge.discord.send(
         'gc',

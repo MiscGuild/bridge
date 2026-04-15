@@ -15,7 +15,12 @@ router.post('/bans', requireAdmin, async (req: AuthRequest, res) => {
     const input: CreateBanInput = req.body;
     const ban = await bansRepo.create(input);
     if (!ban) return res.status(503).json({ error: 'Database unavailable' });
-    await auditLogRepo.log(req.userId ?? 'api', 'ban_create', input.uuid, input as unknown as Record<string, unknown>);
+    await auditLogRepo.log(
+        req.userId ?? 'api',
+        'ban_create',
+        input.uuid,
+        input as unknown as Record<string, unknown>
+    );
     return res.status(201).json({ ban });
 });
 

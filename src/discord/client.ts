@@ -14,7 +14,11 @@ import { DEFAULT_EMBED_COLOR } from '@/config/constants';
 
 export interface DiscordCommand {
     data: import('discord.js').ChatInputApplicationCommandData;
-    run: (bridge: any, interaction: import('discord.js').ChatInputCommandInteraction, args: unknown[]) => Promise<void>;
+    run: (
+        bridge: any,
+        interaction: import('discord.js').ChatInputCommandInteraction,
+        args: unknown[]
+    ) => Promise<void>;
     staffOnly?: boolean;
 }
 
@@ -52,10 +56,7 @@ export class DiscordClient extends Client {
         }
     }
 
-    public async sendEmbed(
-        channel: 'gc' | 'oc',
-        embed: EmbedBuilder
-    ): Promise<void> {
+    public async sendEmbed(channel: 'gc' | 'oc', embed: EmbedBuilder): Promise<void> {
         if (channel === 'gc') {
             await this.memberChannel?.send({ embeds: [embed] });
         } else {

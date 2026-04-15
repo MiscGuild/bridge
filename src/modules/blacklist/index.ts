@@ -16,11 +16,16 @@ interface UrchinResponse {
 }
 
 function hex(): string {
-    return `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0')}`;
+    return `#${Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
 /** Discord timestamp: <t:UNIX:style> */
-function discordTs(date: Date | string | null, style: 'f' | 'R' | 'F' | 'd' | 'D' | 'T' | 't' = 'f'): string {
+function discordTs(
+    date: Date | string | null,
+    style: 'f' | 'R' | 'F' | 'd' | 'D' | 'T' | 't' = 'f'
+): string {
     if (!date) return 'Never';
     const unix = Math.floor(new Date(date).getTime() / 1000);
     return `<t:${unix}:${style}>`;
@@ -49,22 +54,30 @@ async function sendBlacklistLog(
             .setTimestamp(now);
 
         if (action === 'added') {
-            embed.setColor('Red')
+            embed
+                .setColor('Red')
                 .setTitle('Player Blacklisted')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Added by', value: displayName, inline: true },
                     { name: 'Reason', value: reason ?? 'No reason provided' },
                     { name: 'Added', value: discordTs(now, 'f'), inline: true },
-                    { name: 'Expires', value: expiresAt ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})` : 'Never (Permanent)', inline: true },
+                    {
+                        name: 'Expires',
+                        value: expiresAt
+                            ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})`
+                            : 'Never (Permanent)',
+                        inline: true,
+                    }
                 );
         } else {
-            embed.setColor('Green')
+            embed
+                .setColor('Green')
                 .setTitle('Player Removed from Blacklist')
                 .addFields(
                     { name: 'Player', value: `**${playerName}**`, inline: true },
                     { name: 'Removed by', value: displayName, inline: true },
-                    { name: 'Removed', value: discordTs(now, 'f'), inline: true },
+                    { name: 'Removed', value: discordTs(now, 'f'), inline: true }
                 );
         }
 
@@ -93,7 +106,7 @@ async function queryUrchin(uuid: string): Promise<UrchinResponse | null> {
         if (res.status === 401) return null; // invalid key
         if (res.status === 429) return null; // rate limited
         if (!res.ok) return null;
-        return await res.json() as UrchinResponse;
+        return (await res.json()) as UrchinResponse;
     } catch {
         return null;
     }
@@ -107,11 +120,10 @@ export async function isUrchinFlagged(uuid: string): Promise<boolean> {
 
 export async function getUrchinTags(uuid: string): Promise<string[]> {
     const data = await queryUrchin(uuid);
-    return data?.tags?.map(t => t.type) ?? [];
+    return data?.tags?.map((t) => t.type) ?? [];
 }
 
 export function registerBlacklistModule(commands: ModuleCommand[]): void {
-
     // !view [username] — check Urchin tags + internal blacklist (self if no arg)
     commands.push({
         commandId: 'blacklist:view',
@@ -119,14 +131,20 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
         async handler(ctx, bridge) {
             const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'urchin');
             if (remaining > 0) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s | ${hex()}`);
+                bridge.bot.chat(
+                    ctx.replyChannel,
+                    `${ctx.username}, cooldown: ${remaining}s | ${hex()}`
+                );
                 return;
             }
 
             const target = ctx.matches[1]?.trim() ?? ctx.username;
             const profile = await mojangService.getProfile(target);
             if (!profile) {
-                bridge.bot.chat(ctx.replyChannel, `[NOT-TAGGED] ${target} is not a valid Minecraft username. | ${hex()}`);
+                bridge.bot.chat(
+                    ctx.replyChannel,
+                    `[NOT-TAGGED] ${target} is not a valid Minecraft username. | ${hex()}`
+                );
                 return;
             }
 
@@ -135,7 +153,10 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             // Internal blacklist check
             const internalEntry = await blacklistRepo.getByUuid(profile.id).catch(() => null);
             if (internalEntry) {
-                bridge.bot.chat(ctx.replyChannel, `[INTERNAL] ${profile.name} - ${internalEntry.reason ?? 'No reason'} | ${hex()}`);
+                bridge.bot.chat(
+                    ctx.replyChannel,
+                    `[INTERNAL] ${profile.name} - ${internalEntry.reason ?? 'No reason'} | ${hex()}`
+                );
             }
 
             // Urchin API check
@@ -143,14 +164,20 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
 
             if (!urchin) {
                 if (!internalEntry) {
-                    bridge.bot.chat(ctx.replyChannel, `[ERROR] Failed to check blacklist for ${profile.name}. Try again later. | ${hex()}`);
+                    bridge.bot.chat(
+                        ctx.replyChannel,
+                        `[ERROR] Failed to check blacklist for ${profile.name}. Try again later. | ${hex()}`
+                    );
                 }
                 return;
             }
 
             if (!urchin.tags || urchin.tags.length === 0) {
                 if (!internalEntry) {
-                    bridge.bot.chat(ctx.replyChannel, `[NOT-TAGGED] ${profile.name} has no tags in the blacklist. | ${hex()}`);
+                    bridge.bot.chat(
+                        ctx.replyChannel,
+                        `[NOT-TAGGED] ${profile.name} has no tags in the blacklist. | ${hex()}`
+                    );
                 }
                 return;
             }
@@ -192,18 +219,44 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
                 if (match) {
                     const num = parseInt(match[1]!, 10);
                     const unit = match[2]!.toLowerCase();
-                    const ms = unit === 'm' ? num * 60_000 : unit === 'h' ? num * 3_600_000 : unit === 'd' ? num * 86_400_000 : num * 7 * 86_400_000;
+                    const ms =
+                        unit === 'm'
+                            ? num * 60_000
+                            : unit === 'h'
+                              ? num * 3_600_000
+                              : unit === 'd'
+                                ? num * 86_400_000
+                                : num * 7 * 86_400_000;
                     expiresAt = new Date(Date.now() + ms).toISOString();
                 }
             }
 
-            await blacklistRepo.add({ uuid: profile.id, username: profile.name, reason, added_by: ctx.username, expires_at: expiresAt }).catch(() => {});
+            await blacklistRepo
+                .add({
+                    uuid: profile.id,
+                    username: profile.name,
+                    reason,
+                    added_by: ctx.username,
+                    expires_at: expiresAt,
+                })
+                .catch(() => {});
             bridge.blacklist.add(profile.id);
             const expiryMsg = expiresAt ? ` (expires in ${durationStr})` : ' (permanent)';
-            bridge.bot.chat('oc', `${profile.name} added to internal blacklist: ${reason}${expiryMsg}`);
+            bridge.bot.chat(
+                'oc',
+                `${profile.name} added to internal blacklist: ${reason}${expiryMsg}`
+            );
 
             // Log to blacklist channel
-            await sendBlacklistLog(bridge, 'added', profile.name, profile.id, ctx.username, reason, expiresAt);
+            await sendBlacklistLog(
+                bridge,
+                'added',
+                profile.name,
+                profile.id,
+                ctx.username,
+                reason,
+                expiresAt
+            );
         },
     });
 

@@ -7,10 +7,9 @@ const cache = new NodeCache({ stdTTL: STATS_CACHE_TTL_MS / 1000 });
 const inFlight = new Map<string, Promise<unknown>>();
 
 function getApiKeys(): string[] {
-    return [
-        env.HYPIXEL_API_KEY,
-        env.FALLBACK_HYPIXEL_API_KEY,
-    ].filter((k): k is string => Boolean(k));
+    return [env.HYPIXEL_API_KEY, env.FALLBACK_HYPIXEL_API_KEY].filter((k): k is string =>
+        Boolean(k)
+    );
 }
 
 let keyIndex = 0;
@@ -34,7 +33,9 @@ async function fetchWithRetry(url: string, retries = 3): Promise<unknown> {
 
             if (res.status === 429) {
                 const delay = Math.pow(2, attempt) * 1000;
-                consola.warn(`Hypixel rate limited, retrying in ${delay}ms (attempt ${attempt + 1})`);
+                consola.warn(
+                    `Hypixel rate limited, retrying in ${delay}ms (attempt ${attempt + 1})`
+                );
                 await new Promise((r) => setTimeout(r, delay));
                 continue;
             }
@@ -64,14 +65,16 @@ async function cachedFetch<T>(cacheKey: string, url: string): Promise<T> {
     const existing = inFlight.get(cacheKey);
     if (existing) return existing as Promise<T>;
 
-    const promise = fetchWithRetry(url).then((data) => {
-        cache.set(cacheKey, data);
-        inFlight.delete(cacheKey);
-        return data as T;
-    }).catch((err) => {
-        inFlight.delete(cacheKey);
-        throw err;
-    });
+    const promise = fetchWithRetry(url)
+        .then((data) => {
+            cache.set(cacheKey, data);
+            inFlight.delete(cacheKey);
+            return data as T;
+        })
+        .catch((err) => {
+            inFlight.delete(cacheKey);
+            throw err;
+        });
 
     inFlight.set(cacheKey, promise);
     return promise;
@@ -144,7 +147,6 @@ export const hypixelService = {
         }
     },
 
-
     clearCache(uuid?: string) {
         if (uuid) {
             cache.del(`player:${uuid}`);
@@ -192,7 +194,6 @@ export interface HypixelGuildRank {
     tag?: string;
     created?: number;
 }
-
 
 export interface HypixelGuildMember {
     uuid: string;

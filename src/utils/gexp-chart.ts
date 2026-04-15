@@ -20,7 +20,20 @@ function fmtNum(n: number): string {
 /** Format date "2025-04-13" → "Apr 13" */
 function fmtDate(d: string): string {
     const [, month, day] = d.split('-');
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+    ];
     return `${months[parseInt(month!, 10) - 1]} ${parseInt(day!, 10)}`;
 }
 
@@ -32,10 +45,10 @@ export interface GexpDataPoint {
 /** Generate a line chart showing daily GEXP for a player */
 export async function renderPlayerGexpChart(
     playerName: string,
-    data: GexpDataPoint[],
+    data: GexpDataPoint[]
 ): Promise<Buffer> {
-    const labels = data.map(d => fmtDate(d.date));
-    const values = data.map(d => d.gexp);
+    const labels = data.map((d) => fmtDate(d.date));
+    const values = data.map((d) => d.gexp);
 
     const config: ChartConfiguration = {
         type: 'line',
@@ -84,10 +97,10 @@ export async function renderPlayerGexpChart(
 /** Generate a horizontal bar chart for GEXP leaderboard */
 export async function renderLeaderboardChart(
     entries: { username: string; total: number }[],
-    title: string,
+    title: string
 ): Promise<Buffer> {
-    const labels = entries.map(e => e.username);
-    const values = entries.map(e => e.total);
+    const labels = entries.map((e) => e.username);
+    const values = entries.map((e) => e.total);
 
     const colors = entries.map((_, i) => {
         const hue = 220 + i * 8;

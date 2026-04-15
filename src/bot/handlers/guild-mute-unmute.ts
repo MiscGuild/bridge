@@ -5,7 +5,10 @@ import emojis from '@/util/emojis';
 import { consola } from 'consola';
 import { handleMuteSyncFromGame } from '@/modules/mute-warn/index';
 
-export async function handleGuildMuteUnmute(bridge: Bridge, event: ParsedMuteUnmute): Promise<void> {
+export async function handleGuildMuteUnmute(
+    bridge: Bridge,
+    event: ParsedMuteUnmute
+): Promise<void> {
     const emoji = event.action === 'muted' ? emojis.mute : emojis.success;
     const duration = event.duration ? ` for ${event.duration}` : '';
     await bridge.discord.send(
@@ -16,7 +19,13 @@ export async function handleGuildMuteUnmute(bridge: Bridge, event: ParsedMuteUnm
     );
 
     // Sync mute state to DB + Discord role
-    await handleMuteSyncFromGame(bridge, event.action, event.targetName, event.muterName, event.duration).catch(err => {
+    await handleMuteSyncFromGame(
+        bridge,
+        event.action,
+        event.targetName,
+        event.muterName,
+        event.duration
+    ).catch((err) => {
         consola.warn('Mute sync failed:', err);
     });
 }

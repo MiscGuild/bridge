@@ -10,7 +10,10 @@ import { consola } from 'consola';
  * Called during periodic guild sync and on-demand via /gexp sync.
  * Returns the number of members synced.
  */
-export async function syncGexpFromGuild(guild: HypixelGuildResponse, _bridge: Bridge): Promise<number> {
+export async function syncGexpFromGuild(
+    guild: HypixelGuildResponse,
+    _bridge: Bridge
+): Promise<number> {
     const batch: GexpDailyRecord[] = [];
     let memberCount = 0;
 
@@ -28,7 +31,7 @@ export async function syncGexpFromGuild(guild: HypixelGuildResponse, _bridge: Br
         memberCount++;
 
         // Small delay to avoid Mojang rate limits (200 req/min)
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 100));
     }
 
     if (batch.length > 0) {
@@ -60,9 +63,9 @@ export function registerGexpHistoryModule(commands: ModuleCommand[]): void {
                 return;
             }
 
-            const lines = entries.slice(0, 5).map((e, i) =>
-                `${i + 1}. ${e.username}: ${fmt(e.total)}`
-            );
+            const lines = entries
+                .slice(0, 5)
+                .map((e, i) => `${i + 1}. ${e.username}: ${fmt(e.total)}`);
             bridge.bot.chat(ctx.replyChannel, `[GEXP Top ${days}d] ${lines.join(' | ')}`);
         },
     });

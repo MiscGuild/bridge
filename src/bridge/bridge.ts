@@ -21,9 +21,15 @@ import { handleMemberKick } from '@/bot/handlers/member-kick';
 import { handlePromoteDemote } from '@/bot/handlers/promote-demote';
 import { handleGuildMuteUnmute } from '@/bot/handlers/guild-mute-unmute';
 import {
-    handleJoinLimbo, handleLobbyJoin, handleGuildLevelUp,
-    handleMemberCount, handleJoinRequest, handleQuestComplete,
-    handleQuestTierComplete, handleSameMessageTwice, handleCommentBlocked,
+    handleJoinLimbo,
+    handleLobbyJoin,
+    handleGuildLevelUp,
+    handleMemberCount,
+    handleJoinRequest,
+    handleQuestComplete,
+    handleQuestTierComplete,
+    handleSameMessageTwice,
+    handleCommentBlocked,
     handleWhisper,
 } from '@/bot/handlers/misc';
 import { trackInviteOnJoin } from '@/modules/invite-tracker/index';
@@ -69,15 +75,18 @@ export default class Bridge {
 
         // Fetch guild ranks from Hypixel API (for dynamic cooldown/staff checks)
         if (env.HYPIXEL_GUILD_NAME) {
-            guildRankService.init(env.HYPIXEL_GUILD_NAME).catch(err =>
-                consola.warn('[GuildRanks] Init failed:', err)
-            );
+            guildRankService
+                .init(env.HYPIXEL_GUILD_NAME)
+                .catch((err) => consola.warn('[GuildRanks] Init failed:', err));
         }
 
         if (env.REMINDER_ENABLED && env.REMINDER_MESSAGE) {
-            setInterval(() => {
-                this.bot.chat('gc', env.REMINDER_MESSAGE);
-            }, env.REMINDER_FREQUENCY * 60 * 1000);
+            setInterval(
+                () => {
+                    this.bot.chat('gc', env.REMINDER_MESSAGE);
+                },
+                env.REMINDER_FREQUENCY * 60 * 1000
+            );
         }
 
         // Periodic /g online to keep member count fresh
@@ -87,18 +96,24 @@ export default class Bridge {
         setInterval(() => this.loadBans(), env.BAN_CHECK_INTERVAL * 60 * 1000);
 
         // Periodic blacklist expiry sweep (every hour)
-        setInterval(async () => {
-            const expired = await blacklistRepo.expireOverdue().catch(() => [] as string[]);
-            for (const uuid of expired) this.blacklist.remove(uuid);
-        }, 60 * 60 * 1000);
+        setInterval(
+            async () => {
+                const expired = await blacklistRepo.expireOverdue().catch(() => [] as string[]);
+                for (const uuid of expired) this.blacklist.remove(uuid);
+            },
+            60 * 60 * 1000
+        );
 
         // Periodic mute expiry sweep — remove Discord Muted role (every 5 minutes)
-        setInterval(async () => {
-            const expired = await mutesRepo.expireOverdue().catch(() => []);
-            for (const mute of expired) {
-                await syncDiscordMuteRole(this, mute.discord_id, false).catch(() => {});
-            }
-        }, 5 * 60 * 1000);
+        setInterval(
+            async () => {
+                const expired = await mutesRepo.expireOverdue().catch(() => []);
+                for (const mute of expired) {
+                    await syncDiscordMuteRole(this, mute.discord_id, false).catch(() => {});
+                }
+            },
+            5 * 60 * 1000
+        );
 
         consola.success('Bridge started!');
     }
@@ -114,7 +129,10 @@ export default class Bridge {
     public filterMessage(content: string, username: string): FilterResult {
         // Check bridge ban
         if (this.bridgeBanned.has(username.toLowerCase())) {
-            return { allowed: false, reason: 'you are bridge-banned and cannot send messages to Minecraft.' };
+            return {
+                allowed: false,
+                reason: 'you are bridge-banned and cannot send messages to Minecraft.',
+            };
         }
         return applyFilters(content, username);
     }
@@ -138,7 +156,9 @@ export default class Bridge {
                     incrementMetric('messagesIn');
                     break;
                 }
-                case 'joinLeave':       await handleJoinLeave(this, event); break;
+                case 'joinLeave':
+                    await handleJoinLeave(this, event);
+                    break;
                 case 'memberJoinLeave':
                     await handleMemberJoinLeave(this, event);
                     await trackGuildEvent(event, this);
@@ -157,15 +177,25 @@ export default class Bridge {
                     await trackGuildEvent(event, this);
                     trackEvent(event);
                     break;
-                case 'guildMuteUnmute': await handleGuildMuteUnmute(this, event); break;
-                case 'memberCount':     await handleMemberCount(this, event); break;
-                case 'joinRequest':     await handleJoinRequest(this, event); break;
+                case 'guildMuteUnmute':
+                    await handleGuildMuteUnmute(this, event);
+                    break;
+                case 'memberCount':
+                    await handleMemberCount(this, event);
+                    break;
+                case 'joinRequest':
+                    await handleJoinRequest(this, event);
+                    break;
                 case 'guildLevelUp':
                     await handleGuildLevelUp(this, event);
                     trackEvent(event);
                     break;
-                case 'joinLimbo':       await handleJoinLimbo(this, event); break;
-                case 'lobbyJoin':       await handleLobbyJoin(this, event); break;
+                case 'joinLimbo':
+                    await handleJoinLimbo(this, event);
+                    break;
+                case 'lobbyJoin':
+                    await handleLobbyJoin(this, event);
+                    break;
                 case 'questComplete':
                     await handleQuestComplete(this, event);
                     trackEvent(event);
@@ -174,9 +204,15 @@ export default class Bridge {
                     await handleQuestTierComplete(this, event);
                     trackEvent(event);
                     break;
-                case 'sameMessageTwice': await handleSameMessageTwice(this, event); break;
-                case 'commentBlocked':  await handleCommentBlocked(this, event); break;
-                case 'whisper':         await handleWhisper(this, event); break;
+                case 'sameMessageTwice':
+                    await handleSameMessageTwice(this, event);
+                    break;
+                case 'commentBlocked':
+                    await handleCommentBlocked(this, event);
+                    break;
+                case 'whisper':
+                    await handleWhisper(this, event);
+                    break;
             }
         });
 

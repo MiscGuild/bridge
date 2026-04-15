@@ -35,7 +35,11 @@ export function initModules(bridge: Bridge): void {
         await syncGuildMembers(bridge).catch(() => {});
         // Also sync GEXP from the same guild data
         try {
-            const botName = (process.env.MINECRAFT_BOT_NAME ?? process.env.MINECRAFT_EMAIL ?? '').split('@')[0];
+            const botName = (
+                process.env.MINECRAFT_BOT_NAME ??
+                process.env.MINECRAFT_EMAIL ??
+                ''
+            ).split('@')[0];
             if (botName) {
                 const botProfile = await mojangService.getProfile(botName).catch(() => null);
                 if (botProfile) {
@@ -43,7 +47,9 @@ export function initModules(bridge: Bridge): void {
                     if (guild) await syncGexpFromGuild(guild, bridge);
                 }
             }
-        } catch { /* logged inside syncGexpFromGuild */ }
+        } catch {
+            /* logged inside syncGexpFromGuild */
+        }
     };
 
     doSync();

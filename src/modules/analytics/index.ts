@@ -4,7 +4,6 @@ import type { ParsedChatEvent } from '@/bot/chat-parser';
 import { analyticsRepo } from '@/db/repositories/analytics.repo';
 import { guildRankService } from '@/services/guild-ranks';
 
-
 /** In-memory daily stats (resets at midnight UTC) */
 interface DailyStats {
     date: string;
@@ -26,7 +25,20 @@ function todayKey(): string {
 }
 
 function fresh(): DailyStats {
-    return { date: todayKey(), messages: 0, commands: 0, joins: 0, leaves: 0, kicks: 0, promotions: 0, demotions: 0, levelUps: 0, quests: 0, activeUsers: new Set(), topChatters: {} };
+    return {
+        date: todayKey(),
+        messages: 0,
+        commands: 0,
+        joins: 0,
+        leaves: 0,
+        kicks: 0,
+        promotions: 0,
+        demotions: 0,
+        levelUps: 0,
+        quests: 0,
+        activeUsers: new Set(),
+        topChatters: {},
+    };
 }
 
 let stats = fresh();
@@ -43,7 +55,15 @@ async function flushToSupabase(): Promise<void> {
         // Use repo's increment approach for each counter delta since last flush
         // We store the last flushed values to compute deltas
         const db = await analyticsRepo.getToday();
-        const base = db ?? { total_messages: 0, joins: 0, leaves: 0, kicks: 0, promotions: 0, demotions: 0, quest_completions: 0 };
+        const base = db ?? {
+            total_messages: 0,
+            joins: 0,
+            leaves: 0,
+            kicks: 0,
+            promotions: 0,
+            demotions: 0,
+            quest_completions: 0,
+        };
 
         const deltas: Array<[string, number]> = [
             ['total_messages', stats.messages - Number(base.total_messages ?? 0)],
@@ -64,7 +84,6 @@ async function flushToSupabase(): Promise<void> {
         // Supabase optional
     }
 }
-
 
 function buildReport(period: 'today' | 'week'): string {
     const s = stats;
@@ -127,7 +146,11 @@ export function registerAnalyticsModule(commands: ModuleCommand[]): void {
                 bridge.bot.chat(ctx.replyChannel, `${ctx.username}, this command is staff-only.`);
                 return;
             }
-            const period = ctx.matches[1]?.toLowerCase() === 'weekly' || ctx.matches[1]?.toLowerCase() === 'week' ? 'week' : 'today';
+            const period =
+                ctx.matches[1]?.toLowerCase() === 'weekly' ||
+                ctx.matches[1]?.toLowerCase() === 'week'
+                    ? 'week'
+                    : 'today';
             bridge.bot.chat('oc', buildReport(period));
         },
     });

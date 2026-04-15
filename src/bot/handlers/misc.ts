@@ -1,5 +1,10 @@
 import type Bridge from '@/bridge/bridge';
-import type { ParsedSimple, ParsedGuildLevelUp, ParsedMemberCount, ParsedJoinRequest } from '@/bot/chat-parser';
+import type {
+    ParsedSimple,
+    ParsedGuildLevelUp,
+    ParsedMemberCount,
+    ParsedJoinRequest,
+} from '@/bot/chat-parser';
 import emojis from '@/util/emojis';
 import { consola } from 'consola';
 import messageQueue from '@/queue/message-queue';
@@ -46,7 +51,12 @@ export async function handleQuestComplete(bridge: Bridge, _event: ParsedSimple):
 }
 
 export async function handleQuestTierComplete(bridge: Bridge, _event: ParsedSimple): Promise<void> {
-    await bridge.discord.send('gc', `${emojis.star} **Guild quest tier completed!**`, 0xffaa00, true);
+    await bridge.discord.send(
+        'gc',
+        `${emojis.star} **Guild quest tier completed!**`,
+        0xffaa00,
+        true
+    );
 }
 
 export async function handleSameMessageTwice(_bridge: Bridge, _event: ParsedSimple): Promise<void> {

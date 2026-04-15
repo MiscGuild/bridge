@@ -50,7 +50,10 @@ export class ModuleManager {
             };
 
             await cmd.handler(ctx, bridge).catch((err) => {
-                bridge.bot.chat(ctx.replyChannel, `Error running command: ${err instanceof Error ? err.message : err}`);
+                bridge.bot.chat(
+                    ctx.replyChannel,
+                    `Error running command: ${err instanceof Error ? err.message : err}`
+                );
             });
 
             return true;

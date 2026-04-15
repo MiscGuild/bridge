@@ -15,8 +15,18 @@ export default {
                 description: 'Warn a member',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
-                    { name: 'user', description: 'Minecraft username', type: ApplicationCommandOptionType.String, required: true },
-                    { name: 'reason', description: 'Reason for warning', type: ApplicationCommandOptionType.String, required: true },
+                    {
+                        name: 'user',
+                        description: 'Minecraft username',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
+                    {
+                        name: 'reason',
+                        description: 'Reason for warning',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
                 ],
             },
             {
@@ -24,7 +34,12 @@ export default {
                 description: 'View warnings for a member',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
-                    { name: 'user', description: 'Minecraft username', type: ApplicationCommandOptionType.String, required: true },
+                    {
+                        name: 'user',
+                        description: 'Minecraft username',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
                 ],
             },
             {
@@ -32,7 +47,12 @@ export default {
                 description: 'Clear all warnings for a member',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
-                    { name: 'user', description: 'Minecraft username', type: ApplicationCommandOptionType.String, required: true },
+                    {
+                        name: 'user',
+                        description: 'Minecraft username',
+                        type: ApplicationCommandOptionType.String,
+                        required: true,
+                    },
                 ],
             },
         ],
@@ -48,44 +68,65 @@ export default {
                 const profile = await mojangService.getProfile(user).catch(() => null);
                 const discordMember = await findDiscordMember(bridge, user);
 
-                await warnsRepo.create({
-                    uuid: profile?.id ?? '',
-                    username: user,
-                    discord_id: discordMember?.id ?? null,
-                    reason,
-                    warned_by: interaction.user.username,
-                }).catch(() => {});
+                await warnsRepo
+                    .create({
+                        uuid: profile?.id ?? '',
+                        username: user,
+                        discord_id: discordMember?.id ?? null,
+                        reason,
+                        warned_by: interaction.user.username,
+                    })
+                    .catch(() => {});
 
                 const total = (await warnsRepo.getByUsername(user).catch(() => [])).length;
-                await auditLogRepo.log(interaction.user.username, 'warn', user, { reason }).catch(() => {});
+                await auditLogRepo
+                    .log(interaction.user.username, 'warn', user, { reason })
+                    .catch(() => {});
 
-                embed.setColor('Yellow').setTitle('Warning Issued')
-                    .setDescription(`**${user}** has been warned.\nReason: ${reason}\nTotal warnings: ${total}`);
+                embed
+                    .setColor('Yellow')
+                    .setTitle('Warning Issued')
+                    .setDescription(
+                        `**${user}** has been warned.\nReason: ${reason}\nTotal warnings: ${total}`
+                    );
 
-                await dmUser(bridge, discordMember?.id,
+                await dmUser(
+                    bridge,
+                    discordMember?.id,
                     `You have received a warning from **${interaction.user.username}**.\nReason: ${reason}\nTotal warnings: ${total}`
                 );
             } else if (sub === 'list') {
                 const warns = await warnsRepo.getByUsername(user).catch(() => []);
                 if (warns.length === 0) {
-                    embed.setColor('Green').setTitle('No Warnings')
+                    embed
+                        .setColor('Green')
+                        .setTitle('No Warnings')
                         .setDescription(`**${user}** has no warnings.`);
                 } else {
-                    const lines = warns.slice(-10).map(w => {
+                    const lines = warns.slice(-10).map((w) => {
                         const date = new Date(w.warned_at).toLocaleDateString();
                         return `• **${date}** by ${w.warned_by}: ${w.reason}`;
                     });
-                    embed.setColor('Yellow').setTitle(`Warnings for ${user} (${warns.length})`)
+                    embed
+                        .setColor('Yellow')
+                        .setTitle(`Warnings for ${user} (${warns.length})`)
                         .setDescription(lines.join('\n'));
                 }
             } else {
                 const count = await warnsRepo.clearByUsername(user).catch(() => 0);
-                await auditLogRepo.log(interaction.user.username, 'clearwarns', user).catch(() => {});
-                embed.setColor('Green').setTitle('Warnings Cleared')
+                await auditLogRepo
+                    .log(interaction.user.username, 'clearwarns', user)
+                    .catch(() => {});
+                embed
+                    .setColor('Green')
+                    .setTitle('Warnings Cleared')
                     .setDescription(`Cleared ${count} warning(s) for **${user}**.`);
             }
         } catch (e) {
-            embed.setColor('Red').setTitle('Error').setDescription(e as string);
+            embed
+                .setColor('Red')
+                .setTitle('Error')
+                .setDescription(e as string);
         }
         await interaction.reply({ embeds: [embed] });
     },

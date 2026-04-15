@@ -15,7 +15,12 @@ router.post('/', requireAdmin, async (req: AuthRequest, res) => {
     const input: CreateBlacklistInput = req.body;
     const entry = await blacklistRepo.create(input);
     if (!entry) return res.status(503).json({ error: 'Database unavailable' });
-    await auditLogRepo.log(req.userId ?? 'api', 'blacklist_add', input.uuid, input as unknown as Record<string, unknown>);
+    await auditLogRepo.log(
+        req.userId ?? 'api',
+        'blacklist_add',
+        input.uuid,
+        input as unknown as Record<string, unknown>
+    );
     return res.status(201).json({ entry });
 });
 

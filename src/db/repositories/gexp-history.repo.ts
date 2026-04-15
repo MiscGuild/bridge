@@ -2,7 +2,7 @@ import { getSupabaseClient } from '@/db/client';
 import { readJson, writeJson } from '@/db/json-store';
 
 export interface GexpDailyRecord {
-    date: string;      // YYYY-MM-DD
+    date: string; // YYYY-MM-DD
     uuid: string;
     username: string;
     gexp_earned: number;
@@ -37,13 +37,17 @@ export const gexpHistoryRepo = {
         // JSON fallback — merge by (date, uuid)
         const existing = await jsonRead();
         const key = (r: GexpDailyRecord) => `${r.date}|${r.uuid}`;
-        const map = new Map(existing.map(r => [key(r), r]));
+        const map = new Map(existing.map((r) => [key(r), r]));
         for (const r of records) map.set(key(r), r);
         await jsonWrite([...map.values()]);
     },
 
     /** Get GEXP history for a single player within a date range */
-    async getPlayerHistory(uuid: string, startDate: string, endDate: string): Promise<GexpDailyRecord[]> {
+    async getPlayerHistory(
+        uuid: string,
+        startDate: string,
+        endDate: string
+    ): Promise<GexpDailyRecord[]> {
         const db = getSupabaseClient();
         if (db) {
             const { data } = await db
@@ -58,12 +62,16 @@ export const gexpHistoryRepo = {
 
         const all = await jsonRead();
         return all
-            .filter(r => r.uuid === uuid && r.date >= startDate && r.date <= endDate)
+            .filter((r) => r.uuid === uuid && r.date >= startDate && r.date <= endDate)
             .sort((a, b) => a.date.localeCompare(b.date));
     },
 
     /** Get total GEXP per player in a date range, sorted descending */
-    async getLeaderboard(startDate: string, endDate: string, limit = 20): Promise<{ uuid: string; username: string; total: number }[]> {
+    async getLeaderboard(
+        startDate: string,
+        endDate: string,
+        limit = 20
+    ): Promise<{ uuid: string; username: string; total: number }[]> {
         const db = getSupabaseClient();
         if (db) {
             const { data } = await db.rpc('gexp_leaderboard', {
@@ -76,7 +84,7 @@ export const gexpHistoryRepo = {
 
         // JSON fallback — aggregate in memory
         const all = await jsonRead();
-        const filtered = all.filter(r => r.date >= startDate && r.date <= endDate);
+        const filtered = all.filter((r) => r.date >= startDate && r.date <= endDate);
         const totals = new Map<string, { username: string; total: number }>();
         for (const r of filtered) {
             const entry = totals.get(r.uuid) ?? { username: r.username, total: 0 };
@@ -103,6 +111,6 @@ export const gexpHistoryRepo = {
         }
 
         const all = await jsonRead();
-        return all.filter(r => r.date === date).sort((a, b) => b.gexp_earned - a.gexp_earned);
+        return all.filter((r) => r.date === date).sort((a, b) => b.gexp_earned - a.gexp_earned);
     },
 };

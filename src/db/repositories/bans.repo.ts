@@ -51,27 +51,41 @@ export const bansRepo = {
         }
         const records = await jsonRead();
         const now = new Date().toISOString();
-        return records.filter(r => r.is_active && (!r.expires_at || r.expires_at > now));
+        return records.filter((r) => r.is_active && (!r.expires_at || r.expires_at > now));
     },
 
     async getByUuid(uuid: string): Promise<BanRecord | null> {
         const db = getSupabaseClient();
         if (db) {
-            const { data } = await db.from('bans').select('*').eq('uuid', uuid).eq('is_active', true).maybeSingle();
+            const { data } = await db
+                .from('bans')
+                .select('*')
+                .eq('uuid', uuid)
+                .eq('is_active', true)
+                .maybeSingle();
             return (data as BanRecord | null) ?? null;
         }
         const records = await jsonRead();
-        return records.find(r => r.uuid === uuid && r.is_active) ?? null;
+        return records.find((r) => r.uuid === uuid && r.is_active) ?? null;
     },
 
     async getByUsername(username: string): Promise<BanRecord | null> {
         const db = getSupabaseClient();
         if (db) {
-            const { data } = await db.from('bans').select('*').ilike('username', username).eq('is_active', true).maybeSingle();
+            const { data } = await db
+                .from('bans')
+                .select('*')
+                .ilike('username', username)
+                .eq('is_active', true)
+                .maybeSingle();
             return (data as BanRecord | null) ?? null;
         }
         const records = await jsonRead();
-        return records.find(r => r.username.toLowerCase() === username.toLowerCase() && r.is_active) ?? null;
+        return (
+            records.find(
+                (r) => r.username.toLowerCase() === username.toLowerCase() && r.is_active
+            ) ?? null
+        );
     },
 
     async create(input: CreateBanInput): Promise<BanRecord | null> {
@@ -101,14 +115,21 @@ export const bansRepo = {
             return;
         }
         const records = await jsonRead();
-        const rec = records.find(r => r.id === id);
-        if (rec) { rec.is_active = false; await jsonWrite(records); }
+        const rec = records.find((r) => r.id === id);
+        if (rec) {
+            rec.is_active = false;
+            await jsonWrite(records);
+        }
     },
 
     async removeByUsername(username: string): Promise<void> {
         const db = getSupabaseClient();
         if (db) {
-            await db.from('bans').update({ is_active: false }).ilike('username', username).eq('is_active', true);
+            await db
+                .from('bans')
+                .update({ is_active: false })
+                .ilike('username', username)
+                .eq('is_active', true);
             return;
         }
         const records = await jsonRead();
@@ -125,7 +146,11 @@ export const bansRepo = {
     async expireOverdue(): Promise<void> {
         const db = getSupabaseClient();
         if (db) {
-            await db.from('bans').update({ is_active: false }).eq('is_active', true).lt('expires_at', new Date().toISOString());
+            await db
+                .from('bans')
+                .update({ is_active: false })
+                .eq('is_active', true)
+                .lt('expires_at', new Date().toISOString());
             return;
         }
         const now = new Date().toISOString();

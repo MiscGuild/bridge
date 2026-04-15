@@ -10,7 +10,6 @@ async function resolveUuid(username: string): Promise<string | null> {
 }
 
 export function registerModerationModule(commands: ModuleCommand[]): void {
-
     // !gban <username> [reason] — ban from guild (kicks via /g kick, logs to DB)
     commands.push({
         commandId: 'mod:gban',
@@ -28,15 +27,19 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
 
             const uuid = await resolveUuid(target);
             if (uuid) {
-                await bansRepo.create({
-                    username: target,
-                    uuid,
-                    ban_type: 'guild',
-                    reason,
-                    banned_by: ctx.username,
-                    expires_at: null,
-                }).catch(() => {});
-                await auditLogRepo.log(ctx.username, 'guild_ban', target, { reason }).catch(() => {});
+                await bansRepo
+                    .create({
+                        username: target,
+                        uuid,
+                        ban_type: 'guild',
+                        reason,
+                        banned_by: ctx.username,
+                        expires_at: null,
+                    })
+                    .catch(() => {});
+                await auditLogRepo
+                    .log(ctx.username, 'guild_ban', target, { reason })
+                    .catch(() => {});
             }
 
             bridge.bot.chat('oc', `${ctx.username} guild-banned ${target}: ${reason}`);
@@ -56,14 +59,16 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
             const target = ctx.matches[1]!;
             const reason = ctx.matches[2] ?? 'No reason provided';
 
-            await bansRepo.create({
-                username: target.toLowerCase(),
-                uuid: (await resolveUuid(target)) ?? '',
-                ban_type: 'bridge',
-                reason,
-                banned_by: ctx.username,
-                expires_at: null,
-            }).catch(() => {});
+            await bansRepo
+                .create({
+                    username: target.toLowerCase(),
+                    uuid: (await resolveUuid(target)) ?? '',
+                    ban_type: 'bridge',
+                    reason,
+                    banned_by: ctx.username,
+                    expires_at: null,
+                })
+                .catch(() => {});
 
             // Reload bridge ban cache
             await (bridge as any).loadBans().catch(() => {});
@@ -87,14 +92,16 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
             const target = ctx.matches[1]!;
             const reason = ctx.matches[2] ?? 'No reason provided';
 
-            await bansRepo.create({
-                username: target.toLowerCase(),
-                uuid: (await resolveUuid(target)) ?? '',
-                ban_type: 'command',
-                reason,
-                banned_by: ctx.username,
-                expires_at: null,
-            }).catch(() => {});
+            await bansRepo
+                .create({
+                    username: target.toLowerCase(),
+                    uuid: (await resolveUuid(target)) ?? '',
+                    ban_type: 'command',
+                    reason,
+                    banned_by: ctx.username,
+                    expires_at: null,
+                })
+                .catch(() => {});
 
             await (bridge as any).loadBans().catch(() => {});
 
@@ -144,7 +151,10 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
 
             bridge.bot.chat('oc', `Active bans (${bans.length}):`);
             for (const ban of bans.slice(0, 10)) {
-                bridge.bot.chat('oc', `• ${ban.username} [${ban.ban_type}] by ${ban.banned_by}: ${ban.reason}`);
+                bridge.bot.chat(
+                    'oc',
+                    `• ${ban.username} [${ban.ban_type}] by ${ban.banned_by}: ${ban.reason}`
+                );
             }
             if (bans.length > 10) bridge.bot.chat('oc', `...and ${bans.length - 10} more.`);
         },

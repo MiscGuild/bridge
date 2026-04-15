@@ -90,25 +90,37 @@ export function startHealthMonitor(bridge: Bridge): void {
     resetAtMidnight();
 
     // Log health every 5 minutes
-    setInterval(() => {
-        const h = getHealth(bridge);
-        if (h.status === 'healthy') {
-            consola.info(`[Health] ${h.status} | uptime: ${h.uptime}s | mem: ${h.memory.heapUsed}MB | msgs: ${h.metrics.messagesIn}in/${h.metrics.messagesOut}out`);
-        } else {
-            consola.warn(`[Health] ${h.status} | bot: ${h.bot.state} | discord: ${h.discord.ready}`);
-        }
-    }, 5 * 60 * 1000);
+    setInterval(
+        () => {
+            const h = getHealth(bridge);
+            if (h.status === 'healthy') {
+                consola.info(
+                    `[Health] ${h.status} | uptime: ${h.uptime}s | mem: ${h.memory.heapUsed}MB | msgs: ${h.metrics.messagesIn}in/${h.metrics.messagesOut}out`
+                );
+            } else {
+                consola.warn(
+                    `[Health] ${h.status} | bot: ${h.bot.state} | discord: ${h.discord.ready}`
+                );
+            }
+        },
+        5 * 60 * 1000
+    );
 
     // Alert Discord if bot state is bad for > 2 min
     let alertedAt = 0;
-    setInterval(async () => {
-        const h = getHealth(bridge);
-        if (h.status !== 'healthy' && Date.now() - alertedAt > 10 * 60 * 1000) {
-            alertedAt = Date.now();
-            await bridge.discord.send(
-                'gc',
-                `**Health Alert** — status: **${h.status}** | bot: \`${h.bot.state}\` | discord: \`${h.discord.ready}\``
-            ).catch(() => {});
-        }
-    }, 2 * 60 * 1000);
+    setInterval(
+        async () => {
+            const h = getHealth(bridge);
+            if (h.status !== 'healthy' && Date.now() - alertedAt > 10 * 60 * 1000) {
+                alertedAt = Date.now();
+                await bridge.discord
+                    .send(
+                        'gc',
+                        `**Health Alert** — status: **${h.status}** | bot: \`${h.bot.state}\` | discord: \`${h.discord.ready}\``
+                    )
+                    .catch(() => {});
+            }
+        },
+        2 * 60 * 1000
+    );
 }

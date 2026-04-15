@@ -10,7 +10,10 @@ export default {
                 name: 'type',
                 description: 'Promote or demote',
                 type: ApplicationCommandOptionType.String,
-                choices: [{ name: 'promote', value: 'promote' }, { name: 'demote', value: 'demote' }],
+                choices: [
+                    { name: 'promote', value: 'promote' },
+                    { name: 'demote', value: 'demote' },
+                ],
                 required: true,
             },
             {
@@ -27,11 +30,15 @@ export default {
         const embed = new EmbedBuilder();
         try {
             await bridge.bot.executeAndCapture(`/g ${type} ${user}`);
-            embed.setColor(type === 'promote' ? 'Green' : 'Red')
+            embed
+                .setColor(type === 'promote' ? 'Green' : 'Red')
                 .setTitle(type === 'promote' ? 'Promoted!' : 'Demoted!')
                 .setDescription(`${user} has been ${type}d!`);
         } catch (e) {
-            embed.setColor('Red').setTitle('Error').setDescription(e as string);
+            embed
+                .setColor('Red')
+                .setTitle('Error')
+                .setDescription(e as string);
         }
         await interaction.reply({ embeds: [embed] });
     },

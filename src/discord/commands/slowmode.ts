@@ -10,7 +10,11 @@ export default {
                 name: 'time',
                 description: 'Seconds between messages (0 to disable)',
                 type: ApplicationCommandOptionType.Integer,
-                choices: [{ name: '0', value: 0 }, { name: '5', value: 5 }, { name: '10', value: 10 }],
+                choices: [
+                    { name: '0', value: 0 },
+                    { name: '5', value: 5 },
+                    { name: '10', value: 10 },
+                ],
                 required: true,
             },
         ],

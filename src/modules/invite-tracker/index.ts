@@ -34,7 +34,7 @@ export async function lookupInviter(bridge: Bridge, playerName: string): Promise
         });
 
         // Mineflayer may deliver the guild log as a single multi-line string
-        const lines = rawLines.flatMap(l => l.split('\n'));
+        const lines = rawLines.flatMap((l) => l.split('\n'));
 
         for (const line of lines) {
             const m = line.match(INVITE_LOG_PATTERN);
@@ -55,7 +55,7 @@ export async function lookupInviter(bridge: Bridge, playerName: string): Promise
  */
 export async function trackInviteOnJoin(bridge: Bridge, playerName: string): Promise<void> {
     // Small delay to let the guild log update
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 2000));
 
     const inviter = await lookupInviter(bridge, playerName);
     const profile = await mojangService.getProfile(playerName).catch(() => null);
@@ -68,7 +68,7 @@ export async function trackInviteOnJoin(bridge: Bridge, playerName: string): Pro
             .setThumbnail(`https://mc-heads.net/avatar/${profile?.id ?? playerName}/64`)
             .addFields(
                 { name: 'Player', value: playerName, inline: true },
-                { name: 'Invited by', value: inviter, inline: true },
+                { name: 'Invited by', value: inviter, inline: true }
             )
             .setTimestamp();
         await bridge.discord.sendEmbed('oc', embed);
@@ -86,7 +86,6 @@ export async function trackInviteOnJoin(bridge: Bridge, playerName: string): Pro
 }
 
 export function registerInviteTrackerModule(commands: ModuleCommand[]): void {
-
     // !invites [username] — view invite history for a player
     commands.push({
         commandId: 'invitetracker:invites',
@@ -98,10 +97,15 @@ export function registerInviteTrackerModule(commands: ModuleCommand[]): void {
                 bridge.bot.chat('gc', `${target} has no recorded invites.`);
                 return;
             }
-            const accepted = invites.filter(i => i.status === 'accepted').length;
+            const accepted = invites.filter((i) => i.status === 'accepted').length;
             bridge.bot.chat('gc', `${target}'s invites (${accepted}/${invites.length} accepted):`);
             for (const inv of invites.slice(0, 5)) {
-                const status = inv.status === 'accepted' ? '[OK]' : inv.status === 'pending' ? '[PENDING]' : '[FAIL]';
+                const status =
+                    inv.status === 'accepted'
+                        ? '[OK]'
+                        : inv.status === 'pending'
+                          ? '[PENDING]'
+                          : '[FAIL]';
                 const date = new Date(inv.invited_at).toLocaleDateString();
                 bridge.bot.chat('gc', `${status} ${inv.invitee} — ${date}`);
             }
@@ -120,7 +124,10 @@ export function registerInviteTrackerModule(commands: ModuleCommand[]): void {
             }
             bridge.bot.chat('gc', 'Top Inviters:');
             for (const s of stats.slice(0, 5)) {
-                bridge.bot.chat('gc', `• ${s.inviter}: ${s.total} invited (${s.accepted} accepted)`);
+                bridge.bot.chat(
+                    'gc',
+                    `• ${s.inviter}: ${s.total} invited (${s.accepted} accepted)`
+                );
             }
         },
     });

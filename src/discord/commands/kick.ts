@@ -26,9 +26,15 @@ export default {
         const embed = new EmbedBuilder();
         try {
             await bridge.bot.executeAndCapture(`/g kick ${user} ${reason}`);
-            embed.setColor('Red').setTitle('Kicked!').setDescription(`\`${user}\` has been kicked for \`${reason}\``);
+            embed
+                .setColor('Red')
+                .setTitle('Kicked!')
+                .setDescription(`\`${user}\` has been kicked for \`${reason}\``);
         } catch (e) {
-            embed.setColor('Red').setTitle('Error').setDescription(e as string);
+            embed
+                .setColor('Red')
+                .setTitle('Error')
+                .setDescription(e as string);
         }
         await interaction.reply({ embeds: [embed] });
     },
