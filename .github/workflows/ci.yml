@@ -29,4 +29,4 @@ jobs:
 
             - name: Setup files & build
               if: success() || failure()
-              run: pnpm setup-files && pnpm build
+              run: pnpm build
