@@ -5,7 +5,9 @@
     "main": "dist/index.js",
     "scripts": {
         "start": "node dist/index.js",
-        "build": "tsc && tsc-alias"
+        "build": "tsc && tsc-alias",
+        "lint": "eslint src/",
+        "format": "prettier --write ."
     },
     "keywords": [
         "minecraft",

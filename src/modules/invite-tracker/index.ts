@@ -21,7 +21,7 @@ import { consola } from 'consola';
 
 // Regex to extract inviter from guild log line
 const INVITE_LOG_PATTERN = /:\s+(\w{2,17}) invited (\w{2,17})\s*$/;
-const LOG_SEPARATOR = /^-{10,}$/;
+const _LOG_SEPARATOR = /^-{10,}$/;
 
 /**
  * Run `/g log <player>` and parse the output for an invite entry.

@@ -24,7 +24,7 @@ function fmt(n: number): string {
 }
 
 /** Hypixel guild level from total guild XP */
-function guildLevel(exp: number): number {
+function _guildLevel(exp: number): number {
     const thresholds = [
         100000, 150000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 2000000, 2500000,
         2500000, 2500000, 2500000, 2500000, 3000000,
