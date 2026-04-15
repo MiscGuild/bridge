@@ -50,17 +50,23 @@
         "minimatch": "^9.0.7"
     },
     "devDependencies": {
+        "@eslint/js": "^9.39.4",
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.6",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/node": "^20.10.0",
         "@types/node-cron": "^3.0.0",
-        "@typescript-eslint/eslint-plugin": "^8.0.0",
-        "@typescript-eslint/parser": "^8.0.0",
-        "eslint": "^8.57.0",
+        "eslint": "^9.39.4",
         "prettier": "^3.0.0",
-        "ts-node-dev": "^2.0.0",
         "tsc-alias": "^1.8.16",
-        "typescript": "^5.3.0"
+        "tsx": "^4.21.0",
+        "typescript": "^5.3.0",
+        "typescript-eslint": "^8.58.2"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "canvas",
+            "esbuild"
+        ]
     }
 }
