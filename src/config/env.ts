@@ -78,6 +78,11 @@ const envSchema = z.object({
     // === TERMINAL REPL ===
     ENABLE_TERMINAL: OPTIONAL_BOOLEAN,
 
+    // === STAFF THRESHOLD ===
+    // Minimum rank number (1-5) that counts as staff for restricted commands.
+    // Default 4 = RANK_4 and above can use restricted commands.
+    STAFF_MIN_RANK: z.coerce.number().int().min(1).max(5).default(4),
+
     // === COOLDOWNS (seconds, 0 = no cooldown) ===
     // Tier 1 = lowest/member rank, Tier 5 = highest non-GM rank. GM always gets 0.
     COOLDOWN_RANK_1: z.coerce.number().int().min(0).default(60),

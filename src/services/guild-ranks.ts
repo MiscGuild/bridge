@@ -107,7 +107,10 @@ class GuildRankService {
         );
     }
 
-    /** Returns true if the rank is a staff rank (above the lowest/member rank or is GM). */
+    /** The minimum tier (0-indexed) that counts as staff. Derived from STAFF_MIN_RANK (1-indexed). */
+    private readonly staffMinTier = env.STAFF_MIN_RANK - 1; // STAFF_MIN_RANK=4 → tier 3
+
+    /** Returns true if the rank can use restricted commands (at or above STAFF_MIN_RANK, or GM). */
     isStaffRank(guildRank?: string): boolean {
         const name = this.normalize(guildRank);
         if (!name) return false;
@@ -123,12 +126,14 @@ class GuildRankService {
 
         if (this.apiLoaded) {
             const rank = this.findApiRank(name);
-            return rank ? rank.priority > this.minPriority : false;
+            if (!rank) return false;
+            const tier = this.priorityToTier(rank.priority);
+            return tier >= this.staffMinTier;
         }
 
-        // Env fallback: tier > 0 means above lowest rank = staff
+        // Env fallback
         const envRank = this.findEnvRank(name);
-        if (envRank) return envRank.tier > 0;
+        if (envRank) return envRank.tier >= this.staffMinTier;
 
         // Last resort hardcoded names
         return ['leader', 'officer', 'mod', 'moderator', 'admin'].includes(lower);
