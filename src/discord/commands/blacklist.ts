@@ -2,6 +2,7 @@ import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from 'discord
 import type Bridge from '@/bridge/bridge';
 import { blacklistRepo, type BlacklistRecord } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
+import { hypixelService } from '@/services/hypixel';
 import env from '@/config/env';
 
 interface UrchinTag {
@@ -43,6 +44,31 @@ function parseDuration(dur: string): string | null {
                 ? num * 86_400_000
                 : num * 7 * 86_400_000;
     return new Date(Date.now() + ms).toISOString();
+}
+
+/** Check if a player is in the guild and kick them. Returns status string. */
+async function tryGuildKick(
+    bridge: Bridge,
+    playerName: string,
+    playerUuid: string
+): Promise<'kicked' | 'not_in_guild' | 'kick_failed'> {
+    try {
+        const guild = await hypixelService.getGuildByName(env.HYPIXEL_GUILD_NAME);
+        if (!guild) return 'not_in_guild';
+
+        const normalUuid = playerUuid.replace(/-/g, '');
+        const isMember = guild.members.some(
+            (m) => m.uuid.replace(/-/g, '') === normalUuid
+        );
+        if (!isMember) return 'not_in_guild';
+
+        await bridge.bot.executeAndCapture(
+            `/g kick ${playerName} Blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
+        );
+        return 'kicked';
+    } catch {
+        return 'kick_failed';
+    }
 }
 
 function formatExpiry(expiresAt: string | null): string {
@@ -285,6 +311,15 @@ export default {
                 });
                 bridge.blacklist.add(profile.id);
 
+                // Auto-kick if still in guild
+                const kickResult = await tryGuildKick(bridge, profile.name, profile.id);
+                const kickText =
+                    kickResult === 'kicked'
+                        ? 'Kicked from guild'
+                        : kickResult === 'kick_failed'
+                          ? 'Kick failed'
+                          : 'Not in guild';
+
                 embed
                     .setColor('Red')
                     .setTitle('Player Blacklisted')
@@ -298,7 +333,8 @@ export default {
                                 ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})`
                                 : 'Never (Permanent)',
                             inline: true,
-                        }
+                        },
+                        { name: 'Guild Status', value: kickText, inline: true }
                     );
                 await interaction.reply({ embeds: [embed] });
 

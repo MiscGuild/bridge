@@ -1,6 +1,7 @@
 import type { ModuleCommand } from '@/modules/types';
 import { blacklistRepo } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
+import { hypixelService } from '@/services/hypixel';
 import { EmbedBuilder, TextChannel } from 'discord.js';
 import cooldowns from '@/util/cooldown';
 import env from '@/config/env';
@@ -123,6 +124,31 @@ export async function getUrchinTags(uuid: string): Promise<string[]> {
     return data?.tags?.map((t) => t.type) ?? [];
 }
 
+/** Check if a player is in the guild and kick them. Returns status string. */
+async function tryGuildKick(
+    bridge: any,
+    playerName: string,
+    playerUuid: string
+): Promise<'kicked' | 'not_in_guild' | 'kick_failed'> {
+    try {
+        const guild = await hypixelService.getGuildByName(env.HYPIXEL_GUILD_NAME);
+        if (!guild) return 'not_in_guild';
+
+        const normalUuid = playerUuid.replace(/-/g, '');
+        const isMember = guild.members.some(
+            (m) => m.uuid.replace(/-/g, '') === normalUuid
+        );
+        if (!isMember) return 'not_in_guild';
+
+        await bridge.bot.executeAndCapture(
+            `/g kick ${playerName} Blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
+        );
+        return 'kicked';
+    } catch {
+        return 'kick_failed';
+    }
+}
+
 export function registerBlacklistModule(commands: ModuleCommand[]): void {
     // !view [username] — check Urchin tags + internal blacklist (self if no arg)
     commands.push({
@@ -241,10 +267,20 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
                 })
                 .catch(() => {});
             bridge.blacklist.add(profile.id);
+
+            // Auto-kick if still in guild
+            const kickResult = await tryGuildKick(bridge, profile.name, profile.id);
+            const kickStatus =
+                kickResult === 'kicked'
+                    ? ' | Kicked from guild'
+                    : kickResult === 'kick_failed'
+                      ? ' | Kick failed'
+                      : '';
+
             const expiryMsg = expiresAt ? ` (expires in ${durationStr})` : ' (permanent)';
             bridge.bot.chat(
                 'oc',
-                `${profile.name} added to internal blacklist: ${reason}${expiryMsg}`
+                `${profile.name} added to internal blacklist: ${reason}${expiryMsg}${kickStatus}`
             );
 
             // Log to blacklist channel
