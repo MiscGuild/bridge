@@ -1,8 +1,10 @@
+import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand } from '@/modules/types';
-import { blacklistRepo } from '@/db/repositories/blacklist.repo';
+import { blacklistRepo, type BlacklistRecord } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
 import { hypixelService } from '@/services/hypixel';
 import { EmbedBuilder, TextChannel } from 'discord.js';
+import { consola } from 'consola';
 import cooldowns from '@/util/cooldown';
 import env from '@/config/env';
 import { guildRankService } from '@/services/guild-ranks';
@@ -32,7 +34,7 @@ function discordTs(
     return `<t:${unix}:${style}>`;
 }
 
-/** Send a blacklist action embed to the configured log channel */
+/** Send a blacklist action embed to the configured log channel. Returns the sent message id (when added). */
 async function sendBlacklistLog(
     bridge: any,
     action: 'added' | 'removed',
@@ -41,12 +43,12 @@ async function sendBlacklistLog(
     addedBy: string,
     reason?: string,
     expiresAt?: string | null
-): Promise<void> {
+): Promise<string | null> {
     const channelId = env.BLACKLIST_CHANNEL_ID;
-    if (!channelId) return;
+    if (!channelId) return null;
     try {
         const channel = await bridge.discord.channels.fetch(channelId).catch(() => null);
-        if (!channel || !channel.isTextBased()) return;
+        if (!channel || !channel.isTextBased()) return null;
 
         const displayName = env.BLACKLIST_ANONYMOUS ? 'Miscellaneous Staff' : addedBy;
         const now = new Date();
@@ -82,10 +84,69 @@ async function sendBlacklistLog(
                 );
         }
 
-        await (channel as TextChannel).send({ embeds: [embed] });
+        const sent = await (channel as TextChannel).send({ embeds: [embed] });
+        return sent.id;
     } catch {
-        // Silently fail
+        return null;
     }
+}
+
+/** Build the "expired" version of a blacklist embed (used to edit the original log message). */
+function buildExpiredEmbed(record: BlacklistRecord): EmbedBuilder {
+    const now = new Date();
+    return new EmbedBuilder()
+        .setColor('Grey')
+        .setTitle('Blacklist Expired')
+        .setThumbnail(`https://mc-heads.net/avatar/${record.uuid}/64`)
+        .addFields(
+            { name: 'Player', value: `**${record.username}**`, inline: true },
+            {
+                name: 'Originally added by',
+                value: env.BLACKLIST_ANONYMOUS ? 'Miscellaneous Staff' : record.added_by,
+                inline: true,
+            },
+            { name: 'Reason', value: record.reason || 'No reason provided' },
+            { name: 'Added', value: discordTs(record.added_at, 'f'), inline: true },
+            {
+                name: 'Expired',
+                value: `${discordTs(record.expires_at ?? now, 'f')} (auto-removed)`,
+                inline: true,
+            }
+        )
+        .setTimestamp(now);
+}
+
+/** Build a re-join detection embed for an active record whose expiry was just extended. */
+function buildRejoinEmbed(
+    record: BlacklistRecord,
+    extensionMonths: number,
+    newExpiresAt: string
+): EmbedBuilder {
+    const now = new Date();
+    return new EmbedBuilder()
+        .setColor('DarkRed')
+        .setTitle('Blacklisted Player Re-Joined — Auto-Kicked')
+        .setThumbnail(`https://mc-heads.net/avatar/${record.uuid}/64`)
+        .addFields(
+            { name: 'Player', value: `**${record.username}**`, inline: true },
+            {
+                name: 'Originally added by',
+                value: env.BLACKLIST_ANONYMOUS ? 'Miscellaneous Staff' : record.added_by,
+                inline: true,
+            },
+            { name: 'Reason', value: record.reason || 'No reason provided' },
+            { name: 'Added', value: discordTs(record.added_at, 'f'), inline: true },
+            {
+                name: 'New Expiry',
+                value: `${discordTs(newExpiresAt, 'f')} (${discordTs(newExpiresAt, 'R')})`,
+                inline: true,
+            },
+            {
+                name: 'Re-Join Detected',
+                value: `${discordTs(now, 'f')} — extended by **${extensionMonths} month${extensionMonths === 1 ? '' : 's'}**`,
+            }
+        )
+        .setTimestamp(now);
 }
 
 /**
@@ -284,7 +345,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             );
 
             // Log to blacklist channel
-            await sendBlacklistLog(
+            const messageId = await sendBlacklistLog(
                 bridge,
                 'added',
                 profile.name,
@@ -293,6 +354,16 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
                 reason,
                 expiresAt
             );
+
+            // Persist the message id so future expiry / re-join updates can edit it
+            if (messageId) {
+                const fresh = await blacklistRepo.getByUuid(profile.id).catch(() => null);
+                if (fresh) {
+                    await blacklistRepo
+                        .setDiscordMessageId(fresh.id, messageId)
+                        .catch(() => {});
+                }
+            }
         },
     });
 
@@ -322,4 +393,124 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             await sendBlacklistLog(bridge, 'removed', profile.name, profile.id, ctx.username);
         },
     });
+}
+
+// ── Scheduled tasks ──────────────────────────────────────────────────────────
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+/**
+ * Sweep for blacklist entries whose expires_at has passed.
+ * Deactivates them, edits the original Discord embed to reflect expiry,
+ * removes them from the in-memory cache, and announces in officer chat.
+ */
+export async function runExpirySweep(bridge: Bridge): Promise<void> {
+    let expired: BlacklistRecord[] = [];
+    try {
+        expired = await blacklistRepo.expireOverdue();
+    } catch (err) {
+        consola.warn('[Blacklist] expireOverdue failed:', err);
+        return;
+    }
+
+    for (const record of expired) {
+        try {
+            bridge.blacklist.remove(record.uuid);
+
+            const expiredEmbed = buildExpiredEmbed(record);
+            await bridge.discord
+                .editBlacklistMessage(record.discord_message_id, expiredEmbed)
+                .catch(() => false);
+
+            await bridge.discord.sendEmbed('oc', expiredEmbed).catch(() => {});
+
+            consola.info(
+                `[Blacklist] Expired and deactivated ${record.username} (${record.uuid})`
+            );
+        } catch (err) {
+            consola.warn(`[Blacklist] Failed expiry handling for ${record.uuid}:`, err);
+        }
+    }
+}
+
+/**
+ * Periodic guild scan: fetches the live Hypixel guild roster and cross-references
+ * active blacklist UUIDs. Any match is kicked and has their blacklist extended by
+ * BLACKLIST_REJOIN_EXTENSION_MONTHS months. Permanent entries are kicked but not extended.
+ */
+export async function runGuildScan(bridge: Bridge): Promise<void> {
+    let active: BlacklistRecord[];
+    try {
+        active = await blacklistRepo.getAll();
+    } catch (err) {
+        consola.warn('[Blacklist] getAll failed during guild scan:', err);
+        return;
+    }
+    if (active.length === 0) return;
+
+    const guild = await hypixelService.getGuildByName(env.HYPIXEL_GUILD_NAME).catch(() => null);
+    if (!guild) {
+        consola.warn('[Blacklist] Guild scan: failed to fetch guild from Hypixel');
+        return;
+    }
+
+    const norm = (u: string) => u.replace(/-/g, '').toLowerCase();
+    const memberByUuid = new Map<string, { uuid: string; rank: string }>();
+    for (const m of guild.members) memberByUuid.set(norm(m.uuid), m);
+
+    const extensionMonths = env.BLACKLIST_REJOIN_EXTENSION_MONTHS;
+    const addMs = extensionMonths * 30 * MS_PER_DAY; // approximate month length
+
+    for (const record of active) {
+        if (!memberByUuid.has(norm(record.uuid))) continue;
+
+        try {
+            // Resolve the freshest IGN (handles name changes since blacklist was added)
+            const profile = await mojangService.getByUuid(record.uuid).catch(() => null);
+            const ign = profile?.name ?? record.username;
+
+            bridge.bot.execute(
+                `/g kick ${ign} You are blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
+            );
+
+            let updated: BlacklistRecord | null = record;
+            if (record.expires_at) {
+                updated = await blacklistRepo
+                    .extendExpiry(record.uuid, addMs)
+                    .catch(() => record);
+            }
+
+            const newExpiry = updated?.expires_at ?? record.expires_at;
+            if (newExpiry) {
+                const rejoinEmbed = buildRejoinEmbed(updated ?? record, extensionMonths, newExpiry);
+                await bridge.discord
+                    .editBlacklistMessage(record.discord_message_id, rejoinEmbed)
+                    .catch(() => false);
+                await bridge.discord.sendEmbed('oc', rejoinEmbed).catch(() => {});
+            } else {
+                // Permanent entry — still announce the kick, no extension
+                const embed = new EmbedBuilder()
+                    .setColor('DarkRed')
+                    .setTitle('Blacklisted Player Re-Joined — Auto-Kicked')
+                    .setThumbnail(`https://mc-heads.net/avatar/${record.uuid}/64`)
+                    .addFields(
+                        { name: 'Player', value: `**${ign}**`, inline: true },
+                        { name: 'Status', value: 'Permanent — no extension applied', inline: true },
+                        { name: 'Reason', value: record.reason || 'No reason provided' }
+                    )
+                    .setTimestamp();
+                await bridge.discord.sendEmbed('oc', embed).catch(() => {});
+            }
+
+            consola.info(
+                `[Blacklist] Re-join enforcement: kicked ${ign} (${record.uuid}), ` +
+                    (newExpiry ? `extended by ${extensionMonths} months` : 'permanent — no extension')
+            );
+        } catch (err) {
+            consola.warn(
+                `[Blacklist] Re-join enforcement failed for ${record.username} (${record.uuid}):`,
+                err
+            );
+        }
+    }
 }

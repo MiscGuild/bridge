@@ -95,14 +95,7 @@ export default class Bridge {
         // Periodic ban refresh
         setInterval(() => this.loadBans(), env.BAN_CHECK_INTERVAL * 60 * 1000);
 
-        // Periodic blacklist expiry sweep (every hour)
-        setInterval(
-            async () => {
-                const expired = await blacklistRepo.expireOverdue().catch(() => [] as string[]);
-                for (const uuid of expired) this.blacklist.remove(uuid);
-            },
-            60 * 60 * 1000
-        );
+        // Blacklist expiry sweep is wired in initModules() via runExpirySweep.
 
         // Periodic mute expiry sweep — remove Discord Muted role (every 5 minutes)
         setInterval(

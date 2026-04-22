@@ -4,13 +4,14 @@ import { registerStatsModule } from '@/modules/stats/index';
 import { registerSessionsModule } from '@/modules/sessions/index';
 import { registerAnalyticsModule, trackEvent } from '@/modules/analytics/index';
 import { registerModerationModule } from '@/modules/moderation/index';
-import { registerBlacklistModule } from '@/modules/blacklist/index';
+import { registerBlacklistModule, runExpirySweep, runGuildScan } from '@/modules/blacklist/index';
 import { registerMuteWarnModule } from '@/modules/mute-warn/index';
 import { registerInviteTrackerModule } from '@/modules/invite-tracker/index';
 import { registerGexpHistoryModule, syncGexpFromGuild } from '@/modules/gexp-history/index';
 import { trackGuildEvent, syncGuildMembers } from '@/modules/guild-tracker/index';
 import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
+import env from '@/config/env';
 
 export const moduleManager = new ModuleManager();
 
@@ -54,6 +55,17 @@ export function initModules(bridge: Bridge): void {
 
     doSync();
     setInterval(() => doSync(), 24 * 60 * 60 * 1000);
+
+    // Blacklist auto-expiry sweep
+    const expirySweep = () => runExpirySweep(bridge).catch(() => {});
+    expirySweep();
+    setInterval(expirySweep, env.BLACKLIST_EXPIRY_CHECK_INTERVAL_MINUTES * 60 * 1000);
+
+    // Periodic guild scan for blacklisted UUIDs (re-join enforcement).
+    // First run delayed ~60s so it doesn't collide with startup or syncGuildMembers.
+    const guildScan = () => runGuildScan(bridge).catch(() => {});
+    setTimeout(guildScan, 60 * 1000);
+    setInterval(guildScan, env.BLACKLIST_GUILD_SCAN_INTERVAL_MINUTES * 60 * 1000);
 }
 
 export { trackEvent, trackGuildEvent };

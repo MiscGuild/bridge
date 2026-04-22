@@ -127,8 +127,8 @@ export const blacklistRepo = {
         }
     },
 
-    /** Deactivate all entries whose expires_at has passed */
-    async expireOverdue(): Promise<string[]> {
+    /** Deactivate all entries whose expires_at has passed. Returns the full deactivated records. */
+    async expireOverdue(): Promise<BlacklistRecord[]> {
         const all = await (async () => {
             const db = getSupabaseClient();
             if (db) {
@@ -138,14 +138,73 @@ export const blacklistRepo = {
             return (await jsonRead()).filter((r) => r.is_active);
         })();
 
-        const expiredUuids: string[] = [];
+        const expired: BlacklistRecord[] = [];
         for (const r of all) {
             if (isExpired(r)) {
                 await blacklistRepo.deactivate(r.id).catch(() => {});
-                expiredUuids.push(r.uuid);
+                expired.push(r);
             }
         }
-        return expiredUuids;
+        return expired;
+    },
+
+    /**
+     * Extend an active entry's expires_at by `addMs` milliseconds.
+     * No-op (returns existing record) if the entry is permanent (expires_at is null) or missing.
+     */
+    async extendExpiry(uuid: string, addMs: number): Promise<BlacklistRecord | null> {
+        const db = getSupabaseClient();
+        let record: BlacklistRecord | null = null;
+        if (db) {
+            const { data } = await db
+                .from('blacklist')
+                .select('*')
+                .eq('uuid', uuid)
+                .eq('is_active', true)
+                .maybeSingle();
+            record = (data as BlacklistRecord | null) ?? null;
+        } else {
+            record =
+                (await jsonRead()).find((r) => r.uuid === uuid && r.is_active) ?? null;
+        }
+        if (!record) return null;
+        if (!record.expires_at) return record; // permanent — leave unchanged
+
+        const base = Math.max(Date.now(), new Date(record.expires_at).getTime());
+        const newExpiry = new Date(base + addMs).toISOString();
+
+        if (db) {
+            const { data } = await db
+                .from('blacklist')
+                .update({ expires_at: newExpiry })
+                .eq('id', record.id)
+                .select()
+                .single();
+            return (data as BlacklistRecord | null) ?? { ...record, expires_at: newExpiry };
+        }
+        const records = await jsonRead();
+        const idx = records.findIndex((r) => r.id === record!.id);
+        if (idx >= 0) {
+            records[idx]!.expires_at = newExpiry;
+            await jsonWrite(records);
+            return records[idx]!;
+        }
+        return { ...record, expires_at: newExpiry };
+    },
+
+    /** Update the discord_message_id field for a record (used after the embed is posted). */
+    async setDiscordMessageId(id: string, messageId: string): Promise<void> {
+        const db = getSupabaseClient();
+        if (db) {
+            await db.from('blacklist').update({ discord_message_id: messageId }).eq('id', id);
+            return;
+        }
+        const records = await jsonRead();
+        const rec = records.find((r) => r.id === id);
+        if (rec) {
+            rec.discord_message_id = messageId;
+            await jsonWrite(records);
+        }
     },
 };
 

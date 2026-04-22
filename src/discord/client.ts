@@ -64,6 +64,27 @@ export class DiscordClient extends Client {
         }
     }
 
+    /**
+     * Edit a previously-sent blacklist message in BLACKLIST_CHANNEL_ID.
+     * No-op if messageId is null/undefined or the message can no longer be found.
+     */
+    public async editBlacklistMessage(
+        messageId: string | null | undefined,
+        embed: EmbedBuilder
+    ): Promise<boolean> {
+        if (!messageId) return false;
+        try {
+            const channel = await this.channels.fetch(env.BLACKLIST_CHANNEL_ID).catch(() => null);
+            if (!channel || !channel.isTextBased()) return false;
+            const msg = await (channel as TextChannel).messages.fetch(messageId).catch(() => null);
+            if (!msg) return false;
+            await msg.edit({ embeds: [embed] });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     public async loadCommands(): Promise<void> {
         const dir = path.join(__dirname, 'commands');
         if (!fs.existsSync(dir)) return;

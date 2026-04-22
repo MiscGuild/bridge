@@ -68,6 +68,9 @@ const envSchema = z.object({
     URCHIN_JOIN_CHECK: OPTIONAL_BOOLEAN,
     URCHIN_API_KEY: OPTIONAL_STRING,
     BLACKLIST_ANONYMOUS: BOOLEAN.default('false'), // Hide moderator name in blacklist embeds
+    BLACKLIST_REJOIN_EXTENSION_MONTHS: z.coerce.number().int().min(1).default(2),
+    BLACKLIST_GUILD_SCAN_INTERVAL_MINUTES: z.coerce.number().int().min(1).default(15),
+    BLACKLIST_EXPIRY_CHECK_INTERVAL_MINUTES: z.coerce.number().int().min(1).default(5),
 
     // === BRIDGE ACCESS ROLES ===
     BRIDGE_MUTED_ROLE_ID: OPTIONAL_STRING, // Discord role that blocks bridge usage only
