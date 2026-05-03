@@ -1,8 +1,12 @@
+import { consola } from 'consola';
 import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand, CommandContext } from '@/modules/types';
 import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
 import { sessionsRepo } from '@/db/repositories/sessions.repo';
+import { readJson, writeJson } from '@/db/json-store';
+
+const ACTIVE_SESSIONS_FILE = 'active-sessions.json';
 
 interface GameStats {
     bw_wins?: number;
@@ -29,6 +33,27 @@ interface ActiveSession {
 }
 
 const activeSessions = new Map<string, ActiveSession>(); // key: `${uuid}:${game}`
+
+let persistTimer: NodeJS.Timeout | null = null;
+function schedulePersist(): void {
+    if (persistTimer) return;
+    persistTimer = setTimeout(() => {
+        persistTimer = null;
+        const arr = Array.from(activeSessions.values());
+        writeJson(ACTIVE_SESSIONS_FILE, arr).catch((err) =>
+            consola.error('[sessions] failed to persist active sessions:', err)
+        );
+    }, 250);
+}
+
+export async function loadActiveSessions(): Promise<void> {
+    const arr = await readJson<ActiveSession[]>(ACTIVE_SESSIONS_FILE, []);
+    activeSessions.clear();
+    for (const s of arr) {
+        activeSessions.set(`${s.uuid}:${s.game}`, s);
+    }
+    consola.info(`[sessions] restored ${activeSessions.size} active session(s)`);
+}
 
 async function fetchStats(uuid: string, game: 'bw' | 'sw' | 'cvc'): Promise<GameStats | null> {
     const player = await hypixelService.getPlayer(uuid);
@@ -108,13 +133,7 @@ async function handleStart(
     }
 
     const key = `${profile.id}:${game}`;
-    if (activeSessions.has(key)) {
-        bridge.bot.chat(
-            ctx.replyChannel,
-            `${ctx.username}, you already have an active ${game.toUpperCase()} session!`
-        );
-        return;
-    }
+    const existing = activeSessions.has(key);
 
     // Invalidate cache to ensure fresh stats
     hypixelService.clearCache(profile.id);
@@ -131,9 +150,12 @@ async function handleStart(
         startTime: Date.now(),
         startStats,
     });
+    schedulePersist();
     bridge.bot.chat(
         ctx.replyChannel,
-        `${ctx.username}, ${game.toUpperCase()} session started! Good luck!`
+        existing
+            ? `${ctx.username}, restarted your ${game.toUpperCase()} session!`
+            : `${ctx.username}, ${game.toUpperCase()} session started! Good luck!`
     );
 }
 
@@ -158,14 +180,23 @@ async function handleStop(
         return;
     }
 
-    hypixelService.clearCache(profile.id);
-    const endStats = await fetchStats(profile.id, game);
+    let endStats: GameStats | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+        hypixelService.clearCache(profile.id);
+        endStats = await fetchStats(profile.id, game);
+        if (endStats) break;
+        if (attempt < 2) await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+    }
     if (!endStats) {
-        bridge.bot.chat(ctx.replyChannel, `Could not fetch your stats. Session not ended.`);
+        bridge.bot.chat(
+            ctx.replyChannel,
+            `Hypixel API didn't respond. Try \`!session ${game} stop\` again in a moment.`
+        );
         return;
     }
 
     activeSessions.delete(key);
+    schedulePersist();
     const duration = humanDuration(Date.now() - session.startTime);
     const diff = formatDiff(session.startStats, endStats, game);
 

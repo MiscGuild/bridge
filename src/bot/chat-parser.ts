@@ -16,7 +16,7 @@ export const patterns = {
 
     /** Member muted or unmuted */
     guildMuteUnmute:
-        /^(\[.*?])?\s*(\w{2,17}) has (muted|unmuted) (\[.*?])?\s*(\w{2,17})(?: for (\d+[a-z]))?$/,
+        /^\s*(\[.*?])?\s*(\w{2,17}) has (muted|unmuted) (\[.*?])?\s*(\w{2,17})(?: for (\d+[a-z]))?$/,
 
     /** Player joined or left Hypixel */
     joinLeave: /^Guild > (\w{2,17}).*? (joined|left)\.$/,
@@ -29,20 +29,20 @@ export const patterns = {
         /^(?:\s>>>\s)?\[.*?]\s[\w]{2,17} (?:joined|spooked into|slid into) the lobby!(?:\s<<<)?$/,
 
     /** Player requested to join the guild */
-    joinRequest: /^(?:\[.*?])?\s*(\w{2,17}) has requested to join the Guild!$/,
+    joinRequest: /^\s*(?:\[.*?])?\s*(\w{2,17}) has requested to join the Guild!$/,
 
     /** /g online response line */
     memberCount: /^(Online|Total) Members: (\d+)$/,
 
     /** Player joined or left the guild */
-    memberJoinLeave: /^(\[.*?])?\s*(\w{2,17}).*? (joined|left) the guild!$/,
+    memberJoinLeave: /^\s*(\[.*?])?\s*(\w{2,17}).*? (joined|left) the guild!$/,
 
     /** Player was kicked from the guild */
     memberKick:
-        /^(\[.*?])?\s*(\w{2,17}).*? was kicked from the guild by (\[.*?])?\s*(\w{2,17}).*?!$/,
+        /^\s*(\[.*?])?\s*(\w{2,17}).*? was kicked from the guild by (\[.*?])?\s*(\w{2,17}).*?!$/,
 
     /** Player was promoted or demoted */
-    promoteDemote: /^(\[.*?])?\s*(\w{2,17}).*? was (promoted|demoted) from (.*) to (.*)$/,
+    promoteDemote: /^\s*(\[.*?])?\s*(\w{2,17}).*? was (promoted|demoted) from (.*) to (.*)$/,
 
     /** All guild quest tiers complete */
     questComplete: /^\s{17}GUILD QUEST COMPLETED!$/,

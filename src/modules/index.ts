@@ -1,7 +1,7 @@
 import type Bridge from '@/bridge/bridge';
 import { ModuleManager } from '@/modules/types';
 import { registerStatsModule } from '@/modules/stats/index';
-import { registerSessionsModule } from '@/modules/sessions/index';
+import { registerSessionsModule, loadActiveSessions } from '@/modules/sessions/index';
 import { registerAnalyticsModule, trackEvent } from '@/modules/analytics/index';
 import { registerModerationModule } from '@/modules/moderation/index';
 import { registerBlacklistModule, runExpirySweep, runGuildScan } from '@/modules/blacklist/index';
@@ -30,6 +30,9 @@ registerGexpHistoryModule(commands);
 export function initModules(bridge: Bridge): void {
     const initFn = (commands as any).__initAnalytics;
     if (typeof initFn === 'function') initFn(bridge);
+
+    // Restore in-memory active sessions from disk so they survive bot restarts
+    loadActiveSessions().catch(() => {});
 
     // Sync guild members + GEXP once a day
     const doSync = async () => {
