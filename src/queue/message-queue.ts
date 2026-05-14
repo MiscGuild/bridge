@@ -18,9 +18,41 @@ export class MessageQueue {
     private lastSentMessage = '';
     private saltIndex = 0;
     private sendFn: SendFn | null = null;
+    private paused = false;
+    private resumeWaiters: (() => void)[] = [];
 
     setSendFn(fn: SendFn) {
         this.sendFn = fn;
+    }
+
+    /**
+     * Pause queue processing. New messages may still be enqueued, but nothing
+     * will be sent until {@link resume} is called. Used to give priority work
+     * (e.g. blacklist kicks) exclusive access to the chat send function.
+     */
+    pause(): void {
+        this.paused = true;
+    }
+
+    /** Resume processing previously paused by {@link pause}. */
+    resume(): void {
+        if (!this.paused) return;
+        this.paused = false;
+        const waiters = this.resumeWaiters.splice(0);
+        for (const w of waiters) w();
+        this.process();
+    }
+
+    /** Direct send that bypasses the queue entirely. Caller is responsible for rate limits. */
+    sendDirect(message: string): void {
+        if (!this.sendFn) return;
+        try {
+            this.sendFn(message);
+            this.lastSent = Date.now();
+            this.lastSentMessage = message;
+        } catch (err) {
+            consola.error('MessageQueue sendDirect error:', err);
+        }
     }
 
     async enqueue(message: string): Promise<void> {
@@ -40,6 +72,12 @@ export class MessageQueue {
         this.processing = true;
 
         while (this.queue.length > 0) {
+            // If paused, wait until resumed before sending the next message.
+            if (this.paused) {
+                await new Promise<void>((r) => this.resumeWaiters.push(r));
+                continue;
+            }
+
             const now = Date.now();
             const elapsed = now - this.lastSent;
             if (elapsed < MC_CHAT_RATE_MS) {

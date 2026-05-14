@@ -5,7 +5,7 @@ import emojis from '@/util/emojis';
 import { EmbedBuilder } from 'discord.js';
 import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
-import { getUrchinTags } from '@/modules/blacklist/index';
+import { getUrchinTags, enforceBlacklistKick } from '@/modules/blacklist/index';
 
 export async function handleMemberJoinLeave(
     bridge: Bridge,
@@ -14,11 +14,9 @@ export async function handleMemberJoinLeave(
     if (event.status === 'joined') {
         const profile = await mojangService.getProfile(event.playerName);
         if (profile) {
-            // Internal blacklist check — auto-kick
+            // Internal blacklist check — auto-kick (3 attempts, 5s gap, queue paused)
             if (bridge.blacklist.isBlacklisted(profile.id)) {
-                bridge.bot.execute(
-                    `/g kick ${event.playerName} You have been blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
-                );
+                enforceBlacklistKick(bridge, event.playerName).catch(() => {});
                 const kickEmbed = new EmbedBuilder()
                     .setColor(0xed4245)
                     .setTitle('Auto-Kicked: Blacklisted')

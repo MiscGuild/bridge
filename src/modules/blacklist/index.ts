@@ -8,6 +8,7 @@ import { consola } from 'consola';
 import cooldowns from '@/util/cooldown';
 import env from '@/config/env';
 import { guildRankService } from '@/services/guild-ranks';
+import messageQueue from '@/queue/message-queue';
 
 interface UrchinTag {
     type: string;
@@ -185,6 +186,69 @@ export async function getUrchinTags(uuid: string): Promise<string[]> {
     return data?.tags?.map((t) => t.type) ?? [];
 }
 
+/**
+ * Aggressively enforce a blacklist kick. The Hypixel queue is paused (so no
+ * other queued chat messages can interleave and slow us down), then `/g kick`
+ * is sent up to 3 times with a 5-second gap between attempts. Returns early
+ * as soon as we observe a "was kicked / left the guild" confirmation for the
+ * target. The queue is always resumed in the finally block.
+ */
+export async function enforceBlacklistKick(
+    bridge: any,
+    playerName: string,
+    reason?: string
+): Promise<boolean> {
+    const fullReason = reason ?? `Blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`;
+    const command = `/g kick ${playerName} ${fullReason}`;
+
+    // Confirmation: kicked OR voluntarily left while we were attempting.
+    const confirmRe = new RegExp(
+        `\\b${playerName.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b.*?(was kicked from the guild|left the guild)`,
+        'i'
+    );
+
+    let confirmed = false;
+    let confirmResolve: (() => void) | null = null;
+    const confirmPromise = new Promise<void>((res) => {
+        confirmResolve = res;
+    });
+
+    const listener = (jsonMsg: unknown) => {
+        const raw = typeof jsonMsg === 'string' ? jsonMsg : String(jsonMsg);
+        const str = raw.replace(/§./g, '');
+        if (confirmRe.test(str)) {
+            confirmed = true;
+            confirmResolve?.();
+        }
+    };
+
+    const mcBot = bridge.bot?.bot;
+    if (mcBot?.on) mcBot.on('message', listener);
+
+    messageQueue.pause();
+    try {
+        for (let attempt = 1; attempt <= 3 && !confirmed; attempt++) {
+            try {
+                messageQueue.sendDirect(command);
+            } catch (err) {
+                consola.warn(`[Blacklist] kick attempt ${attempt} send failed:`, err);
+            }
+
+            // Wait up to 5s, but break early on confirmation.
+            await Promise.race([
+                confirmPromise,
+                new Promise<void>((r) => setTimeout(r, 5000)),
+            ]);
+        }
+    } finally {
+        if (mcBot?.removeListener) mcBot.removeListener('message', listener);
+        messageQueue.resume();
+    }
+
+    return confirmed;
+}
+
+
 /** Check if a player is in the guild and kick them. Returns status string. */
 async function tryGuildKick(
     bridge: any,
@@ -201,10 +265,8 @@ async function tryGuildKick(
         );
         if (!isMember) return 'not_in_guild';
 
-        await bridge.bot.executeAndCapture(
-            `/g kick ${playerName} Blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
-        );
-        return 'kicked';
+        const ok = await enforceBlacklistKick(bridge, playerName);
+        return ok ? 'kicked' : 'kick_failed';
     } catch {
         return 'kick_failed';
     }
@@ -469,9 +531,7 @@ export async function runGuildScan(bridge: Bridge): Promise<void> {
             const profile = await mojangService.getByUuid(record.uuid).catch(() => null);
             const ign = profile?.name ?? record.username;
 
-            bridge.bot.execute(
-                `/g kick ${ign} You are blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
-            );
+            await enforceBlacklistKick(bridge, ign);
 
             let updated: BlacklistRecord | null = record;
             if (record.expires_at) {
