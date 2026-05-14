@@ -250,14 +250,25 @@ export default class Bridge {
                 if (ban.ban_type === 'bridge') this.bridgeBanned.add(ban.username.toLowerCase());
                 if (ban.ban_type === 'command') this.commandBanned.add(ban.username.toLowerCase());
             }
+            consola.debug(
+                `[Bans] Loaded ${this.bridgeBanned.size} bridge bans, ${this.commandBanned.size} command bans`
+            );
+        } catch (err) {
+            consola.warn('[Bans] Failed to load bans:', err);
+        }
 
+        try {
             const blacklisted = await blacklistRepo.getAll();
             this.blacklist._set.clear();
             for (const entry of blacklisted) {
                 this.blacklist._set.add(entry.uuid);
             }
-        } catch {
-            // Supabase may not be configured; silently skip
+            consola.info(
+                `[Blacklist] Cache loaded: ${this.blacklist._set.size} active entries ` +
+                    `(sample: ${[...this.blacklist._set].slice(0, 3).join(', ') || 'none'})`
+            );
+        } catch (err) {
+            consola.error('[Blacklist] Failed to load blacklist cache:', err);
         }
     }
 

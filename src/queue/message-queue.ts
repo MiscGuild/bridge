@@ -31,12 +31,14 @@ export class MessageQueue {
      * (e.g. blacklist kicks) exclusive access to the chat send function.
      */
     pause(): void {
+        if (!this.paused) consola.debug(`[Queue] paused (size=${this.queue.length})`);
         this.paused = true;
     }
 
     /** Resume processing previously paused by {@link pause}. */
     resume(): void {
         if (!this.paused) return;
+        consola.debug(`[Queue] resumed (size=${this.queue.length})`);
         this.paused = false;
         const waiters = this.resumeWaiters.splice(0);
         for (const w of waiters) w();
@@ -45,11 +47,15 @@ export class MessageQueue {
 
     /** Direct send that bypasses the queue entirely. Caller is responsible for rate limits. */
     sendDirect(message: string): void {
-        if (!this.sendFn) return;
+        if (!this.sendFn) {
+            consola.warn('[Queue] sendDirect called but sendFn is not set');
+            return;
+        }
         try {
             this.sendFn(message);
             this.lastSent = Date.now();
             this.lastSentMessage = message;
+            consola.debug(`[Queue] sendDirect: ${message}`);
         } catch (err) {
             consola.error('MessageQueue sendDirect error:', err);
         }

@@ -207,6 +207,10 @@ export async function enforceBlacklistKick(
         'i'
     );
 
+    consola.info(
+        `[Blacklist] enforceBlacklistKick start: ${playerName} (queueSize=${messageQueue.size})`
+    );
+
     let confirmed = false;
     let confirmResolve: (() => void) | null = null;
     const confirmPromise = new Promise<void>((res) => {
@@ -217,32 +221,47 @@ export async function enforceBlacklistKick(
         const raw = typeof jsonMsg === 'string' ? jsonMsg : String(jsonMsg);
         const str = raw.replace(/§./g, '');
         if (confirmRe.test(str)) {
+            consola.info(`[Blacklist] confirmation matched: ${str.trim()}`);
             confirmed = true;
             confirmResolve?.();
         }
     };
 
     const mcBot = bridge.bot?.bot;
-    if (mcBot?.on) mcBot.on('message', listener);
+    if (mcBot?.on) {
+        mcBot.on('message', listener);
+    } else {
+        consola.warn('[Blacklist] mineflayer bot unavailable — cannot attach kick listener');
+    }
 
     messageQueue.pause();
+    consola.debug('[Blacklist] message queue paused');
     try {
         for (let attempt = 1; attempt <= 3 && !confirmed; attempt++) {
+            consola.info(
+                `[Blacklist] kick attempt ${attempt}/3: ${command}`
+            );
             try {
                 messageQueue.sendDirect(command);
             } catch (err) {
                 consola.warn(`[Blacklist] kick attempt ${attempt} send failed:`, err);
             }
 
-            // Wait up to 5s, but break early on confirmation.
+            const waitStart = Date.now();
             await Promise.race([
                 confirmPromise,
                 new Promise<void>((r) => setTimeout(r, 5000)),
             ]);
+            consola.debug(
+                `[Blacklist] attempt ${attempt} wait done after ${Date.now() - waitStart}ms (confirmed=${confirmed})`
+            );
         }
     } finally {
         if (mcBot?.removeListener) mcBot.removeListener('message', listener);
         messageQueue.resume();
+        consola.info(
+            `[Blacklist] enforceBlacklistKick finished: ${playerName} confirmed=${confirmed}`
+        );
     }
 
     return confirmed;
@@ -501,6 +520,7 @@ export async function runExpirySweep(bridge: Bridge): Promise<void> {
  * BLACKLIST_REJOIN_EXTENSION_MONTHS months. Permanent entries are kicked but not extended.
  */
 export async function runGuildScan(bridge: Bridge): Promise<void> {
+    consola.debug('[Blacklist] Guild scan starting');
     let active: BlacklistRecord[];
     try {
         active = await blacklistRepo.getAll();
@@ -508,7 +528,10 @@ export async function runGuildScan(bridge: Bridge): Promise<void> {
         consola.warn('[Blacklist] getAll failed during guild scan:', err);
         return;
     }
-    if (active.length === 0) return;
+    if (active.length === 0) {
+        consola.debug('[Blacklist] Guild scan: no active blacklist entries');
+        return;
+    }
 
     const guild = await hypixelService.getGuildByName(env.HYPIXEL_GUILD_NAME).catch(() => null);
     if (!guild) {
@@ -520,11 +543,19 @@ export async function runGuildScan(bridge: Bridge): Promise<void> {
     const memberByUuid = new Map<string, { uuid: string; rank: string }>();
     for (const m of guild.members) memberByUuid.set(norm(m.uuid), m);
 
+    const matches = active.filter((r) => memberByUuid.has(norm(r.uuid)));
+    consola.info(
+        `[Blacklist] Guild scan: ${active.length} active entries vs ${guild.members.length} guild members — ${matches.length} match(es)`
+    );
+
     const extensionMonths = env.BLACKLIST_REJOIN_EXTENSION_MONTHS;
     const addMs = extensionMonths * 30 * MS_PER_DAY; // approximate month length
 
     for (const record of active) {
         if (!memberByUuid.has(norm(record.uuid))) continue;
+        consola.warn(
+            `[Blacklist] Guild scan match: ${record.username} (${record.uuid}) is currently in the guild`
+        );
 
         try {
             // Resolve the freshest IGN (handles name changes since blacklist was added)
