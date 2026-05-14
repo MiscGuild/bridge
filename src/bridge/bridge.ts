@@ -258,6 +258,13 @@ export default class Bridge {
         }
 
         try {
+            const repaired = await blacklistRepo.reactivatePermanent().catch(() => 0);
+            if (repaired > 0) {
+                consola.warn(
+                    `[Blacklist] Repaired ${repaired} permanent entries that had is_active=false`
+                );
+            }
+
             const blacklisted = await blacklistRepo.getAll();
             this.blacklist._set.clear();
             for (const entry of blacklisted) {

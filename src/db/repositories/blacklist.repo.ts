@@ -41,7 +41,39 @@ function newId(): string {
 // ── Repo ──────────────────────────────────────────────────────────────────────
 
 export const blacklistRepo = {
+    /**
+     * Bulk-reactivate any permanent entries (expires_at IS NULL) that were
+     * mistakenly deactivated. Permanent blacklists must always remain active.
+     * Returns the number of rows that were repaired.
+     */
+    async reactivatePermanent(): Promise<number> {
+        const db = getSupabaseClient();
+        if (db) {
+            const { data, error } = await db
+                .from('blacklist')
+                .update({ is_active: true })
+                .is('expires_at', null)
+                .eq('is_active', false)
+                .select('id');
+            if (error) return 0;
+            return (data as { id: string }[] | null)?.length ?? 0;
+        }
+        const records = await jsonRead();
+        let count = 0;
+        for (const r of records) {
+            if (r.expires_at === null && r.is_active === false) {
+                r.is_active = true;
+                count++;
+            }
+        }
+        if (count > 0) await jsonWrite(records);
+        return count;
+    },
+
     async getAll(): Promise<BlacklistRecord[]> {
+        // Self-heal any permanent entries that were deactivated before returning.
+        await blacklistRepo.reactivatePermanent().catch(() => 0);
+
         const db = getSupabaseClient();
         if (db) {
             const { data } = await db.from('blacklist').select('*').eq('is_active', true);
@@ -54,19 +86,31 @@ export const blacklistRepo = {
         const db = getSupabaseClient();
         let record: BlacklistRecord | null;
         if (db) {
+            // Match active OR permanent (expires_at IS NULL) entries — permanent
+            // entries are always considered active even if is_active was flipped.
             const { data } = await db
                 .from('blacklist')
                 .select('*')
                 .eq('uuid', uuid)
-                .eq('is_active', true)
+                .or('is_active.eq.true,expires_at.is.null')
+                .order('added_at', { ascending: false })
+                .limit(1)
                 .maybeSingle();
             record = (data as BlacklistRecord | null) ?? null;
         } else {
-            record = (await jsonRead()).find((r) => r.uuid === uuid && r.is_active) ?? null;
+            record =
+                (await jsonRead()).find(
+                    (r) => r.uuid === uuid && (r.is_active || r.expires_at === null)
+                ) ?? null;
         }
         if (record && isExpired(record)) {
             await blacklistRepo.deactivate(record.id).catch(() => {});
             return null;
+        }
+        // If we found a permanent entry that was somehow deactivated, repair it.
+        if (record && !record.is_active && record.expires_at === null) {
+            await blacklistRepo.reactivate(record.id).catch(() => {});
+            record.is_active = true;
         }
         return record;
     },
@@ -100,6 +144,7 @@ export const blacklistRepo = {
     },
 
     async remove(uuid: string): Promise<void> {
+        // Explicit removal (e.g. !blacklist remove) — allowed even for permanent entries.
         const db = getSupabaseClient();
         if (db) {
             await db.from('blacklist').update({ is_active: false }).eq('uuid', uuid);
@@ -113,15 +158,35 @@ export const blacklistRepo = {
         }
     },
 
-    async deactivate(id: string): Promise<void> {
+    /** Re-enable a previously deactivated entry by id. */
+    async reactivate(id: string): Promise<void> {
         const db = getSupabaseClient();
         if (db) {
-            await db.from('blacklist').update({ is_active: false }).eq('id', id);
+            await db.from('blacklist').update({ is_active: true }).eq('id', id);
             return;
         }
         const records = await jsonRead();
         const rec = records.find((r) => r.id === id);
         if (rec) {
+            rec.is_active = true;
+            await jsonWrite(records);
+        }
+    },
+
+    async deactivate(id: string): Promise<void> {
+        // Refuse to deactivate permanent entries — they must stay active.
+        const db = getSupabaseClient();
+        if (db) {
+            await db
+                .from('blacklist')
+                .update({ is_active: false })
+                .eq('id', id)
+                .not('expires_at', 'is', null);
+            return;
+        }
+        const records = await jsonRead();
+        const rec = records.find((r) => r.id === id);
+        if (rec && rec.expires_at !== null) {
             rec.is_active = false;
             await jsonWrite(records);
         }
