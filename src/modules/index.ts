@@ -9,6 +9,8 @@ import { registerMuteWarnModule } from '@/modules/mute-warn/index';
 import { registerInviteTrackerModule } from '@/modules/invite-tracker/index';
 import { registerGexpHistoryModule, syncGexpFromGuild } from '@/modules/gexp-history/index';
 import { trackGuildEvent, syncGuildMembers } from '@/modules/guild-tracker/index';
+import { registerCompareModule } from '@/modules/compare/index';
+import { registerNextCalcModule } from '@/modules/next-calc/index';
 import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
@@ -17,6 +19,10 @@ export const moduleManager = new ModuleManager();
 
 const commands = moduleManager['commands'] as any[];
 
+// Compare + next-calc must come BEFORE stats so patterns like `!bw <a> vs <b>`
+// match the compare handler instead of the stats `!bw [player]` catch-all.
+registerCompareModule(commands);
+registerNextCalcModule(commands);
 registerStatsModule(commands);
 registerSessionsModule(commands);
 registerAnalyticsModule(commands);

@@ -90,6 +90,24 @@
 | `!skills / !slayers / !dungeons [player]`                                                           | SkyBlock sub-stats                                                 |
 | `!nw / !networth [player]`                                                                          | SkyBlock net worth (total, unsoulbound, purse, bank)               |
 
+#### Comparison
+
+| Command                                                | Description                                                          |
+| ------------------------------------------------------ | -------------------------------------------------------------------- |
+| `!bwvs <p1> <p2>`                                      | Compare two players' overall BedWars stats side-by-side              |
+| `!bwvs <mode> <p1> <p2>`                               | Compare a specific BW mode (solo/doubles/threes/fours/4v4)           |
+| `!bw <p1> vs <p2>`                                     | Same as `!bwvs` — overall comparison                                 |
+| `!bw <mode> <p1> vs <p2>`                              | Same as `!bwvs <mode>` — comparison by mode                          |
+
+#### Next Calculators (BedWars)
+
+| Command                                | Description                                                                                  |
+| -------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `!nfkdr [player] [target]`             | Final kills needed (assuming 0 deaths) to reach target FKDR. Default target: next 0.5 step.  |
+| `!nbblr [player] [target]`             | Beds broken needed (assuming 0 beds lost) to reach target BBLR. Default target: next 0.5.    |
+| `!nlevel [player] [star] [avg_xp]`     | XP & games needed to reach a target star. Default target: next prestige. Default avg: 150.   |
+
+
 #### Sessions
 
 | Command                                             | Description                   |
@@ -146,6 +164,7 @@
 | `/announce <message>`              | Send guild announcement                      |
 | `/slowmode <seconds>`              | Set bridge channel slowmode                  |
 | `/command <cmd>`                   | Execute arbitrary Minecraft command          |
+| `/next level <ign> <levelwanted> [avg_exp]` | Games & XP needed to reach a target BedWars star (avg_exp default 150) |
 
 ---
 
