@@ -14,7 +14,11 @@ interface EmitterLike {
 }
 
 interface ChatPatternEmitter extends EmitterLike {
-    addChatPattern(name: string, pattern: RegExp, options: { repeat: boolean; parse: boolean }): void;
+    addChatPattern(
+        name: string,
+        pattern: RegExp,
+        options: { repeat: boolean; parse: boolean },
+    ): void;
 }
 
 const hasChatPatternEmitter = (emitter: EmitterLike): emitter is ChatPatternEmitter =>

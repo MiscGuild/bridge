@@ -51,7 +51,7 @@ export default {
             embed
                 .setTitle(type === 'mute' ? 'Muted!' : 'Unmuted!')
                 .setDescription(
-                    `${user} was ${type}d${type === 'mute' ? ` for ${duration}!` : '!'}`
+                    `${user} was ${type}d${type === 'mute' ? ` for ${duration}!` : '!'}`,
                 )
                 .setColor(type === 'mute' ? 'Red' : 'Green');
         } catch (e) {

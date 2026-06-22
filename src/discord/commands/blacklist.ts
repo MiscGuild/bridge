@@ -68,7 +68,7 @@ export default {
                 .setColor('Red')
                 .setTitle('Error')
                 .setDescription(
-                    `That user is ${type === 'add' ? 'already' : 'not'} on the blacklist!`
+                    `That user is ${type === 'add' ? 'already' : 'not'} on the blacklist!`,
                 );
 
             await interaction.reply({ embeds: [embed] });
@@ -121,7 +121,7 @@ export default {
             .setDescription(
                 `${mojangProfile.name} was ${
                     type === 'add' ? 'added to' : 'removed from'
-                } the blacklist!`
+                } the blacklist!`,
             );
 
         writeToJsonFile('./src/blacklist/_blacklist.json', blacklist, interaction, successEmbed);

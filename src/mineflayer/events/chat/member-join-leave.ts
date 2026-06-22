@@ -15,7 +15,7 @@ export default {
 
             if (!isFetchError(mojangProfile) && isUserBlacklisted(mojangProfile.id)) {
                 bridge.mineflayer.execute(
-                    `/g kick ${playerName} You have been blacklisted from the guild. Mistake? --> ${env.DISCORD_INVITE_LINK}`
+                    `/g kick ${playerName} You have been blacklisted from the guild. Mistake? --> ${env.DISCORD_INVITE_LINK}`,
                 );
             }
         }
@@ -26,7 +26,7 @@ export default {
                 rank ? `${rank} ` : ''
             }${escapeMarkdown(playerName)}** ${type} the guild!`,
             getRankColor(rank),
-            true
+            true,
         );
     },
 } as BotEvent;

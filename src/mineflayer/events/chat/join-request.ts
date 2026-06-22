@@ -18,7 +18,7 @@ export default {
             if (networkLevel < env.MINIMUM_NETWORK_LEVEL) {
                 bridge.mineflayer.chat(
                     'oc',
-                    `The player ${playerName} is not network level ${env.MINIMUM_NETWORK_LEVEL}!`
+                    `The player ${playerName} is not network level ${env.MINIMUM_NETWORK_LEVEL}!`,
                 );
             }
         }
@@ -26,7 +26,7 @@ export default {
         if (isUserBlacklisted(mojangProfile.id)) {
             bridge.mineflayer.chat(
                 'oc',
-                `The player ${playerName} is blacklisted. Do NOT accept their join request.`
+                `The player ${playerName} is blacklisted. Do NOT accept their join request.`,
             );
         }
     },

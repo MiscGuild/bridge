@@ -11,7 +11,7 @@ export default {
         playerName: string,
         type: 'promoted' | 'demoted',
         originalRank: string,
-        newRank: string
+        newRank: string,
     ) => {
         await bridge.discord.send(
             'gc',
@@ -19,7 +19,7 @@ export default {
                 rank ? `${rank} ` : ''
             }${escapeMarkdown(playerName)}** was ${type} to ${newRank} from ${originalRank}!`,
             getRankColor(rank),
-            true
+            true,
         );
     },
 } as BotEvent;

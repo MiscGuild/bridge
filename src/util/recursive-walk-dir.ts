@@ -11,17 +11,17 @@ import winston from 'winston';
 async function recursiveWalkDir(
     normalisedDirName: string,
     callback: (currentDir: string, file: string) => Promise<void>,
-    errMessage: string
+    errMessage: string,
 ) {
     const files = await fs.readdir(normalisedDirName);
     const stats = await Promise.all(
-        files.map((file) => fs.lstat(path.join(normalisedDirName, file)))
+        files.map((file) => fs.lstat(path.join(normalisedDirName, file))),
     );
 
     const promises = stats.map((stat, i) =>
         stat.isDirectory()
             ? recursiveWalkDir(path.join(normalisedDirName, files[i]!), callback, errMessage)
-            : callback(normalisedDirName, files[i]!)
+            : callback(normalisedDirName, files[i]!),
     );
 
     try {

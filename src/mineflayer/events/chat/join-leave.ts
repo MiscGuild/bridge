@@ -12,7 +12,7 @@ export default {
             'gc',
             `${emoji} **${escapeMarkdown(playerName)}** ${status}. \`(${bridge.onlineCount}/${
                 bridge.totalCount
-            })\``
+            })\``,
         );
     },
 } as BotEvent;

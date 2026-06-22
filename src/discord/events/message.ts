@@ -36,7 +36,7 @@ export default {
 
         if (message.content.length > 250 - name.length) {
             await message.channel.send(
-                `Your message is too long! \`${message.content.length}/${250 - name.length}\``
+                `Your message is too long! \`${message.content.length}/${250 - name.length}\``,
             );
             return;
         }
@@ -45,29 +45,29 @@ export default {
             await message.delete();
         } catch (e) {
             await message.channel.send(
-                `${emojis.warning} ${message.author.username}, could not delete message.`
+                `${emojis.warning} ${message.author.username}, could not delete message.`,
             );
             winston.error(e);
         }
 
         if (profanityMatcher?.hasMatch(message.content)) {
             await message.channel.send(
-                `${emojis.warning} ${message.author.username}, you may not use profane language!`
+                `${emojis.warning} ${message.author.username}, you may not use profane language!`,
             );
             winston.warn(`Comment blocked: ${message.content}`);
             bridge.discord.send(
                 'oc',
-                `${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked. This message was not sent to Hypixel.`
+                `${emojis.warning} <@${message.author.id}> tried to say "${message.content}" but was blocked. This message was not sent to Hypixel.`,
             );
         } else {
             const content = `${name} ${env.MINECRAFT_CHAT_SEPARATOR} ${message.content.replace(
                 /\r?\n|\r/g,
-                ' '
+                ' ',
             )}`;
 
             bridge.mineflayer.chat(
                 message.channel.id === bridge.discord.memberChannel?.id ? 'gc' : 'oc',
-                content
+                content,
             );
         }
     },

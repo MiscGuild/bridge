@@ -7,5 +7,5 @@ declare interface Command {
 type ExecuteCommand = (
     bridge: import('../bridge').default,
     interaction: import('discord.js').ChatInputCommandInteraction,
-    args: unknown[]
+    args: unknown[],
 ) => Promise<void>;

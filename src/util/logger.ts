@@ -28,7 +28,7 @@ winston.configure({
                     return info.stack
                         ? `${message}\n\t${(info.stack as string).replaceAll('\n', '\n\t')}`
                         : message;
-                })
+                }),
             ),
         }),
     ],

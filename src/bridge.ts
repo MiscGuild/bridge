@@ -34,7 +34,7 @@ export default class Bridge {
                 `${this.onlineCount - 1} online player${plural ? 's' : ''}`,
                 {
                     type: ActivityType.Watching,
-                }
+                },
             );
         }
     }

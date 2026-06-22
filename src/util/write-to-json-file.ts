@@ -12,7 +12,7 @@ export default (
     path: string,
     data: any,
     interaction: CommandInteraction,
-    successEmbed: EmbedBuilder
+    successEmbed: EmbedBuilder,
 ) => {
     writeFile(path, JSON.stringify(data), async (err) => {
         if (!err) {
