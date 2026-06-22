@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
         "target": "ESNext",
-        "module": "CommonJS",
-        "moduleResolution": "Node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "rootDir": ".",
         "outDir": "./dist",
         "resolveJsonModule": true,
         "preserveConstEnums": true,

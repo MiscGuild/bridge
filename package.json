@@ -7,7 +7,7 @@
     "scripts": {
         "build": "tsc && tsc-alias",
         "clean": "rm -r dist/",
-        "dev": "ts-node-dev --respawn --transpile-only --poll -r tsconfig-paths/register src/index.ts",
+        "dev": "tsx watch src/index.ts",
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint .",
         "pm2:kill": "pm2 kill",
@@ -18,21 +18,21 @@
     "dependencies": {
         "discord.js": "14.22.1",
         "dotenv": "^17.4.2",
-        "mineflayer": "^4.37.0",
+        "mineflayer": "^4.37.1",
         "obscenity": "^0.4.6",
         "prismarine-chat": "^1.13.0",
         "winston": "^3.19.0",
-        "zod": "^4.3.6"
+        "zod": "^4.4.3"
     },
     "devDependencies": {
         "@jejebecarte/eslint-config": "^1.0.7",
         "@types/node-fetch": "^2.6.13",
         "eslint": "^9.39.4",
         "pm2": "^6.0.14",
-        "prettier": "^3.8.3",
-        "ts-node-dev": "^2.0.0",
-        "tsc-alias": "^1.8.16",
+        "prettier": "^3.8.4",
+        "tsc-alias": "^1.8.17",
         "tsconfig-paths": "^4.2.0",
+        "tsx": "^4.22.4",
         "typescript": "^5.9.3"
     }
 }
