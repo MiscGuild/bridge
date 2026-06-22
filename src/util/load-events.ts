@@ -1,5 +1,3 @@
-import { Bot } from 'mineflayer';
-import EventEmitter from 'events';
 import path from 'path';
 import winston from 'winston';
 import regex from '@mineflayer/events/regex';
@@ -8,7 +6,25 @@ import Bridge from '../bridge';
 
 const isObjKey = <T extends object>(key: any, obj: T): key is keyof T => key in obj;
 
-export default async function loadEvents(dir: string, emitter: EventEmitter, bridge: Bridge) {
+type EventHandler = (...args: any[]) => void;
+
+interface EmitterLike {
+    on(event: string, listener: EventHandler): void;
+    once(event: string, listener: EventHandler): void;
+}
+
+interface ChatPatternEmitter extends EmitterLike {
+    addChatPattern(
+        name: string,
+        pattern: RegExp,
+        options: { repeat: boolean; parse: boolean }
+    ): void;
+}
+
+const hasChatPatternEmitter = (emitter: EmitterLike): emitter is ChatPatternEmitter =>
+    typeof (emitter as Partial<ChatPatternEmitter>).addChatPattern === 'function';
+
+export default async function loadEvents(dir: string, emitter: EmitterLike, bridge: Bridge) {
     const callback = async (currentDir: string, file: string) => {
         if (!(file.endsWith('.ts') || file.endsWith('.js')) || file.endsWith('.d.ts')) return;
 
@@ -25,8 +41,8 @@ export default async function loadEvents(dir: string, emitter: EventEmitter, bri
             return;
         }
 
-        if (isObjKey(name, regex)) {
-            (emitter as Bot).addChatPattern(name.replace('chat:', ''), regex[name], {
+        if (isObjKey(name, regex) && hasChatPatternEmitter(emitter)) {
+            emitter.addChatPattern(name.replace('chat:', ''), regex[name], {
                 repeat: true,
                 parse: true,
             });

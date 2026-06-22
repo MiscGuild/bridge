@@ -139,7 +139,7 @@ To raise an issue or bug report, please contact a developer or [open an issue](h
 Parts of this project adapt code from the following repositories:
 
 -   [hychat-mc/self-host](https://github.com/hychat-mc/self-host) under the MIT License.
-	- [xMdb/hypixel-guild-chat-bot](https://github.com/xmdb/hypixel-guild-chat-bot) originally licensed under the GPL-3.0 License, relicensed under the MIT License with explicit permission from the original author.
+-   [xMdb/hypixel-guild-chat-bot](https://github.com/xmdb/hypixel-guild-chat-bot) originally licensed under the GPL-3.0 License, relicensed under the MIT License with explicit permission from the original author.
 -   [unaussprechlich/hypixel-api-typescript](https://github.com/unaussprechlich/hypixel-api-typescript) under the MIT License.
 
 ## License
