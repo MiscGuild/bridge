@@ -8,7 +8,7 @@ export default {
             'gc',
             `${emojis.positiveEvent} The guild has completed this week's Guild Quest!`,
             0xffaa00,
-            true,
+            true
         );
     },
 } as BotEvent;

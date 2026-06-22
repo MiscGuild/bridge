@@ -27,7 +27,7 @@ export default {
         const gexp = Object.values(data!.expHistory).reduce((total, day) => total + day);
 
         bridge.mineflayer.execute(
-            `/w ${playerName} ${target}'s total weekly gexp: ${gexp.toLocaleString()}`,
+            `/w ${playerName} ${target}'s total weekly gexp: ${gexp.toLocaleString()}`
         );
     },
 } as BotEvent;

@@ -40,11 +40,11 @@ export default {
 
         await bridge.discord.send(
             'gc',
-            `${emojis.error} The bot was kicked from the server due to ${message}`,
+            `${emojis.error} The bot was kicked from the server due to ${message}`
         );
 
         winston.error(
-            `The bot was kicked from the server.\nReason: ${reason}\nLogged in: ${loggedIn}`,
+            `The bot was kicked from the server.\nReason: ${reason}\nLogged in: ${loggedIn}`
         );
 
         bridge.mineflayer.reconnectOrExit(bridge);

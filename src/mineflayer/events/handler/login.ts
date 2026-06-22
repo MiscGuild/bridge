@@ -9,24 +9,18 @@ export default {
 
         await bridge.discord.send(
             'gc',
-            `${emojis.success} **The bot has logged in and is now ready!**`,
+            `${emojis.success} **The bot has logged in and is now ready!**`
         );
 
         if (env.REMINDER_ENABLED) {
-            setInterval(
-                () => {
-                    bridge.mineflayer.chat('gc', env.REMINDER_MESSAGE);
-                },
-                1000 * 60 * env.REMINDER_FREQUENCY,
-            );
+            setInterval(() => {
+                bridge.mineflayer.chat('gc', env.REMINDER_MESSAGE);
+            }, 1000 * 60 * env.REMINDER_FREQUENCY);
         }
 
-        setInterval(
-            () => {
-                bridge.mineflayer.execute('/g online');
-            },
-            1000 * 60 * 5,
-        );
+        setInterval(() => {
+            bridge.mineflayer.execute('/g online');
+        }, 1000 * 60 * 5);
 
         setTimeout(() => {
             bridge.mineflayer.execute('/g online');

@@ -8,7 +8,7 @@ export default {
         winston.warn(`Comment blocked by Hypixel: ${comment} (${reason})`);
         await bridge.discord.send(
             'oc',
-            `${emojis.alert} "${comment}" was blocked by Hypixel because **${reason}**. Developers will not take responsibility for banned accounts.`,
+            `${emojis.alert} "${comment}" was blocked by Hypixel because **${reason}**. Developers will not take responsibility for banned accounts.`
         );
     },
 } as BotEvent;

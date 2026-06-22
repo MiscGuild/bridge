@@ -17,7 +17,7 @@ interface ChatPatternEmitter extends EmitterLike {
     addChatPattern(
         name: string,
         pattern: RegExp,
-        options: { repeat: boolean; parse: boolean },
+        options: { repeat: boolean; parse: boolean }
     ): void;
 }
 

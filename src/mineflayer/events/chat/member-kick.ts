@@ -9,17 +9,17 @@ export default {
         rank: string | undefined,
         playerName: string,
         kickerRank: string | undefined,
-        kickerName: string,
+        kickerName: string
     ) => {
         await bridge.discord.send(
             'gc',
             `${emojis.negativeEvent} **${rank ? `${rank} ` : ''}${escapeMarkdown(
-                playerName,
+                playerName
             )}** was kicked by **${kickerRank ? `${kickerRank} ` : ''}${escapeMarkdown(
-                kickerName,
+                kickerName
             )}**`,
             undefined,
-            true,
+            true
         );
     },
 } as BotEvent;

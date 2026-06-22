@@ -22,34 +22,34 @@
 > [!Note]
 > This application will no longer receive updates that contain new features or QOL improvements. Updates, where necessary, will only contain patches for security vulnerabilities and bugs.
 
-- [Features](#features)
-- [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Setup](#setup)
-    - [Hypixel API keys](#hypixel-api-keys)
-    - [Process management](#process-management)
-- [Contributing](#contributing)
-    - [Issues and bug reports](#issues-and-bug-reports)
-- [Acknowledgements](#acknowledgements)
-- [License](#license)
+-   [Features](#features)
+-   [Installation](#installation)
+    -   [Prerequisites](#prerequisites)
+    -   [Setup](#setup)
+    -   [Hypixel API keys](#hypixel-api-keys)
+    -   [Process management](#process-management)
+-   [Contributing](#contributing)
+    -   [Issues and bug reports](#issues-and-bug-reports)
+-   [Acknowledgements](#acknowledgements)
+-   [License](#license)
 
 ## Features
 
-- Bridges between Discord and Hypixel guild chats.
-- Sends all guild related messages, including chat, guild announcements and more to Discord.
-- Automatic restarts and reconnections.
-- Privileged slash commands to control bot behaviour in-game.
-- Toggleable slowmode to control member usage.
-- Basic filtering of extreme profanity to protect bot accounts from abuse.
-- Configurable in-game reminders to spread the word about news and upcoming events.
+-   Bridges between Discord and Hypixel guild chats.
+-   Sends all guild related messages, including chat, guild announcements and more to Discord.
+-   Automatic restarts and reconnections.
+-   Privileged slash commands to control bot behaviour in-game.
+-   Toggleable slowmode to control member usage.
+-   Basic filtering of extreme profanity to protect bot accounts from abuse.
+-   Configurable in-game reminders to spread the word about news and upcoming events.
 
 ## Installation
 
 ### Prerequisites
 
-- [Git](https://git-scm.com/downloads)
-- [NodeJS](https://nodejs.org/en/) and npm
-- A full access Minecraft Java Edition account
+-   [Git](https://git-scm.com/downloads)
+-   [NodeJS](https://nodejs.org/en/) and npm
+-   A full access Minecraft Java Edition account
 
 ### Setup
 
@@ -124,9 +124,9 @@ Pull requests are welcome. If you would like to chat with other developers pleas
 
 Before submitting your changes for review, please ensure:
 
-- The application is fully functional
-- Your code has been thoroughly tested
-- Your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+-   The application is fully functional
+-   Your code has been thoroughly tested
+-   Your commit messages adhere to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 Give this repository a ⭐ if it helped you!
 
@@ -138,9 +138,9 @@ To raise an issue or bug report, please contact a developer or [open an issue](h
 
 Parts of this project adapt code from the following repositories:
 
-- [hychat-mc/self-host](https://github.com/hychat-mc/self-host) under the MIT License.
-- [xMdb/hypixel-guild-chat-bot](https://github.com/xmdb/hypixel-guild-chat-bot) originally licensed under the GPL-3.0 License, relicensed under the MIT License with explicit permission from the original author.
-- [unaussprechlich/hypixel-api-typescript](https://github.com/unaussprechlich/hypixel-api-typescript) under the MIT License.
+-   [hychat-mc/self-host](https://github.com/hychat-mc/self-host) under the MIT License.
+-   [xMdb/hypixel-guild-chat-bot](https://github.com/xmdb/hypixel-guild-chat-bot) originally licensed under the GPL-3.0 License, relicensed under the MIT License with explicit permission from the original author.
+-   [unaussprechlich/hypixel-api-typescript](https://github.com/unaussprechlich/hypixel-api-typescript) under the MIT License.
 
 ## License
 

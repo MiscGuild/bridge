@@ -5,7 +5,7 @@ const oldPaths = ['.env.template', 'src/blacklist/_blacklist.json.template'];
 oldPaths.forEach((path) => {
     if (!fs.existsSync(path)) {
         console.warn(
-            `'${path}' does not exist. If you have NOT run this command before, you may need to repair your installation.`,
+            `'${path}' does not exist. If you have NOT run this command before, you may need to repair your installation.`
         );
 
         return;

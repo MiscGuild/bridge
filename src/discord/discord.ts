@@ -14,7 +14,7 @@ export default class Discord extends Client {
         channel: 'gc' | 'oc',
         content: string,
         color: ColorResolvable = 0x36393f,
-        pad = false,
+        pad = false
     ) {
         const embed = new EmbedBuilder()
             .setDescription(pad ? `${'-'.repeat(54)}\n${content}\n${'-'.repeat(54)}` : content)
@@ -40,7 +40,7 @@ export default class Discord extends Client {
 
             if (!command.run) {
                 winston.warn(
-                    `The command ${command.data.name} doesn't have an executable function!`,
+                    `The command ${command.data.name} doesn't have an executable function!`
                 );
                 return;
             }
@@ -51,7 +51,7 @@ export default class Discord extends Client {
         await recursiveWalkDir(
             path.join(__dirname, 'commands/'),
             callback,
-            'Error while loading commands:',
+            'Error while loading commands:'
         );
     }
 

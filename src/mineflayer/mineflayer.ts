@@ -41,7 +41,7 @@ export default class Mineflayer {
             winston.info(
                 `Sending to Limbo. Attempting disconnect.spam in ${triesBeforeSpam} ${
                     LIMBO_SPAM_THRESHOLD - this.limboAttempts === 1 ? 'try' : 'tries'
-                }`,
+                }`
             );
 
             this.execute('§');

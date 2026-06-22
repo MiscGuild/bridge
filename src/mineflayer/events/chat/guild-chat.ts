@@ -10,7 +10,7 @@ export default {
         rank: string | undefined,
         playerName: string,
         guildRank: string | undefined,
-        message: string,
+        message: string
     ) => {
         const content = ` **${rank ? `${rank} ` : ''}${escapeMarkdown(playerName)}${
             guildRank ? ` ${guildRank}` : ''

@@ -5,7 +5,7 @@ export default async (uuid: string) => {
         return { status: 400, statusText: 'Missing Hypixel API key' } as FetchError;
 
     const response = await fetch(
-        `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&player=${uuid}`,
+        `https://api.hypixel.net/guild?key=${env.HYPIXEL_API_KEY}&player=${uuid}`
     );
 
     return response.status === 200

@@ -11,7 +11,7 @@ export default {
         type: 'muted' | 'unmuted',
         victimRank: string | undefined,
         victimName: string,
-        duration: string | undefined,
+        duration: string | undefined
     ) => {
         const content = `${type === 'unmuted' ? emojis.positiveEvent : emojis.negativeEvent} **${
             authorRank ? `${authorRank} ` : ''

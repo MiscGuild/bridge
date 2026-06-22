@@ -6,14 +6,14 @@ export default {
     runOnce: true,
     run: async (bridge) => {
         bridge.discord.application?.commands.set(
-            bridge.discord.commands.map((command) => command.data),
+            bridge.discord.commands.map((command) => command.data)
         );
 
         bridge.discord.memberChannel = (await bridge.discord.channels.fetch(
-            env.MEMBER_CHANNEL_ID,
+            env.MEMBER_CHANNEL_ID
         )) as TextChannel;
         bridge.discord.officerChannel = (await bridge.discord.channels.fetch(
-            env.OFFICER_CHANNEL_ID,
+            env.OFFICER_CHANNEL_ID
         )) as TextChannel;
 
         bridge.setStatus();
