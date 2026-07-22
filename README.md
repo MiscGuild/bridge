@@ -39,17 +39,17 @@
 
 - **Bidirectional chat bridge** — Guild chat and Officer chat ↔ Discord channels
 - **Rich Discord embeds** for all guild events (joins, leaves, kicks, mutes, promotions)
-- **Officer channel notifications** — invite tracking, Urchin cheater alerts, auto-kicks, all as rich embeds
+- **Officer channel notifications** — invite tracking, Coral cheater alerts, auto-kicks, all as rich embeds
 - **Guild invite tracker** — detects who invited a new member via `/g log`, stores history
 - **Dual blacklist system**
     - _Guild Blacklist_ — blocks players from the guild, supports expiry
-    - _Urchin Blacklist_ — real-time cheater tag checks on join
-- **Warning system** — warns players via in-game `/msg`, Discord DM (falls back to GC), tracks in DB with audit log
+    - _Coral Tags_ — real-time cheater tag checks via [Coral API](https://api.urchin.gg) on join
 - **Mute system** — syncs in-game guild mutes to a Discord Muted role (auto-expires)
 - **Networth** — SkyBlock profile net worth calculation via skyhelper-networth
 - **GEXP history** — tracks daily guild experience, leaderboard with bar chart, player graphs
 - **30+ stat commands** — BedWars, SkyWars, Duels, UHC, Pit, SkyBlock, Networth, and more
 - **Session tracking** — track stat gains during a play session
+- **Guild tournaments (Phase 1–5)** — weighted delta leaderboard, teams, weekly sub-winners, Coral auto-DQ, qualifying logins (≥15m guild-chat presence), channel digests, Discord commands
 - **Dynamic guild ranks** — fetches rank names and tags from Hypixel API with .env fallback
 - **Analytics** — daily message counts, top chatters, guild event tracking
 - **REST API** — protected endpoints for guild data, stats, analytics, GEXP, moderation
@@ -135,11 +135,8 @@
 | --------------------------------------------- | ------------------------------------------------------------------ |
 | `!ban <player> <reason>`                      | Bridge-ban a player                                                |
 | `!unban <player>`                             | Remove bridge-ban                                                  |
-| `!warn <player> <reason>`                     | Warn a player — sends in-game `/msg`, Discord DM, falls back to GC |
-| `!warns <player>`                             | View warnings (works in GC and OC)                                 |
-| `!clearwarns <player>`                        | Clear all warnings                                                 |
 | `!ismuted <player>`                           | Check mute status (works in GC and OC)                             |
-| `!blacklist view <player>`                    | Check Urchin blacklist tags                                        |
+| `!blacklist view <player>`                    | Check Coral blacklist tags                                         |
 | `!blacklist add <player> <reason> [duration]` | Add to guild blacklist                                             |
 | `!blacklist remove <player>`                  | Remove from guild blacklist                                        |
 | `!blacklist list`                             | List all blacklisted players                                       |
@@ -152,12 +149,11 @@
 
 | Command                            | Description                                  |
 | ---------------------------------- | -------------------------------------------- |
-| `/blacklist check/add/remove/list` | Manage guild blacklist and check Urchin tags |
+| `/blacklist check/add/remove/list` | Manage guild blacklist and check Coral tags  |
 | `/gexp player <username> [days]`   | Player GEXP history graph                    |
 | `/gexp leaderboard [days] [top]`   | Guild GEXP leaderboard with chart            |
 | `/gexp sync`                       | Force-sync GEXP data from Hypixel            |
 | `/mute mute/unmute/info`           | Manage Discord mute role sync                |
-| `/warn add/list/clear`             | Manage player warnings                       |
 | `/kick <player> [reason]`          | Kick from guild                              |
 | `/invite <player>`                 | Invite to guild                              |
 | `/promote / /demote <player>`      | Promote or demote a guild member             |
@@ -165,6 +161,24 @@
 | `/slowmode <seconds>`              | Set bridge channel slowmode                  |
 | `/command <cmd>`                   | Execute arbitrary Minecraft command          |
 | `/next level <ign> <levelwanted> [avg_exp]` | Games & XP needed to reach a target BedWars star (avg_exp default 150) |
+| `/tournament create/start/end/cancel` | Staff: manage guild tournament lifecycle |
+| `/tournament info` | Tournament status, participant/team/week counts |
+| `/tournament leaderboard [type] [top] [id]` | Solo or team weighted leaderboard (`type`: solo\|team) |
+| `/tournament me [username] [id]` | Personal standing, deltas, and team if any |
+| `/tournament weeks [week] [id]` | Weekly sub-winners or live current-week standing |
+| `/tournament digest [id]` | Staff: force-post daily digest to tournament channel |
+| `/tournament dq/undq <player> [id]` | Staff: manual disqualify / clear DQ |
+| `/tournament team create/invite/join/leave/kick/info/list` | Phase 2 team lifecycle (max 5) |
+
+#### Tournament Phase 1–5 notes
+
+- Scoring uses **full-window deltas** × the **balanced** weight pack (Duels 1, TNT/BB/Party 3, SW 5, BW wins 9, BW final kills 2.5, GEXP 0.02, qualifying login 20).
+- `/tournament start` snapshots all current guild members and opens membership segments (leave/rejoin only counts in-guild progress).
+- Announces go to the tournament's `channel` option, or `TOURNAMENT_CHANNEL_ID` if set.
+- **Teams (Phase 2):** max 5 players; hybrid team score = `0.7 × average + 0.3 × (sum / 5)` from active members only (left/DQ excluded). Solo and team podiums are announced separately on end. Create/invite/join/leave/kick only while draft or active. Captain leave transfers to earliest-enrolled remaining member, or disbands if alone. One team per player per tournament; join requires a captain invite.
+- **Weekly slices (Phase 3):** week 1 = `starts_at` → +7d, then successive 7-day windows until `ends_at` (partial final week OK). **Weekly score** = in-window delta from nearest snapshots (membership segments still apply). Overall leaderboard formula is unchanged. Completed weeks are **frozen** into `tournament_week_results` so re-announce does not drift. Daily digest (top movers + solo top 10 + team top 5) posts once/day at `TOURNAMENT_DAILY_DIGEST_HOUR` UTC; weekly job announces solo/team top 3 sub-winners.
+- **Coral auto-DQ (Phase 4):** players with Coral tags `caution`, `closet cheater`, `blatant cheater`, or `sniper` (case/spacing normalized; exact match after normalize — e.g. `possible sniper` does not match) are set to `disqualified`. Checked on tournament start/enroll, on guild join into an active tournament, and on a periodic job (`TOURNAMENT_CORAL_CHECK_INTERVAL_MINUTES`). One channel embed per DQ event. Staff can `/tournament dq` / `/tournament undq`. Requires `URCHIN_API_KEY`; if unset, Coral checks are skipped (guild blacklist kick behavior is unchanged).
+- **Qualifying logins (Phase 5):** bridge `Guild > player joined/left.` presence starts a continuous online streak; after **≥15 minutes** continuous, +1 `qualifying_logins` (weight 20) for active participants. Leaving guild chat/offline or leaving guild membership closes the streak (no partial credit). Counts persist on the participant and are merged into snapshot stats for scoring deltas.
 
 ---
 
@@ -233,6 +247,16 @@ npm start
 | `BOT_OWNER_ID`         | Your Discord user ID                                |
 | `STAFF_ROLE_ID`        | Staff role ID for command gating                    |
 
+#### Optional — Tournament
+
+| Variable | Description |
+| -------- | ----------- |
+| `TOURNAMENT_CHANNEL_ID` | Default channel for tournament create/start/end embeds |
+| `TOURNAMENT_RESNAPSHOT_INTERVAL_MINUTES` | Active tournament resnapshot interval (default `30`) |
+| `TOURNAMENT_DAILY_DIGEST_HOUR` | UTC hour (0–23) for daily digest post (default `18`) |
+| `TOURNAMENT_WEEKLY_CHECK_INTERVAL_MINUTES` | How often to check for week rollovers (default `60`) |
+| `TOURNAMENT_CORAL_CHECK_INTERVAL_MINUTES` | Coral auto-DQ sweep interval for active tournaments (default `60`) |
+
 #### Optional — Minecraft & API
 
 | Variable                       | Description                               |
@@ -285,8 +309,8 @@ npm start
 | Variable            | Description                            |
 | ------------------- | -------------------------------------- |
 | `BAN_ALLOWED_RANKS` | Ranks allowed to use ban commands      |
-| `URCHIN_JOIN_CHECK` | Auto-check new joins against Urchin DB |
-| `URCHIN_API_KEY`    | Urchin cheater database API key        |
+| `URCHIN_JOIN_CHECK` | Auto-check new joins against Coral tags (requires `URCHIN_API_KEY`) |
+| `URCHIN_API_KEY`    | Coral API key (`https://api.urchin.gg`)                             |
 
 #### Optional — Cooldowns & Rank Fallbacks
 
@@ -313,7 +337,7 @@ All data defaults to local JSON files in `data/`. To use Supabase, set `SUPABASE
 -- Run src/db/schema.sql in your Supabase SQL editor
 ```
 
-Tables: `guild_members`, `chat_messages`, `analytics_daily`, `analytics_chatters`, `sessions`, `bans`, `blacklist`, `mutes`, `warns`, `guild_invites`, `gexp_daily`, `audit_log`, `webhooks`, `bot_health`.
+Tables: `guild_members`, `chat_messages`, `analytics_daily`, `analytics_chatters`, `sessions`, `bans`, `blacklist`, `mutes`, `guild_invites`, `gexp_daily`, `audit_log`, `webhooks`, `bot_health`.
 
 ---
 

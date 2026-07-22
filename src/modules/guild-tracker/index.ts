@@ -3,6 +3,10 @@ import type { ParsedChatEvent } from '@/bot/chat-parser';
 import { mojangService } from '@/services/mojang';
 import { guildMembersRepo } from '@/db/repositories/guild-members.repo';
 import { hypixelService } from '@/services/hypixel';
+import {
+    onGuildMemberJoined,
+    onGuildMemberLeft,
+} from '@/modules/tournament/membership';
 import { consola } from 'consola';
 
 /** Called from bridge for every parsed event — passively track join/leave/kick/promote */
@@ -13,19 +17,24 @@ export async function trackGuildEvent(event: ParsedChatEvent, _bridge: Bridge): 
                 const profile = await mojangService.getProfile(event.playerName).catch(() => null);
                 if (profile) {
                     await guildMembersRepo.upsert(profile.id, profile.name, null).catch(() => {});
+                    await onGuildMemberJoined(profile.id, profile.name, _bridge).catch(() => {});
                 }
             } else if (event.status === 'left') {
                 // Look up UUID to call markLeft
                 const profile = await mojangService.getProfile(event.playerName).catch(() => null);
                 if (profile) {
                     await guildMembersRepo.markLeft(profile.id).catch(() => {});
+                    await onGuildMemberLeft(profile.id, profile.name).catch(() => {});
                 }
             }
             break;
         }
         case 'memberKick': {
             const profile = await mojangService.getProfile(event.playerName).catch(() => null);
-            if (profile) await guildMembersRepo.markLeft(profile.id).catch(() => {});
+            if (profile) {
+                await guildMembersRepo.markLeft(profile.id).catch(() => {});
+                await onGuildMemberLeft(profile.id, profile.name).catch(() => {});
+            }
             break;
         }
         case 'promoteDemote': {

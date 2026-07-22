@@ -33,6 +33,16 @@ const envSchema = z.object({
     MEMBER_CHANNEL_ID: SNOWFLAKE,
     OFFICER_CHANNEL_ID: SNOWFLAKE,
     BLACKLIST_CHANNEL_ID: SNOWFLAKE,
+    /** Optional default channel for tournament create/start/end embeds */
+    TOURNAMENT_CHANNEL_ID: SNOWFLAKE.optional(),
+    /** Minutes between active-tournament resnapshots (default 30) */
+    TOURNAMENT_RESNAPSHOT_INTERVAL_MINUTES: z.coerce.number().int().min(1).default(30),
+    /** UTC hour (0–23) to post the daily tournament digest (default 18) */
+    TOURNAMENT_DAILY_DIGEST_HOUR: z.coerce.number().int().min(0).max(23).default(18),
+    /** Minutes between weekly sub-winner rollover checks (default 60) */
+    TOURNAMENT_WEEKLY_CHECK_INTERVAL_MINUTES: z.coerce.number().int().min(1).default(60),
+    /** Minutes between Coral auto-DQ sweeps on active tournaments (default 60) */
+    TOURNAMENT_CORAL_CHECK_INTERVAL_MINUTES: z.coerce.number().int().min(1).default(60),
     BOT_OWNER_ID: SNOWFLAKE,
     STAFF_ROLE_ID: SNOWFLAKE,
 
@@ -65,7 +75,9 @@ const envSchema = z.object({
     // === STAFF / MODERATION ===
     BAN_ALLOWED_RANKS: OPTIONAL_STRING,
     BAN_CHECK_INTERVAL: z.coerce.number().int().min(1).default(10),
+    /** When true (and URCHIN_API_KEY is set), alert OC on guild join if Coral tags exist */
     URCHIN_JOIN_CHECK: OPTIONAL_BOOLEAN,
+    /** Coral API key (api.urchin.gg) — env name kept for compatibility */
     URCHIN_API_KEY: OPTIONAL_STRING,
     BLACKLIST_ANONYMOUS: BOOLEAN.default('false'), // Hide moderator name in blacklist embeds
     BLACKLIST_REJOIN_EXTENSION_MONTHS: z.coerce.number().int().min(1).default(2),

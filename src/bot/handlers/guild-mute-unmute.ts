@@ -3,7 +3,7 @@ import type { ParsedMuteUnmute } from '@/bot/chat-parser';
 import { escapeMarkdown } from '@/util/formatting';
 import emojis from '@/util/emojis';
 import { consola } from 'consola';
-import { handleMuteSyncFromGame } from '@/modules/mute-warn/index';
+import { handleMuteSyncFromGame } from '@/modules/mute/index';
 
 export async function handleGuildMuteUnmute(
     bridge: Bridge,

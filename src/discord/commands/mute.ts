@@ -8,7 +8,7 @@ import {
     dmUser,
     parseDuration,
     formatRemaining,
-} from '@/modules/mute-warn/index';
+} from '@/modules/mute/index';
 
 export default {
     data: {

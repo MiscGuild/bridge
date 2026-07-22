@@ -184,21 +184,8 @@ CREATE TABLE IF NOT EXISTS mutes (
 CREATE INDEX IF NOT EXISTS idx_mutes_uuid ON mutes (uuid, is_active);
 CREATE INDEX IF NOT EXISTS idx_mutes_active ON mutes (is_active) WHERE is_active = TRUE;
 
--- =====================================================
--- warns
--- =====================================================
-CREATE TABLE IF NOT EXISTS warns (
-    id          TEXT PRIMARY KEY,
-    uuid        TEXT NOT NULL,
-    username    TEXT NOT NULL,
-    discord_id  TEXT,
-    reason      TEXT NOT NULL,
-    warned_by   TEXT NOT NULL,
-    warned_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_warns_uuid ON warns (uuid);
-CREATE INDEX IF NOT EXISTS idx_warns_username ON warns (username);
+-- warns table removed from Bridge (warnings handled by a separate Discord bot).
+-- Existing deployments may still have an unused `warns` table; safe to DROP if desired.
 
 -- =====================================================
 -- guild_invites
@@ -240,3 +227,149 @@ RETURNS TABLE(uuid TEXT, username TEXT, total BIGINT) AS $$
     ORDER BY total DESC
     LIMIT p_limit;
 $$ LANGUAGE sql STABLE;
+
+-- =====================================================
+-- tournaments (Guild Tournament — Phase 1)
+-- =====================================================
+CREATE TABLE IF NOT EXISTS tournaments (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name        TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'draft'
+                CHECK (status IN ('draft', 'active', 'ended', 'cancelled')),
+    metrics     JSONB NOT NULL DEFAULT '{}',
+    starts_at   TIMESTAMPTZ NOT NULL,
+    ends_at     TIMESTAMPTZ NOT NULL,
+    channel_id  TEXT,
+    created_by  TEXT NOT NULL,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    started_at  TIMESTAMPTZ,
+    ended_at    TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_tournaments_status ON tournaments (status);
+
+-- =====================================================
+-- tournament_teams (Guild Tournament — Phase 2)
+-- =====================================================
+CREATE TABLE IF NOT EXISTS tournament_teams (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tournament_id   UUID NOT NULL REFERENCES tournaments(id) ON DELETE CASCADE,
+    name            TEXT NOT NULL,
+    captain_uuid    TEXT NOT NULL,
+    pending_invites JSONB NOT NULL DEFAULT '[]',
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (tournament_id, name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_tournament_teams_tid
+    ON tournament_teams (tournament_id);
+
+-- =====================================================
+-- tournament_participants
+-- =====================================================
+CREATE TABLE IF NOT EXISTS tournament_participants (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tournament_id   UUID NOT NULL REFERENCES tournaments(id) ON DELETE CASCADE,
+    uuid            TEXT NOT NULL,
+    username        TEXT NOT NULL,
+    baseline_stats  JSONB NOT NULL DEFAULT '{}',
+    status          TEXT NOT NULL DEFAULT 'active'
+                    CHECK (status IN ('active', 'left', 'disqualified')),
+    team_id         UUID REFERENCES tournament_teams(id) ON DELETE SET NULL,
+    qualifying_logins INT NOT NULL DEFAULT 0,
+    enrolled_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (tournament_id, uuid)
+);
+
+CREATE INDEX IF NOT EXISTS idx_tournament_participants_tid
+    ON tournament_participants (tournament_id);
+CREATE INDEX IF NOT EXISTS idx_tournament_participants_uuid
+    ON tournament_participants (uuid);
+CREATE INDEX IF NOT EXISTS idx_tournament_participants_team
+    ON tournament_participants (team_id);
+
+-- Phase 2 migration for DBs that already had Phase 1 participants (no FK / index).
+DO $$ BEGIN
+    ALTER TABLE tournament_participants
+        ADD CONSTRAINT tournament_participants_team_id_fkey
+        FOREIGN KEY (team_id) REFERENCES tournament_teams(id) ON DELETE SET NULL;
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+    WHEN undefined_column THEN NULL;
+END $$;
+
+-- =====================================================
+-- tournament_membership_segments
+-- Tracks periods a player was in the guild during a tournament
+-- (leave/rejoin foundation — only count progress while in guild)
+-- =====================================================
+CREATE TABLE IF NOT EXISTS tournament_membership_segments (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tournament_id   UUID NOT NULL REFERENCES tournaments(id) ON DELETE CASCADE,
+    uuid            TEXT NOT NULL,
+    joined_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    left_at         TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_tournament_segments_tid_uuid
+    ON tournament_membership_segments (tournament_id, uuid);
+
+-- =====================================================
+-- tournament_snapshots
+-- =====================================================
+CREATE TABLE IF NOT EXISTS tournament_snapshots (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tournament_id   UUID NOT NULL REFERENCES tournaments(id) ON DELETE CASCADE,
+    uuid            TEXT NOT NULL,
+    taken_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    stats           JSONB NOT NULL DEFAULT '{}'
+);
+
+CREATE INDEX IF NOT EXISTS idx_tournament_snapshots_tid_uuid
+    ON tournament_snapshots (tournament_id, uuid, taken_at DESC);
+
+-- =====================================================
+-- tournament_week_results (Guild Tournament — Phase 3)
+-- Frozen weekly sub-winners so digests can re-announce without recalc drift
+-- =====================================================
+CREATE TABLE IF NOT EXISTS tournament_week_results (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tournament_id   UUID NOT NULL REFERENCES tournaments(id) ON DELETE CASCADE,
+    week_number     INT NOT NULL CHECK (week_number >= 1),
+    week_starts_at  TIMESTAMPTZ NOT NULL,
+    week_ends_at    TIMESTAMPTZ NOT NULL,
+    solo_podium     JSONB NOT NULL DEFAULT '[]',
+    team_podium     JSONB NOT NULL DEFAULT '[]',
+    frozen_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (tournament_id, week_number)
+);
+
+CREATE INDEX IF NOT EXISTS idx_tournament_week_results_tid
+    ON tournament_week_results (tournament_id, week_number);
+
+-- Phase 3: last daily digest timestamp (spam guard)
+DO $$ BEGIN
+    ALTER TABLE tournaments
+        ADD COLUMN last_daily_digest_at TIMESTAMPTZ;
+EXCEPTION
+    WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Phase 5: cumulative qualifying logins on participants
+DO $$ BEGIN
+    ALTER TABLE tournament_participants
+        ADD COLUMN qualifying_logins INT NOT NULL DEFAULT 0;
+EXCEPTION
+    WHEN duplicate_column THEN NULL;
+END $$;
+
+-- =====================================================
+-- tournament_online_presence (Guild Tournament — Phase 5)
+-- Open guild-chat online streak per player (Hypixel join/leave)
+-- =====================================================
+CREATE TABLE IF NOT EXISTS tournament_online_presence (
+    uuid        TEXT PRIMARY KEY,
+    username    TEXT NOT NULL,
+    joined_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    credited    BOOLEAN NOT NULL DEFAULT FALSE
+);

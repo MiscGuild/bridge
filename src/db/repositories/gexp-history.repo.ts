@@ -113,4 +113,18 @@ export const gexpHistoryRepo = {
         const all = await jsonRead();
         return all.filter((r) => r.date === date).sort((a, b) => b.gexp_earned - a.gexp_earned);
     },
+
+    /** Lifetime cumulative GEXP for a player (monotonic counter for tournament deltas). */
+    async getLifetimeTotal(uuid: string): Promise<number> {
+        const db = getSupabaseClient();
+        if (db) {
+            const { data } = await db.from('gexp_daily').select('gexp_earned').eq('uuid', uuid);
+            const rows = (data as { gexp_earned: number }[] | null) ?? [];
+            return rows.reduce((sum, r) => sum + (r.gexp_earned ?? 0), 0);
+        }
+        const all = await jsonRead();
+        return all
+            .filter((r) => r.uuid === uuid)
+            .reduce((sum, r) => sum + (r.gexp_earned ?? 0), 0);
+    },
 };

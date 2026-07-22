@@ -6,6 +6,7 @@ export const MINECRAFT_VERSION = '1.8.9';
 export const HYPIXEL_API_BASE = 'https://api.hypixel.net';
 export const HYPIXEL_API_V2_BASE = 'https://api.hypixel.net/v2';
 export const MOJANG_API_BASE = 'https://api.mojang.com';
+export const CORAL_API_BASE = 'https://api.urchin.gg';
 
 /** Hypixel rank color mapping (rank tag → hex color) */
 export const RANK_COLORS: Record<string, number> = {

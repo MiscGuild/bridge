@@ -33,7 +33,7 @@ import {
     handleWhisper,
 } from '@/bot/handlers/misc';
 import { trackInviteOnJoin } from '@/modules/invite-tracker/index';
-import { syncDiscordMuteRole } from '@/modules/mute-warn/index';
+import { syncDiscordMuteRole } from '@/modules/mute/index';
 
 export default class Bridge {
     public readonly bot: MinecraftBot;

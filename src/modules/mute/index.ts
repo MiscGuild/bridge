@@ -2,11 +2,9 @@ import { GuildMember } from 'discord.js';
 import { consola } from 'consola';
 import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand } from '@/modules/types';
-import { mutesRepo, warnsRepo } from '@/db/repositories/mutes.repo';
-import { auditLogRepo } from '@/db/repositories/audit-log.repo';
+import { mutesRepo } from '@/db/repositories/mutes.repo';
 import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
-import { guildRankService } from '@/services/guild-ranks';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -91,7 +89,7 @@ export async function findDiscordMember(
 }
 
 /**
- * DM a Discord user about a mute or warn.
+ * DM a Discord user about a mute.
  * Returns true if the DM was sent successfully, false if DMs are disabled.
  */
 export async function dmUser(
@@ -161,121 +159,12 @@ export async function handleMuteSyncFromGame(
     }
 }
 
-// ── In-game commands (OC-only for moderation, GC for info) ────────────────────
+// ── In-game commands ──────────────────────────────────────────────────────────
 
-export function registerMuteWarnModule(commands: ModuleCommand[]): void {
-    // !warn <username> <reason> — Officer Chat only
-    commands.push({
-        commandId: 'mutewarn:warn',
-        pattern: /^!warn\s+(\S+)(?:\s+(.+))?/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (ctx.channel !== 'Officer') {
-                bridge.bot.chat(
-                    ctx.replyChannel,
-                    `${ctx.username}, !warn can only be used in Officer Chat.`
-                );
-                return;
-            }
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat('oc', `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-            const reason = ctx.matches[2] ?? 'No reason provided';
-
-            const profile = await mojangService.getProfile(target).catch(() => null);
-            const discordMember = await findDiscordMember(bridge, target);
-            await warnsRepo
-                .create({
-                    uuid: profile?.id ?? '',
-                    username: target,
-                    discord_id: discordMember?.id ?? null,
-                    reason,
-                    warned_by: ctx.username,
-                })
-                .catch(() => {});
-
-            const total = (await warnsRepo.getByUsername(target).catch(() => [])).length;
-            await auditLogRepo.log(ctx.username, 'warn', target, { reason }).catch(() => {});
-
-            // 1. In-game /msg to the offender; fall back to GC if offline/blocked
-            let igStatus = 'IG DM';
-            try {
-                await bridge.bot.executeAndCapture(
-                    `/msg ${target} You have been warned in the guild for: ${reason} (${total} total)`
-                );
-            } catch {
-                igStatus = 'IG FAIL';
-                bridge.bot.chat(
-                    'gc',
-                    `${target}, you have been warned by ${ctx.username}: ${reason} (${total} total)`
-                );
-            }
-
-            // 2. Discord DM; silently fail if DMs are off
-            let dcStatus = 'DC DM';
-            const dmText = `You have received a warning from **${ctx.username}**: ${reason}\nTotal warnings: ${total}`;
-            const dmSent = await dmUser(bridge, discordMember?.id, dmText);
-            if (!dmSent) {
-                dcStatus = 'DC FAIL';
-            }
-
-            // 3. Confirm in OC with delivery status
-            bridge.bot.chat(
-                'oc',
-                `Warned: ${target} For: ${reason} By: ${ctx.username} Status: ${dcStatus} & ${igStatus}`
-            );
-        },
-    });
-
-    // !warns <username> — viewable in both GC and OC
-    commands.push({
-        commandId: 'mutewarn:warns',
-        pattern: /^!warns\s+(\S+)/i,
-        async handler(ctx, bridge) {
-            const target = ctx.matches[1]!;
-            const channel = ctx.channel === 'Officer' ? 'oc' : 'gc';
-            const warns = await warnsRepo.getByUsername(target).catch(() => []);
-            if (warns.length === 0) {
-                bridge.bot.chat(channel, `${target} has no warnings.`);
-                return;
-            }
-            bridge.bot.chat(channel, `${target} has ${warns.length} warning(s):`);
-            for (const w of warns.slice(-5)) {
-                const date = new Date(w.warned_at).toLocaleDateString();
-                bridge.bot.chat(channel, `• ${date} by ${w.warned_by}: ${w.reason}`);
-            }
-        },
-    });
-
-    // !clearwarns <username> — Officer Chat only
-    commands.push({
-        commandId: 'mutewarn:clearwarns',
-        pattern: /^!clearwarns\s+(\S+)/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (ctx.channel !== 'Officer') {
-                bridge.bot.chat(
-                    ctx.replyChannel,
-                    `${ctx.username}, !clearwarns can only be used in Officer Chat.`
-                );
-                return;
-            }
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat('oc', `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-            const count = await warnsRepo.clearByUsername(target).catch(() => 0);
-            await auditLogRepo.log(ctx.username, 'clearwarns', target).catch(() => {});
-            bridge.bot.chat('oc', `Cleared ${count} warning(s) for ${target}`);
-        },
-    });
-
+export function registerMuteModule(commands: ModuleCommand[]): void {
     // !ismuted <username> — viewable in both GC and OC
     commands.push({
-        commandId: 'mutewarn:ismuted',
+        commandId: 'mute:ismuted',
         pattern: /^!ismuted\s+(\S+)/i,
         async handler(ctx, bridge) {
             const target = ctx.matches[1]!;

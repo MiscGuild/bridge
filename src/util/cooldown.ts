@@ -50,7 +50,7 @@ export class CooldownManager {
     }
 }
 
-// Keep COOLDOWN_URCHIN as a direct env read (urchin is not a guild rank)
+// Keep COOLDOWN_URCHIN as a direct env read (Coral !view is not a guild rank)
 export const URCHIN_COOLDOWN = env.COOLDOWN_URCHIN;
 
 export default new CooldownManager();

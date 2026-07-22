@@ -3,21 +3,13 @@ import type { ModuleCommand } from '@/modules/types';
 import { blacklistRepo, type BlacklistRecord } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
 import { hypixelService } from '@/services/hypixel';
+import { getPlayerTags } from '@/services/coral';
 import { EmbedBuilder, TextChannel } from 'discord.js';
 import { consola } from 'consola';
 import cooldowns from '@/util/cooldown';
 import env from '@/config/env';
 import { guildRankService } from '@/services/guild-ranks';
 import messageQueue from '@/queue/message-queue';
-
-interface UrchinTag {
-    type: string;
-    reason?: string;
-}
-
-interface UrchinResponse {
-    tags?: UrchinTag[];
-}
 
 function hex(): string {
     return `#${Math.floor(Math.random() * 0xffffff)
@@ -151,42 +143,6 @@ function buildRejoinEmbed(
 }
 
 /**
- * Query Urchin API using the same URL format as the original extension:
- * https://urchin.ws/player/{uuid}?key={key}&sources=GAME,MANUAL,CHAT,ME,PARTY
- */
-async function queryUrchin(uuid: string): Promise<UrchinResponse | null> {
-    const apiKey = env.URCHIN_API_KEY;
-    if (!apiKey) return null;
-    try {
-        const url = `https://urchin.ws/player/${uuid}?key=${apiKey}&sources=GAME,MANUAL,CHAT,ME,PARTY`;
-        const res = await fetch(url, {
-            headers: {
-                'User-Agent': 'MiscellaneousBridge/2.6 (info@vliegenier04.dev)',
-                Accept: 'application/json',
-            },
-        });
-        if (res.status === 404) return { tags: [] };
-        if (res.status === 401) return null; // invalid key
-        if (res.status === 429) return null; // rate limited
-        if (!res.ok) return null;
-        return (await res.json()) as UrchinResponse;
-    } catch {
-        return null;
-    }
-}
-
-/** Simplified check for auto-kick on guild join */
-export async function isUrchinFlagged(uuid: string): Promise<boolean> {
-    const data = await queryUrchin(uuid);
-    return !!data?.tags && data.tags.length > 0;
-}
-
-export async function getUrchinTags(uuid: string): Promise<string[]> {
-    const data = await queryUrchin(uuid);
-    return data?.tags?.map((t) => t.type) ?? [];
-}
-
-/**
  * Aggressively enforce a blacklist kick. The Hypixel queue is paused (so no
  * other queued chat messages can interleave and slow us down), then `/g kick`
  * is sent up to 3 times with a 5-second gap between attempts. Returns early
@@ -292,12 +248,12 @@ async function tryGuildKick(
 }
 
 export function registerBlacklistModule(commands: ModuleCommand[]): void {
-    // !view [username] — check Urchin tags + internal blacklist (self if no arg)
+    // !view [username] — check Coral tags + internal blacklist (self if no arg)
     commands.push({
         commandId: 'blacklist:view',
         pattern: /^!view(?:\s+(\S+))?/i,
         async handler(ctx, bridge) {
-            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'urchin');
+            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'coral');
             if (remaining > 0) {
                 bridge.bot.chat(
                     ctx.replyChannel,
@@ -316,7 +272,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
                 return;
             }
 
-            cooldowns.setCooldown(ctx.username, 'urchin', ctx.guildRank);
+            cooldowns.setCooldown(ctx.username, 'coral', ctx.guildRank);
 
             // Internal blacklist check
             const internalEntry = await blacklistRepo.getByUuid(profile.id).catch(() => null);
@@ -327,10 +283,10 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
                 );
             }
 
-            // Urchin API check
-            const urchin = await queryUrchin(profile.id);
+            // Coral API check
+            const tags = await getPlayerTags(profile.id);
 
-            if (!urchin) {
+            if (tags === null) {
                 if (!internalEntry) {
                     bridge.bot.chat(
                         ctx.replyChannel,
@@ -340,7 +296,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
                 return;
             }
 
-            if (!urchin.tags || urchin.tags.length === 0) {
+            if (tags.length === 0) {
                 if (!internalEntry) {
                     bridge.bot.chat(
                         ctx.replyChannel,
@@ -351,7 +307,7 @@ export function registerBlacklistModule(commands: ModuleCommand[]): void {
             }
 
             // Display each tag individually, matching original format
-            for (const tag of urchin.tags) {
+            for (const tag of tags) {
                 const tagType = (tag.type || 'UNKNOWN').toUpperCase().replace(/ /g, '-');
                 const reason = tag.reason || 'No reason given';
                 let msg = `[${tagType}] ${profile.name} - ${reason} | ${hex()}`;

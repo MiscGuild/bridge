@@ -13,16 +13,6 @@ export interface MuteRecord {
     is_active: boolean;
 }
 
-export interface WarnRecord {
-    id: string;
-    uuid: string;
-    username: string;
-    discord_id: string | null;
-    reason: string;
-    warned_by: string;
-    warned_at: string;
-}
-
 export interface CreateMuteInput {
     uuid: string;
     username: string;
@@ -32,30 +22,15 @@ export interface CreateMuteInput {
     expires_at?: string | null;
 }
 
-export interface CreateWarnInput {
-    uuid: string;
-    username: string;
-    discord_id?: string | null;
-    reason: string;
-    warned_by: string;
-}
-
 // ── JSON fallback ─────────────────────────────────────────────────────────────
 
 const MUTES_FILE = 'mutes.json';
-const WARNS_FILE = 'warns.json';
 
 async function readMutes(): Promise<MuteRecord[]> {
     return readJson<MuteRecord[]>(MUTES_FILE, []);
 }
 async function writeMutes(r: MuteRecord[]): Promise<void> {
     return writeJson(MUTES_FILE, r);
-}
-async function readWarns(): Promise<WarnRecord[]> {
-    return readJson<WarnRecord[]>(WARNS_FILE, []);
-}
-async function writeWarns(r: WarnRecord[]): Promise<void> {
-    return writeJson(WARNS_FILE, r);
 }
 
 function newId(): string {
@@ -160,58 +135,5 @@ export const mutesRepo = {
         }
         if (changed) await writeMutes(all);
         return expired;
-    },
-};
-
-// ── Warns Repo ────────────────────────────────────────────────────────────────
-
-export const warnsRepo = {
-    async getByUsername(username: string): Promise<WarnRecord[]> {
-        const db = getSupabaseClient();
-        if (db) {
-            const { data } = await db.from('warns').select('*').ilike('username', username);
-            return (data as WarnRecord[]) ?? [];
-        }
-        const all = await readWarns();
-        return all.filter((w) => w.username.toLowerCase() === username.toLowerCase());
-    },
-
-    async create(input: CreateWarnInput): Promise<WarnRecord | null> {
-        const record: WarnRecord = {
-            id: newId(),
-            uuid: input.uuid,
-            username: input.username,
-            discord_id: input.discord_id ?? null,
-            reason: input.reason,
-            warned_by: input.warned_by,
-            warned_at: new Date().toISOString(),
-        };
-
-        const db = getSupabaseClient();
-        if (db) {
-            const { data } = await db.from('warns').insert(record).select().single();
-            return (data as WarnRecord) ?? record;
-        }
-        const all = await readWarns();
-        all.push(record);
-        await writeWarns(all);
-        return record;
-    },
-
-    async clearByUsername(username: string): Promise<number> {
-        const db = getSupabaseClient();
-        if (db) {
-            const { data } = await db
-                .from('warns')
-                .delete()
-                .ilike('username', username)
-                .select('id');
-            return data?.length ?? 0;
-        }
-        const all = await readWarns();
-        const before = all.length;
-        const filtered = all.filter((w) => w.username.toLowerCase() !== username.toLowerCase());
-        await writeWarns(filtered);
-        return before - filtered.length;
     },
 };

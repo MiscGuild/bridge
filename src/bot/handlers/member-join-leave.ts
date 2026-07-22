@@ -6,7 +6,8 @@ import { EmbedBuilder } from 'discord.js';
 import { consola } from 'consola';
 import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
-import { getUrchinTags, enforceBlacklistKick } from '@/modules/blacklist/index';
+import { enforceBlacklistKick } from '@/modules/blacklist/index';
+import { getTagTypes } from '@/services/coral';
 import { blacklistRepo } from '@/db/repositories/blacklist.repo';
 
 export async function handleMemberJoinLeave(
@@ -69,13 +70,13 @@ export async function handleMemberJoinLeave(
                 await bridge.discord.sendEmbed('oc', kickEmbed);
             }
 
-            // Urchin check — report to OC, don't auto-kick
-            if (env.URCHIN_API_KEY) {
-                const tags = await getUrchinTags(profile.id).catch(() => []);
+            // Coral check — report to OC, don't auto-kick (gated by URCHIN_JOIN_CHECK)
+            if (env.URCHIN_API_KEY && env.URCHIN_JOIN_CHECK) {
+                const tags = await getTagTypes(profile.id).catch(() => []);
                 if (tags.length > 0) {
-                    const urchinEmbed = new EmbedBuilder()
+                    const coralEmbed = new EmbedBuilder()
                         .setColor(0xff5555)
-                        .setTitle('Urchin Tags Detected')
+                        .setTitle('Coral Tags Detected')
                         .setThumbnail(`https://mc-heads.net/avatar/${profile.id}/64`)
                         .addFields(
                             {
@@ -86,7 +87,7 @@ export async function handleMemberJoinLeave(
                             { name: 'Tags', value: tags.join(', '), inline: true }
                         )
                         .setTimestamp();
-                    await bridge.discord.sendEmbed('oc', urchinEmbed);
+                    await bridge.discord.sendEmbed('oc', coralEmbed);
                 }
             }
         }

@@ -3,32 +3,8 @@ import type Bridge from '@/bridge/bridge';
 import { blacklistRepo, type BlacklistRecord } from '@/db/repositories/blacklist.repo';
 import { mojangService } from '@/services/mojang';
 import { hypixelService } from '@/services/hypixel';
+import { getPlayerTags } from '@/services/coral';
 import env from '@/config/env';
-
-interface UrchinTag {
-    type: string;
-    reason?: string;
-}
-
-interface UrchinResponse {
-    tags?: UrchinTag[];
-}
-
-async function queryUrchin(uuid: string): Promise<UrchinResponse | null> {
-    const apiKey = env.URCHIN_API_KEY;
-    if (!apiKey) return null;
-    try {
-        const url = `https://urchin.ws/player/${uuid}?key=${apiKey}&sources=GAME,MANUAL,CHAT,ME,PARTY`;
-        const res = await fetch(url, {
-            headers: { 'User-Agent': 'MiscellaneousBridge/3.0', Accept: 'application/json' },
-        });
-        if (res.status === 404) return { tags: [] };
-        if (!res.ok) return null;
-        return (await res.json()) as UrchinResponse;
-    } catch {
-        return null;
-    }
-}
 
 function parseDuration(dur: string): string | null {
     const match = dur.match(/^(\d+)([mhdw])$/i);
@@ -150,11 +126,11 @@ async function sendBlacklistLog(
 export default {
     data: {
         name: 'blacklist',
-        description: 'Manage guild blacklist and check Urchin cheater tags',
+        description: 'Manage guild blacklist and check Coral cheater tags',
         options: [
             {
                 name: 'check',
-                description: 'Check a player against both Urchin and Guild blacklists',
+                description: 'Check a player against both Coral and Guild blacklists',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [
                     {
@@ -261,26 +237,27 @@ export default {
                     fields.push({ name: 'Guild Blacklist', value: 'Not blacklisted' });
                 }
 
-                const urchin = await queryUrchin(profile.id);
-                if (!urchin) {
+                const coralTags = await getPlayerTags(profile.id);
+                if (coralTags === null) {
                     fields.push({
-                        name: 'Urchin Blacklist',
+                        name: 'Coral Tags',
                         value: 'Could not check (no API key or error)',
                     });
-                } else if (!urchin.tags || urchin.tags.length === 0) {
-                    fields.push({ name: 'Urchin Blacklist', value: 'No cheater tags' });
+                } else if (coralTags.length === 0) {
+                    fields.push({ name: 'Coral Tags', value: 'No cheater tags' });
                 } else {
-                    const tagLines = urchin.tags.map(
+                    const tagLines = coralTags.map(
                         (t) =>
                             `**[${(t.type || 'UNKNOWN').toUpperCase()}]** ${t.reason || 'No reason'}`
                     );
                     fields.push({
-                        name: `Urchin Blacklist (${urchin.tags.length} tag${urchin.tags.length > 1 ? 's' : ''})`,
+                        name: `Coral Tags (${coralTags.length} tag${coralTags.length > 1 ? 's' : ''})`,
                         value: tagLines.join('\n'),
                     });
                 }
 
-                const isClean = !guildEntry && (!urchin?.tags || urchin.tags.length === 0);
+                const hasCoralTags = (coralTags?.length ?? 0) > 0;
+                const isClean = !guildEntry && !hasCoralTags;
                 embed
                     .setColor(isClean ? 'Green' : 'Red')
                     .setTitle(`Blacklist Check: ${profile.name}`)
