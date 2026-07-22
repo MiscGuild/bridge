@@ -24,9 +24,9 @@ export const patterns = {
     /** Bot is in Limbo */
     joinLimbo: /^You were spawned in Limbo\.$/,
 
-    /** Bot entered a lobby (not Limbo) */
+    /** Someone entered a lobby (not Limbo) — capture player name */
     lobbyJoin:
-        /^(?:\s>>>\s)?\[.*?]\s[\w]{2,17} (?:joined|spooked into|slid into) the lobby!(?:\s<<<)?$/,
+        /^(?:\s>>>\s)?\[.*?]\s([\w]{2,17}) (?:joined|spooked into|slid into) the lobby!(?:\s<<<)?$/,
 
     /** Player requested to join the guild */
     joinRequest: /^\s*(?:\[.*?])?\s*(\w{2,17}) has requested to join the Guild!$/,
@@ -120,11 +120,15 @@ export interface ParsedGuildLevelUp {
     type: 'guildLevelUp';
     level: number;
 }
+export interface ParsedLobbyJoin {
+    type: 'lobbyJoin';
+    playerName: string;
+    raw: string;
+}
 export interface ParsedSimple {
     type:
         | 'commentBlocked'
         | 'joinLimbo'
-        | 'lobbyJoin'
         | 'questComplete'
         | 'questTierComplete'
         | 'sameMessageTwice';
@@ -142,6 +146,7 @@ export type ParsedChatEvent =
     | ParsedMemberCount
     | ParsedJoinRequest
     | ParsedGuildLevelUp
+    | ParsedLobbyJoin
     | ParsedSimple;
 
 export function parseChatMessage(message: string): ParsedChatEvent | null {
@@ -211,7 +216,9 @@ export function parseChatMessage(message: string): ParsedChatEvent | null {
         return { type: 'guildLevelUp', level: Number(m[1]) };
     }
     if (patterns.joinLimbo.test(message)) return { type: 'joinLimbo', raw: message };
-    if (patterns.lobbyJoin.test(message)) return { type: 'lobbyJoin', raw: message };
+    if ((m = message.match(patterns.lobbyJoin))) {
+        return { type: 'lobbyJoin', playerName: m[1]!, raw: message };
+    }
     if (patterns.questComplete.test(message)) return { type: 'questComplete', raw: message };
     if ((m = message.match(patterns.questTierComplete)))
         return { type: 'questTierComplete', raw: message };

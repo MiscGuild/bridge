@@ -4,20 +4,26 @@ import type {
     ParsedGuildLevelUp,
     ParsedMemberCount,
     ParsedJoinRequest,
+    ParsedLobbyJoin,
 } from '@/bot/chat-parser';
 import emojis from '@/util/emojis';
 import { consola } from 'consola';
 import messageQueue from '@/queue/message-queue';
 
 export async function handleJoinLimbo(bridge: Bridge, _event: ParsedSimple): Promise<void> {
-    bridge.bot.state = 'limbo';
+    bridge.bot.confirmLimbo();
 }
 
-export async function handleLobbyJoin(bridge: Bridge, _event: ParsedSimple): Promise<void> {
-    if (bridge.bot.state === 'limbo') {
-        bridge.bot.state = 'connected';
-    }
-    bridge.bot.limboAttempts = 0;
+export async function handleLobbyJoin(bridge: Bridge, event: ParsedLobbyJoin): Promise<void> {
+    const botName = bridge.bot.bot?.username;
+    const isSelf =
+        !!botName && event.playerName.toLowerCase() === botName.toLowerCase();
+
+    // Only the bridge account's own lobby spawn means we left limbo.
+    // Ignore other players' lobby join lines (they must not reset recovery).
+    if (!isSelf) return;
+
+    bridge.bot.leftLimbo('self-lobby');
     bridge.bot.execute('/g online');
 }
 

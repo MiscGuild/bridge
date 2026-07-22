@@ -131,3 +131,9 @@ data/
 
 #Github
 .github/
+
+#Production Env
+prod.env
+
+# pnpm content-addressable store (local)
+.pnpm-store/

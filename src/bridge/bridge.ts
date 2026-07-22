@@ -134,6 +134,23 @@ export default class Bridge {
         return Date.now() - this.startedAt;
     }
 
+    /**
+     * Controlled MC relogin used by health monitor / terminal.
+     * No-ops during intentional shutdown or when a reconnect is already pending.
+     */
+    public requestRelogin(reason: string): boolean {
+        if (this.bot.isShuttingDown) {
+            consola.info(`[Relogin] Skipped (${reason}) — shutting down`);
+            return false;
+        }
+        if (this.bot.isReconnectPending) {
+            consola.info(`[Relogin] Skipped (${reason}) — reconnect already pending`);
+            return false;
+        }
+        this.bot.forceRelogin(reason);
+        return true;
+    }
+
     private setupBotHandlers(): void {
         this.bot.registerMessageHandler(async (raw: string) => {
             consola.info(raw);
@@ -209,7 +226,22 @@ export default class Bridge {
             }
         });
 
-        // Login event
+        // Re-wire Mineflayer lifecycle listeners after every connect/relogin
+        this.bot.onLifecycle(() => this.wireBotLifecycle());
+
+        // Limbo exhaustion → controlled relogin; process.exit remains last resort after N sessions
+        this.bot.onLimboExhausted((reason) => {
+            consola.warn(`[Limbo] Exhausted — requesting relogin (${reason})`);
+            const started = this.requestRelogin(reason);
+            if (!started) {
+                consola.fatal('[Limbo] Relogin could not start after exhaustion. Exiting.');
+                process.exit(1);
+            }
+        });
+    }
+
+    private wireBotLifecycle(): void {
+        // Login event (per client instance)
         this.bot.bot.once('login', async () => {
             this.bot.state = 'connected';
             this.bot.limboAttempts = 0;
@@ -217,22 +249,33 @@ export default class Bridge {
             await this.discord.send('gc', '**The bot has logged in and is now ready!**');
             setTimeout(() => {
                 this.bot.execute('/g online');
-                this.bot.sendToLimbo();
+                this.bot.ensureInLimbo('login');
             }, 3000);
+        });
+
+        // Also nudge limbo on spawn (covers some reconnect paths where login already fired)
+        this.bot.bot.on('spawn', () => {
+            if (this.bot.state === 'connected') {
+                this.bot.ensureInLimbo('spawn');
+            }
         });
 
         // End/kick events
         this.bot.bot.on('end', (reason) => {
             consola.error(`Disconnected: ${reason}`);
             this.bot.state = 'disconnected';
-            this.discord.send('gc', `Disconnected: ${reason}`).catch(() => {});
+            if (!this.bot.isShuttingDown) {
+                this.discord.send('gc', `Disconnected: ${reason}`).catch(() => {});
+            }
             this.bot.scheduleReconnect();
         });
 
         this.bot.bot.on('kicked', async (reason, loggedIn) => {
             consola.error(`Kicked: ${reason} (loggedIn=${loggedIn})`);
             this.bot.state = 'disconnected';
-            await this.discord.send('gc', `Bot was kicked: ${reason}`).catch(() => {});
+            if (!this.bot.isShuttingDown) {
+                await this.discord.send('gc', `Bot was kicked: ${reason}`).catch(() => {});
+            }
             this.bot.scheduleReconnect();
         });
 
@@ -285,6 +328,7 @@ export default class Bridge {
 
     public async shutdown(): Promise<void> {
         consola.info('Shutting down...');
+        this.bot.markShuttingDown();
         messageQueue.clear();
         this.bot.disconnect();
         this.discord.destroy();

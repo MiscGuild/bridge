@@ -18,6 +18,27 @@ const envSchema = z.object({
     MINECRAFT_PASSWORD: OPTIONAL_STRING,
     MINECRAFT_CHAT_SEPARATOR: z.string().trim().min(1).default('»'),
     MINECRAFT_RECONNECT_DELAY: z.coerce.number().int().positive().default(10),
+    /** Seconds between /limbo retries while connected but not yet in limbo */
+    MINECRAFT_LIMBO_RETRY_COOLDOWN_SECONDS: z.coerce.number().int().min(1).default(15),
+    /** Consecutive /limbo sends per session before limbo exhaustion handling */
+    MINECRAFT_LIMBO_MAX_ATTEMPTS: z.coerce.number().int().min(1).default(5),
+    /**
+     * After this many limbo-exhaustion cycles (failed sessions), process.exit.
+     * Relogin is attempted between cycles. Set to 1 to exit on first exhaustion (legacy).
+     */
+    MINECRAFT_LIMBO_EXIT_AFTER_SESSIONS: z.coerce.number().int().min(1).default(3),
+    /** Seconds in `connected` (not limbo) before health escalates to relogin (limbo retries first) */
+    MINECRAFT_LIMBO_CONNECTED_GRACE_SECONDS: z.coerce.number().int().min(1).default(90),
+    /** When true, health monitor triggers controlled MC relogin on sustained unhealth */
+    MINECRAFT_HEALTH_RELOGIN_ENABLED: BOOLEAN.default('true'),
+    /** Minutes MC must stay unhealthy (not in limbo / disconnected) before a health relogin */
+    MINECRAFT_HEALTH_RELOGIN_GRACE_MINUTES: z.coerce.number().int().min(1).default(2),
+    /** Minimum minutes between health-triggered relogin attempts */
+    MINECRAFT_HEALTH_RELOGIN_COOLDOWN_MINUTES: z.coerce.number().int().min(1).default(5),
+    /** Max health-triggered relogins before requiring a longer backoff window reset */
+    MINECRAFT_HEALTH_RELOGIN_MAX_ATTEMPTS: z.coerce.number().int().min(1).default(5),
+    /** Minutes of healthy MC (in limbo) before the attempt counter resets */
+    MINECRAFT_HEALTH_RELOGIN_RESET_MINUTES: z.coerce.number().int().min(1).default(30),
 
     // === HYPIXEL ===
     HYPIXEL_API_KEY: z.string().min(1),

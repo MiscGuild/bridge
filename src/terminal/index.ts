@@ -96,8 +96,7 @@ export function startTerminalRepl(bridge: Bridge): void {
 
                 case '/reconnect':
                     consola.info('Forcing reconnect...');
-                    bridge.bot.disconnect();
-                    setTimeout(() => bridge.bot.connect(), 2000);
+                    bridge.requestRelogin('terminal');
                     break;
 
                 case '/stop':

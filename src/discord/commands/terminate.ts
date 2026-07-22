@@ -17,6 +17,7 @@ export default {
             ],
         });
         consola.info(`Bot terminated by ${interaction.user.username}`);
+        bridge.bot.markShuttingDown();
         bridge.bot.chat('gc', 'Session terminated. Goodbye!');
         setTimeout(() => process.exit(0), 1000);
     },

@@ -171,6 +171,7 @@ export function registerModerationModule(commands: ModuleCommand[]): void {
                 return;
             }
             await auditLogRepo.log(ctx.username, 'reboot', undefined).catch(() => {});
+            bridge.bot.markShuttingDown();
             bridge.bot.chat(ctx.replyChannel, `Rebooting... requested by ${ctx.username}`);
             setTimeout(() => process.exit(0), 2000);
         },
