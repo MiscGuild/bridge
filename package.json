@@ -1,7 +1,7 @@
 {
     "name": "bridge",
     "version": "1.0.0",
-    "main": "dist",
+    "main": "dist/src/index.js",
     "license": "MIT",
     "private": false,
     "scripts": {
@@ -11,7 +11,7 @@
         "format:check": "prettier --check . && eslint .",
         "format:fix": "prettier --write . && eslint --fix .",
         "pm2:kill": "pm2 kill",
-        "pm2:start": "pm2 start dist/index.js --attach --name bridge",
+        "pm2:start": "pm2 start dist/src/index.js --attach --name bridge",
         "setup-files": "node scripts/setup-files.js",
         "start": "node ."
     },
