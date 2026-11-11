@@ -1,21 +1,13 @@
-import type Bridge from '@/bridge/bridge';
-import type { ModuleCommand, CommandContext } from '@/modules/types';
-import { hypixelService } from '@/services/hypixel';
-import { mojangService } from '@/services/mojang';
-import cooldowns from '@/util/cooldown';
+import { bwStats, resolvePlayer, type BwStats } from '@/modules/stats/shared';
+import type { ModuleCommand } from '@/modules/types';
+import cooldowns, { replyIfOnCooldown } from '@/util/cooldown';
+import { compactNumber, randomHex } from '@/util/formatting';
 
 // ── Shared helpers ───────────────────────────────────────────────────────────
 
-function hex(): string {
-    return `#${Math.floor(Math.random() * 0xffffff)
-        .toString(16)
-        .padStart(6, '0')}`;
-}
-
+/** Next-calc replies show millions with two decimals, e.g. "1.25M". */
 function fmt(n: number): string {
-    if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + 'M';
-    if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K';
-    return n.toLocaleString();
+    return compactNumber(n, 2);
 }
 
 function fmtRatio(n: number): string {
@@ -34,24 +26,6 @@ function parseTargetNumber(s: string | undefined): number | null {
 /** Round-up to the next 0.5 step. */
 function nextHalfStep(current: number): number {
     return Math.floor(current * 2 + 1) / 2;
-}
-
-async function resolveBw(
-    username: string,
-    bridge: Bridge,
-    replyChannel: 'gc' | 'oc'
-): Promise<{ name: string; player: any } | null> {
-    const profile = await mojangService.getProfile(username);
-    if (!profile) {
-        bridge.bot.chat(replyChannel, `Could not find player: ${username}`);
-        return null;
-    }
-    const player = await hypixelService.getPlayer(profile.id);
-    if (!player) {
-        bridge.bot.chat(replyChannel, `Could not fetch Hypixel data for ${username}`);
-        return null;
-    }
-    return { name: profile.name, player };
 }
 
 /**
@@ -76,30 +50,6 @@ function parseUserAndTarget(
     return { user: self, target: null };
 }
 
-// ── BedWars stats extraction ─────────────────────────────────────────────────
-
-interface BwOverall {
-    lvl: number;
-    xp: number;
-    fk: number;
-    fd: number;
-    bb: number;
-    bl: number;
-}
-
-function bwOverall(player: any): BwOverall {
-    const ach = player.achievements ?? {};
-    const s = (player.stats?.Bedwars as Record<string, number>) ?? {};
-    return {
-        lvl: ach.bedwars_level ?? 0,
-        xp: Number(s.Experience ?? s.Experience_new ?? 0),
-        fk: s.final_kills_bedwars ?? 0,
-        fd: s.final_deaths_bedwars ?? 0,
-        bb: s.beds_broken_bedwars ?? 0,
-        bl: s.beds_lost_bedwars ?? 0,
-    };
-}
-
 // ── BedWars star ↔ XP formula ────────────────────────────────────────────────
 // Standard Hypixel BedWars formula:
 //   First 4 levels of each prestige (the "easy levels"): 500, 1000, 2000, 3500.
@@ -119,9 +69,20 @@ function xpForLevel(level: number): number {
     return prestiges * XP_PER_PRESTIGE + withinPrestige;
 }
 
+/** XP and games still needed to reach the `target` star. Also used by `/next level`. */
+export function levelGoal(
+    stats: BwStats,
+    target: number,
+    avgXp: number
+): { targetXp: number; neededXp: number; games: number } {
+    const targetXp = xpForLevel(target);
+    const neededXp = Math.max(0, targetXp - stats.xp);
+    return { targetXp, neededXp, games: Math.ceil(neededXp / Math.max(1, avgXp)) };
+}
+
 // ── Calculators ──────────────────────────────────────────────────────────────
 
-function calcNextFkdr(s: BwOverall, target: number | null): string {
+function calcNextFkdr(s: BwStats, target: number | null): string {
     const current = s.fd === 0 ? (s.fk > 0 ? Infinity : 0) : s.fk / s.fd;
     const tgt = target ?? nextHalfStep(Number.isFinite(current) ? current : 0);
     if (Number.isFinite(current) && current >= tgt) {
@@ -135,7 +96,7 @@ function calcNextFkdr(s: BwOverall, target: number | null): string {
     );
 }
 
-function calcNextBblr(s: BwOverall, target: number | null): string {
+function calcNextBblr(s: BwStats, target: number | null): string {
     const current = s.bl === 0 ? (s.bb > 0 ? Infinity : 0) : s.bb / s.bl;
     const tgt = target ?? nextHalfStep(Number.isFinite(current) ? current : 0);
     if (Number.isFinite(current) && current >= tgt) {
@@ -148,54 +109,47 @@ function calcNextBblr(s: BwOverall, target: number | null): string {
     );
 }
 
-function calcNextLevel(s: BwOverall, target: number | null, avgXp: number): string {
+function calcNextLevel(s: BwStats, target: number | null, avgXp: number): string {
     // Default target: next prestige boundary (next multiple of 100).
     const tgt = target !== null ? Math.floor(target) : (Math.floor(s.lvl / 100) + 1) * 100;
     if (tgt <= s.lvl) {
         return `Already at ★${s.lvl} (target ★${tgt})`;
     }
-    const targetXp = xpForLevel(tgt);
-    const needed = Math.max(0, targetXp - s.xp);
-    const games = Math.ceil(needed / Math.max(1, avgXp));
+    const { neededXp, games } = levelGoal(s, tgt, avgXp);
     return (
-        `★${s.lvl} → ★${tgt} | Need ${fmt(needed)} XP | ` +
+        `★${s.lvl} → ★${tgt} | Need ${fmt(neededXp)} XP | ` +
         `~${fmt(games)} games @ ${avgXp} xp/game`
     );
 }
 
 // ── In-game command handlers ────────────────────────────────────────────────
 
-type CalcFn = (s: BwOverall, target: number | null) => string;
+type CalcFn = (s: BwStats, target: number | null) => string;
 
 function makeNextCmd(
-    cmdId: string,
+    commandId: string,
     pattern: RegExp,
     label: string,
     calc: CalcFn
 ): ModuleCommand {
     return {
-        commandId: cmdId,
+        commandId,
         pattern,
         async handler(ctx, bridge) {
-            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, cmdId);
-            if (remaining > 0) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
-                return;
-            }
+            if (replyIfOnCooldown(ctx, bridge, commandId)) return;
             const { user, target } = parseUserAndTarget(
                 ctx.matches[1],
                 ctx.matches[2],
                 ctx.username
             );
-            const result = await resolveBw(user, bridge, ctx.replyChannel);
+            const result = await resolvePlayer(user, bridge, ctx.replyChannel);
             if (!result) return;
-            const stats = bwOverall(result.player);
-            const body = calc(stats, target);
+            const body = calc(bwStats(result.player), target);
             bridge.bot.chat(
                 ctx.replyChannel,
-                `[${label}] ${result.name} | ${body} | ${hex()}`
+                `[${label}] ${result.name} | ${body} | ${randomHex()}`
             );
-            cooldowns.setCooldown(ctx.username, cmdId, ctx.guildRank);
+            cooldowns.setCooldown(ctx.username, commandId, ctx.guildRank);
         },
     };
 }
@@ -203,22 +157,12 @@ function makeNextCmd(
 export function registerNextCalcModule(commands: ModuleCommand[]): void {
     // !nfkdr [user] [target]
     commands.push(
-        makeNextCmd(
-            'next:fkdr',
-            /^!nfkdr(?:\s+(\S+))?(?:\s+(\S+))?\s*$/i,
-            'nFKDR',
-            calcNextFkdr
-        )
+        makeNextCmd('next:fkdr', /^!nfkdr(?:\s+(\S+))?(?:\s+(\S+))?\s*$/i, 'nFKDR', calcNextFkdr)
     );
 
     // !nbblr [user] [target]
     commands.push(
-        makeNextCmd(
-            'next:bblr',
-            /^!nbblr(?:\s+(\S+))?(?:\s+(\S+))?\s*$/i,
-            'nBBLR',
-            calcNextBblr
-        )
+        makeNextCmd('next:bblr', /^!nbblr(?:\s+(\S+))?(?:\s+(\S+))?\s*$/i, 'nBBLR', calcNextBblr)
     );
 
     // !nlevel [user] [target] [avg_xp]
@@ -226,12 +170,8 @@ export function registerNextCalcModule(commands: ModuleCommand[]): void {
         commandId: 'next:level',
         pattern: /^!nlevel(?:\s+(\S+))?(?:\s+(\S+))?(?:\s+(\S+))?\s*$/i,
         async handler(ctx, bridge) {
-            const cmdId = 'next:level';
-            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, cmdId);
-            if (remaining > 0) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
-                return;
-            }
+            const commandId = 'next:level';
+            if (replyIfOnCooldown(ctx, bridge, commandId)) return;
             // For !nlevel we have up to 3 positional args. Decide layout:
             //   [user] [target] [avg_xp]   where each can be omitted from the left.
             //   - 3 args  → user, target, avg_xp
@@ -268,22 +208,11 @@ export function registerNextCalcModule(commands: ModuleCommand[]): void {
 
             if (avgXp <= 0) avgXp = 150;
 
-            const result = await resolveBw(user, bridge, ctx.replyChannel);
+            const result = await resolvePlayer(user, bridge, ctx.replyChannel);
             if (!result) return;
-            const stats = bwOverall(result.player);
-            const body = calcNextLevel(stats, target, avgXp);
-            bridge.bot.chat(
-                ctx.replyChannel,
-                `[nLevel] ${result.name} | ${body} | ${hex()}`
-            );
-            cooldowns.setCooldown(ctx.username, cmdId, ctx.guildRank);
+            const body = calcNextLevel(bwStats(result.player), target, avgXp);
+            bridge.bot.chat(ctx.replyChannel, `[nLevel] ${result.name} | ${body} | ${randomHex()}`);
+            cooldowns.setCooldown(ctx.username, commandId, ctx.guildRank);
         },
     });
 }
-
-// Exported for the Discord `/next level` command so we don't duplicate logic.
-export const nextCalc = {
-    bwOverall,
-    xpForLevel,
-    calcNextLevel,
-};
