@@ -57,9 +57,7 @@ export const patterns = {
     whisper: /^From (?:\[.*?])?\s*(\w{2,17}).*?: (.+)$/,
 } as const;
 
-export type PatternName = keyof typeof patterns;
-
-export interface ParsedGuildChat {
+    export interface ParsedGuildChat {
     type: 'guildChat';
     channel: 'Guild' | 'Officer';
     rank?: string;
