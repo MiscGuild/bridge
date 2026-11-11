@@ -27,6 +27,6 @@ jobs:
             - name: Lint
               run: pnpm lint
 
-            - name: Setup files & build
+            - name: Build
               if: success() || failure()
               run: pnpm build
