@@ -1,51 +1,15 @@
-import { ApplicationCommandOptionType, EmbedBuilder, TextChannel } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import type Bridge from '@/bridge/bridge';
 import { blacklistRepo, type BlacklistRecord } from '@/db/repositories/blacklist.repo';
-import { mojangService } from '@/services/mojang';
-import { hypixelService } from '@/services/hypixel';
+import {
+    addToBlacklist,
+    KICK_RESULT_TEXT,
+    parseExpiry,
+    removeFromBlacklist,
+} from '@/modules/blacklist/index';
 import { getPlayerTags } from '@/services/coral';
-import env from '@/config/env';
-
-function parseDuration(dur: string): string | null {
-    const match = dur.match(/^(\d+)([mhdw])$/i);
-    if (!match) return null;
-    const num = parseInt(match[1]!, 10);
-    const unit = match[2]!.toLowerCase();
-    const ms =
-        unit === 'm'
-            ? num * 60_000
-            : unit === 'h'
-              ? num * 3_600_000
-              : unit === 'd'
-                ? num * 86_400_000
-                : num * 7 * 86_400_000;
-    return new Date(Date.now() + ms).toISOString();
-}
-
-/** Check if a player is in the guild and kick them. Returns status string. */
-async function tryGuildKick(
-    bridge: Bridge,
-    playerName: string,
-    playerUuid: string
-): Promise<'kicked' | 'not_in_guild' | 'kick_failed'> {
-    try {
-        const guild = await hypixelService.getGuildByName(env.HYPIXEL_GUILD_NAME);
-        if (!guild) return 'not_in_guild';
-
-        const normalUuid = playerUuid.replace(/-/g, '');
-        const isMember = guild.members.some(
-            (m) => m.uuid.replace(/-/g, '') === normalUuid
-        );
-        if (!isMember) return 'not_in_guild';
-
-        await bridge.bot.executeAndCapture(
-            `/g kick ${playerName} Blacklisted. Dispute? ${env.DISCORD_INVITE_LINK}`
-        );
-        return 'kicked';
-    } catch {
-        return 'kick_failed';
-    }
-}
+import { mojangService } from '@/services/mojang';
+import { discordTimestamp } from '@/util/formatting';
 
 function formatExpiry(expiresAt: string | null): string {
     if (!expiresAt) return 'Permanent';
@@ -55,72 +19,6 @@ function formatExpiry(expiresAt: string | null): string {
     const hours = Math.floor((remaining % 86_400_000) / 3_600_000);
     if (days > 0) return `${days}d ${hours}h remaining`;
     return `${hours}h remaining`;
-}
-
-/** Discord timestamp: <t:UNIX:style> */
-function discordTs(
-    date: Date | string | null,
-    style: 'f' | 'R' | 'F' | 'd' | 'D' | 'T' | 't' = 'f'
-): string {
-    if (!date) return 'Never';
-    const unix = Math.floor(new Date(date).getTime() / 1000);
-    return `<t:${unix}:${style}>`;
-}
-
-/** Send a blacklist action embed to the configured log channel */
-async function sendBlacklistLog(
-    bridge: Bridge,
-    action: 'added' | 'removed',
-    playerName: string,
-    playerUuid: string,
-    addedBy: string,
-    reason?: string,
-    expiresAt?: string | null
-): Promise<void> {
-    const channelId = env.BLACKLIST_CHANNEL_ID;
-    if (!channelId) return;
-    try {
-        const channel = await bridge.discord.channels.fetch(channelId).catch(() => null);
-        if (!channel || !channel.isTextBased()) return;
-
-        const displayName = env.BLACKLIST_ANONYMOUS ? 'Miscellaneous Staff' : addedBy;
-        const now = new Date();
-        const embed = new EmbedBuilder()
-            .setThumbnail(`https://mc-heads.net/avatar/${playerUuid}/64`)
-            .setTimestamp(now);
-
-        if (action === 'added') {
-            embed
-                .setColor('Red')
-                .setTitle('Player Blacklisted')
-                .addFields(
-                    { name: 'Player', value: `**${playerName}**`, inline: true },
-                    { name: 'Added by', value: displayName, inline: true },
-                    { name: 'Reason', value: reason ?? 'No reason provided' },
-                    { name: 'Added', value: discordTs(now, 'f'), inline: true },
-                    {
-                        name: 'Expires',
-                        value: expiresAt
-                            ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})`
-                            : 'Never (Permanent)',
-                        inline: true,
-                    }
-                );
-        } else {
-            embed
-                .setColor('Green')
-                .setTitle('Player Removed from Blacklist')
-                .addFields(
-                    { name: 'Player', value: `**${playerName}**`, inline: true },
-                    { name: 'Removed by', value: displayName, inline: true },
-                    { name: 'Removed', value: discordTs(now, 'f'), inline: true }
-                );
-        }
-
-        await (channel as TextChannel).send({ embeds: [embed] });
-    } catch {
-        // Silently fail
-    }
 }
 
 export default {
@@ -268,7 +166,7 @@ export default {
             } else if (sub === 'add') {
                 const reason = interaction.options.getString('reason', true);
                 const durationStr = interaction.options.getString('duration');
-                const expiresAt = durationStr ? parseDuration(durationStr) : null;
+                const expiresAt = durationStr ? parseExpiry(durationStr) : null;
 
                 if (durationStr && !expiresAt) {
                     embed
@@ -279,23 +177,16 @@ export default {
                     return;
                 }
 
-                await blacklistRepo.add({
+                // Kicking can retry for several seconds — acknowledge the command first
+                await interaction.deferReply();
+
+                const kickResult = await addToBlacklist(bridge, {
                     uuid: profile.id,
                     username: profile.name,
                     reason,
-                    added_by: interaction.user.username,
-                    expires_at: expiresAt,
+                    addedBy: interaction.user.username,
+                    expiresAt,
                 });
-                bridge.blacklist.add(profile.id);
-
-                // Auto-kick if still in guild
-                const kickResult = await tryGuildKick(bridge, profile.name, profile.id);
-                const kickText =
-                    kickResult === 'kicked'
-                        ? 'Kicked from guild'
-                        : kickResult === 'kick_failed'
-                          ? 'Kick failed'
-                          : 'Not in guild';
 
                 embed
                     .setColor('Red')
@@ -303,49 +194,36 @@ export default {
                     .setDescription(`**${profile.name}** added to guild blacklist.`)
                     .addFields(
                         { name: 'Reason', value: reason },
-                        { name: 'Added', value: discordTs(new Date(), 'f'), inline: true },
+                        { name: 'Added', value: discordTimestamp(new Date()), inline: true },
                         {
                             name: 'Expires',
                             value: expiresAt
-                                ? discordTs(expiresAt, 'f') + ` (${discordTs(expiresAt, 'R')})`
+                                ? `${discordTimestamp(expiresAt)} (${discordTimestamp(expiresAt, 'R')})`
                                 : 'Never (Permanent)',
                             inline: true,
                         },
-                        { name: 'Guild Status', value: kickText, inline: true }
+                        { name: 'Guild Status', value: KICK_RESULT_TEXT[kickResult], inline: true }
                     );
-                await interaction.reply({ embeds: [embed] });
-
-                // Log to blacklist channel
-                await sendBlacklistLog(
-                    bridge,
-                    'added',
-                    profile.name,
-                    profile.id,
-                    interaction.user.username,
-                    reason,
-                    expiresAt
-                );
+                await interaction.editReply({ embeds: [embed] });
             } else if (sub === 'remove') {
-                await blacklistRepo.remove(profile.id);
-                bridge.blacklist.remove(profile.id);
+                await removeFromBlacklist(bridge, {
+                    uuid: profile.id,
+                    username: profile.name,
+                    removedBy: interaction.user.username,
+                });
                 embed
                     .setColor('Green')
                     .setTitle('Player Removed')
                     .setDescription(`**${profile.name}** removed from guild blacklist.`);
                 await interaction.reply({ embeds: [embed] });
-
-                // Log to blacklist channel
-                await sendBlacklistLog(
-                    bridge,
-                    'removed',
-                    profile.name,
-                    profile.id,
-                    interaction.user.username
-                );
             }
         } catch (e) {
             embed.setColor('Red').setTitle('Error').setDescription(`${e}`);
-            await interaction.reply({ embeds: [embed], ephemeral: true });
+            if (interaction.deferred || interaction.replied) {
+                await interaction.editReply({ embeds: [embed] });
+            } else {
+                await interaction.reply({ embeds: [embed], ephemeral: true });
+            }
         }
     },
     staffOnly: true,
