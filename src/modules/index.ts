@@ -1,84 +1,42 @@
+import { consola } from 'consola';
 import type Bridge from '@/bridge/bridge';
-import { ModuleManager } from '@/modules/types';
-import { registerStatsModule } from '@/modules/stats/index';
-import { registerSessionsModule, loadActiveSessions } from '@/modules/sessions/index';
-import { registerAnalyticsModule, trackEvent } from '@/modules/analytics/index';
-import { registerModerationModule } from '@/modules/moderation/index';
-import { registerBlacklistModule, runExpirySweep, runGuildScan } from '@/modules/blacklist/index';
-import { registerMuteModule } from '@/modules/mute/index';
-import { registerInviteTrackerModule } from '@/modules/invite-tracker/index';
-import { registerGexpHistoryModule, syncGexpFromGuild } from '@/modules/gexp-history/index';
-import { trackGuildEvent, syncGuildMembers } from '@/modules/guild-tracker/index';
-import { registerCompareModule } from '@/modules/compare/index';
-import { registerNextCalcModule } from '@/modules/next-calc/index';
-import { initTournamentModule } from '@/modules/tournament/index';
-import { hypixelService } from '@/services/hypixel';
-import { mojangService } from '@/services/mojang';
 import env from '@/config/env';
+import { registerBlacklistModule, runExpirySweep, runGuildScan } from '@/modules/blacklist/index';
+import { registerCompareModule } from '@/modules/compare/index';
+import { registerModerationModule } from '@/modules/moderation/index';
+import { registerNextCalcModule } from '@/modules/next-calc/index';
+import { registerSessionsModule, loadActiveSessions } from '@/modules/sessions/index';
+import { registerStatsModule } from '@/modules/stats/index';
+import { ModuleManager } from '@/modules/types';
 
 export const moduleManager = new ModuleManager();
 
-const commands = moduleManager['commands'] as any[];
+const { commands } = moduleManager;
 
-// Compare + next-calc must come BEFORE stats so patterns like `!bw <a> vs <b>`
-// match the compare handler instead of the stats `!bw [player]` catch-all.
+// Commands are checked in this order and the first match wins. Compare must come
+// before stats so `!bw <a> vs <b>` isn't treated as `!bw <player>`.
 registerCompareModule(commands);
 registerNextCalcModule(commands);
 registerStatsModule(commands);
 registerSessionsModule(commands);
-registerAnalyticsModule(commands);
 registerModerationModule(commands);
 registerBlacklistModule(commands);
-registerMuteModule(commands);
-registerInviteTrackerModule(commands);
-registerGexpHistoryModule(commands);
 
-/** Call this after bridge is ready — wires analytics scheduler + guild sync + GEXP sync */
+/** Start the background jobs. Call once the bridge has connected. */
 export function initModules(bridge: Bridge): void {
-    const initFn = (commands as any).__initAnalytics;
-    if (typeof initFn === 'function') initFn(bridge);
+    // Stat sessions survive restarts
+    loadActiveSessions().catch((err) =>
+        consola.warn('[sessions] failed to restore active sessions:', err)
+    );
 
-    // Restore in-memory active sessions from disk so they survive bot restarts
-    loadActiveSessions().catch(() => {});
-
-    // Sync guild members + GEXP once a day
-    const doSync = async () => {
-        await syncGuildMembers(bridge).catch(() => {});
-        // Also sync GEXP from the same guild data
-        try {
-            const botName = (
-                process.env.MINECRAFT_BOT_NAME ??
-                process.env.MINECRAFT_EMAIL ??
-                ''
-            ).split('@')[0];
-            if (botName) {
-                const botProfile = await mojangService.getProfile(botName).catch(() => null);
-                if (botProfile) {
-                    const guild = await hypixelService.getGuild(botProfile.id);
-                    if (guild) await syncGexpFromGuild(guild, bridge);
-                }
-            }
-        } catch {
-            /* logged inside syncGexpFromGuild */
-        }
-    };
-
-    doSync();
-    setInterval(() => doSync(), 24 * 60 * 60 * 1000);
-
-    // Blacklist auto-expiry sweep
+    // Lift blacklist entries that have expired
     const expirySweep = () => runExpirySweep(bridge).catch(() => {});
     expirySweep();
     setInterval(expirySweep, env.BLACKLIST_EXPIRY_CHECK_INTERVAL_MINUTES * 60 * 1000);
 
-    // Periodic guild scan for blacklisted UUIDs (re-join enforcement).
-    // First run delayed ~60s so it doesn't collide with startup or syncGuildMembers.
+    // Kick blacklisted players who got back into the guild. First run is delayed
+    // a minute so it doesn't compete with startup.
     const guildScan = () => runGuildScan(bridge).catch(() => {});
     setTimeout(guildScan, 60 * 1000);
     setInterval(guildScan, env.BLACKLIST_GUILD_SCAN_INTERVAL_MINUTES * 60 * 1000);
-
-    // Guild tournament resnapshot + Phase 3 digest/rollover jobs
-    initTournamentModule(bridge);
 }
-
-export { trackEvent, trackGuildEvent };
