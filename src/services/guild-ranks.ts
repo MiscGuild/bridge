@@ -173,15 +173,6 @@ class GuildRankService {
         const normalized = (priority - this.minPriority) / (this.maxPriority - this.minPriority);
         return Math.min(4, Math.floor(normalized * 5));
     }
-
-    /** Exposes loaded rank definitions (sorted ascending by priority). */
-    getRanks(): GuildRankDefinition[] {
-        return this.ranks;
-    }
-
-    get isReady(): boolean {
-        return this.apiLoaded && this.ranks.length > 0;
-    }
 }
 
 export const guildRankService = new GuildRankService();
