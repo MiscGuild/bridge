@@ -19,7 +19,8 @@ export interface DiscordCommand {
         interaction: import('discord.js').ChatInputCommandInteraction,
         args: unknown[]
     ) => Promise<void>;
-    staffOnly?: boolean;
+    /** Staff only: `true` for the whole command, or the names of its staff-only subcommands */
+    staffOnly?: boolean | readonly string[];
 }
 
 export class DiscordClient extends Client {
