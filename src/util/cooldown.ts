@@ -1,56 +1,56 @@
-import env from '@/config/env';
+import type Bridge from '@/bridge/bridge';
+import type { CommandContext } from '@/modules/types';
 import { guildRankService } from '@/services/guild-ranks';
 
-interface CooldownEntry {
-    expiry: number;
-}
-
-type CommandId = string;
-type Username = string;
-
+/** Per-player, per-command cooldowns. Lengths come from the player's guild rank (COOLDOWN_RANK_*). */
 export class CooldownManager {
-    private store = new Map<string, CooldownEntry>();
+    /** `username:commandId` → time the cooldown ends */
+    private store = new Map<string, number>();
 
     constructor() {
-        // Clean up expired entries every 60 seconds
         setInterval(() => this.cleanup(), 60_000);
     }
 
-    private key(username: Username, commandId: CommandId): string {
+    private key(username: string, commandId: string): string {
         return `${username.toLowerCase()}:${commandId}`;
     }
 
-    getCooldownSeconds(guildRank?: string): number {
-        return guildRankService.getCooldownSeconds(guildRank);
+    /** Seconds left on the cooldown, or 0 if the command can be used. */
+    isOnCooldown(username: string, commandId: string): number {
+        const expiry = this.store.get(this.key(username, commandId));
+        if (!expiry) return 0;
+        return Math.max(0, Math.ceil((expiry - Date.now()) / 1000));
     }
 
-    /** Returns remaining seconds if on cooldown, 0 if free */
-    isOnCooldown(username: Username, guildRank: string | undefined, commandId: CommandId): number {
-        const entry = this.store.get(this.key(username, commandId));
-        if (!entry) return 0;
-        const remaining = Math.ceil((entry.expiry - Date.now()) / 1000);
-        return remaining > 0 ? remaining : 0;
-    }
-
-    setCooldown(username: Username, commandId: CommandId, guildRank?: string): void {
-        const secs = this.getCooldownSeconds(guildRank);
+    setCooldown(username: string, commandId: string, guildRank?: string): void {
+        const secs = guildRankService.getCooldownSeconds(guildRank);
         if (secs === 0) return;
-        this.store.set(this.key(username, commandId), { expiry: Date.now() + secs * 1000 });
-    }
-
-    clearCooldown(username: Username, commandId: CommandId): void {
-        this.store.delete(this.key(username, commandId));
+        this.store.set(this.key(username, commandId), Date.now() + secs * 1000);
     }
 
     private cleanup(): void {
         const now = Date.now();
-        for (const [k, v] of this.store) {
-            if (v.expiry <= now) this.store.delete(k);
+        for (const [key, expiry] of this.store) {
+            if (expiry <= now) this.store.delete(key);
         }
     }
 }
 
-// Keep COOLDOWN_URCHIN as a direct env read (Coral !view is not a guild rank)
-export const URCHIN_COOLDOWN = env.COOLDOWN_URCHIN;
+const cooldowns = new CooldownManager();
+export default cooldowns;
 
-export default new CooldownManager();
+/**
+ * If the sender is on cooldown for `commandId`, tell them in chat and return true.
+ * `suffix` is appended to the reply.
+ */
+export function replyIfOnCooldown(
+    ctx: CommandContext,
+    bridge: Bridge,
+    commandId: string,
+    suffix = ''
+): boolean {
+    const remaining = cooldowns.isOnCooldown(ctx.username, commandId);
+    if (remaining === 0) return false;
+    bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s${suffix}`);
+    return true;
+}
