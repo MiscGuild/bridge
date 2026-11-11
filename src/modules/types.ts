@@ -1,14 +1,14 @@
 import type Bridge from '@/bridge/bridge';
 import type { ParsedGuildChat } from '@/bot/chat-parser';
+import { guildRankService } from '@/services/guild-ranks';
 
 export interface ModuleCommand {
-    /** Regex that matches the message content (e.g. /^!bw(?:\s+(.+))?$/i) */
+    /** Matched against the whole chat message, e.g. /^!bw(?:\s+(\S+))?/i */
     pattern: RegExp;
-    /** Handler called when pattern matches */
     handler: (ctx: CommandContext, bridge: Bridge) => Promise<void>;
-    /** Cooldown command ID (for CooldownManager) */
+    /** Stable id, also used as the cooldown key */
     commandId: string;
-    /** Whether this command needs staff rank */
+    /** Only guild ranks at STAFF_MIN_RANK or above (and the Guild Master) may use it */
     staffOnly?: boolean;
 }
 
@@ -22,23 +22,22 @@ export interface CommandContext {
     replyChannel: 'gc' | 'oc';
 }
 
+/** The match must end at a space or the end of the message, so `!gexp` doesn't catch `!gexptop`. */
+function endsAtWordBoundary(message: string, match: RegExpMatchArray): boolean {
+    const end = (match.index ?? 0) + match[0].length;
+    return end === message.length || /\s/.test(message.charAt(end));
+}
+
 export class ModuleManager {
-    private commands: ModuleCommand[] = [];
-
-    register(command: ModuleCommand): void {
-        this.commands.push(command);
-    }
-
-    registerAll(commands: ModuleCommand[]): void {
-        this.commands.push(...commands);
-    }
+    /** In-game commands, checked in registration order; the first match wins. */
+    readonly commands: ModuleCommand[] = [];
 
     async dispatch(event: ParsedGuildChat, bridge: Bridge): Promise<boolean> {
         if (!event.message.startsWith('!')) return false;
 
         for (const cmd of this.commands) {
             const matches = event.message.match(cmd.pattern);
-            if (!matches) continue;
+            if (!matches || !endsAtWordBoundary(event.message, matches)) continue;
 
             const ctx: CommandContext = {
                 username: event.playerName,
@@ -48,6 +47,11 @@ export class ModuleManager {
                 channel: event.channel,
                 replyChannel: event.channel === 'Officer' ? 'oc' : 'gc',
             };
+
+            if (cmd.staffOnly && !guildRankService.isStaffRank(ctx.guildRank)) {
+                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
+                return true;
+            }
 
             await cmd.handler(ctx, bridge).catch((err) => {
                 bridge.bot.chat(
