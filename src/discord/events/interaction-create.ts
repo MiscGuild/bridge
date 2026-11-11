@@ -16,8 +16,12 @@ export default {
         }
 
         const member = interaction.member as GuildMember;
+        const subcommand = interaction.options.getSubcommand(false);
+        const staffOnly = Array.isArray(command.staffOnly)
+            ? subcommand !== null && command.staffOnly.includes(subcommand)
+            : command.staffOnly === true;
         if (
-            command.staffOnly &&
+            staffOnly &&
             !member.roles.cache.has(env.STAFF_ROLE_ID) &&
             member.id !== env.BOT_OWNER_ID
         ) {
