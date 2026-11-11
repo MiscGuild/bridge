@@ -2,8 +2,6 @@ import type Bridge from '@/bridge/bridge';
 import type { ParsedMuteUnmute } from '@/bot/chat-parser';
 import { escapeMarkdown } from '@/util/formatting';
 import emojis from '@/util/emojis';
-import { consola } from 'consola';
-import { handleMuteSyncFromGame } from '@/modules/mute/index';
 
 export async function handleGuildMuteUnmute(
     bridge: Bridge,
@@ -17,15 +15,4 @@ export async function handleGuildMuteUnmute(
         undefined,
         true
     );
-
-    // Sync mute state to DB + Discord role
-    await handleMuteSyncFromGame(
-        bridge,
-        event.action,
-        event.targetName,
-        event.muterName,
-        event.duration
-    ).catch((err) => {
-        consola.warn('Mute sync failed:', err);
-    });
 }
