@@ -6,23 +6,16 @@
         "baseUrl": "./src",
         "rootDir": "./src",
         "outDir": "./dist",
-        "resolveJsonModule": true,
-        "preserveConstEnums": true,
         "strict": true,
         "noUncheckedIndexedAccess": true,
         "noImplicitReturns": true,
         "allowUnreachableCode": false,
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "allowJs": false,
         "skipLibCheck": true,
         "isolatedModules": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
         "paths": {
             "@/*": ["./*"]
         }
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "dashboard", "**/*.test.ts", "**/*.spec.ts"]
+    "include": ["src/**/*"]
 }
