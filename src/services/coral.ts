@@ -24,19 +24,6 @@ interface CoralPlayerTagsResponse {
 
 const USER_AGENT = 'MiscellaneousBridge/3.0 (info@vliegenier04.dev)';
 
-/**
- * Normalize Coral tag labels for comparison:
- * trim, lower-case, collapse `_`/`-`/whitespace → single spaces.
- * e.g. "Closet_Cheater" / "Closet Cheater" → "closet cheater"
- */
-export function normalizeCoralTagType(tag: string): string {
-    return tag
-        .trim()
-        .toLowerCase()
-        .replace(/[_-]+/g, ' ')
-        .replace(/\s+/g, ' ');
-}
-
 function mapTags(raw: CoralTagRaw[] | undefined): CoralTag[] {
     if (!raw || raw.length === 0) return [];
     return raw
@@ -91,12 +78,6 @@ export async function getPlayerTags(player: string): Promise<CoralTag[] | null> 
         consola.warn('[Coral] Request failed:', err);
         return null;
     }
-}
-
-/** True when the player has one or more Coral tags. False on empty tags or lookup failure. */
-export async function isFlagged(player: string): Promise<boolean> {
-    const tags = await getPlayerTags(player);
-    return !!tags && tags.length > 0;
 }
 
 /** Tag type strings only; empty array on missing key / error / no tags. */
