@@ -2,6 +2,7 @@ import { Message } from 'discord.js';
 import { DataSet, RegExpMatcher, englishDataset, englishRecommendedTransformers } from 'obscenity';
 import type Bridge from '@/bridge/bridge';
 import emojis from '@/util/emojis';
+import { bridgeName } from '@/util/discord-members';
 import env from '@/config/env';
 
 const whitelist = ['ass', 'bitch', 'cock', 'dick', 'fuck'];
@@ -76,17 +77,7 @@ export default {
             return;
         }
 
-        const name = env.USE_FIRST_WORD_OF_AUTHOR_NAME
-            ? (message.member.displayName.split(' ')[0] ?? message.member.displayName)
-            : message.member.displayName;
-
-        const { allowed, reason } = bridge.filterMessage(message.content, name);
-
-        if (!allowed) {
-            await message.delete().catch(() => {});
-            await message.channel.send(`${emojis.warning} ${message.author.username}, ${reason}`);
-            return;
-        }
+        const name = bridgeName(message.member);
 
         if (message.content.length > 250 - name.length) {
             await message.channel.send(
