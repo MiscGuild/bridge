@@ -1,54 +1,14 @@
-import type Bridge from '@/bridge/bridge';
+import { consola } from 'consola';
+import { ProfileNetworthCalculator } from 'skyhelper-networth';
+import env from '@/config/env';
+import { BW_MODES, bwStar, bwStats, resolvePlayer } from '@/modules/stats/shared';
 import type { ModuleCommand } from '@/modules/types';
 import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
-import cooldowns from '@/util/cooldown';
-import { consola } from 'consola';
-import { ProfileNetworthCalculator } from 'skyhelper-networth';
+import cooldowns, { replyIfOnCooldown } from '@/util/cooldown';
+import { compactNumber, randomHex, ratio } from '@/util/formatting';
 
-// ── Utility helpers ───────────────────────────────────────────────────────────
-
-function ratio(a: number, b: number): string {
-    if (b === 0) return a > 0 ? String(a) : '0';
-    return (a / b).toFixed(2);
-}
-
-function hex(): string {
-    return `#${Math.floor(Math.random() * 0xffffff)
-        .toString(16)
-        .padStart(6, '0')}`;
-}
-
-function fmt(n: number): string {
-    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
-    if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K';
-    return n.toLocaleString();
-}
-
-/** Hypixel guild level from total guild XP */
-function _guildLevel(exp: number): number {
-    const thresholds = [
-        100000, 150000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 2000000, 2500000,
-        2500000, 2500000, 2500000, 2500000, 3000000,
-    ];
-    let level = 0;
-    let remaining = exp;
-    for (let i = 0; remaining > 0; i++) {
-        const needed = i < thresholds.length ? thresholds[i]! : 3000000;
-        if (remaining >= needed) {
-            remaining -= needed;
-            level++;
-        } else {
-            break;
-        }
-    }
-    return level;
-}
-
-function bwStar(level: number): string {
-    const sym = level >= 1000 ? '✫' : '✪';
-    return `[${level}${sym}]`;
-}
+// ── Level helpers ─────────────────────────────────────────────────────────────
 
 function swLevel(exp: number): number {
     // Cumulative XP thresholds for levels 1-20 (from Hypixel wiki, Apr 2025)
@@ -116,56 +76,11 @@ function sbSkillLevel(xp: number, skillKey = 'SKILL_FARMING'): number {
     return skillLevel(xp, SKILL_TABLES[skillKey] ?? SKILL_XP_60);
 }
 
-async function resolve(
-    username: string,
-    bridge: Bridge,
-    replyChannel: 'gc' | 'oc'
-): Promise<{ uuid: string; name: string; player: any } | null> {
-    const profile = await mojangService.getProfile(username);
-    if (!profile) {
-        bridge.bot.chat(replyChannel, `Could not find player: ${username}`);
-        return null;
-    }
-    const player = await hypixelService.getPlayer(profile.id);
-    if (!player) {
-        bridge.bot.chat(replyChannel, `Could not fetch Hypixel data for ${username}`);
-        return null;
-    }
-    return { uuid: profile.id, name: profile.name, player };
-}
-
 // ── Bedwars ───────────────────────────────────────────────────────────────────
 
-function bwMode(label: string, p: string, name: string, player: any): string {
-    const ach = player.achievements ?? {};
-    const s = (player.stats?.Bedwars as Record<string, number>) ?? {};
-    const lvl = ach.bedwars_level ?? 0;
-    const w = s[`${p}wins_bedwars`] ?? 0;
-    const l = s[`${p}losses_bedwars`] ?? 0;
-    const fk = s[`${p}final_kills_bedwars`] ?? 0;
-    const fd = s[`${p}final_deaths_bedwars`] ?? 0;
-    const bb = s[`${p}beds_broken_bedwars`] ?? 0;
-    const bl = s[`${p}beds_lost_bedwars`] ?? 0;
-    return `[${label}] ${bwStar(lvl)} ${name} | W: ${w} | FK: ${fk} | FKDR: ${ratio(fk, fd)} | BBLR: ${ratio(bb, bl)} | WLR: ${ratio(w, l)} | ${hex()}`;
-}
-
-function buildBwOverall(name: string, player: any): string {
-    return bwMode('BW', '', name, player);
-}
-function buildBwSolo(name: string, player: any): string {
-    return bwMode('BW Solo', 'eight_one_', name, player);
-}
-function buildBwDoubles(name: string, player: any): string {
-    return bwMode('BW 2s', 'eight_two_', name, player);
-}
-function buildBwThrees(name: string, player: any): string {
-    return bwMode('BW 3s', 'four_three_', name, player);
-}
-function buildBwFours(name: string, player: any): string {
-    return bwMode('BW 4s', 'four_four_', name, player);
-}
-function buildBw4v4(name: string, player: any): string {
-    return bwMode('BW 4v4', 'two_four_', name, player);
+function buildBw(label: string, prefix: string, name: string, player: any): string {
+    const s = bwStats(player, prefix);
+    return `[${label}] ${bwStar(s.lvl)} ${name} | W: ${s.w} | FK: ${s.fk} | FKDR: ${ratio(s.fk, s.fd)} | BBLR: ${ratio(s.bb, s.bl)} | WLR: ${ratio(s.w, s.l)} | ${randomHex()}`;
 }
 
 // ── SkyWars ───────────────────────────────────────────────────────────────────
@@ -179,98 +94,53 @@ function buildSkywars(name: string, player: any): string {
     const k = Number(s.kills ?? 0),
         d = Number(s.deaths ?? 0);
     const souls = Number(s.souls ?? 0);
-    return `[SW] ${swStar(lvl)} ${name} | W: ${w} | K: ${fmt(k)} | KDR: ${ratio(k, d)} | WLR: ${ratio(w, l)} | Souls: ${fmt(souls)} | ${hex()}`;
+    return `[SW] ${swStar(lvl)} ${name} | W: ${w} | K: ${compactNumber(k)} | KDR: ${ratio(k, d)} | WLR: ${ratio(w, l)} | Souls: ${compactNumber(souls)} | ${randomHex()}`;
 }
 
 // ── Duels ─────────────────────────────────────────────────────────────────────
 
-function duelsMsg(
-    label: string,
-    name: string,
-    s: Record<string, number>,
-    wKey: string,
-    lKey: string
-): string {
-    const w = s[wKey] ?? 0,
-        l = s[lKey] ?? 0;
+/** Duels and its sub-modes: the command, the reply label, and the Hypixel win/loss keys. */
+const DUELS_MODES = [
+    { command: 'duels', label: 'Duels', wins: 'wins', losses: 'losses' },
+    { command: 'uhcduels', label: 'UHC Duels', wins: 'uhc_duel_wins', losses: 'uhc_duel_losses' },
+    { command: 'swduels', label: 'SW Duels', wins: 'sw_duel_wins', losses: 'sw_duel_losses' },
+    {
+        command: 'classicduels',
+        label: 'Classic Duels',
+        wins: 'classic_duel_wins',
+        losses: 'classic_duel_losses',
+    },
+    { command: 'bowduels', label: 'Bow Duels', wins: 'bow_wins', losses: 'bow_losses' },
+    { command: 'opduels', label: 'OP Duels', wins: 'op_duel_wins', losses: 'op_duel_losses' },
+    {
+        command: 'comboduels',
+        label: 'Combo Duels',
+        wins: 'combo_duel_wins',
+        losses: 'combo_duel_losses',
+    },
+    {
+        command: 'potionduels',
+        label: 'Potion Duels',
+        wins: 'potion_duel_wins',
+        losses: 'potion_duel_losses',
+    },
+];
+
+function buildDuels(mode: (typeof DUELS_MODES)[number], name: string, player: any): string {
+    const s = (player.stats?.Duels as Record<string, number>) ?? {};
+    const w = s[mode.wins] ?? 0,
+        l = s[mode.losses] ?? 0;
+    // Kills and deaths are the all-modes totals
     const k = s.kills ?? 0,
         d = s.deaths ?? 0;
-    return `[${label}] ${name} | W: ${w} | K: ${fmt(k)} | KDR: ${ratio(k, d)} | WLR: ${ratio(w, l)} | ${hex()}`;
-}
-
-function buildDuels(name: string, player: any): string {
-    const s = (player.stats?.Duels as Record<string, number>) ?? {};
-    return duelsMsg('Duels', name, s, 'wins', 'losses');
-}
-function buildUhcDuels(name: string, player: any): string {
-    return duelsMsg(
-        'UHC Duels',
-        name,
-        (player.stats?.Duels ?? {}) as any,
-        'uhc_duel_wins',
-        'uhc_duel_losses'
-    );
-}
-function buildSwDuels(name: string, player: any): string {
-    return duelsMsg(
-        'SW Duels',
-        name,
-        (player.stats?.Duels ?? {}) as any,
-        'sw_duel_wins',
-        'sw_duel_losses'
-    );
-}
-function buildClassicDuels(name: string, player: any): string {
-    return duelsMsg(
-        'Classic Duels',
-        name,
-        (player.stats?.Duels ?? {}) as any,
-        'classic_duel_wins',
-        'classic_duel_losses'
-    );
-}
-function buildBowDuels(name: string, player: any): string {
-    return duelsMsg(
-        'Bow Duels',
-        name,
-        (player.stats?.Duels ?? {}) as any,
-        'bow_wins',
-        'bow_losses'
-    );
-}
-function buildOpDuels(name: string, player: any): string {
-    return duelsMsg(
-        'OP Duels',
-        name,
-        (player.stats?.Duels ?? {}) as any,
-        'op_duel_wins',
-        'op_duel_losses'
-    );
-}
-function buildComboDuels(name: string, player: any): string {
-    return duelsMsg(
-        'Combo Duels',
-        name,
-        (player.stats?.Duels ?? {}) as any,
-        'combo_duel_wins',
-        'combo_duel_losses'
-    );
-}
-function buildPotionDuels(name: string, player: any): string {
-    return duelsMsg(
-        'Potion Duels',
-        name,
-        (player.stats?.Duels ?? {}) as any,
-        'potion_duel_wins',
-        'potion_duel_losses'
-    );
+    return `[${mode.label}] ${name} | W: ${w} | K: ${compactNumber(k)} | KDR: ${ratio(k, d)} | WLR: ${ratio(w, l)} | ${randomHex()}`;
 }
 
 // ── UHC Champions ─────────────────────────────────────────────────────────────
 
 function buildUhc(name: string, player: any): string {
     const s = (player.stats?.UHC as Record<string, number>) ?? {};
-    return `[UHC] ${name} | W: ${s.wins ?? 0} | K: ${fmt(s.kills ?? 0)} | KDR: ${ratio(s.kills ?? 0, s.deaths ?? 0)} | ${hex()}`;
+    return `[UHC] ${name} | W: ${s.wins ?? 0} | K: ${compactNumber(s.kills ?? 0)} | KDR: ${ratio(s.kills ?? 0, s.deaths ?? 0)} | ${randomHex()}`;
 }
 
 // ── Murder Mystery ────────────────────────────────────────────────────────────
@@ -278,28 +148,28 @@ function buildUhc(name: string, player: any): string {
 function buildMM(name: string, player: any): string {
     const s = (player.stats?.MurderMystery as Record<string, number>) ?? {};
     const w = s.wins ?? 0;
-    return `[MM] ${name} | W: ${w} | Kills: ${s.murderer_kills ?? 0} | Detective W: ${s.detective_wins ?? 0} | ${hex()}`;
+    return `[MM] ${name} | W: ${w} | Kills: ${s.murderer_kills ?? 0} | Detective W: ${s.detective_wins ?? 0} | ${randomHex()}`;
 }
 
 // ── Build Battle ──────────────────────────────────────────────────────────────
 
 function buildBB(name: string, player: any): string {
     const s = (player.stats?.BuildBattle as Record<string, number>) ?? {};
-    return `[BB] ${name} | W: ${s.wins ?? 0} | Score: ${fmt(s.score ?? 0)} | ${hex()}`;
+    return `[BB] ${name} | W: ${s.wins ?? 0} | Score: ${compactNumber(s.score ?? 0)} | ${randomHex()}`;
 }
 
 // ── Arcade ────────────────────────────────────────────────────────────────────
 
 function buildArcade(name: string, player: any): string {
     const s = (player.stats?.Arcade as Record<string, number>) ?? {};
-    return `[Arcade] ${name} | W: ${s.wins ?? 0} | Coins: ${fmt(s.coins ?? 0)} | ${hex()}`;
+    return `[Arcade] ${name} | W: ${s.wins ?? 0} | Coins: ${compactNumber(s.coins ?? 0)} | ${randomHex()}`;
 }
 
 // ── TNT Games ─────────────────────────────────────────────────────────────────
 
 function buildTnt(name: string, player: any): string {
     const s = (player.stats?.TNTGames as Record<string, number>) ?? {};
-    return `[TNT] ${name} | W: ${s.wins ?? 0} | K: ${s.kills ?? 0} | ${hex()}`;
+    return `[TNT] ${name} | W: ${s.wins ?? 0} | K: ${s.kills ?? 0} | ${randomHex()}`;
 }
 
 // ── Cops and Crims ────────────────────────────────────────────────────────────
@@ -309,7 +179,7 @@ function buildCvc(name: string, player: any): string {
     const k = s.kills ?? 0,
         d = s.deaths ?? 0,
         w = s.game_wins ?? 0;
-    return `[CvC] ${name} | W: ${w} | K: ${fmt(k)} | KDR: ${ratio(k, d)} | Rounds: ${s.round_wins ?? 0} | ${hex()}`;
+    return `[CvC] ${name} | W: ${w} | K: ${compactNumber(k)} | KDR: ${ratio(k, d)} | Rounds: ${s.round_wins ?? 0} | ${randomHex()}`;
 }
 
 // ── Mega Walls ────────────────────────────────────────────────────────────────
@@ -322,7 +192,7 @@ function buildMW(name: string, player: any): string {
         fd = s.final_deaths ?? 0;
     const w = s.wins ?? 0,
         l = s.losses ?? 0;
-    return `[MW] ${name} | W: ${w} | KDR: ${ratio(k, d)} | FKDR: ${ratio(fk, fd)} | FK: ${fk} | Class: ${s.chosen_class ?? '?'} | WLR: ${ratio(w, l)} | ${hex()}`;
+    return `[MW] ${name} | W: ${w} | KDR: ${ratio(k, d)} | FKDR: ${ratio(fk, fd)} | FK: ${fk} | Class: ${s.chosen_class ?? '?'} | WLR: ${ratio(w, l)} | ${randomHex()}`;
 }
 
 // ── Pit ───────────────────────────────────────────────────────────────────────
@@ -367,7 +237,7 @@ function buildPit(name: string, player: any): string {
     const assists = stats.assists ?? 0;
     const gold = profile.cash ?? 0;
 
-    return `[Pit] ${name} | Prestige: ${prestige} | Lvl: ${level} | K: ${fmt(kills)} | D: ${fmt(deaths)} | KDR: ${ratio(kills, deaths)} | A: ${fmt(assists)} | Gold: ${fmt(gold)} | ${hex()}`;
+    return `[Pit] ${name} | Prestige: ${prestige} | Lvl: ${level} | K: ${compactNumber(kills)} | D: ${compactNumber(deaths)} | KDR: ${ratio(kills, deaths)} | A: ${compactNumber(assists)} | Gold: ${compactNumber(gold)} | ${randomHex()}`;
 }
 
 // ── GEXP ──────────────────────────────────────────────────────────────────────
@@ -385,7 +255,7 @@ function buildGexp(name: string, player: any, guild: any): string {
     const today = entries[0]?.[1] ?? 0;
     // Sum all available history entries (Hypixel returns up to 7 days)
     const weeklyTotal = entries.reduce((sum, [, v]) => sum + v, 0);
-    return `[GEXP] ${name} | Today: ${fmt(today)} | Week: ${fmt(weeklyTotal)} | ${hex()}`;
+    return `[GEXP] ${name} | Today: ${compactNumber(today)} | Week: ${compactNumber(weeklyTotal)} | ${randomHex()}`;
 }
 
 // ── SkyBlock ──────────────────────────────────────────────────────────────────
@@ -428,7 +298,7 @@ function sbSkillXp(memberData: any): Record<string, number> {
 }
 
 function buildSbOverview(name: string, _player: any, sbData: any): string {
-    if (!sbData) return `No SkyBlock data found for ${name}. | ${hex()}`;
+    if (!sbData) return `No SkyBlock data found for ${name}. | ${randomHex()}`;
     const m = sbData.memberData;
     const skillData = sbSkillXp(m);
     const skills = [
@@ -445,25 +315,25 @@ function buildSbOverview(name: string, _player: any, sbData: any): string {
     const avg = levels.reduce((a: number, b: number) => a + b, 0) / levels.length;
     const purse = m?.currencies?.coin_purse ?? 0;
     const sbLvl = Math.floor(((m?.leveling?.experience as number) ?? 0) / 100);
-    return `[SB] ${name} | Lvl: ${sbLvl} | Avg Skill: ${avg.toFixed(1)} | Purse: ${fmt(Math.floor(purse))} | Bank: ${fmt(Math.floor(sbData.bankBalance))} | ${hex()}`;
+    return `[SB] ${name} | Lvl: ${sbLvl} | Avg Skill: ${avg.toFixed(1)} | Purse: ${compactNumber(Math.floor(purse))} | Bank: ${compactNumber(Math.floor(sbData.bankBalance))} | ${randomHex()}`;
 }
 
 function buildSbSkills(name: string, _player: any, sbData: any): string {
-    if (!sbData) return `No SkyBlock data for ${name}. | ${hex()}`;
+    if (!sbData) return `No SkyBlock data for ${name}. | ${randomHex()}`;
     const sd = sbSkillXp(sbData.memberData);
     const sk = (key: string) => sbSkillLevel(sd[key] ?? 0, key);
-    return `[SB Skills] ${name} | Farm: ${sk('SKILL_FARMING')} | Mine: ${sk('SKILL_MINING')} | Combat: ${sk('SKILL_COMBAT')} | Forge: ${sk('SKILL_FORAGING')} | Fish: ${sk('SKILL_FISHING')} | Ench: ${sk('SKILL_ENCHANTING')} | Alch: ${sk('SKILL_ALCHEMY')} | ${hex()}`;
+    return `[SB Skills] ${name} | Farm: ${sk('SKILL_FARMING')} | Mine: ${sk('SKILL_MINING')} | Combat: ${sk('SKILL_COMBAT')} | Forge: ${sk('SKILL_FORAGING')} | Fish: ${sk('SKILL_FISHING')} | Ench: ${sk('SKILL_ENCHANTING')} | Alch: ${sk('SKILL_ALCHEMY')} | ${randomHex()}`;
 }
 
 function buildSbSlayers(name: string, _player: any, sbData: any): string {
-    if (!sbData) return `No SkyBlock data for ${name}. | ${hex()}`;
+    if (!sbData) return `No SkyBlock data for ${name}. | ${randomHex()}`;
     const slayers = sbData.memberData?.slayer?.slayer_bosses ?? {};
     const xp = (boss: string) => (slayers[boss]?.xp ?? 0) as number;
-    return `[SB Slayers] ${name} | Rev: ${fmt(xp('zombie'))} | Tara: ${fmt(xp('spider'))} | Sven: ${fmt(xp('wolf'))} | Eman: ${fmt(xp('enderman'))} | Blaze: ${fmt(xp('blaze'))} | Inf: ${fmt(xp('vampire'))} | ${hex()}`;
+    return `[SB Slayers] ${name} | Rev: ${compactNumber(xp('zombie'))} | Tara: ${compactNumber(xp('spider'))} | Sven: ${compactNumber(xp('wolf'))} | Eman: ${compactNumber(xp('enderman'))} | Blaze: ${compactNumber(xp('blaze'))} | Inf: ${compactNumber(xp('vampire'))} | ${randomHex()}`;
 }
 
 function buildSbDungeons(name: string, _player: any, sbData: any): string {
-    if (!sbData) return `No SkyBlock data for ${name}. | ${hex()}`;
+    if (!sbData) return `No SkyBlock data for ${name}. | ${randomHex()}`;
     const d = sbData.memberData?.dungeons?.dungeon_types?.catacombs ?? {};
     const catXp = d.experience ?? 0;
     const catLvl = skillLevel(catXp, CATA_XP);
@@ -471,62 +341,63 @@ function buildSbDungeons(name: string, _player: any, sbData: any): string {
         (a: number, b: any) => a + Number(b),
         0
     );
-    return `[SB Dungeons] ${name} | Cata Lvl: ${catLvl} | Completions: ${completions} | ${hex()}`;
+    return `[SB Dungeons] ${name} | Cata Lvl: ${catLvl} | Completions: ${completions} | ${randomHex()}`;
 }
 
 // ── Command factory ───────────────────────────────────────────────────────────
 
+/** A `!<cmd> [player]` command that looks the player up and replies with one line of stats. */
 function makeStatCmd(
-    cmdId: string,
+    commandId: string,
     pattern: RegExp,
     buildMsg: (name: string, player: any, extra?: any) => string,
-    extraFn?: (uuid: string, bridge: Bridge) => Promise<any>
+    extraFn?: (uuid: string) => Promise<any>
 ): ModuleCommand {
     return {
-        commandId: cmdId,
+        commandId,
         pattern,
         async handler(ctx, bridge) {
             const target = ctx.matches[1]?.trim() ?? ctx.username;
-            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, cmdId);
-            if (remaining > 0) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
-                return;
-            }
-            const result = await resolve(target, bridge, ctx.replyChannel);
+            if (replyIfOnCooldown(ctx, bridge, commandId)) return;
+            const result = await resolvePlayer(target, bridge, ctx.replyChannel);
             if (!result) return;
-            const extra = extraFn ? await extraFn(result.uuid, bridge) : undefined;
-            const msg = buildMsg(result.name, result.player, extra);
-            bridge.bot.chat(ctx.replyChannel, msg);
-            cooldowns.setCooldown(ctx.username, cmdId, ctx.guildRank);
+            const extra = extraFn ? await extraFn(result.uuid) : undefined;
+            bridge.bot.chat(ctx.replyChannel, buildMsg(result.name, result.player, extra));
+            cooldowns.setCooldown(ctx.username, commandId, ctx.guildRank);
         },
     };
 }
 
 export function registerStatsModule(commands: ModuleCommand[]): void {
-    // BW sub-modes must be registered BEFORE the overall !bw catch-all
+    // BedWars — per-mode commands first, then the overall `!bw [player]`
+    for (const mode of BW_MODES) {
+        commands.push(
+            makeStatCmd(
+                `stats:bw:${mode.key}`,
+                new RegExp(`^!bw\\s+(?:${mode.aliases.join('|')})\\s*(\\S+)?`, 'i'),
+                (name, player) => buildBw(`BW ${mode.label}`, mode.prefix, name, player)
+            )
+        );
+    }
     commands.push(
-        makeStatCmd('stats:bw:solo', /^!bw\s+(?:solo|1s|solos)\s*(\S+)?/i, buildBwSolo),
-        makeStatCmd('stats:bw:doubles', /^!bw\s+(?:doubles|2s|duos)\s*(\S+)?/i, buildBwDoubles),
-        makeStatCmd('stats:bw:threes', /^!bw\s+(?:threes|3s|3v3|trios)\s*(\S+)?/i, buildBwThrees),
-        makeStatCmd('stats:bw:fours', /^!bw\s+(?:fours|4s|4v4v4v4|quads)\s*(\S+)?/i, buildBwFours),
-        makeStatCmd('stats:bw:4v4', /^!bw\s+4v4\s*(\S+)?/i, buildBw4v4),
-        makeStatCmd('stats:bw', /^!bw(?:\s+(\S+))?/i, buildBwOverall)
+        makeStatCmd('stats:bw', /^!bw(?:\s+(\S+))?/i, (name, player) =>
+            buildBw('BW', '', name, player)
+        )
     );
 
     // SkyWars
     commands.push(makeStatCmd('stats:sw', /^!sw(?:\s+(\S+))?/i, buildSkywars));
 
     // Duels — overall + 7 sub-modes
-    commands.push(
-        makeStatCmd('stats:duels', /^!duels(?:\s+(\S+))?/i, buildDuels),
-        makeStatCmd('stats:uhcduels', /^!uhcduels(?:\s+(\S+))?/i, buildUhcDuels),
-        makeStatCmd('stats:swduels', /^!swduels(?:\s+(\S+))?/i, buildSwDuels),
-        makeStatCmd('stats:classicduels', /^!classicduels(?:\s+(\S+))?/i, buildClassicDuels),
-        makeStatCmd('stats:bowduels', /^!bowduels(?:\s+(\S+))?/i, buildBowDuels),
-        makeStatCmd('stats:opduels', /^!opduels(?:\s+(\S+))?/i, buildOpDuels),
-        makeStatCmd('stats:comboduels', /^!comboduels(?:\s+(\S+))?/i, buildComboDuels),
-        makeStatCmd('stats:potionduels', /^!potionduels(?:\s+(\S+))?/i, buildPotionDuels)
-    );
+    for (const mode of DUELS_MODES) {
+        commands.push(
+            makeStatCmd(
+                `stats:${mode.command}`,
+                new RegExp(`^!${mode.command}(?:\\s+(\\S+))?`, 'i'),
+                (name, player) => buildDuels(mode, name, player)
+            )
+        );
+    }
 
     // Other game modes
     commands.push(
@@ -542,10 +413,48 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
 
     // GEXP
     commands.push(
-        makeStatCmd('stats:gexp', /^!gexp(?:\s+(\S+))?/i, buildGexp as any, async (uuid) =>
+        makeStatCmd('stats:gexp', /^!gexp(?:\s+(\S+))?/i, buildGexp as any, (uuid) =>
             hypixelService.getGuild(uuid)
         )
     );
+
+    // !gexptop [days] — top 5 guild XP earners. Hypixel only reports the last 7 days.
+    commands.push({
+        commandId: 'stats:gexptop',
+        pattern: /^!gexptop(?:\s+(\d+))?/i,
+        async handler(ctx, bridge) {
+            const days = Math.min(parseInt(ctx.matches[1] ?? '7', 10) || 7, 7);
+            const guild = await hypixelService.getGuildByName(env.HYPIXEL_GUILD_NAME);
+            if (!guild) {
+                bridge.bot.chat(ctx.replyChannel, 'Could not fetch guild data.');
+                return;
+            }
+
+            const top = guild.members
+                .map((m) => ({
+                    uuid: m.uuid,
+                    total: Object.entries(m.expHistory ?? {})
+                        .sort(([a], [b]) => b.localeCompare(a))
+                        .slice(0, days)
+                        .reduce((sum, [, gexp]) => sum + gexp, 0),
+                }))
+                .sort((a, b) => b.total - a.total)
+                .slice(0, 5);
+            if (top.length === 0) {
+                bridge.bot.chat(ctx.replyChannel, 'No GEXP data available yet.');
+                return;
+            }
+
+            const profiles = await Promise.all(
+                top.map((t) => mojangService.getByUuid(t.uuid).catch(() => null))
+            );
+            const lines = top.map(
+                (t, i) =>
+                    `${i + 1}. ${profiles[i]?.name ?? `Unknown-${t.uuid.slice(0, 8)}`}: ${t.total.toLocaleString('en-US')}`
+            );
+            bridge.bot.chat(ctx.replyChannel, `[GEXP Top ${days}d] ${lines.join(' | ')}`);
+        },
+    });
 
     // SkyBlock commands
     commands.push(
@@ -575,25 +484,17 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         commandId: 'stats:sb:networth',
         pattern: /^!(?:nw|networth)(?:\s+(\S+))?/i,
         async handler(ctx, bridge) {
-            const remaining = cooldowns.isOnCooldown(
-                ctx.username,
-                ctx.guildRank,
-                'stats:sb:networth'
-            );
-            if (remaining > 0) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
-                return;
-            }
+            if (replyIfOnCooldown(ctx, bridge, 'stats:sb:networth')) return;
 
             const target = ctx.matches[1]?.trim() ?? ctx.username;
-            const result = await resolve(target, bridge, ctx.replyChannel);
+            const result = await resolvePlayer(target, bridge, ctx.replyChannel);
             if (!result) return;
 
             const sbData = await fetchSkyblockData(result.uuid);
             if (!sbData) {
                 bridge.bot.chat(
                     ctx.replyChannel,
-                    `No SkyBlock data found for ${result.name}. | ${hex()}`
+                    `No SkyBlock data found for ${result.name}. | ${randomHex()}`
                 );
                 return;
             }
@@ -612,20 +513,20 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
                 );
                 const nw = await calc.getNetworth({ onlyNetworth: true, cachePrices: true });
 
-                const total = fmt(Math.round(nw.networth));
-                const unsb = fmt(Math.round(nw.unsoulboundNetworth));
-                const purse = fmt(Math.round(nw.purse));
-                const bank = fmt(Math.round(nw.bank));
+                const total = compactNumber(Math.round(nw.networth));
+                const unsb = compactNumber(Math.round(nw.unsoulboundNetworth));
+                const purse = compactNumber(Math.round(nw.purse));
+                const bank = compactNumber(Math.round(nw.bank));
 
                 bridge.bot.chat(
                     ctx.replyChannel,
-                    `[NW] ${result.name} (${sbData.profileName}) | Total: ${total} | Unsoulbound: ${unsb} | Purse: ${purse} | Bank: ${bank} | ${hex()}`
+                    `[NW] ${result.name} (${sbData.profileName}) | Total: ${total} | Unsoulbound: ${unsb} | Purse: ${purse} | Bank: ${bank} | ${randomHex()}`
                 );
             } catch (err) {
                 consola.warn('[Networth] Calculation error:', err);
                 bridge.bot.chat(
                     ctx.replyChannel,
-                    `Failed to calculate networth for ${result.name}. | ${hex()}`
+                    `Failed to calculate networth for ${result.name}. | ${randomHex()}`
                 );
             }
 
@@ -638,11 +539,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
         commandId: 'stats:guild',
         pattern: /^!guild(?:\s+(\S+))?/i,
         async handler(ctx, bridge) {
-            const remaining = cooldowns.isOnCooldown(ctx.username, ctx.guildRank, 'stats:guild');
-            if (remaining > 0) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, cooldown: ${remaining}s`);
-                return;
-            }
+            if (replyIfOnCooldown(ctx, bridge, 'stats:guild')) return;
 
             const name = ctx.matches[1]?.trim() || ctx.username;
             const profile = await mojangService.getProfile(name).catch(() => null);
@@ -682,7 +579,7 @@ export function registerStatsModule(commands: ModuleCommand[]): void {
 
             bridge.bot.chat(
                 ctx.replyChannel,
-                `${profile.name} | Guild: ${guild.name} ${guildTag} | Rank: ${rankDisplay} | Weekly GEXP: ${fmt(weeklyGexp)} | Joined: ${joined} | ${hex()}`
+                `${profile.name} | Guild: ${guild.name} ${guildTag} | Rank: ${rankDisplay} | Weekly GEXP: ${compactNumber(weeklyGexp)} | Joined: ${joined} | ${randomHex()}`
             );
             cooldowns.setCooldown(ctx.username, 'stats:guild', ctx.guildRank);
         },
