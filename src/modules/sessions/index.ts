@@ -3,8 +3,8 @@ import type Bridge from '@/bridge/bridge';
 import type { ModuleCommand, CommandContext } from '@/modules/types';
 import { hypixelService } from '@/services/hypixel';
 import { mojangService } from '@/services/mojang';
-import { sessionsRepo } from '@/db/repositories/sessions.repo';
 import { readJson, writeJson } from '@/db/json-store';
+import { ratio } from '@/util/formatting';
 
 const ACTIVE_SESSIONS_FILE = 'active-sessions.json';
 
@@ -94,20 +94,17 @@ function formatDiff(start: GameStats, end: GameStats, game: 'bw' | 'sw' | 'cvc')
         const fk = (end.bw_final_kills ?? 0) - (start.bw_final_kills ?? 0);
         const fd = (end.bw_final_deaths ?? 0) - (start.bw_final_deaths ?? 0);
         const bb = (end.bw_beds_broken ?? 0) - (start.bw_beds_broken ?? 0);
-        const fkdr = fd === 0 ? (fk > 0 ? String(fk) : '0') : (fk / fd).toFixed(2);
-        return `+W: ${wins} | +FK: ${fk} | FKDR: ${fkdr} | +BB: ${bb}`;
+        return `+W: ${wins} | +FK: ${fk} | FKDR: ${ratio(fk, fd)} | +BB: ${bb}`;
     } else if (game === 'sw') {
         const wins = (end.sw_wins ?? 0) - (start.sw_wins ?? 0);
         const kills = (end.sw_kills ?? 0) - (start.sw_kills ?? 0);
         const deaths = (end.sw_deaths ?? 0) - (start.sw_deaths ?? 0);
-        const kdr = deaths === 0 ? (kills > 0 ? String(kills) : '0') : (kills / deaths).toFixed(2);
-        return `+W: ${wins} | +K: ${kills} | KDR: ${kdr}`;
+        return `+W: ${wins} | +K: ${kills} | KDR: ${ratio(kills, deaths)}`;
     } else {
         const wins = (end.cvc_wins ?? 0) - (start.cvc_wins ?? 0);
         const kills = (end.cvc_kills ?? 0) - (start.cvc_kills ?? 0);
         const deaths = (end.cvc_deaths ?? 0) - (start.cvc_deaths ?? 0);
-        const kdr = deaths === 0 ? (kills > 0 ? String(kills) : '0') : (kills / deaths).toFixed(2);
-        return `+W: ${wins} | +K: ${kills} | KDR: ${kdr}`;
+        return `+W: ${wins} | +K: ${kills} | KDR: ${ratio(kills, deaths)}`;
     }
 }
 
@@ -204,22 +201,6 @@ async function handleStop(
         ctx.replyChannel,
         `[Session] ${ctx.username} ${game.toUpperCase()} (${duration}): ${diff}`
     );
-
-    // Persist to Supabase
-    sessionsRepo
-        .create({
-            user_uuid: profile.id,
-            username: ctx.username,
-            game_mode: game,
-            start_stats: session.startStats as Record<string, unknown>,
-        })
-        .then((record) => {
-            if (!record) return;
-            return sessionsRepo.complete(record.id, endStats as Record<string, unknown>, {});
-        })
-        .catch(() => {
-            /* Supabase optional */
-        });
 }
 
 async function handleShow(
@@ -274,11 +255,9 @@ export function registerSessionsModule(commands: ModuleCommand[]): void {
             },
             {
                 commandId: `session:${g}:show`,
-                pattern: new RegExp(`^!session\\s+${g}(?:\\s|$)`, 'i'),
+                pattern: new RegExp(`^!session\\s+${g}(?=\\s|$)`, 'i'),
                 handler: (ctx, bridge) => handleShow(g, ctx, bridge),
             }
         );
     }
 }
-
-export { activeSessions };
