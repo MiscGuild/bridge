@@ -1,14 +1,10 @@
 import { consola } from 'consola';
 import Bridge from '@/bridge/bridge';
-import { createApiServer } from '@/api/server';
 import { startTerminalRepl } from '@/terminal/index';
 
 async function main() {
     const bridge = new Bridge();
     await bridge.start();
-
-    const api = createApiServer(bridge);
-    await api.start();
 
     startTerminalRepl(bridge);
 
