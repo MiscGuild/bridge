@@ -24,13 +24,6 @@ export const RANK_COLORS: Record<string, number> = {
 
 export const DEFAULT_EMBED_COLOR = 0x36393f;
 
-/** Chat modes for the Minecraft bot */
-export const CHAT_MODES = {
-    GUILD: 'gc',
-    OFFICER: 'oc',
-    PARTY: 'pc',
-} as const;
-
 /** Bot connection state machine */
 export const BOT_STATES = {
     DISCONNECTED: 'disconnected',
@@ -40,45 +33,6 @@ export const BOT_STATES = {
 } as const;
 
 export type BotState = (typeof BOT_STATES)[keyof typeof BOT_STATES];
-
-/** Supported Hypixel game modes for stats */
-export const GAME_MODES = [
-    'bedwars',
-    'skywars',
-    'duels',
-    'uhc',
-    'buildbattle',
-    'murdermystery',
-    'tntgames',
-    'megawalls',
-    'arcade',
-    'copsandcrims',
-    'pit',
-    'skyblock',
-    'woolwars',
-    'smash',
-    'speeduhc',
-    'blitz',
-    'paintball',
-    'quakecraft',
-    'vampirez',
-    'walls',
-] as const;
-
-export type GameMode = (typeof GAME_MODES)[number];
-
-/** Ban types */
-export const BAN_TYPES = {
-    GUILD: 'guild',
-    BRIDGE: 'bridge',
-    COMMAND: 'command',
-} as const;
-
-export type BanType = (typeof BAN_TYPES)[keyof typeof BAN_TYPES];
-
-/** API response shapes */
-export const API_VERSION = 'v1';
-export const API_PREFIX = `/api/${API_VERSION}`;
 
 /** Hypixel stat cache TTL (ms) */
 export const STATS_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
