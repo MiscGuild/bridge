@@ -1,8 +1,7 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import type Bridge from '@/bridge/bridge';
-import { hypixelService } from '@/services/hypixel';
-import { mojangService } from '@/services/mojang';
-import { nextCalc } from '@/modules/next-calc/index';
+import { levelGoal } from '@/modules/next-calc/index';
+import { bwStats, lookupPlayer } from '@/modules/stats/shared';
 
 export default {
     data: {
@@ -51,8 +50,8 @@ export default {
         const target = interaction.options.getInteger('levelwanted', true);
         const avgXp = interaction.options.getInteger('avg_exp') ?? 150;
 
-        const profile = await mojangService.getProfile(ign);
-        if (!profile) {
+        const found = await lookupPlayer(ign);
+        if (!found) {
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -62,55 +61,42 @@ export default {
             });
             return;
         }
-
-        const player = await hypixelService.getPlayer(profile.id);
-        if (!player) {
+        if (!found.player) {
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')
-                        .setDescription(`Could not fetch Hypixel data for **${profile.name}**`),
+                        .setDescription(
+                            `Could not fetch Hypixel data for **${found.profile.name}**`
+                        ),
                 ],
             });
             return;
         }
 
-        const stats = nextCalc.bwOverall(player);
-        const currentXp = stats.xp;
-        const targetXp = nextCalc.xpForLevel(target);
-        const neededXp = Math.max(0, targetXp - currentXp);
-        const games = Math.ceil(neededXp / Math.max(1, avgXp));
+        const name = found.profile.name;
+        const stats = bwStats(found.player);
+        const { targetXp, neededXp, games } = levelGoal(stats, target, avgXp);
+        const reached = target <= stats.lvl;
 
         const embed = new EmbedBuilder()
-            .setColor(target <= stats.lvl ? 'Yellow' : '#5865f2')
+            .setColor(reached ? 'Yellow' : '#5865f2')
             .setTitle(`BedWars — Next Level`)
             .setDescription(
-                target <= stats.lvl
-                    ? `**${profile.name}** is already at ★${stats.lvl} (target ★${target}).`
-                    : `**${profile.name}** needs to reach ★${target}.`
+                reached
+                    ? `**${name}** is already at ★${stats.lvl} (target ★${target}).`
+                    : `**${name}** needs to reach ★${target}.`
             )
             .addFields(
                 { name: 'Current Star', value: `★${stats.lvl}`, inline: true },
                 { name: 'Target Star', value: `★${target}`, inline: true },
                 { name: 'Avg XP / game', value: avgXp.toLocaleString(), inline: true },
-                {
-                    name: 'Current XP',
-                    value: currentXp.toLocaleString(),
-                    inline: true,
-                },
-                {
-                    name: 'Target XP',
-                    value: targetXp.toLocaleString(),
-                    inline: true,
-                },
-                {
-                    name: 'XP Needed',
-                    value: neededXp.toLocaleString(),
-                    inline: true,
-                },
+                { name: 'Current XP', value: stats.xp.toLocaleString(), inline: true },
+                { name: 'Target XP', value: targetXp.toLocaleString(), inline: true },
+                { name: 'XP Needed', value: neededXp.toLocaleString(), inline: true },
                 {
                     name: 'Games Needed',
-                    value: target <= stats.lvl ? '0' : games.toLocaleString(),
+                    value: reached ? '0' : games.toLocaleString(),
                     inline: false,
                 }
             )
