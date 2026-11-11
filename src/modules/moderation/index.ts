@@ -1,194 +1,63 @@
+import type { GuildMember } from 'discord.js';
+import env from '@/config/env';
 import type { ModuleCommand } from '@/modules/types';
-import { bansRepo } from '@/db/repositories/bans.repo';
-import { auditLogRepo } from '@/db/repositories/audit-log.repo';
-import { mojangService } from '@/services/mojang';
-import { guildRankService } from '@/services/guild-ranks';
+import { findMemberByBridgeName } from '@/util/discord-members';
 
-async function resolveUuid(username: string): Promise<string | null> {
-    const profile = await mojangService.getProfile(username);
-    return profile?.id ?? null;
+/**
+ * Give or take BRIDGE_MUTED_ROLE_ID. Members with the role can still read the bridge
+ * channels, but their messages aren't sent to Minecraft.
+ */
+export async function setBridgeMuted(
+    member: GuildMember,
+    muted: boolean,
+    reason?: string
+): Promise<void> {
+    const roleId = env.BRIDGE_MUTED_ROLE_ID;
+    if (!roleId) throw new Error('BRIDGE_MUTED_ROLE_ID is not configured.');
+    if (muted) await member.roles.add(roleId, reason);
+    else await member.roles.remove(roleId, reason);
 }
 
 export function registerModerationModule(commands: ModuleCommand[]): void {
-    // !gban <username> [reason] — ban from guild (kicks via /g kick, logs to DB)
-    commands.push({
-        commandId: 'mod:gban',
-        pattern: /^!gban\s+(\S+)(?:\s+(.+))?/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-            const reason = ctx.matches[2] ?? 'No reason provided';
+    // !bridge-mute <name> [reason] / !bridge-unmute <name> — `name` is the Discord name shown in-game
+    for (const muted of [true, false]) {
+        const command = muted ? 'bridge-mute' : 'bridge-unmute';
+        commands.push({
+            commandId: `mod:${command}`,
+            pattern: new RegExp(`^!${command}\\s+(\\S+)(?:\\s+(.+))?`, 'i'),
+            staffOnly: true,
+            async handler(ctx, bridge) {
+                const name = ctx.matches[1]!;
+                const reason = ctx.matches[2];
 
-            bridge.bot.execute(`/g kick ${target} ${reason}`);
+                const member = await findMemberByBridgeName(bridge, name);
+                if (!member) {
+                    bridge.bot.chat(ctx.replyChannel, `No Discord member found named ${name}.`);
+                    return;
+                }
 
-            const uuid = await resolveUuid(target);
-            if (uuid) {
-                await bansRepo
-                    .create({
-                        username: target,
-                        uuid,
-                        ban_type: 'guild',
-                        reason,
-                        banned_by: ctx.username,
-                        expires_at: null,
-                    })
-                    .catch(() => {});
-                await auditLogRepo
-                    .log(ctx.username, 'guild_ban', target, { reason })
-                    .catch(() => {});
-            }
-
-            bridge.bot.chat('oc', `${ctx.username} guild-banned ${target}: ${reason}`);
-        },
-    });
-
-    // !bridgeban <username> [reason] — ban from bridge chat (in-memory + DB)
-    commands.push({
-        commandId: 'mod:bridgeban',
-        pattern: /^!bridgeban\s+(\S+)(?:\s+(.+))?/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-            const reason = ctx.matches[2] ?? 'No reason provided';
-
-            await bansRepo
-                .create({
-                    username: target.toLowerCase(),
-                    uuid: (await resolveUuid(target)) ?? '',
-                    ban_type: 'bridge',
-                    reason,
-                    banned_by: ctx.username,
-                    expires_at: null,
-                })
-                .catch(() => {});
-
-            // Reload bridge ban cache
-            await (bridge as any).loadBans().catch(() => {});
-
-            await auditLogRepo.log(ctx.username, 'bridge_ban', target, { reason }).catch(() => {});
-
-            bridge.bot.chat('oc', `${ctx.username} bridge-banned ${target}: ${reason}`);
-        },
-    });
-
-    // !cmdban <username> [reason] — ban from using bot commands
-    commands.push({
-        commandId: 'mod:cmdban',
-        pattern: /^!cmdban\s+(\S+)(?:\s+(.+))?/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-            const reason = ctx.matches[2] ?? 'No reason provided';
-
-            await bansRepo
-                .create({
-                    username: target.toLowerCase(),
-                    uuid: (await resolveUuid(target)) ?? '',
-                    ban_type: 'command',
-                    reason,
-                    banned_by: ctx.username,
-                    expires_at: null,
-                })
-                .catch(() => {});
-
-            await (bridge as any).loadBans().catch(() => {});
-
-            await auditLogRepo.log(ctx.username, 'command_ban', target, { reason }).catch(() => {});
-
-            bridge.bot.chat('oc', `${ctx.username} command-banned ${target}: ${reason}`);
-        },
-    });
-
-    // !unban <username> — remove all active bans
-    commands.push({
-        commandId: 'mod:unban',
-        pattern: /^!unban\s+(\S+)/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            const target = ctx.matches[1]!;
-
-            await bansRepo.removeByUsername(target).catch(() => {});
-            await (bridge as any).loadBans().catch(() => {});
-
-            await auditLogRepo.log(ctx.username, 'unban', target).catch(() => {});
-
-            bridge.bot.chat('oc', `${ctx.username} unbanned ${target}`);
-        },
-    });
-
-    // !banlist — list all active bans (officer chat)
-    commands.push({
-        commandId: 'mod:banlist',
-        pattern: /^!banlist/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
-                return;
-            }
-
-            const bans = await bansRepo.getActive().catch(() => []);
-            if (bans.length === 0) {
-                bridge.bot.chat('oc', `No active bans.`);
-                return;
-            }
-
-            bridge.bot.chat('oc', `Active bans (${bans.length}):`);
-            for (const ban of bans.slice(0, 10)) {
+                await setBridgeMuted(
+                    member,
+                    muted,
+                    `${ctx.username} (in-game)${reason ? `: ${reason}` : ''}`
+                );
                 bridge.bot.chat(
                     'oc',
-                    `• ${ban.username} [${ban.ban_type}] by ${ban.banned_by}: ${ban.reason}`
+                    `${ctx.username} ${muted ? 'bridge-muted' : 'bridge-unmuted'} ${name}${reason ? `: ${reason}` : ''}`
                 );
-            }
-            if (bans.length > 10) bridge.bot.chat('oc', `...and ${bans.length - 10} more.`);
-        },
-    });
+            },
+        });
+    }
 
-    // !reboot — restart the bot process (staff only)
+    // !reboot — exit the process; the process manager (e.g. PM2) starts it again
     commands.push({
         commandId: 'mod:reboot',
         pattern: /^!reboot/i,
         staffOnly: true,
         async handler(ctx, bridge) {
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            await auditLogRepo.log(ctx.username, 'reboot', undefined).catch(() => {});
             bridge.bot.markShuttingDown();
             bridge.bot.chat(ctx.replyChannel, `Rebooting... requested by ${ctx.username}`);
             setTimeout(() => process.exit(0), 2000);
-        },
-    });
-
-    // !save — force flush all JSON data stores to disk
-    commands.push({
-        commandId: 'mod:save',
-        pattern: /^!save/i,
-        staffOnly: true,
-        async handler(ctx, bridge) {
-            if (!guildRankService.isStaffRank(ctx.guildRank)) {
-                bridge.bot.chat(ctx.replyChannel, `${ctx.username}, you don't have permission.`);
-                return;
-            }
-            await auditLogRepo.log(ctx.username, 'save', undefined).catch(() => {});
-            bridge.bot.chat(ctx.replyChannel, `Data saved by ${ctx.username}.`);
         },
     });
 }
