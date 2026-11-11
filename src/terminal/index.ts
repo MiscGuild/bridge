@@ -111,7 +111,7 @@ export function startTerminalRepl(bridge: Bridge): void {
             }
         } else {
             // Bare text — send to guild chat if enabled
-            if (process.env['ENABLE_TERMINAL_CHAT'] === 'true') {
+            if (env.ENABLE_TERMINAL_CHAT) {
                 bridge.bot.chat('gc', input);
                 consola.info(`[GC] → ${input}`);
             } else {
