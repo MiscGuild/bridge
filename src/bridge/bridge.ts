@@ -180,13 +180,28 @@ export default class Bridge {
                 process.exit(1);
             }
         });
+
+        // The one failure the bot can't recover from alone: someone has to enter the code
+        this.bot.onSignInRequired((code) => {
+            const minutes = Math.round(code.expires_in / 60);
+            this.discord
+                .send(
+                    'oc',
+                    `**MC sign-in needed** — Microsoft wants the bot's account to sign in again. ` +
+                        `The link and code are in the server console (valid ~${minutes} min, a new code follows if it expires).`
+                )
+                .catch(() => {});
+        });
     }
 
     private wireBotLifecycle(): void {
-        // Login event (per client instance)
-        this.bot.bot.once('login', async () => {
-            this.bot.state = 'connected';
-            this.bot.limboAttempts = 0;
+        // Listeners stay on the client they were added to, so skip events once it's replaced.
+        // MinecraftBot tracks the state and reconnects; these handlers only report.
+        const client = this.bot.bot;
+        const isCurrent = () => this.bot.isCurrentClient(client);
+
+        client.once('login', async () => {
+            if (!isCurrent()) return;
             consola.success('Logged in to Hypixel!');
             await this.discord.send('gc', '**The bot has logged in and is now ready!**');
             setTimeout(() => {
@@ -196,33 +211,30 @@ export default class Bridge {
         });
 
         // Also nudge limbo on spawn (covers some reconnect paths where login already fired)
-        this.bot.bot.on('spawn', () => {
-            if (this.bot.state === 'connected') {
+        client.on('spawn', () => {
+            if (isCurrent() && this.bot.state === 'connected') {
                 this.bot.ensureInLimbo('spawn');
             }
         });
 
-        // End/kick events
-        this.bot.bot.on('end', (reason) => {
+        client.on('end', (reason) => {
+            if (!isCurrent()) return;
             consola.error(`Disconnected: ${reason}`);
-            this.bot.state = 'disconnected';
             if (!this.bot.isShuttingDown) {
                 this.discord.send('gc', `Disconnected: ${reason}`).catch(() => {});
             }
-            this.bot.scheduleReconnect();
         });
 
-        this.bot.bot.on('kicked', async (reason, loggedIn) => {
+        client.on('kicked', async (reason, loggedIn) => {
+            if (!isCurrent()) return;
             consola.error(`Kicked: ${reason} (loggedIn=${loggedIn})`);
-            this.bot.state = 'disconnected';
             if (!this.bot.isShuttingDown) {
                 await this.discord.send('gc', `Bot was kicked: ${reason}`).catch(() => {});
             }
-            this.bot.scheduleReconnect();
         });
 
-        this.bot.bot.on('error', (err) => {
-            consola.error('Bot error:', err);
+        client.on('error', (err) => {
+            if (isCurrent()) consola.error('Bot error:', err);
         });
     }
 
