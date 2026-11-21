@@ -36,7 +36,7 @@ const envSchema = z.object({
     MINECRAFT_HEALTH_RELOGIN_GRACE_MINUTES: POSITIVE_INT.default(2),
     /** Minimum minutes between relogins */
     MINECRAFT_HEALTH_RELOGIN_COOLDOWN_MINUTES: POSITIVE_INT.default(5),
-    /** Relogins before giving up… */
+    /** Relogins at the normal cooldown before slowing to one every 30 minutes… */
     MINECRAFT_HEALTH_RELOGIN_MAX_ATTEMPTS: POSITIVE_INT.default(5),
     /** …until the bot has been healthy for this many minutes */
     MINECRAFT_HEALTH_RELOGIN_RESET_MINUTES: POSITIVE_INT.default(30),
