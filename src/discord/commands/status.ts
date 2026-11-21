@@ -28,6 +28,9 @@ export default {
             )
             .setTimestamp();
 
+        const issue = mcState === 'limbo' ? null : bridge.bot.lastIssue;
+        if (issue) embed.addFields({ name: 'Minecraft issue', value: issue.slice(0, 1024) });
+
         await interaction.reply({ embeds: [embed] });
     },
 };
