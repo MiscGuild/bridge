@@ -42,3 +42,12 @@ export const MAX_QUEUE_SIZE = 100;
 
 /** Minecraft chat rate limit (ms between sends) */
 export const MC_CHAT_RATE_MS = 600;
+
+/** A connect attempt that hasn't logged in by then is abandoned and retried */
+export const MC_LOGIN_TIMEOUT_MS = 60 * 1000;
+
+/** The reconnect delay doubles after each failed reconnect, up to this */
+export const MC_RECONNECT_MAX_DELAY_MS = 5 * 60 * 1000;
+
+/** Health relogins past MINECRAFT_HEALTH_RELOGIN_MAX_ATTEMPTS slow down to one per this interval */
+export const HEALTH_SLOW_RELOGIN_MS = 30 * 60 * 1000;
