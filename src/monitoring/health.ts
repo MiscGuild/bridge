@@ -1,5 +1,6 @@
 import { consola } from 'consola';
 import env from '@/config/env';
+import { HEALTH_SLOW_RELOGIN_MS } from '@/config/constants';
 import type Bridge from '@/bridge/bridge';
 
 export interface HealthStatus {
@@ -9,6 +10,8 @@ export interface HealthStatus {
         state: string;
         limboAttempts: number;
         minecraftOk: boolean;
+        /** Why Minecraft is unhealthy, when the bot knows */
+        issue?: string;
     };
     discord: {
         ready: boolean;
@@ -67,6 +70,7 @@ export function getHealth(bridge: Bridge): HealthStatus {
             state: bridge.bot.state,
             limboAttempts: bridge.bot.limboAttempts,
             minecraftOk: botOk,
+            issue: botOk ? undefined : (bridge.bot.lastIssue ?? undefined),
         },
         discord: {
             ready: discordOk,
@@ -110,7 +114,8 @@ export function startHealthMonitor(bridge: Bridge): void {
                 );
             } else {
                 consola.warn(
-                    `[Health] ${h.status} | bot: ${h.bot.state} | discord: ${h.discord.ready}`
+                    `[Health] ${h.status} | bot: ${h.bot.state} | discord: ${h.discord.ready}` +
+                        (h.bot.issue ? ` | ${h.bot.issue}` : '')
                 );
             }
         },
@@ -124,10 +129,13 @@ export function startHealthMonitor(bridge: Bridge): void {
             const h = getHealth(bridge);
             if (h.status !== 'healthy' && Date.now() - alertedAt > 10 * 60 * 1000) {
                 alertedAt = Date.now();
+                const issue = h.bot.issue
+                    ? `\nLast issue: \`${h.bot.issue.replace(/`/g, "'")}\``
+                    : '';
                 await bridge.discord
                     .send(
                         'gc',
-                        `**Health Alert** — status: **${h.status}** | bot: \`${h.bot.state}\` | discord: \`${h.discord.ready}\``
+                        `**Health Alert** — status: **${h.status}** | bot: \`${h.bot.state}\` | discord: \`${h.discord.ready}\`${issue}`
                     )
                     .catch(() => {});
             }
@@ -154,6 +162,7 @@ function startMinecraftReloginWatchdog(bridge: Bridge): void {
     const cooldownMs = env.MINECRAFT_HEALTH_RELOGIN_COOLDOWN_MINUTES * 60 * 1000;
     const resetMs = env.MINECRAFT_HEALTH_RELOGIN_RESET_MINUTES * 60 * 1000;
     const maxAttempts = env.MINECRAFT_HEALTH_RELOGIN_MAX_ATTEMPTS;
+    const slowCooldownMs = Math.max(cooldownMs, HEALTH_SLOW_RELOGIN_MS);
 
     let unhealthySince: number | null = null;
     let lastReloginAt = 0;
@@ -195,33 +204,33 @@ function startMinecraftReloginWatchdog(bridge: Bridge): void {
         const escalateAfterMs = state === 'connected' ? connectedGraceMs : graceMs;
         if (unhealthyFor < escalateAfterMs) return;
 
-        // Already reconnecting via kick/end/limbo-exhaustion path — don't pile on
-        if (bridge.bot.isReconnectPending) {
-            consola.debug('[Health] MC unhealthy but reconnect already pending');
+        // The bot is already retrying on its own (reconnect queued or connect attempt running).
+        // Connect attempts have their own deadline, so `connecting` can't hang here forever.
+        if (bridge.bot.isRecovering) {
+            consola.debug('[Health] MC unhealthy but the bot is already reconnecting');
             return;
         }
 
-        if (attemptCount >= maxAttempts) {
-            consola.error(
-                `[Health] MC unhealthy (${state}) but max relogin attempts (${maxAttempts}) reached — manual intervention needed`
-            );
-            return;
-        }
-
-        if (now - lastReloginAt < cooldownMs) return;
+        // Past the max, retry at a slower pace instead of stopping: stopping would leave the
+        // bridge offline until someone restarts it.
+        const slow = attemptCount >= maxAttempts;
+        if (now - lastReloginAt < (slow ? slowCooldownMs : cooldownMs)) return;
 
         attemptCount++;
         lastReloginAt = now;
         const reason = `health:${state}`;
+        const attempt = slow
+            ? `attempt ${attemptCount}, now every ${Math.round(slowCooldownMs / 60000)}m`
+            : `attempt ${attemptCount}/${maxAttempts}`;
 
         consola.warn(
-            `[Health] MC unhealthy for ${Math.round(unhealthyFor / 1000)}s (state=${state}) — relogin attempt ${attemptCount}/${maxAttempts}`
+            `[Health] MC unhealthy for ${Math.round(unhealthyFor / 1000)}s (state=${state}) — relogin ${attempt}`
         );
 
         await bridge.discord
             .send(
                 'oc',
-                `**MC Relogin** — bot stuck \`${state}\` for ~${Math.round(unhealthyFor / 60000)}m. Attempting reconnect (${attemptCount}/${maxAttempts})...`
+                `**MC Relogin** — bot stuck \`${state}\` for ~${Math.round(unhealthyFor / 60000)}m. Attempting reconnect (${attempt})...`
             )
             .catch(() => {});
 
@@ -237,6 +246,6 @@ function startMinecraftReloginWatchdog(bridge: Bridge): void {
     }, 30 * 1000);
 
     consola.info(
-        `[Health] MC relogin watchdog on (limbo-required, connectedGrace=${env.MINECRAFT_LIMBO_CONNECTED_GRACE_SECONDS}s, grace=${env.MINECRAFT_HEALTH_RELOGIN_GRACE_MINUTES}m, cooldown=${env.MINECRAFT_HEALTH_RELOGIN_COOLDOWN_MINUTES}m, max=${maxAttempts})`
+        `[Health] MC relogin watchdog on (limbo-required, connectedGrace=${env.MINECRAFT_LIMBO_CONNECTED_GRACE_SECONDS}s, grace=${env.MINECRAFT_HEALTH_RELOGIN_GRACE_MINUTES}m, cooldown=${env.MINECRAFT_HEALTH_RELOGIN_COOLDOWN_MINUTES}m, max=${maxAttempts} then every ${Math.round(slowCooldownMs / 60000)}m)`
     );
 }
