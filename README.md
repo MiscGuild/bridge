@@ -121,7 +121,7 @@ pnpm build
 pnpm start
 ```
 
-On the first start Mineflayer prints a Microsoft sign-in link and code in the console. After you sign in, the login is cached.
+On the first start Mineflayer prints a Microsoft sign-in link and code in the console. After you sign in, the login is cached. If Microsoft asks for a new sign-in later (when a token refresh fails), the bot posts a notice in officer chat and prints a fresh link and code in the console.
 
 ## Configuration
 
