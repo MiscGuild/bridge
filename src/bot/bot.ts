@@ -1,4 +1,4 @@
-import { createBot, Bot } from 'mineflayer';
+import { createBot, Bot, BotOptions } from 'mineflayer';
 import { consola } from 'consola';
 import env from '@/config/env';
 import {
@@ -6,11 +6,38 @@ import {
     BotState,
     HYPIXEL_HOST,
     HYPIXEL_PORT,
+    MC_LOGIN_TIMEOUT_MS,
+    MC_RECONNECT_MAX_DELAY_MS,
     MINECRAFT_VERSION,
 } from '@/config/constants';
 import messageQueue from '@/queue/message-queue';
 
 export type { BotState };
+
+/** The device code Microsoft hands out when the account has to sign in again. */
+export type SignInCode = Parameters<NonNullable<BotOptions['onMsaCode']>>[0];
+
+function errorText(err: unknown): string {
+    return err instanceof Error ? err.message : String(err);
+}
+
+/** Kick reasons arrive as chat-component JSON; flatten them to plain text. */
+function chatText(reason: string): string {
+    const flatten = (node: unknown): string => {
+        if (typeof node === 'string') return node;
+        if (!node || typeof node !== 'object') return '';
+        const { text, extra } = node as { text?: unknown; extra?: unknown };
+        return (
+            (typeof text === 'string' ? text : '') +
+            (Array.isArray(extra) ? extra.map(flatten).join('') : '')
+        );
+    };
+    try {
+        return flatten(JSON.parse(reason)).replace(/§./g, '').trim() || reason;
+    } catch {
+        return reason;
+    }
+}
 
 export class MinecraftBot {
     public bot!: Bot;
@@ -18,7 +45,15 @@ export class MinecraftBot {
     public limboAttempts = 0;
     /** Sessions that exhausted /limbo retries without confirmation (for process.exit last resort). */
     public limboExhaustedSessions = 0;
+    /** Why the last connect attempt failed or the session dropped. Cleared on login. */
+    public lastIssue: string | null = null;
     private reconnectTimer: NodeJS.Timeout | null = null;
+    /** Deadline for the connect attempt in flight, so a stuck sign-in can't hang it forever. */
+    private loginTimer: NodeJS.Timeout | null = null;
+    /** Reconnects since the bot last reached limbo; each one doubles the delay. */
+    private reconnectStreak = 0;
+    /** Clients we gave up on. Their listeners stay attached, so their events must be ignored. */
+    private abandonedClients = new WeakSet<Bot>();
     private limboRetryTimer: NodeJS.Timeout | null = null;
     private lastLimboCommandAt = 0;
     private messageHandler?: (raw: string) => Promise<void>;
@@ -29,34 +64,37 @@ export class MinecraftBot {
      * Bridge uses this to relogin; process.exit remains the last resort after N sessions.
      */
     private limboExhaustedHandler?: (reason: string) => void;
+    /** Alerts staff when Microsoft wants the account to sign in again. */
+    private signInHandler?: (code: SignInCode) => void;
+    /** The sign-in alert goes out once per outage, not once per code. */
+    private signInAlerted = false;
     /** True during intentional shutdown (/terminate, !reboot, SIGINT) — blocks reconnect. */
     private shuttingDown = false;
-    /**
-     * When true, the next `end` event must not auto-schedule a reconnect
-     * (used by forceRelogin which schedules its own reconnect).
-     */
-    private suppressAutoReconnect = false;
 
     constructor() {
+        messageQueue.setSendFn((msg) => this.send(msg));
         this.connect();
     }
 
     public connect(): void {
+        // Exactly one live client: close whatever the last session left behind
+        if (this.bot) this.abandonClient(this.bot);
+
         this.state = BOT_STATES.CONNECTING;
         consola.info('Connecting to Hypixel...');
 
-        this.bot = createBot({
+        const client: Bot = createBot({
             username: env.MINECRAFT_EMAIL,
             host: HYPIXEL_HOST,
             port: HYPIXEL_PORT,
             version: MINECRAFT_VERSION,
             auth: 'microsoft',
+            onMsaCode: (code) => this.handleSignInCode(client, code),
         });
+        this.bot = client;
+        client.setMaxListeners(50);
 
-        this.bot.setMaxListeners(50);
-
-        // Wire message queue to bot send function
-        messageQueue.setSendFn((msg) => this.bot.chat(msg));
+        this.trackConnection(client);
 
         // Re-attach Bridge lifecycle listeners to the new client
         this.lifecycleHandler?.();
@@ -67,17 +105,122 @@ export class MinecraftBot {
         }
     }
 
+    /**
+     * Moves `state` through connecting → connected / disconnected for one client and
+     * reconnects when it drops. A failed Microsoft sign-in only emits `error`: no socket
+     * was opened, so no `end` follows. That's why a connect attempt also fails on an
+     * error before login, or when it hasn't logged in by the deadline.
+     */
+    private trackConnection(client: Bot): void {
+        this.armLoginTimer(
+            client,
+            MC_LOGIN_TIMEOUT_MS,
+            `no login within ${MC_LOGIN_TIMEOUT_MS / 1000}s`
+        );
+
+        client.once('login', () => {
+            if (!this.isCurrentClient(client)) return;
+            this.clearLoginTimer();
+            this.state = BOT_STATES.CONNECTED;
+            this.limboAttempts = 0;
+            this.lastIssue = null;
+            this.signInAlerted = false;
+        });
+
+        client.on('error', (err) => {
+            if (this.isCurrentClient(client) && this.state === BOT_STATES.CONNECTING) {
+                this.failConnect(client, errorText(err));
+            }
+        });
+
+        let kicked = false;
+        client.on('kicked', (reason) => {
+            if (!this.isCurrentClient(client)) return;
+            kicked = true;
+            this.lastIssue = `Kicked: ${chatText(reason)}`;
+            this.clearLoginTimer();
+            this.state = BOT_STATES.DISCONNECTED;
+            this.scheduleReconnect();
+        });
+
+        client.on('end', (reason) => {
+            if (!this.isCurrentClient(client)) return;
+            if (!kicked) this.lastIssue = `Disconnected: ${reason}`;
+            this.clearLoginTimer();
+            this.state = BOT_STATES.DISCONNECTED;
+            this.scheduleReconnect();
+        });
+    }
+
+    /** False once a client has been replaced or abandoned. Ignore its events then. */
+    public isCurrentClient(client: Bot): boolean {
+        return client === this.bot && !this.abandonedClients.has(client);
+    }
+
+    /** Give up on a connect attempt that can't finish, then retry with backoff. */
+    private failConnect(client: Bot, reason: string): void {
+        if (!this.isCurrentClient(client)) return;
+        consola.warn(`[Connect] Attempt failed: ${reason}`);
+        this.lastIssue = `Connect failed: ${reason}`;
+        this.abandonClient(client);
+        this.state = BOT_STATES.DISCONNECTED;
+        this.scheduleReconnect();
+    }
+
+    /** Close a client we're done with; its later events (even `end`) are ignored. */
+    private abandonClient(client: Bot): void {
+        if (client === this.bot) this.clearLoginTimer();
+        this.abandonedClients.add(client);
+        try {
+            client.end();
+        } catch {
+            /* ignore */
+        }
+    }
+
+    /**
+     * prismarine-auth falls back to a device code when a token refresh fails, then waits
+     * for someone to enter it. Keep this attempt open until the code expires so the code
+     * in the console stays valid, instead of retrying with a fresh one every minute.
+     */
+    private handleSignInCode(client: Bot, code: SignInCode): void {
+        if (!this.isCurrentClient(client)) return;
+        const instructions =
+            code.message || `Open ${code.verification_uri} and enter the code ${code.user_code}`;
+        consola.warn(
+            `[Auth] Microsoft wants the bot to sign in again (use the account in MINECRAFT_EMAIL). ${instructions}`
+        );
+        this.lastIssue =
+            'Waiting for Microsoft sign-in (the link and code are in the server console)';
+        this.armLoginTimer(client, (code.expires_in + 30) * 1000, 'Microsoft sign-in code expired');
+        if (this.signInHandler && !this.signInAlerted) {
+            this.signInAlerted = true;
+            this.signInHandler(code);
+        }
+    }
+
+    private armLoginTimer(client: Bot, ms: number, reason: string): void {
+        this.clearLoginTimer();
+        this.loginTimer = setTimeout(() => {
+            this.loginTimer = null;
+            this.failConnect(client, reason);
+        }, ms);
+    }
+
+    private clearLoginTimer(): void {
+        if (this.loginTimer) {
+            clearTimeout(this.loginTimer);
+            this.loginTimer = null;
+        }
+    }
+
     public disconnect(): void {
         if (this.reconnectTimer) {
             clearTimeout(this.reconnectTimer);
             this.reconnectTimer = null;
         }
         this.clearLimboRetry();
-        try {
-            this.bot.end();
-        } catch {
-            /* ignore */
-        }
+        this.abandonClient(this.bot);
         this.state = BOT_STATES.DISCONNECTED;
     }
 
@@ -88,6 +231,7 @@ export class MinecraftBot {
             clearTimeout(this.reconnectTimer);
             this.reconnectTimer = null;
         }
+        this.clearLoginTimer();
         this.clearLimboRetry();
     }
 
@@ -96,12 +240,27 @@ export class MinecraftBot {
         this.limboExhaustedHandler = handler;
     }
 
+    /** Wire the alert for when Microsoft wants the account to sign in again. */
+    public onSignInRequired(handler: (code: SignInCode) => void): void {
+        this.signInHandler = handler;
+    }
+
     public get isShuttingDown(): boolean {
         return this.shuttingDown;
     }
 
     public get isReconnectPending(): boolean {
         return this.reconnectTimer !== null;
+    }
+
+    /** Already recovering on its own: a reconnect is queued or a connect attempt is running. */
+    public get isRecovering(): boolean {
+        return this.reconnectTimer !== null || this.loginTimer !== null;
+    }
+
+    /** Logged in, so chat can be sent. */
+    public get isOnline(): boolean {
+        return this.state === BOT_STATES.CONNECTED || this.state === BOT_STATES.LIMBO;
     }
 
     /**
@@ -113,9 +272,14 @@ export class MinecraftBot {
         handler();
     }
 
-    public scheduleReconnect(): void {
-        if (this.shuttingDown || this.suppressAutoReconnect) return;
-        this.queueReconnect();
+    /**
+     * Reconnect after a drop or a failed attempt. The delay doubles each time until the
+     * bot reaches limbo again, so an outage doesn't mean a login attempt every 10s.
+     */
+    private scheduleReconnect(): void {
+        const baseMs = env.MINECRAFT_RECONNECT_DELAY * 1000;
+        const backoffMs = Math.min(baseMs * 2 ** this.reconnectStreak, MC_RECONNECT_MAX_DELAY_MS);
+        if (this.queueReconnect(Math.max(baseMs, backoffMs))) this.reconnectStreak++;
     }
 
     /**
@@ -131,29 +295,36 @@ export class MinecraftBot {
 
         consola.warn(`[Relogin] Starting controlled relogin (${reason})...`);
 
-        // Suppress auto-reconnect from the disconnect `end` event while we
-        // queue our own reconnect, then clear the flag.
-        this.suppressAutoReconnect = true;
-        try {
-            this.disconnect();
-            this.queueReconnect();
-        } finally {
-            this.suppressAutoReconnect = false;
-        }
+        // disconnect() abandons the client, so its `end` can't queue a second reconnect
+        this.disconnect();
+        this.queueReconnect(env.MINECRAFT_RECONNECT_DELAY * 1000);
     }
 
-    private queueReconnect(): void {
-        if (this.shuttingDown) return;
-        if (this.reconnectTimer) return;
+    /** Returns false when nothing was queued (shutting down, or a reconnect is already pending). */
+    private queueReconnect(delayMs: number): boolean {
+        if (this.shuttingDown || this.reconnectTimer) return false;
 
-        const delay = env.MINECRAFT_RECONNECT_DELAY * 1000;
-        consola.warn(`Reconnecting in ${env.MINECRAFT_RECONNECT_DELAY}s...`);
+        consola.warn(`Reconnecting in ${Math.round(delayMs / 1000)}s...`);
 
         this.reconnectTimer = setTimeout(() => {
             this.reconnectTimer = null;
             if (this.shuttingDown) return;
             this.connect();
-        }, delay);
+        }, delayMs);
+        return true;
+    }
+
+    /** The message queue's send function. Offline, Mineflayer would throw, so drop instead. */
+    private send(message: string): void {
+        if (!this.isOnline) {
+            consola.warn(`[Chat] Not sent, Minecraft is ${this.state}: ${message}`);
+            return;
+        }
+        this.bot.chat(message);
+    }
+
+    private offlineError(): string {
+        return `The bot isn't connected to Minecraft right now (${this.state}).`;
     }
 
     public registerMessageHandler(handler: (raw: string) => Promise<void>): void {
@@ -162,7 +333,9 @@ export class MinecraftBot {
     }
 
     private attachMessageListener(handler: (raw: string) => Promise<void>): void {
-        this.bot.on('message', async (jsonMsg) => {
+        const client = this.bot;
+        client.on('message', async (jsonMsg) => {
+            if (!this.isCurrentClient(client)) return;
             const str = typeof jsonMsg === 'string' ? jsonMsg : jsonMsg.toString();
             await handler(str);
         });
@@ -206,6 +379,7 @@ export class MinecraftBot {
         this.state = BOT_STATES.LIMBO;
         this.limboAttempts = 0;
         this.limboExhaustedSessions = 0;
+        this.reconnectStreak = 0;
         this.clearLimboRetry();
         consola.success('Bot is in Limbo');
     }
@@ -305,6 +479,7 @@ export class MinecraftBot {
 
     /** Execute a command and wait for a response or error */
     public executeAndCapture(command: string): Promise<string | undefined> {
+        if (!this.isOnline) return Promise.reject(this.offlineError());
         return new Promise((resolve, reject) => {
             const listener = (jsonMsg: unknown) => {
                 const str = typeof jsonMsg === 'string' ? jsonMsg : String(jsonMsg);
@@ -350,6 +525,7 @@ export class MinecraftBot {
             endCount?: number;
         }
     ): Promise<string[]> {
+        if (!this.isOnline) return Promise.reject(this.offlineError());
         const timeout = opts?.timeout ?? 3000;
         const endPattern = opts?.endPattern;
         const endTarget = opts?.endCount ?? 2;
